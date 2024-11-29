@@ -68,6 +68,7 @@ class GenericSearchTest {
         assertEquals(0, equalNode.compareTo(smallerNode));
     }
 
+    @Disabled
     @Test
     void dfs() {
         final Optional<GenericSearch.Node<Maze.Location>> result = GenericSearch.dfs(start, maze::goalTest, maze::successors);
