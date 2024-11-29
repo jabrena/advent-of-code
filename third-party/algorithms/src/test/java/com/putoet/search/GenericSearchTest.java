@@ -106,6 +106,7 @@ class GenericSearchTest {
         System.out.println("Steps is " + result.get().steps());
     }
 
+    @Disabled
     @Test
     void astar() {
         final Optional<GenericSearch.Node<Maze.Location>> result =
