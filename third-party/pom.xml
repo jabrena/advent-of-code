@@ -13,6 +13,7 @@
     <modules>
         <module>algorithms</module>
         <module>aoc</module>
+        <module>bom</module>
     </modules>
 
 </project>
