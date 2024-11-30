@@ -6,6 +6,10 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 
 ```bash
 ./mvnw clean verify
+./mvnw clean verify -pl 2021 -am
+
+./mvnw versions:display-dependency-updates
+./mvnw versions:display-plugin-updates
 ```
 
 ## References
@@ -16,5 +20,6 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 - https://adventofcode.com/2022
 - https://adventofcode.com/2021
 - https://www.reddit.com/r/adventofcode/
+- https://www.reddit.com/r/adventofcode/search/?q=flair_name%3A%22SOLUTION%20MEGATHREAD%22&restrict_sr=1
 - https://github.com/z669016/aoc
 - https://github.com/z669016/algorithms
