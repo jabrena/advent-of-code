@@ -11,11 +11,9 @@
     <packaging>pom</packaging>
 
     <properties>
-        <java.version>23</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>23</java.version>
 
-        <slf4j.version>2.0.13</slf4j.version>
-        <logback.version>1.5.6</logback.version>
 
         <mockito.version>5.12.0</mockito.version>
         <junit-jupiter.version>5.11.0-M2</junit-jupiter.version>
@@ -25,42 +23,28 @@
     </properties>
 
     <modules>
-        <module>2019</module>
-        <module>2022</module>
-        <module>2023</module>
         <module>2024</module>
+        <module>2023</module>
+        <module>2022</module>
+        <module>2021</module>
+        <!-- <module>2019</module> -->
+
         <module>third-party</module>
     </modules>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <!-- Define versions for the default bindings plugins -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.3.2</version> <!-- Specify the version you want to use -->
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.3.1</version> <!-- Specify the version you want to use -->
-                </plugin>
-                <!-- You can define other plugins here as needed -->
-            </plugins>
-        </pluginManagement>
         <plugins>
 
             <!-- Checkstyle -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>3.6.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.17.0</version>
+                        <version>10.20.1</version>
                     </dependency>
                 </dependencies>
                 <configuration>
@@ -89,6 +73,7 @@
 
             <!-- https://mvnrepository.com/artifact/com.hubspot.maven.plugins/prettier-maven-plugin/ -->
             <!-- https://github.com/jhipster/prettier-java/blob/main/CHANGELOG.md -->
+            <!--
             <plugin>
                 <groupId>com.hubspot.maven.plugins</groupId>
                 <artifactId>prettier-maven-plugin</artifactId>
@@ -100,10 +85,7 @@
                     <useTabs>false</useTabs>
                     <ignoreConfigFile>true</ignoreConfigFile>
                     <ignoreEditorConfig>true</ignoreEditorConfig>
-                    <!-- Use <inputGlobs> to override the default input patterns -->
                     <inputGlobs>
-                        <!-- These are the default patterns, you can omit <inputGlobs> entirely
-                        unless you want to override them -->
                         <inputGlob>src/main/java/**/*.java</inputGlob>
                         <inputGlob>src/test/java/**/*.java</inputGlob>
                     </inputGlobs>
@@ -118,6 +100,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -126,9 +109,6 @@
                 <configuration>
                     <compilerArgument>-Xlint:all</compilerArgument><!-- -Werror -->
                     <release>${java.version}</release>
-                    <compilerArgs>
-                        <arg>--enable-preview</arg>
-                    </compilerArgs>
                 </configuration>
             </plugin>
 
@@ -144,7 +124,7 @@
                                 <dependencyConvergence />
                                 <banDuplicatePomDependencyVersions />
                                 <requireMavenVersion>
-                                    <version>3.9.6</version>
+                                    <version>3.9.9</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <version>23</version>
@@ -166,18 +146,12 @@
 
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <argLine>
-                        @{argLine}
-                        --enable-preview
-                    </argLine>
-                </configuration>
+                <version>3.5.2</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.16.2</version>
+                <version>2.18.0</version>
             </plugin>
         </plugins>
     </build>
