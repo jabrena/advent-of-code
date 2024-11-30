@@ -4,7 +4,6 @@ import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.ArrayList;
 import java.util.List;

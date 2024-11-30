@@ -23,6 +23,9 @@
         <java.version>23</java.version>
 
         <putoet.aoc.version>1.7.0</putoet.aoc.version>
+        <combinatoricslib3.version>3.4.0</combinatoricslib3.version>
+        <guava.version>31.1-jre</guava.version>
+
         <junit-jupiter.version>5.11.3</junit-jupiter.version>
         <assertj-core.version>3.26.3</assertj-core.version>
 
@@ -34,6 +37,7 @@
         <module>2023</module>
         <module>2022</module>
         <module>2021</module>
+        <module>2020</module>
         <module>2019</module>
 
         <module>third-party</module>
@@ -47,9 +51,14 @@
                 <version>${putoet.aoc.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.github.dpaukov</groupId>
+                <artifactId>combinatoricslib3</artifactId>
+                <version>${combinatoricslib3.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>31.1-jre</version>
+                <version>${guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -74,7 +83,11 @@
             <groupId>com.putoet</groupId>
             <artifactId>aoc</artifactId>
         </dependency>
-            <dependency>
+        <dependency>
+            <groupId>com.github.dpaukov</groupId>
+            <artifactId>combinatoricslib3</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
