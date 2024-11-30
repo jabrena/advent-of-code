@@ -39,6 +39,7 @@
         <module>2021</module>
         <module>2020</module>
         <module>2019</module>
+        <module>2015</module>
 
         <module>third-party</module>
     </modules>
