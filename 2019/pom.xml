@@ -6,17 +6,6 @@
 	<groupId>org.jab.principles</groupId>
 	<artifactId>advent-of-code-2019</artifactId>
 	<version>${revision}</version>
-	<name>advent-of-code-2019</name>
-	<description>Advent of Code</description>
-	<packaging>jar</packaging>
-
-	<developers>
-		<developer>
-			<id>jabrena</id>
-			<name>Juan Antonio Breña Moral</name>
-			<email>bren@juanantonio.info</email>
-		</developer>
-	</developers>
 
 	<properties>
 		<revision>0.1.0</revision>

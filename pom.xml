@@ -10,14 +10,21 @@
     <version>0.1.0</version>
     <packaging>pom</packaging>
 
+	<developers>
+		<developer>
+			<id>jabrena</id>
+			<name>Juan Antonio Breña Moral</name>
+			<email>bren@juanantonio.info</email>
+		</developer>
+	</developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>23</java.version>
 
-
-        <mockito.version>5.12.0</mockito.version>
-        <junit-jupiter.version>5.11.0-M2</junit-jupiter.version>
-        <assertj-core.version>3.26.0</assertj-core.version>
+        <putoet.aoc.version>1.7.0</putoet.aoc.version>
+        <junit-jupiter.version>5.11.3</junit-jupiter.version>
+        <assertj-core.version>3.26.3</assertj-core.version>
 
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
@@ -27,10 +34,63 @@
         <module>2023</module>
         <module>2022</module>
         <module>2021</module>
-        <!-- <module>2019</module> -->
+        <module>2019</module>
 
         <module>third-party</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.putoet</groupId>
+                <artifactId>aoc</artifactId>
+                <version>${putoet.aoc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>31.1-jre</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit-jupiter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit-jupiter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj-core.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.putoet</groupId>
+            <artifactId>aoc</artifactId>
+        </dependency>
+            <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -104,16 +164,6 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-                <configuration>
-                    <compilerArgument>-Xlint:all</compilerArgument><!-- -Werror -->
-                    <release>${java.version}</release>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>3.5.0</version>
                 <executions>
@@ -144,6 +194,15 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <compilerArgument>-Xlint:all</compilerArgument><!-- -Werror -->
+                    <release>${java.version}</release>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
