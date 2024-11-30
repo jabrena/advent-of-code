@@ -6,7 +6,8 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 
 ```bash
 ./mvnw clean verify
-./mvnw clean verify -pl 2021 -am
+./mvnw clean verify -pl 2024 -am
+./mvnw dependency:tree -pl 2024 -am
 
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates
