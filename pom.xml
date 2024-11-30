@@ -33,6 +33,7 @@
     </properties>
 
     <modules>
+        <module>commons</module>
         <module>2024</module>
         <module>2023</module>
         <module>2022</module>
@@ -46,6 +47,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>info.jab.aoc</groupId>
+                <artifactId>commons</artifactId>
+                <version>0.1.0</version>
+            </dependency>
             <dependency>
                 <groupId>com.putoet</groupId>
                 <artifactId>aoc</artifactId>
@@ -80,6 +86,10 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>info.jab.aoc</groupId>
+            <artifactId>commons</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.putoet</groupId>
             <artifactId>aoc</artifactId>
