@@ -52,7 +52,7 @@ class Day1Test {
         String fileName = "/day1/day1-input.txt";
 
         //When
-        Day1 day1 = new Day1();
+        var day1 = new Day1();
         var result = day1.getPart2Result(fileName);
 
         //Then

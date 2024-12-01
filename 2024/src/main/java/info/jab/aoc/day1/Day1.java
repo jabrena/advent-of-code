@@ -10,6 +10,9 @@ import java.util.stream.IntStream;
 import java.util.stream.Collectors;
 import java.util.regex.Pattern;
 
+/**
+ * https://adventofcode.com/2024/day/1
+ */
 public class Day1 implements Day<Integer> {
 
     Function<String, List<String>> loadFle = fileName -> ResourceLines.list(fileName);
