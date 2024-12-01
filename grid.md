@@ -12,7 +12,7 @@
 - https://adventofcode.com/2023/day/3
 - https://adventofcode.com/2022/day/23
 - https://adventofcode.com/2022/day/17
-- https://adventofcode.com/2022/day/14
+- https://adventofcode.com/2022/day/14 , https://github.com/z669016/adventofcode-2022/blob/master/src/main/java/com/putoet/day14/Lines.java
 - https://adventofcode.com/2021/day/11
 - https://adventofcode.com/2021/day/5
 - https://adventofcode.com/2020/day/24
