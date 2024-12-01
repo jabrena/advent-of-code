@@ -31,6 +31,7 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 - https://www.reddit.com/r/adventofcode/search/?q=flair_name%3A%22SOLUTION%20MEGATHREAD%22&restrict_sr=1
 - https://github.com/z669016/aoc
 - https://github.com/z669016/algorithms
+- https://github.com/sim642/adventofcode/tree/master/src/main/scala/eu/sim642/adventofcodelib
 - https://github.com/dpaukov/combinatoricslib3
 - https://github.com/z669016/adventofcode-2022
 - https://github.com/forax/advent-of-code-2023
