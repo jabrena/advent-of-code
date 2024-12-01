@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.IntStream;
+import java.util.stream.Collectors;
 import java.util.regex.Pattern;
 
 public class Day1 implements Day<Integer> {
@@ -22,6 +23,17 @@ public class Day1 implements Day<Integer> {
         var list1 = param.stream().map(line -> Integer.parseInt(SEPARATOR_PATTERN.split(line)[0])).sorted().toList();
         var list2 = param.stream().map(line -> Integer.parseInt(SEPARATOR_PATTERN.split(line)[1])).sorted().toList();
         return new ListSplitted(list1, list2);
+    };
+
+    //@juan-medina idea
+    Function<List<String>, ListSplitted> splitInto2Lists2 = param -> {
+        return param.stream()
+            .map(line -> SEPARATOR_PATTERN.split(line))
+            .collect(Collectors.teeing(
+                Collectors.mapping(parts -> Integer.parseInt(parts[0]), Collectors.toList()),
+                Collectors.mapping(parts -> Integer.parseInt(parts[1]), Collectors.toList()),
+                (l1, l2) -> new ListSplitted(l1.stream().sorted().toList(), l2.stream().sorted().toList())
+            ));
     };
 
     Function<ListSplitted, Integer> calculateDistance = parameter -> {
@@ -55,6 +67,6 @@ public class Day1 implements Day<Integer> {
 
     @Override
     public Integer getPart2Result(String fileName) {
-        return loadFle.andThen(splitInto2Lists).andThen(calculateOcurrences).apply(fileName);
+        return loadFle.andThen(splitInto2Lists2).andThen(calculateOcurrences).apply(fileName);
     }
 }
