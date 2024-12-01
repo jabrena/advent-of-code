@@ -4,83 +4,73 @@ import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.IntStream;
+import java.util.regex.Pattern;
 
 public class Day1 implements Day<Integer> {
 
-    @Override
-    public Integer getPart1Result(String fileName) {
-        //Load file
-        var lines = ResourceLines.list(fileName);
+    record ListSplitted(List<Integer> listLeft, List<Integer> listRight) {}
 
-        //Load 2 lists
-        var list1 = new ArrayList<Integer>();
-        var list2 = new ArrayList<Integer>();
-        lines.stream()
-            .forEach(line -> {
-                var parts = line.split("   ");
-                list1.add(Integer.parseInt(parts[0]));
-                list2.add(Integer.parseInt(parts[1]));
-            });
-        //Sort
-        var list12 = list1.stream().sorted().toList();
-        var list22 = list2.stream().sorted().toList();
+    Function<String, List<String>> loadFle = fileName -> ResourceLines.list(fileName);
 
-        //Calculate distance
-        //Sum
-        AtomicInteger index = new AtomicInteger();
-        return list12.stream()
-            .mapToInt(element -> {
-                int param1 = element;
-                int param2 = list22.get(index.get());
-                int distance = param1 - param2;
-                index.addAndGet(+1);
-                return Math.abs(distance);
+    private final static Pattern SEPARATOR = Pattern.compile("   ");
+
+    Function<List<String>, ListSplitted> splitInto2Lists = param -> {
+        var list1 = param.stream()
+            .map(line -> Integer.parseInt(SEPARATOR.split(line)[0]))
+            .sorted()
+            .toList();
+
+        var list2 = param.stream()
+            .map(line -> Integer.parseInt(SEPARATOR.split(line)[1]))
+            .sorted()
+            .toList();
+
+        return new ListSplitted(list1, list2);
+    };
+
+    Function<ListSplitted, Integer> calculateDistance = parameter -> {
+        return IntStream.range(0, parameter.listLeft().size())
+            .map(i -> {
+                int param1 = parameter.listLeft().get(i);
+                int param2 = parameter.listRight().get(i);
+                return Math.abs(param1 - param2);
             })
             .sum();
+    };
+
+    @Override
+    public Integer getPart1Result(String fileName) {
+        return loadFle
+            .andThen(splitInto2Lists)
+            .andThen(calculateDistance)
+            .apply(fileName);
     }
 
-    public static int countOccurrences(int target, List<Integer> list) {
-        int count = 0;
-        for (int number : list) {
-            if (number == target) {
-                count++;
-            }
-        }
-        return count;
-    }
+    BiFunction<Integer, List<Integer>, Integer> countOccurrences = (param1, param2) -> {
+        return (int) param2.stream()
+            .filter(number -> number.equals(param1))
+            .count();
+    };
+
+    Function<ListSplitted, Integer> calculateOcurrences = parameter -> {
+        return IntStream.range(0, parameter.listLeft().size())
+            .map(i -> {
+                int param1 = parameter.listLeft().get(i);
+                int param2 = countOccurrences.apply(param1, parameter.listRight());
+                return param1 * param2;
+            })
+            .sum();
+    };
 
     @Override
     public Integer getPart2Result(String fileName) {
-        //Load file
-        var lines = ResourceLines.list(fileName);
-
-        //Load 2 lists
-        var list1 = new ArrayList<Integer>();
-        var list2 = new ArrayList<Integer>();
-        lines.stream()
-            .forEach(line -> {
-                var parts = line.split("   ");
-                list1.add(Integer.parseInt(parts[0]));
-                list2.add(Integer.parseInt(parts[1]));
-            });
-        //Sort
-        var list12 = list1.stream().sorted().toList();
-        var list22 = list2.stream().sorted().toList();
-
-        //Calculate ocurrences
-        //Sum
-        AtomicInteger index = new AtomicInteger();
-        return list12.stream()
-            .mapToInt(element -> {
-                int param1 = element;
-                //int param2 = list22.get(index.get());
-                int param2 = countOccurrences(param1, list22);
-                int distance = param1 * param2;
-                index.addAndGet(+1);
-                return distance;
-            })
-            .sum();
+        return loadFle
+            .andThen(splitInto2Lists)
+            .andThen(calculateOcurrences)
+            .apply(fileName);
     }
 
 }
