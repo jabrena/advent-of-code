@@ -15,7 +15,7 @@ public class Day1 implements Day<Integer> {
 
     Function<String, List<String>> loadFle = fileName -> ResourceLines.list(fileName);
 
-    private static final String SEPARATOR = "   ";
+    private static final String SEPARATOR = "\\s+";
     private static final Pattern SEPARATOR_PATTERN = Pattern.compile(SEPARATOR);
 
     Function<List<String>, ListSplitted> splitInto2Lists = param -> {
