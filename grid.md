@@ -1,5 +1,15 @@
 # Grid problems
 
+- https://adventofcode.com/2023/day/23
+- https://adventofcode.com/2023/day/22
+- https://adventofcode.com/2023/day/21
+- https://adventofcode.com/2023/day/17
+- https://adventofcode.com/2023/day/16
+- https://adventofcode.com/2023/day/14
+- https://adventofcode.com/2023/day/13
+- https://adventofcode.com/2023/day/11
+- https://adventofcode.com/2023/day/10
+- https://adventofcode.com/2023/day/3
 - https://adventofcode.com/2022/day/23
 - https://adventofcode.com/2022/day/17
 - https://adventofcode.com/2022/day/14
