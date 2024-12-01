@@ -11,12 +11,12 @@ import java.util.regex.Pattern;
 
 public class Day1 implements Day<Integer> {
 
-    record ListSplitted(List<Integer> listLeft, List<Integer> listRight) {}
-
     Function<String, List<String>> loadFle = fileName -> ResourceLines.list(fileName);
 
     private static final String SEPARATOR = "\\s+";
     private static final Pattern SEPARATOR_PATTERN = Pattern.compile(SEPARATOR);
+
+    private record ListSplitted(List<Integer> listLeft, List<Integer> listRight) {}
 
     Function<List<String>, ListSplitted> splitInto2Lists = param -> {
         var list1 = param.stream().map(line -> Integer.parseInt(SEPARATOR_PATTERN.split(line)[0])).sorted().toList();
@@ -57,5 +57,4 @@ public class Day1 implements Day<Integer> {
     public Integer getPart2Result(String fileName) {
         return loadFle.andThen(splitInto2Lists).andThen(calculateOcurrences).apply(fileName);
     }
-
 }
