@@ -15,7 +15,7 @@
 - https://adventofcode.com/2022/day/14 , https://github.com/z669016/adventofcode-2022/blob/master/src/main/java/com/putoet/day14/Lines.java
 - https://adventofcode.com/2021/day/11 , https://github.com/z669016/adventofcode-2021/blob/master/src/main/java/com/putoet/day11/Cavern.java
 - https://adventofcode.com/2021/day/5, https://github.com/z669016/adventofcode-2021/blob/master/src/main/java/com/putoet/day5/OceanFloor.java
-- https://adventofcode.com/2020/day/24
+- https://adventofcode.com/2020/day/24, https://github.com/z669016/adventofcode-2020/blob/master/src/main/java/com/putoet/day20/Puzzler.java
 - https://adventofcode.com/2020/day/20
 - https://adventofcode.com/2020/day/12
 - https://adventofcode.com/2020/day/11
