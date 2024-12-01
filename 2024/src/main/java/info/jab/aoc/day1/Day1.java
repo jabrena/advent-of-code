@@ -15,19 +15,12 @@ public class Day1 implements Day<Integer> {
 
     Function<String, List<String>> loadFle = fileName -> ResourceLines.list(fileName);
 
-    private final static Pattern SEPARATOR = Pattern.compile("   ");
+    private static final String SEPARATOR = "   ";
+    private static final Pattern SEPARATOR_PATTERN = Pattern.compile(SEPARATOR);
 
     Function<List<String>, ListSplitted> splitInto2Lists = param -> {
-        var list1 = param.stream()
-            .map(line -> Integer.parseInt(SEPARATOR.split(line)[0]))
-            .sorted()
-            .toList();
-
-        var list2 = param.stream()
-            .map(line -> Integer.parseInt(SEPARATOR.split(line)[1]))
-            .sorted()
-            .toList();
-
+        var list1 = param.stream().map(line -> Integer.parseInt(SEPARATOR_PATTERN.split(line)[0])).sorted().toList();
+        var list2 = param.stream().map(line -> Integer.parseInt(SEPARATOR_PATTERN.split(line)[1])).sorted().toList();
         return new ListSplitted(list1, list2);
     };
 
@@ -43,16 +36,11 @@ public class Day1 implements Day<Integer> {
 
     @Override
     public Integer getPart1Result(String fileName) {
-        return loadFle
-            .andThen(splitInto2Lists)
-            .andThen(calculateDistance)
-            .apply(fileName);
+        return loadFle.andThen(splitInto2Lists).andThen(calculateDistance).apply(fileName);
     }
 
     BiFunction<Integer, List<Integer>, Integer> countOccurrences = (param1, param2) -> {
-        return (int) param2.stream()
-            .filter(number -> number.equals(param1))
-            .count();
+        return (int) param2.stream().filter(number -> number.equals(param1)).count();
     };
 
     Function<ListSplitted, Integer> calculateOcurrences = parameter -> {
@@ -67,10 +55,7 @@ public class Day1 implements Day<Integer> {
 
     @Override
     public Integer getPart2Result(String fileName) {
-        return loadFle
-            .andThen(splitInto2Lists)
-            .andThen(calculateOcurrences)
-            .apply(fileName);
+        return loadFle.andThen(splitInto2Lists).andThen(calculateOcurrences).apply(fileName);
     }
 
 }
