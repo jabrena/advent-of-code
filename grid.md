@@ -13,7 +13,6 @@
 - https://adventofcode.com/2022/day/23
 - https://adventofcode.com/2022/day/17
 - https://adventofcode.com/2022/day/14
-- https://adventofcode.com/2022/day/9
 - https://adventofcode.com/2021/day/20
 - https://adventofcode.com/2021/day/11
 - https://adventofcode.com/2021/day/5
