@@ -14,25 +14,23 @@ import java.util.ArrayList;
  **/
 public class Day3 implements Day<Integer> {
 
+    // Define the regex as a constant
+    private static final String REGEX = "mul\\((\\d+),(\\d+)\\)";
+    private static final String REGEX2 = "(mul\\((\\d+),(\\d+)\\)|don't\\(\\)|do\\(\\))";
+    private static final Pattern PATTERN = Pattern.compile(REGEX);
+    private static final Pattern PATTERN2 = Pattern.compile(REGEX2);
+
     @Override
     public Integer getPart1Result(String fileName) {
-
         var input = ResourceLines.line(fileName);
 
-        String regex = "mul\\((\\d+),(\\d+)\\)";
-
-        // Compile the pattern
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
+        Matcher matcher = PATTERN.matcher(input);
 
         List<Integer> sum = new ArrayList<>();
         while (matcher.find()) {
-            System.out.println("Found: " + matcher.group(0));
-            var param1 = matcher.group(1);
-            var param2 = matcher.group(2);
-            System.out.println("x: " + param1);
-            System.out.println("y: " + param2);
-            sum.add(Integer.parseInt(param1) * Integer.parseInt(param2));
+            var param1 = Integer.parseInt(matcher.group(1));
+            var param2 = Integer.parseInt(matcher.group(2));
+            sum.add(param1 * param2);
         }
 
         return sum.stream().reduce(0, (a, b) -> a + b);
@@ -40,20 +38,14 @@ public class Day3 implements Day<Integer> {
 
     @Override
     public Integer getPart2Result(String fileName) {
-
         var input = ResourceLines.line(fileName);
 
-        String regex = "(mul\\((\\d+),(\\d+)\\)|don't\\(\\)|do\\(\\))";
-
-        // Compile the pattern
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
+        Matcher matcher = PATTERN2.matcher(input);
 
         boolean enabled = true;
         List<Integer> sum = new ArrayList<>();
         while (matcher.find()) {
             String command = matcher.group(0);
-            System.out.println("Found: " + matcher.group(0));
 
             if(command.equals("don't()")) {
                 enabled = false;
@@ -62,14 +54,11 @@ public class Day3 implements Day<Integer> {
                 enabled = true;
             }
 
-            // Print specific groups for mul(x,y)
             if (matcher.group(2) != null && matcher.group(3) != null) {
-                var param1 = matcher.group(2);
-                var param2 = matcher.group(3);
-                System.out.println("x: " + param1);
-                System.out.println("y: " + param2);
+                var param1 = Integer.parseInt(matcher.group(2));
+                var param2 = Integer.parseInt(matcher.group(3));
                 if(enabled) {
-                    sum.add(Integer.parseInt(param1) * Integer.parseInt(param2));
+                    sum.add(param1 * param2);
                 }
             }
         }
