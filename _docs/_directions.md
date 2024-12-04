@@ -6,6 +6,7 @@
 - https://github.com/z669016/adventofcode-2019/blob/master/src/main/java/com/putoet/day20/DonutMaze.java
 - https://adventofcode.com/2019/day/11 , https://github.com/z669016/adventofcode-2019/blob/master/src/main/java/com/putoet/day11/Surface.java
 - https://adventofcode.com/2019/day/3 , https://github.com/z669016/adventofcode-2019/blob/master/src/main/java/com/putoet/day3/Direction.java
+- https://github.com/z669016/adventofcode-2018/blob/master/src/main/java/com/putoet/day18/AcreScanner.java
 - https://adventofcode.com/2017/day/22, https://github.com/z669016/adventofcode-2017/blob/master/src/main/java/com/putoet/day22/Direction.java
 - https://adventofcode.com/2017/day/19 , https://github.com/z669016/adventofcode-2017/blob/master/src/main/java/com/putoet/day19/SeriesOfTubes.java
 - https://adventofcode.com/2016/day/17 , https://github.com/z669016/adventofcode-2016/blob/master/src/main/java/com/putoet/day17/Direction.java
