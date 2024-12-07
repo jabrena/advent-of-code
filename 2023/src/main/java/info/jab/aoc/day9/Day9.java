@@ -7,6 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * https://adventofcode.com/2023/day/9
+ *
+ * https://nickymeuleman.netlify.app/blog/aoc2023-day09/
+ */
 public class Day9 implements Day<Integer> {
 
     // Método para calcular las diferencias entre elementos consecutivos

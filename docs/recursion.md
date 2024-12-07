@@ -39,5 +39,6 @@ Running method recursively: 70246 [1, 557, 86, 7, 587, 588] 5 28173653 28173653 
 ## Links of interest
 
 - https://en.wikipedia.org/wiki/Recursion_(computer_science)
+- https://www.baeldung.com/cs/recursion-looping
 - https://aoc.just2good.co.uk/python/recursion.html
 - https://community.appsmith.com/content/blog/recursion-vs-loops-simple-introduction-elegant-javascript
