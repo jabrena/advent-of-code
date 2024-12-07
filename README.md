@@ -29,6 +29,7 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://adventofcode.com/2016
 - https://adventofcode.com/2015
 - https://www.reddit.com/r/adventofcode/
+- https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Funny%22
 - https://www.reddit.com/r/adventofcode/search/?q=flair_name%3A%22SOLUTION%20MEGATHREAD%22&restrict_sr=1
 - https://github.com/z669016/aoc
 - https://github.com/z669016/algorithms

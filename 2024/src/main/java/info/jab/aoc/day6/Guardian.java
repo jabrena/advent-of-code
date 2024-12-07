@@ -43,7 +43,7 @@ public class Guardian {
                     if (map.get(point.x(), point.y()) == obstacleSymbol) {
                         direction = direction.RIGHT;
                         point = point.sub(Point.SOUTH); //Correction
-                        System.out.println(map);
+                        //System.out.println(map);
                         break;
                     } else {
                         map.set(point.x(), point.y(), walked);
@@ -59,7 +59,7 @@ public class Guardian {
                     if (map.get(point.x(), point.y()) == obstacleSymbol) {
                         direction = direction.SOUTH;
                         point = point.add(Point.WEST); //Correction
-                        System.out.println(map);
+                        //System.out.println(map);
                         break;
                     } else {
                         map.set(point.x(), point.y(), walked);
@@ -75,7 +75,7 @@ public class Guardian {
                     if (map.get(point.x(), point.y()) == obstacleSymbol) {
                         direction = direction.LEFT;
                         point = point.sub(Point.NORTH); //Correction
-                        System.out.println(map);
+                        //System.out.println(map);
                         break;
                     } else {
                         map.set(point.x(), point.y(), walked);
@@ -91,7 +91,7 @@ public class Guardian {
                     if (map.get(point.x(), point.y()) == obstacleSymbol) {
                         direction = direction.NORTH;
                         point = point.sub(Point.WEST); //Correction
-                        System.out.println(map);
+                        //System.out.println(map);
                         break;
                     } else {
                         map.set(point.x(), point.y(), walked);
