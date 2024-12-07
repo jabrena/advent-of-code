@@ -2,7 +2,6 @@ package info.jab.aoc.day1;
 
 import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;

@@ -1,4 +1,4 @@
-package info.jab.aoc.day1;
+package info.jab.aoc.day3;
 
 import info.jab.aoc.Day;
 
