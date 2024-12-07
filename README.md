@@ -1,4 +1,4 @@
-# Advent of code
+# Advent of code collection
 
 Advent of Code is an annual set of Christmas-themed computer programming challenges that follow an Advent calendar.
 
@@ -6,6 +6,7 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 
 ```bash
 ./mvnw clean verify
+./mvnw clean verify -pl 2023 -am
 ./mvnw clean verify -pl 2024 -am
 ./mvnw dependency:tree -pl 2024 -am
 ./mvnw verify -pl 2024 -am surefire-report:report -DshowSuccess=false
