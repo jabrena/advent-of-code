@@ -9,13 +9,13 @@ public class Day4 implements Day<Integer> {
 
     @Override
     public Integer getPart1Result(String fileName) {
-        SoupLetter game = new SoupLetter(fileName);
-        game.print();
-        return game.countXMAS();
+        var soupLetter = new SoupLetter(fileName);
+        return soupLetter.xmasCount();
     }
 
     @Override
     public Integer getPart2Result(String fileName) {
-        throw new UnsupportedOperationException();
+        var soupLetter = new SoupLetter(fileName);
+        return soupLetter.xDashMasCount();
     }
 }

@@ -47,7 +47,6 @@
         <module>2015</module>
 
         <module>third-party</module>
-        <module>lab</module>
     </modules>
 
     <dependencyManagement>
@@ -252,4 +251,17 @@
             </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>3.5.2</version>
+            <configuration>
+                <showSuccess>false</showSuccess>
+            </configuration>
+        </plugin>
+        </plugins>
+    </reporting>
 </project>

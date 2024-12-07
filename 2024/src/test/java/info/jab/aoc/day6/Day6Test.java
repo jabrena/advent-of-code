@@ -1,4 +1,4 @@
-package info.jab.aoc.day5;
+package info.jab.aoc.day6;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -6,65 +6,68 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
 import com.putoet.utils.Timer;
 
-class Day5Test {
+class Day6Test {
 
     @Test
-    void should_solve_day5_part1_with_sample() {
+    void should_solve_day6_part1_with_sample() {
         Timer.run(() -> {
             //Given
-            String fileName = "/day5/day5-input-sample.txt";
+            String fileName = "/day6/day6-input-sample.txt";
 
             //When
-            var day = new Day5();
+            var day = new Day6();
             var result = day.getPart1Result(fileName);
 
             //Then
-            then(result).isEqualTo(143);
+            then(result).isEqualTo(41);
         });
     }
 
+    @Disabled
     @Test
-    void should_solve_day5_part1() {
+    void should_solve_day6_part1() {
         Timer.run(() -> {
             //Given
-            String fileName = "/day5/day5-input.txt";
+            String fileName = "/day6/day6-input.txt";
 
             //When
-            var day = new Day5();
+            var day = new Day6();
             var result = day.getPart1Result(fileName);
 
             //Then
-            then(result).isEqualTo(5955);
+            then(result).isEqualTo(5312);
         });
     }
 
+    @Disabled
     @Test
-    void should_solve_day5_part2_with_sample() {
+    void should_solve_day6_part2_with_sample() {
         Timer.run(() -> {
             //Given
-            String fileName = "/day5/day5-input-sample.txt";
+            String fileName = "/day6/day6-input-sample.txt";
 
             //When
-            var day = new Day5();
+            var day = new Day6();
             var result = day.getPart2Result(fileName);
 
             //Then
-            then(result).isEqualTo(123);
+            then(result).isEqualTo(6);
         });
     }
 
+    @Disabled
     @Test
-    void should_solve_day5_part2() {
+    void should_solve_day6_part2() {
         Timer.run(() -> {
             //Given
-            String fileName = "/day5/day5-input.txt";
+            String fileName = "/day6/day6-input2.txt";
 
             //When
-            var day = new Day5();
+            var day = new Day6();
             var result = day.getPart2Result(fileName);
 
             //Then
-            then(result).isEqualTo(4030);
+            then(result).isEqualTo(6);
         });
     }
 
