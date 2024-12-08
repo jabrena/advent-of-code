@@ -33,6 +33,7 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://github.com/z669016/adventofcode-2022
 - https://github.com/forax/advent-of-code-2023
 - https://github.com/nipafx/advent-of-code-2023
+- https://github.com/juan-medina/adventofcode2024/
 
 ### Others
 
