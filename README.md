@@ -6,7 +6,6 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 
 ```bash
 ./mvnw clean verify
-./mvnw clean verify -pl 2023 -am
 ./mvnw clean verify -pl 2024 -am
 ./mvnw dependency:tree -pl 2024 -am
 ./mvnw verify -pl 2024 -am surefire-report:report -DshowSuccess=false
@@ -30,10 +29,12 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 
 ### Examples
 
-- https://github.com/z669016/adventofcode-2022
-- https://github.com/forax/advent-of-code-2023
-- https://github.com/nipafx/advent-of-code-2023
-- https://github.com/juan-medina/adventofcode2024/
+- https://github.com/z669016/adventofcode-2022 (Java)
+- https://github.com/forax/advent-of-code-2023 (Java)
+- https://github.com/forax/advent-of-code-2024 (Java)
+- https://github.com/nipafx/advent-of-code-2023 (Java)
+- https://github.com/juan-medina/adventofcode2024/ (C#)
+- https://github.com/jmgimeno/aoc2024/tree/master (Scala)
 
 ### Others
 
