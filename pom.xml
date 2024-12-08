@@ -10,13 +10,13 @@
     <version>0.1.0</version>
     <packaging>pom</packaging>
 
-	<developers>
-		<developer>
-			<id>jabrena</id>
-			<name>Juan Antonio Breña Moral</name>
-			<email>bren@juanantonio.info</email>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <id>jabrena</id>
+            <name>Juan Antonio Breña Moral</name>
+            <email>bren@juanantonio.info</email>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -254,14 +254,14 @@
 
     <reporting>
         <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-report-plugin</artifactId>
-            <version>3.5.2</version>
-            <configuration>
-                <showSuccess>false</showSuccess>
-            </configuration>
-        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.5.2</version>
+                <configuration>
+                    <showSuccess>false</showSuccess>
+                </configuration>
+            </plugin>
         </plugins>
     </reporting>
 </project>

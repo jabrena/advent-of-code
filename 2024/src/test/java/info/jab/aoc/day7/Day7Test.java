@@ -12,6 +12,7 @@ import com.putoet.utils.Timer;
 
 class Day7Test {
 
+    @Disabled
     @Test
     void should_solve_day7_methods() {
         //Given

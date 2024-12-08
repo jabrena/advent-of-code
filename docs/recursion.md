@@ -1,4 +1,4 @@
-# Recursivity
+# Recursion
 
 ```
 Running method recursively: 70223 [1, 557, 86, 7, 587, 588] 0 1 28173653
@@ -27,9 +27,18 @@ Running method recursively: 70244 [1, 557, 86, 7, 587, 588] 5 28566216 28173653 
 Running method recursively: 70246 [1, 557, 86, 7, 587, 588] 5 28173653 28173653 +
 ```
 
-
 - https://adventofcode.com/2024/day/7
+- https://adventofcode.com/2023/day/9
+- https://adventofcode.com/2022/day/13
+- https://adventofcode.com/2022/day/7
+- https://adventofcode.com/2021/day/21
+- https://adventofcode.com/2021/day/18
+- https://adventofcode.com/2021/day/14
+- https://adventofcode.com/2015/day/12
 
 ## Links of interest
 
+- https://en.wikipedia.org/wiki/Recursion_(computer_science)
+- https://www.baeldung.com/cs/recursion-looping
 - https://aoc.just2good.co.uk/python/recursion.html
+- https://community.appsmith.com/content/blog/recursion-vs-loops-simple-introduction-elegant-javascript
