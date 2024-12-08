@@ -18,6 +18,24 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 
 ## References
 
+### Libraries
+
+- https://github.com/z669016/aoc
+- https://github.com/z669016/algorithms
+- https://javadoc.io/doc/com.google.guava/guava/latest/index.html
+- https://github.com/dpaukov/combinatoricslib3
+- https://github.com/sim642/adventofcode/tree/master/src/main/scala/eu/sim642/adventofcodelib
+- https://github.com/bertjan/advent-of-code-2024/blob/main/src/main/java/utils/Matrix.java
+- https://github.com/p-kovacs/advent-of-code-2024/tree/master/src/main/java/com/github/pkovacs/util
+
+### Examples
+
+- https://github.com/z669016/adventofcode-2022
+- https://github.com/forax/advent-of-code-2023
+- https://github.com/nipafx/advent-of-code-2023
+
+### Others
+
 - https://adventofcode.com/
 - https://adventofcode.com/2024
 - https://adventofcode.com/2023
@@ -32,12 +50,4 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://www.reddit.com/r/adventofcode/
 - https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Funny%22
 - https://www.reddit.com/r/adventofcode/search/?q=flair_name%3A%22SOLUTION%20MEGATHREAD%22&restrict_sr=1
-- https://github.com/z669016/aoc
-- https://github.com/z669016/algorithms
-- https://github.com/sim642/adventofcode/tree/master/src/main/scala/eu/sim642/adventofcodelib
-- https://github.com/bertjan/advent-of-code-2024/blob/main/src/main/java/utils/Matrix.java
-- https://github.com/p-kovacs/advent-of-code-2024/tree/master/src/main/java/com/github/pkovacs/util
-- https://github.com/dpaukov/combinatoricslib3
-- https://github.com/z669016/adventofcode-2022
-- https://github.com/forax/advent-of-code-2023
-- https://github.com/nipafx/advent-of-code-2023
+

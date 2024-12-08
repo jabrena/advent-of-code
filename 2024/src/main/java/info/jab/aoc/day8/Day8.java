@@ -7,15 +7,17 @@ import com.putoet.resources.ResourceLines;
 /**
  * https://adventofcode.com/2024/day/8
  **/
-public class Day8 implements Day<Integer> {
+public class Day8 implements Day<Long> {
 
     @Override
-    public Integer getPart1Result(String fileName) {
-        throw new UnsupportedOperationException();
+    public Long getPart1Result(String fileName) {
+        AntennaMap antennaMap = new AntennaMap(fileName);
+        return antennaMap.countAntinodes();
     }
 
     @Override
-    public Integer getPart2Result(String fileName) {
-        throw new UnsupportedOperationException();
+    public Long getPart2Result(String fileName) {
+        AntennaMap antennaMap = new AntennaMap(fileName);
+        return antennaMap.countAntinodesWithHarmonics();
     }
 }

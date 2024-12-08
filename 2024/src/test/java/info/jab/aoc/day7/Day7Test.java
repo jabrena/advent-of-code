@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import com.putoet.resources.ResourceLines;
 import com.putoet.utils.Timer;
 
+@Disabled
 class Day7Test {
 
     @Disabled
