@@ -7,8 +7,6 @@ import com.putoet.grid.Grid;
 import com.putoet.grid.GridUtils;
 import com.putoet.grid.Point;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +16,6 @@ import java.util.concurrent.Executors;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 public class AntennaMap {
@@ -109,7 +105,7 @@ public class AntennaMap {
         return antinodes.stream().filter(isInsideOfGrid).count();
     }
 
-    private Set<Point> calculateHarmonics(Point a, Point b) {
+    private Set<Point> getHarmonics(Point a, Point b) {
         var deltas = getDeltas.apply(a, b);
 
         //https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#iterate-T-java.util.function.UnaryOperator-
@@ -123,15 +119,13 @@ public class AntennaMap {
 
     public Long countAntinodesWithHarmonics() {
         Map<Character, Set<Point>> antennas = getAntennasByType();
-
         return antennas.entrySet().stream()
             .flatMap(entry -> {
                 Set<Point> points = entry.getValue();
                 return Sets.cartesianProduct(points, points).stream()
                     .filter(pair -> !pair.get(0).equals(pair.get(1)))
-                    .flatMap(pair -> Stream.of(
-                        calculateHarmonics(pair.get(0), pair.get(1)),
-                        calculateHarmonics(pair.get(1), pair.get(0))
+                    .flatMap(pair -> Stream.of(getHarmonics(pair.get(0), pair.get(1)),
+                                               getHarmonics(pair.get(1), pair.get(0))
                     ).flatMap(Set::stream)); // Flatten the sets of harmonics into one stream
             })
             .collect(Collectors.toSet()).stream().filter(isInsideOfGrid).count();
