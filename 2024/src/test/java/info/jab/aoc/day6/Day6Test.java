@@ -67,7 +67,7 @@ class Day6Test {
             var result = day.getPart2Result(fileName);
 
             //Then
-            then(result).isEqualTo(6);
+            then(result).isEqualTo(1748);
         });
     }
 

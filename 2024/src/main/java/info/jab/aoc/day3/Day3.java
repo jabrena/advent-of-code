@@ -1,7 +1,6 @@
 package info.jab.aoc.day3;
 
 import info.jab.aoc.Day;
-
 import com.putoet.resources.ResourceLines;
 
 import java.util.regex.Matcher;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
  **/
 public class Day3 implements Day<Integer> {
 
-    // Define the regex as a constant
+    // Define the regex patterns as constants
     private static final String REGEX = "mul\\((\\d+),(\\d+)\\)";
     private static final String REGEX2 = "(mul\\((\\d+),(\\d+)\\)|don't\\(\\)|do\\(\\))";
     private static final Pattern PATTERN = Pattern.compile(REGEX);
@@ -23,45 +22,54 @@ public class Day3 implements Day<Integer> {
     @Override
     public Integer getPart1Result(String fileName) {
         var input = ResourceLines.line(fileName);
-
-        Matcher matcher = PATTERN.matcher(input);
-
-        List<Integer> sum = new ArrayList<>();
-        while (matcher.find()) {
-            var param1 = Integer.parseInt(matcher.group(1));
-            var param2 = Integer.parseInt(matcher.group(2));
-            sum.add(param1 * param2);
-        }
-
-        return sum.stream().reduce(0, (a, b) -> a + b);
+        return calculateSumFromMultiplications(input, PATTERN);
     }
 
     @Override
     public Integer getPart2Result(String fileName) {
         var input = ResourceLines.line(fileName);
+        return calculateSumWithConditional(input, PATTERN2);
+    }
 
-        Matcher matcher = PATTERN2.matcher(input);
+    // Helper method to calculate sum from multiplication patterns
+    private Integer calculateSumFromMultiplications(String input, Pattern pattern) {
+        Matcher matcher = pattern.matcher(input);
+        List<Integer> results = new ArrayList<>();
 
+        while (matcher.find()) {
+            var param1 = Integer.parseInt(matcher.group(1));
+            var param2 = Integer.parseInt(matcher.group(2));
+            results.add(param1 * param2);
+        }
+
+        return results.stream().reduce(0, Integer::sum);
+    }
+
+    // Helper method for part 2 that handles conditional "do" and "don't" commands
+    private Integer calculateSumWithConditional(String input, Pattern pattern) {
+        Matcher matcher = pattern.matcher(input);
         boolean enabled = true;
-        List<Integer> sum = new ArrayList<>();
+        List<Integer> results = new ArrayList<>();
+
         while (matcher.find()) {
             String command = matcher.group(0);
 
-            if(command.equals("don't()")) {
+            if ("don't()".equals(command)) {
                 enabled = false;
-            }
-            if(command.equals("do()")) {
+            } else if ("do()".equals(command)) {
                 enabled = true;
             }
 
+            // Process the multiplication if it's enabled and the groups are non-null
             if (matcher.group(2) != null && matcher.group(3) != null) {
                 var param1 = Integer.parseInt(matcher.group(2));
                 var param2 = Integer.parseInt(matcher.group(3));
-                if(enabled) {
-                    sum.add(param1 * param2);
+                if (enabled) {
+                    results.add(param1 * param2);
                 }
             }
         }
-        return sum.stream().reduce(0, (a, b) -> a + b);
+
+        return results.stream().reduce(0, Integer::sum);
     }
 }

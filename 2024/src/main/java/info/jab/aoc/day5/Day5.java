@@ -3,9 +3,12 @@ package info.jab.aoc.day5;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.google.common.collect.HashMultimap;
 import com.putoet.resources.ResourceLines;
 
 import info.jab.aoc.Day;
@@ -13,12 +16,10 @@ import info.jab.aoc.Day;
 /**
  * https://adventofcode.com/2016/day/5
  *
- * TODO Pending to refactor & simplify
  **/
 public class Day5 implements Day<Integer> {
 
-    //https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/collect/HashMultimap.html
-    private HashMultimap<Integer, Integer> ordering = HashMultimap.create();
+    private Map<Integer, Set<Integer>> ordering = new HashMap<>();
 
     private List<List<Integer>> prepareData(String fileName) {
         var lines = ResourceLines.list(fileName);
@@ -28,7 +29,7 @@ public class Day5 implements Day<Integer> {
                 String[] parts = line.split("\\|");
                 int first = Integer.parseInt(parts[0]);
                 int second = Integer.parseInt(parts[1]);
-                ordering.put(first, second);
+                ordering.computeIfAbsent(first, k -> new HashSet<>()).add(second);
             } else if (line.contains(",")) {
                 pages.add(Arrays.stream(line.split(",")).map(Integer::parseInt).toList());
             }
@@ -37,7 +38,8 @@ public class Day5 implements Day<Integer> {
     }
 
     private int compare(Integer first, Integer second) {
-        return ordering.get(first).contains(second) ? -1 : 1;
+        // Check if second is in the set of first's dependencies
+        return ordering.getOrDefault(first, Collections.emptySet()).contains(second) ? -1 : 1;
     }
 
     private Integer sum(List<List<Integer>> pages, Boolean part1) {
@@ -47,16 +49,13 @@ public class Day5 implements Day<Integer> {
             List<Integer> ordered = new ArrayList<>(pageSet);
             Collections.sort(ordered, this::compare);
             if (ordered.equals(pageSet)) {
-                sum1 += pageSet.get(pageSet.size()/2);
+                sum1 += pageSet.get(pageSet.size() / 2);
             } else {
-                sum2 += ordered.get(ordered.size()/2);
+                sum2 += ordered.get(ordered.size() / 2);
             }
         }
 
-        if (part1) {
-            return sum1;
-        }
-        return sum2;
+        return part1 ? sum1 : sum2;
     }
 
     @Override
