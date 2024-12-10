@@ -15,30 +15,9 @@ import com.putoet.resources.ResourceLines;
  **/
 public class Day7 implements Day<Long> {
 
-    @Override
-    public Long getPart1Result(String fileName) {
-        var list = ResourceLines.list(fileName);
-        return list.stream()
-            .filter(str -> {
-                var parts = str.split(":");
-                var result = Long.parseLong(parts[0]);
-                var operators = parts[1].trim().split(" ");
-                long[] numbers = Arrays.stream(operators).mapToLong(Long::parseLong).toArray();
-                var flag = tryOps(false, numbers, result, 0, numbers[0], false, "");
-
-                //Learn from positive cases
-                if(flag) {
-                    tryOps(true, numbers, result, 0, numbers[0], false, "");
-                }
-                return flag;
-            })
-            .mapToLong(str -> Long.parseLong(str.split(":")[0]))
-            .sum();
-    }
-
     AtomicLong counter = new AtomicLong();
 
-    boolean tryOps(boolean debug, long[] numbers, long target, int pos, long cur, boolean part2, String operator) {
+    boolean recursive(boolean debug, long[] numbers, long target, int pos, long cur, boolean part2, String operator) {
         if (debug) {
             System.out.println("Running method recursively: " + counter.incrementAndGet() + " " + Arrays.toString(numbers) + " " + pos + " " + cur + " " + target + " " + operator);
         }
@@ -47,17 +26,17 @@ public class Day7 implements Day<Long> {
             return cur == target;
         }
 
-        if (tryOps(debug, numbers, target, pos + 1, cur + numbers[pos + 1], part2, "+")) {
+        if (recursive(debug, numbers, target, pos + 1, cur + numbers[pos + 1], part2, "+")) {
             return true;
         }
 
-        if (tryOps(debug, numbers, target, pos + 1, cur * numbers[pos + 1], part2, "*")) {
+        if (recursive(debug, numbers, target, pos + 1, cur * numbers[pos + 1], part2, "*")) {
             return true;
         }
 
         if (part2) {
             String concat = String.valueOf(cur) + String.valueOf(numbers[pos + 1]);
-            if (tryOps(debug, numbers, target, pos + 1, Long.parseLong(concat), part2, "concat")) {
+            if (recursive(debug, numbers, target, pos + 1, Long.parseLong(concat), part2, "concat")) {
                 return true;
             }
         }
@@ -65,8 +44,7 @@ public class Day7 implements Day<Long> {
         return false;
     }
 
-    @Override
-    public Long getPart2Result(String fileName) {
+    private Long getResult(String fileName, boolean isPart2) {
         var list = ResourceLines.list(fileName);
         return list.stream()
             .filter(str -> {
@@ -74,9 +52,19 @@ public class Day7 implements Day<Long> {
                 var result = Long.parseLong(parts[0]);
                 var operators = parts[1].trim().split(" ");
                 long[] numbers = Arrays.stream(operators).mapToLong(Long::parseLong).toArray();
-                return tryOps(false, numbers, result, 0, numbers[0], true, "");
+                return recursive(false, numbers, result, 0, numbers[0], isPart2, "");
             })
             .mapToLong(str -> Long.parseLong(str.split(":")[0]))
             .sum();
+    }
+
+    @Override
+    public Long getPart1Result(String fileName) {
+        return getResult(fileName, false);
+    }
+
+    @Override
+    public Long getPart2Result(String fileName) {
+        return getResult(fileName, true);
     }
 }

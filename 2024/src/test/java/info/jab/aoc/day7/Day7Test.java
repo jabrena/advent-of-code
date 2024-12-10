@@ -27,7 +27,7 @@ class Day7Test {
                 var result = Long.parseLong(parts[0]);
                 var operators = parts[1].trim().split(" ");
                 long[] numbers = Arrays.stream(operators).mapToLong(Long::parseLong).toArray();
-                var flag = day.tryOps(true, numbers, result, 0, numbers[0], false, "");
+                var flag = day.recursive(true, numbers, result, 0, numbers[0], false, "");
                 System.out.println(flag);
             });
     }

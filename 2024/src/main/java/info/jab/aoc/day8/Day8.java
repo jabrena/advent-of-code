@@ -2,8 +2,6 @@ package info.jab.aoc.day8;
 
 import info.jab.aoc.Day;
 
-import com.putoet.resources.ResourceLines;
-
 /**
  * https://adventofcode.com/2024/day/8
  **/

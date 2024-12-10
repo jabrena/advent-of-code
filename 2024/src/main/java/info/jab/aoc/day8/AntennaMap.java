@@ -11,8 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -72,21 +70,6 @@ public class AntennaMap {
             })
             .collect(Collectors.toSet()).stream()
             .filter(isInsideOfGrid).count();
-    }
-
-    //Native approach with flatmap is difficult to read the code
-    private Long countAntinodes2() {
-        Map<Character, Set<Point>> antennas = getAntennasByType();
-
-        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
-            return antennas.values().stream()
-                .flatMap(types -> types.stream()
-                    .flatMap(a -> types.stream()
-                        .filter(b -> !a.equals(b))
-                        .flatMap(b -> List.of(getAntinode(a, b), getAntinode(b, a)).stream())))
-                .collect(Collectors.toSet()).stream()
-                .filter(isInsideOfGrid).count();
-        }
     }
 
     private Long countAntinodesImperative() {
