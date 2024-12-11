@@ -7,10 +7,10 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 ```bash
 sdk env install
 ./mvnw clean verify
-./mvnw clean verify -pl 2024 -am
-./mvnw -pl 2024 clean test -Dtest=Day10Test
-./mvnw dependency:tree -pl 2024 -am
-./mvnw verify -pl 2024 -am surefire-report:report -DshowSuccess=false
+./mvnw -pl 2024 clean verify
+./mvnw -pl 2024 clean test -Dtest=Day11Test
+./mvnw -pl 2024 clean dependency:tree
+./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
 jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 
 ./mvnw versions:display-dependency-updates
