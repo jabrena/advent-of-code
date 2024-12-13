@@ -12,7 +12,7 @@ import com.putoet.resources.ResourceLines;
  *
  * Alternatives in Design:
  * https://github.com/bercee/AoC2024/blob/master/src/main/java/com/chemaxon/solvers/year2024/Day7.java
- **/
+ */
 public class Day7 implements Day<Long> {
 
     AtomicLong counter = new AtomicLong();

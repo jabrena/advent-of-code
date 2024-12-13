@@ -8,7 +8,7 @@ import com.putoet.resources.ResourceLines;
  * https://adventofcode.com/2024/day/9
  *
  * Pair programming with ChatGTP
- **/
+ */
 public class Day9 implements Day<Long> {
 
     @Override
