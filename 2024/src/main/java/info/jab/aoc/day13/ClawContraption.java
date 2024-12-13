@@ -6,18 +6,7 @@ import com.putoet.resources.ResourceLines;
 
 public class ClawContraption {
 
-    public Long solve(String fileName, boolean flag) {
-        List<Claw> claws = getInput2(fileName);
-        if (flag) {
-            claws.forEach(Claw::update);
-        }
-        return claws.stream()
-            .map(Claw::solve)
-            .mapToLong(Long::valueOf)
-            .sum();
-    }
-
-    public static List<List<String>> groupLines(List<String> lines, int groupSize) {
+    private List<List<String>> groupLines(List<String> lines, int groupSize) {
         List<List<String>> grouped = new ArrayList<>();
         List<String> currentGroup = new ArrayList<>();
         for (String line : lines) {
@@ -28,18 +17,24 @@ public class ClawContraption {
                 currentGroup.clear();
             }
         }
-        if (!currentGroup.isEmpty()) {
-            if (currentGroup.size() < groupSize) {
-                throw new IllegalStateException("Incomplete group detected: " + currentGroup);
-            }
-            grouped.add(currentGroup);
-        }
         return grouped;
     }
 
-    public List<Claw> getInput2(String fileName) {
-        return groupLines(ResourceLines.list(fileName), 3).stream()
+    private List<Claw> getInput(String fileName) {
+        var groupBy = 3;
+        return groupLines(ResourceLines.list(fileName), groupBy).stream()
             .map(group -> new Claw(String.join("\n", group)))
             .toList();
+    }
+
+    public Long solve(String fileName, boolean flag) {
+        List<Claw> claws = getInput(fileName);
+        if (flag) {
+            claws.forEach(Claw::update);
+        }
+        return claws.stream()
+            .map(Claw::solve)
+            .mapToLong(Long::valueOf)
+            .sum();
     }
 }
