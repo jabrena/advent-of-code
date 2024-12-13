@@ -1,7 +1,8 @@
 package info.jab.aoc.day13;
 
-//TODO Refactor with java records style
-//https://math.libretexts.org/Bookshelves/Precalculus/Precalculus_1e_(OpenStax)/09%3A_Systems_of_Equations_and_Inequalities/9.08%3A_Solving_Systems_with_Cramer's_Rule
+// TODO Refactor with java records style
+// https://openstax.org/books/college-algebra-2e/pages/7-8-solving-systems-with-cramers-rule
+// https://www.studypug.com/algebra-help/solving-linear-systems-using-cramers-rule
 class Claw {
     Button a;
     Button b;
