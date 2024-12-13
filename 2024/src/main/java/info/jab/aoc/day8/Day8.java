@@ -4,7 +4,8 @@ import info.jab.aoc.Day;
 
 /**
  * https://adventofcode.com/2024/day/8
- **/
+ *
+ */
 public class Day8 implements Day<Long> {
 
     @Override

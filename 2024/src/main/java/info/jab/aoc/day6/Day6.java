@@ -8,7 +8,7 @@ import info.jab.aoc.Day;
  * Interesting implementations:
  * https://github.com/Zooty6/adventofcode2024/blob/master/src/main/java/dev/zooty/day6/LabMap.java
  * https://github.com/bertjan/advent-of-code-2024/blob/main/src/main/java/AoC2024Day6.java
- **/
+ */
 public class Day6 implements Day<Integer> {
 
     @Override

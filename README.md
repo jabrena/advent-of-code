@@ -7,10 +7,10 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 ```bash
 sdk env install
 ./mvnw clean verify
-./mvnw clean verify -pl 2024 -am
-./mvnw -pl 2024 clean test -Dtest=Day10Test
-./mvnw dependency:tree -pl 2024 -am
-./mvnw verify -pl 2024 -am surefire-report:report -DshowSuccess=false
+./mvnw -pl 2024 clean verify
+./mvnw -pl 2024 clean test -Dtest=Day13Test
+./mvnw -pl 2024 clean dependency:tree
+./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
 jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 
 ./mvnw versions:display-dependency-updates
@@ -38,6 +38,7 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://github.com/juan-medina/adventofcode2024 (C#)
 - https://github.com/jmgimeno/aoc2024/tree/master (Scala)
 - https://github.com/bertjan/advent-of-code-2024 (Java)
+- https://github.com/search?q=advent+of+code+2024++language%3AJava&type=repositories&l=Java&s=updated&o=desc
 
 ### Others
 
@@ -55,5 +56,9 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://www.reddit.com/r/adventofcode/
 - https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Funny%22
 - https://www.reddit.com/r/adventofcode/search/?q=flair_name%3A%22SOLUTION%20MEGATHREAD%22&restrict_sr=1
+
+## Acknowledgements
+
+Many thanks for ChatGPT and Gemini for the good converstations about Design thinking, Code refactoring seeking functional approaches in the morning (At 6:00AM) and the continuous conversations during the day with my friend [Juan Antonio Medina](https://www.github.com/juan-medina) and the Inspiration from [Rene van Putten](https://github.com/z669016/).
 
 **Powered by Java 24**
