@@ -3,7 +3,7 @@ package info.jab.aoc.day4;
 import info.jab.aoc.Day;
 
 /**
- * https://adventofcode.com/2016/day/4
+ * https://adventofcode.com/2024/day/4
  **/
 public class Day4 implements Day<Integer> {
 

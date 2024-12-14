@@ -5,47 +5,33 @@ import com.putoet.resources.ResourceLines;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 /**
  * https://adventofcode.com/2024/day/2
  */
 public class Day2 implements Day<Integer> {
 
-    public static boolean isDecreasing(List<Integer> numbers) {
-        for (int i = 0; i < numbers.size() - 1; i++) {
-            int difference = Math.abs(numbers.get(i) - numbers.get(i + 1));
-            if(difference == 0) {
-                return false;
-            }
-            if (difference > 3) {
-                return false;
-            }
-            if ((numbers.get(i) <= numbers.get(i + 1))) {
-                return false; // Not strictly decreasing
-            }
-        }
-        return true;
+    public boolean isMonotonic(List<Integer> numbers, BiPredicate<Integer, Integer> comparator) {
+        return IntStream.range(0, numbers.size() - 1)
+            .allMatch(i -> {
+                int difference = Math.abs(numbers.get(i) - numbers.get(i + 1));
+                return difference != 0 && difference <= 3 && comparator.test(numbers.get(i), numbers.get(i + 1));
+            });
     }
 
-    public static boolean isIncreasing(List<Integer> numbers) {
-        for (int i = 0; i < numbers.size() - 1; i++) {
-            int difference = Math.abs(numbers.get(i) - numbers.get(i + 1));
-            if(difference == 0) {
-                return false;
-            }
-            if (difference > 3) {
-                return false;
-            }
-            if ((numbers.get(i) >= numbers.get(i + 1))) {
-                return false; // Not strictly increasing
-            }
-        }
-        return true; // All elements are strictly increasing
+    public boolean isDecreasing(List<Integer> numbers) {
+        return isMonotonic(numbers, (a, b) -> a > b);
     }
 
-    Predicate<List<Integer>> isSafe = param -> {
+    public boolean isIncreasing(List<Integer> numbers) {
+        return isMonotonic(numbers, (a, b) -> a < b);
+    }
+
+    Predicate<List<Integer>> isSafePart1 = param -> {
         return isDecreasing(param) || isIncreasing(param);
     };
 
@@ -54,23 +40,20 @@ public class Day2 implements Day<Integer> {
     @Override
     public Integer getPart1Result(String fileName) {
         var list = ResourceLines.list(fileName);
-        return (int) list.stream().map(toList).filter(isSafe).count();
+        return (int) list.stream().map(toList).filter(isSafePart1).count();
     }
 
     Predicate<List<Integer>> isSafe2 = param -> {
-        if (isSafe.test(param)) {
+        if (isSafePart1.test(param)) {
             return true;
         }
 
-        //Tricky part
-        for (int skip = 0; skip < param.size(); skip++) {
-            List<Integer> clean = new ArrayList<>(param);
-            clean.remove(skip);
-            if (isSafe.test(clean)) {
-                return true;
-            }
-        }
-        return false;
+        return IntStream.range(0, param.size())
+            .anyMatch(skip -> {
+                List<Integer> clean = new ArrayList<>(param);
+                clean.remove(skip);
+                return isSafePart1.test(clean);
+            });
     };
 
     @Override

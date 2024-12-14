@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 /**
  * https://adventofcode.com/2024/day/1
+ *
+ * TODO: Refactor in a less functional style, more OOP.
  */
 public class Day1 implements Day<Integer> {
 

@@ -3,6 +3,9 @@ package info.jab.aoc.day2;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import org.junit.jupiter.api.Test;
+
+import com.putoet.utils.Timer;
+
 import org.junit.jupiter.api.Disabled;
 
 class Day2Test {
@@ -62,27 +65,31 @@ Ok
      */
     @Test
     void should_solve_day2_part2_with_sample() {
-        //Given
-        String fileName = "/day2/day2-input-sample.txt";
+        Timer.run(() -> {
+            //Given
+            String fileName = "/day2/day2-input-sample.txt";
 
-        //When
-        var day1 = new Day2();
-        var result = day1.getPart2Result(fileName);
+            //When
+            var day1 = new Day2();
+            var result = day1.getPart2Result(fileName);
 
-        //Then
-        then(result).isEqualTo(4);
+            //Then
+            then(result).isEqualTo(4);
+        });
     }
 
     @Test
     void should_solve_day2_part2() {
-        //Given
-        String fileName = "/day2/day2-input.txt";
+        Timer.run(() -> {
+            //Given
+            String fileName = "/day2/day2-input.txt";
 
-        //When
-        var day1 = new Day2();
-        var result = day1.getPart2Result(fileName);
+            //When
+            var day1 = new Day2();
+            var result = day1.getPart2Result(fileName);
 
-        //Then
-        then(result).isEqualTo(436);
+            //Then
+            then(result).isEqualTo(436);
+        });
     }
 }
