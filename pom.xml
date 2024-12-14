@@ -20,7 +20,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>23</java.version>
+        <java.version>24</java.version>
 
         <jcolor.version>5.5.1</jcolor.version>
         <putoet.aoc.version>1.7.0</putoet.aoc.version>
@@ -237,6 +237,7 @@
                 <version>3.13.0</version>
                 <configuration>
                     <compilerArgument>-Xlint:all</compilerArgument><!-- -Werror -->
+                    <compilerArgument>--enable-preview</compilerArgument>
                     <release>${java.version}</release>
                 </configuration>
             </plugin>
