@@ -20,7 +20,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>23</java.version>
+        <java.version>24</java.version>
 
         <jcolor.version>5.5.1</jcolor.version>
         <putoet.aoc.version>1.7.0</putoet.aoc.version>
@@ -131,74 +131,6 @@
 
     <build>
         <plugins>
-
-            <!-- Checkstyle -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.6.0</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>10.20.1</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <!--
-                    https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml -->
-                    <configLocation>src/main/checkstyle/google_checks.xml</configLocation>
-                    <suppressionsLocation>src/main/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <consoleOutput>true</consoleOutput>
-                    <failsOnError>true</failsOnError>
-                    <violationSeverity>warning</violationSeverity>
-                    <failOnViolation>true</failOnViolation>
-                    <maxAllowedViolations>0</maxAllowedViolations>
-                    <linkXRef>false</linkXRef>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>process-sources</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- https://mvnrepository.com/artifact/com.hubspot.maven.plugins/prettier-maven-plugin/ -->
-            <!-- https://github.com/jhipster/prettier-java/blob/main/CHANGELOG.md -->
-            <!--
-            <plugin>
-                <groupId>com.hubspot.maven.plugins</groupId>
-                <artifactId>prettier-maven-plugin</artifactId>
-                <version>0.22</version>
-                <configuration>
-                    <prettierJavaVersion>2.6.0</prettierJavaVersion>
-                    <printWidth>150</printWidth>
-                    <tabWidth>4</tabWidth>
-                    <useTabs>false</useTabs>
-                    <ignoreConfigFile>true</ignoreConfigFile>
-                    <ignoreEditorConfig>true</ignoreEditorConfig>
-                    <inputGlobs>
-                        <inputGlob>src/main/java/**/*.java</inputGlob>
-                        <inputGlob>src/test/java/**/*.java</inputGlob>
-                    </inputGlobs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>process-sources</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -237,6 +169,7 @@
                 <version>3.13.0</version>
                 <configuration>
                     <compilerArgument>-Xlint:all</compilerArgument><!-- -Werror -->
+                    <compilerArgument>--enable-preview</compilerArgument>
                     <release>${java.version}</release>
                 </configuration>
             </plugin>
