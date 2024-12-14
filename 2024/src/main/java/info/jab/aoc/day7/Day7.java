@@ -3,68 +3,80 @@ package info.jab.aoc.day7;
 import info.jab.aoc.Day;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicLong;
 
 import com.putoet.resources.ResourceLines;
 
 /**
- * https://adventofcode.com/2016/day/1
+ * https://adventofcode.com/2024/day/1
  *
- * Alternatives in Design:
- * https://github.com/bercee/AoC2024/blob/master/src/main/java/com/chemaxon/solvers/year2024/Day7.java
  */
 public class Day7 implements Day<Long> {
 
-    AtomicLong counter = new AtomicLong();
+    private sealed interface Operator permits Add, Multiply, Concatenate {
+        long apply(long a, long b);
+    }
 
-    boolean recursive(boolean debug, long[] numbers, long target, int pos, long cur, boolean part2, String operator) {
-        if (debug) {
-            System.out.println("Running method recursively: " + counter.incrementAndGet() + " " + Arrays.toString(numbers) + " " + pos + " " + cur + " " + target + " " + operator);
+    private record Add() implements Operator {
+        @Override
+        public long apply(long a, long b) {
+            return a + b;
         }
+    }
 
+    private record Multiply() implements Operator {
+        @Override
+        public long apply(long a, long b) {
+            return a * b;
+        }
+    }
+
+    private record Concatenate() implements Operator {
+        @Override
+        public long apply(long a, long b) {
+            return Long.parseLong(a + String.valueOf(b));
+        }
+    }
+
+    private boolean recursive(long[] numbers, long target, int pos, long current, boolean part2) {
+        // Base case: check if we are at the last position
         if (pos == numbers.length - 1) {
-            return cur == target;
+            return current == target;
         }
 
-        if (recursive(debug, numbers, target, pos + 1, cur + numbers[pos + 1], part2, "+")) {
-            return true;
-        }
+        long nextNumber = numbers[pos + 1];
 
-        if (recursive(debug, numbers, target, pos + 1, cur * numbers[pos + 1], part2, "*")) {
-            return true;
-        }
+        // Try each operator
+        Operator[] operators = part2
+            ? new Operator[]{new Add(), new Multiply(), new Concatenate()}
+            : new Operator[]{new Add(), new Multiply()};
 
-        if (part2) {
-            String concat = String.valueOf(cur) + String.valueOf(numbers[pos + 1]);
-            if (recursive(debug, numbers, target, pos + 1, Long.parseLong(concat), part2, "concat")) {
+        for (Operator op : operators) {
+            if (recursive(numbers, target, pos + 1, op.apply(current, nextNumber), part2)) {
                 return true;
             }
         }
-
         return false;
     }
 
-    private Long getResult(String fileName, boolean isPart2) {
-        var list = ResourceLines.list(fileName);
-        return list.stream()
-            .filter(str -> {
-                var parts = str.split(":");
-                var result = Long.parseLong(parts[0]);
-                var operators = parts[1].trim().split(" ");
-                long[] numbers = Arrays.stream(operators).mapToLong(Long::parseLong).toArray();
-                return recursive(false, numbers, result, 0, numbers[0], isPart2, "");
+    private Long calculateResult(String fileName, boolean allowConcat) {
+        return ResourceLines.list(fileName).stream()
+            .filter(line -> {
+                String[] parts = line.split(":");
+                long target = Long.parseLong(parts[0].trim());
+                long[] numbers = Arrays.stream(parts[1].trim().split(" ")).mapToLong(Long::parseLong).toArray();
+                return recursive(numbers, target, 0, numbers[0], allowConcat);
             })
-            .mapToLong(str -> Long.parseLong(str.split(":")[0]))
+            .mapToLong(line -> Long.parseLong(line.split(":")[0].trim()))
             .sum();
     }
 
     @Override
     public Long getPart1Result(String fileName) {
-        return getResult(fileName, false);
+        return calculateResult(fileName, false);
     }
 
     @Override
     public Long getPart2Result(String fileName) {
-        return getResult(fileName, true);
+        return calculateResult(fileName, true);
     }
 }

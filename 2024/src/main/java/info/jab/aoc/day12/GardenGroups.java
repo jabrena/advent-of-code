@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
 
 import com.putoet.grid.Point;
 
+//TODO Pending to be simplified
 public class GardenGroups {
 
     public record RegionPart1(int area, int perimeter) {}

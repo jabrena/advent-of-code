@@ -2,9 +2,7 @@ package info.jab.aoc.day11;
 
 import info.jab.aoc.DayWith2Params;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import com.putoet.resources.ResourceLines;

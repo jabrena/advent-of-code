@@ -7,6 +7,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
+//TODO Refactor
 public class DiskCompactor {
 
     // Function to populate the disk with file IDs and free spaces (-1)

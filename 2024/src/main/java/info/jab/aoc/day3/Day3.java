@@ -69,7 +69,6 @@ public class Day3 implements Day<Integer> {
                 }
             }
         }
-
         return results.stream().reduce(0, Integer::sum);
     }
 }

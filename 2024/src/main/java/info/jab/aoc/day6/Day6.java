@@ -18,6 +18,7 @@ public class Day6 implements Day<Integer> {
         return count;
     }
 
+    //TODO Empty on purpose
     @Override
     public Integer getPart2Result(String fileName) {
         throw new UnsupportedOperationException();
