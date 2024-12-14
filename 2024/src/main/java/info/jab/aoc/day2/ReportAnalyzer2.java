@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Gatherers;
 
+//WIP
 //https://docs.oracle.com/en/java/javase/22/core/stream-gatherers.html
 //Not working as expected
 public class ReportAnalyzer2 {
