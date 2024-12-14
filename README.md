@@ -2,6 +2,8 @@
 
 Advent of Code is an annual set of Christmas-themed computer programming challenges that follow an Advent calendar.
 
+[![Java CI](https://github.com/jabrena/advent-of-code-collection/actions/workflows/maven.yml/badge.svg)](https://github.com/jabrena/advent-of-code-collection/actions/workflows/maven.yml)
+
 ## How to build in local?
 
 ```bash
