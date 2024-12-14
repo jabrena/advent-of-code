@@ -7,7 +7,7 @@ import java.util.Arrays;
 import com.putoet.resources.ResourceLines;
 
 /**
- * https://adventofcode.com/2024/day/1
+ * https://adventofcode.com/2024/day/7
  *
  */
 public class Day7 implements Day<Long> {
