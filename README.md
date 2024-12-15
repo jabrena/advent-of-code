@@ -10,7 +10,7 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 sdk env install
 ./mvnw clean verify
 ./mvnw -pl 2024 clean verify -am
-./mvnw -pl 2024 clean test -Dtest=Day14Test
+./mvnw -pl 2024 clean test -Dtest=Day15Test
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
 jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
@@ -37,11 +37,16 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://github.com/forax/advent-of-code-2023 (Java)
 - https://github.com/forax/advent-of-code-2024 (Java)
 - https://github.com/nipafx/advent-of-code-2023 (Java)
+- https://github.com/bertjan/advent-of-code-2024 (Java)
 - https://github.com/juan-medina/adventofcode2024 (C#)
 - https://github.com/TheJare/aoc2024 (Ruby)
 - https://github.com/jmgimeno/aoc2024/tree/master (Scala)
-- https://github.com/bertjan/advent-of-code-2024 (Java)
 - https://github.com/neutropolis/aoc (APL)
+
+### Searches
+
+- https://github.com/search?q=advent+of+code++language%3AJava&type=repositories&s=updated&o=desc
+- https://github.com/search?q=aoc+2024+language%3AJava&type=repositories&s=updated&o=desc
 - https://github.com/search?q=advent+of+code+2024++language%3AJava&type=repositories&l=Java&s=updated&o=desc
 
 ### Others
