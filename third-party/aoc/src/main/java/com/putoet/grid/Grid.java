@@ -70,6 +70,14 @@ public class Grid implements GridType {
     }
 
     @Override
+    public void set(Point p, char c) {
+        assert p.x() >= minX && p.x() < maxX;
+        assert p.y() >= minY && p.y() < maxY;
+
+        grid[p.y() - minY][p.x() - minX] = c;
+    }
+
+    @Override
     public char get(int x, int y) {
         assert x >= minX && x < maxX;
         assert y >= minY && y < maxY;
@@ -78,8 +86,21 @@ public class Grid implements GridType {
     }
 
     @Override
+    public char get(Point p) {
+        assert p.x() >= minX && p.x() < maxX;
+        assert p.y() >= minY && p.y() < maxY;
+
+        return grid[p.y() - minY][p.x() - minX];
+    }
+
+    @Override
     public boolean contains(int x, int y) {
         return x >= minX && x < maxX && y >= minY && y < maxY;
+    }
+
+    @Override
+    public boolean contains(Point p) {
+        return p.x() >= minX && p.x() < maxX && p.y() >= minY && p.y() < maxY;
     }
 
     @Override
