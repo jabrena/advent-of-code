@@ -117,4 +117,25 @@ public record GridSection(GridType grid, Point upperLeft, Point lowerRight) impl
 
         return sb.toString();
     }
+
+
+    //WIP
+
+    @Override
+    public void set(Point p, char c) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'set'");
+    }
+
+    @Override
+    public char get(Point p) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'get'");
+    }
+
+    @Override
+    public boolean contains(Point p) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'contains'");
+    }
 }
