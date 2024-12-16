@@ -27,6 +27,7 @@
         <combinatoricslib3.version>3.4.0</combinatoricslib3.version>
         <guava.version>31.1-jre</guava.version>
 
+        <jol.version>0.17</jol.version>
         <junit-jupiter.version>5.11.3</junit-jupiter.version>
         <assertj-core.version>3.26.3</assertj-core.version>
 
@@ -77,6 +78,11 @@
                 <version>${guava.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.openjdk.jol</groupId>
+                <artifactId>jol-core</artifactId>
+                <version>${jol.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
                 <version>${junit-jupiter.version}</version>
@@ -117,6 +123,11 @@
         </dependency>
 
         <!-- Testing -->
+        <dependency>
+            <groupId>org.openjdk.jol</groupId>
+            <artifactId>jol-core</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
