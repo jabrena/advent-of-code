@@ -31,6 +31,7 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://github.com/sim642/adventofcode/tree/master/src/main/scala/eu/sim642/adventofcodelib
 - https://github.com/bertjan/advent-of-code-2024/blob/main/src/main/java/utils/Matrix.java
 - https://github.com/p-kovacs/advent-of-code-2024/tree/master/src/main/java/com/github/pkovacs/util
+- https://openjdk.org/projects/code-tools/jol/
 
 ### Examples
 
