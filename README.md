@@ -11,6 +11,7 @@ sdk env install
 ./mvnw clean verify
 ./mvnw -pl 2024 clean verify -am
 ./mvnw -pl 2024 clean test -Dtest=Day6Test -Djol.tryWithSudo=true
+MAVEN_OPTS="-Xmx4g -Xms512m" ./mvnw -pl 2024 clean test -Dtest=Day17Test
 ./mvnw -pl 2024 clean test -Dtest=Day17Test
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
@@ -31,6 +32,7 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://github.com/sim642/adventofcode/tree/master/src/main/scala/eu/sim642/adventofcodelib
 - https://github.com/bertjan/advent-of-code-2024/blob/main/src/main/java/utils/Matrix.java
 - https://github.com/p-kovacs/advent-of-code-2024/tree/master/src/main/java/com/github/pkovacs/util
+- https://github.com/hlipka/AdventOfCode/tree/main/java/src/util/de/hendriklipka/aoc
 - https://openjdk.org/projects/code-tools/jol/
 
 ### Examples
@@ -40,6 +42,7 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://github.com/forax/advent-of-code-2024 (Java)
 - https://github.com/nipafx/advent-of-code-2023 (Java)
 - https://github.com/bertjan/advent-of-code-2024 (Java)
+- https://github.com/nilederg/AOC-2024 (Java)
 - https://github.com/juan-medina/adventofcode2024 (C#)
 - https://github.com/TheJare/aoc2024 (Ruby)
 - https://github.com/jmgimeno/aoc2024/tree/master (Scala)
