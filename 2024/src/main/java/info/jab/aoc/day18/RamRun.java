@@ -145,6 +145,7 @@ public class RamRun {
         return String.valueOf(shortestPath);
     }
 
+    //TODO Use the method solve1 inside of solve2 directly
     public String solve2(String fileName, Integer gridSize, Integer limit, Boolean debug) {
         // Input: list of corrupted coordinates
         int[][] corruptedCoordinates = getInputData(fileName);
