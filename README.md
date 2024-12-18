@@ -11,8 +11,7 @@ sdk env install
 ./mvnw clean verify
 ./mvnw -pl 2024 clean verify -am
 ./mvnw -pl 2024 clean test -Dtest=Day6Test -Djol.tryWithSudo=true
-MAVEN_OPTS="-Xmx4g -Xms512m" ./mvnw -pl 2024 clean test -Dtest=Day17Test
-./mvnw -pl 2024 clean test -Dtest=Day17Test
+./mvnw -pl 2024 clean test -Dtest=Day18Test
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
 jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
