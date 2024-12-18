@@ -11,7 +11,8 @@ sdk env install
 ./mvnw clean verify
 ./mvnw -pl 2024 clean verify -am
 ./mvnw -pl 2024 clean test -Dtest=Day6Test -Djol.tryWithSudo=true
-./mvnw -pl 2024 clean test -Dtest=Day18Test
+./mvnw -pl 2024 compile exec:java -Dexec.mainClass="info.jab.aoc.day19.ObjectSizeExample"
+./mvnw -pl 2024 clean test -Dtest=Day19Test
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
 jwebserver -p 9000 -d "$(pwd)/2024/target/reports"

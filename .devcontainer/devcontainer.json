@@ -45,7 +45,9 @@
           "ms-azuretools.vscode-docker",
           "redhat.vscode-xml",
           "redhat.vscode-yaml",
-          "editorconfig.editorconfig"
+          "editorconfig.editorconfig",
+          "github.copilot"
+          //"github.copilot-chat"
         ]
       }
     }
