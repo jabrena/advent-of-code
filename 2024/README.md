@@ -1,6 +1,6 @@
 # AOC 2024
 
-## Data processing
+## Data processing
 
 - Day 1
 - Day 2
@@ -10,6 +10,9 @@
 - Day 11
 - Day 12
 - Day 13
+- Day 17
+- Day 18
+- Day 19
 
 # Recursion
 
@@ -18,8 +21,9 @@
 # Specials
 
 - Day 14
+- Day 16
 
-## Grids
+## Grid
 
 - Day 4
 - Day 6
