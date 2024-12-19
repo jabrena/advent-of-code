@@ -43,7 +43,7 @@ public class TowelArrangement {
     }
 
     // Function to determine if a design can be formed using the available patterns
-    public boolean canFormDesign(String design, Set<String> towelPatterns) {
+    private boolean canFormDesign(String design, Set<String> towelPatterns) {
         int n = design.length();
         boolean[] dp = new boolean[n + 1];
         dp[0] = true; // Empty design can always be formed
@@ -59,7 +59,7 @@ public class TowelArrangement {
         return dp[n];
     }
 
-    public Long solve1(String fileName) {
+    Long solve1(String fileName) {
         var inputData = getInputData(fileName);
 
         // Count how many designs are possible
@@ -69,7 +69,7 @@ public class TowelArrangement {
     }
 
     // Function to calculate the number of ways to form a design
-    public long countWaysToFormDesign(String design, Set<String> towelPatterns) {
+    Long countWaysToFormDesign(String design, Set<String> towelPatterns) {
         int n = design.length();
         long[] dp = new long[n + 1];
         dp[0] = 1; // There's one way to form an empty design
