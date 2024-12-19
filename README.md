@@ -7,11 +7,10 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 ## How to build in local?
 
 ```bash
-sdk env install
+java -version
 ./mvnw clean verify
 ./mvnw -pl 2024 clean verify -am
-./mvnw -pl 2024 clean test -Dtest=Day6Test -Djol.tryWithSudo=true
-./mvnw -pl 2024 compile exec:java -Dexec.mainClass="info.jab.aoc.day19.ObjectSizeExample"
+./mvnw -pl 2024 compile exec:java -Dexec.mainClass="info.jab.aoc.day19.TowelArrangement"
 ./mvnw -pl 2024 clean test -Dtest=Day19Test
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
@@ -79,4 +78,4 @@ I'm also deeply grateful to my friend [Juan Antonio Medina](https://www.github.c
 for the continuous and inspiring conversations throughout the day,
 and to [Rene van Putten](https://github.com/z669016/) for their invaluable inspiration.
 
-**Powered by Java 24**
+**Powered by Java 24 EA**

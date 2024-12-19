@@ -25,7 +25,7 @@
       },
       "ghcr.io/devcontainers/features/docker-in-docker:2": {
         "version": "latest",
-        "dockerDashComposeVersion": "v1"
+        "dockerDashComposeVersion": "v2"
       }
     },
     "customizations": {

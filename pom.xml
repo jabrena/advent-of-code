@@ -169,7 +169,7 @@
                                     <version>3.9.9</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>23</version>
+                                    <version>24</version>
                                 </requireJavaVersion>
                                 <bannedDependencies>
                                     <excludes>
