@@ -1,5 +1,6 @@
 package info.jab.aoc.day19;
 
+import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -16,6 +17,9 @@ public class TowelArrangement {
 
     private record InputData(Set<String> towelPatterns, List<String> designList) {}
 
+    private static final String PATTERN_SPLIT_REGEX = ",\\s*";
+    private static final Pattern COMPILED_PATTERN = Pattern.compile(PATTERN_SPLIT_REGEX);
+
     private InputData getInputData(String fileName) {
         List<String> list = ResourceLines.list(fileName);
         List<String> patternsList = new ArrayList<>();
@@ -28,7 +32,7 @@ public class TowelArrangement {
                 continue;
             }
             if (isPatternSection) {
-                patternsList.addAll(Arrays.asList(line.split(",\\s*"))); // Split by comma and trim spaces
+                patternsList.addAll(Arrays.asList(COMPILED_PATTERN.split(line)));
             } else {
                 designsList.add(line);
             }
