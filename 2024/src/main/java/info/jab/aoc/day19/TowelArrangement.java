@@ -14,23 +14,6 @@ import com.putoet.resources.ResourceLines;
 
 public class TowelArrangement {
 
-    // Function to determine if a design can be formed using the available patterns
-    public boolean canFormDesign(String design, Set<String> towelPatterns) {
-        int n = design.length();
-        boolean[] dp = new boolean[n + 1];
-        dp[0] = true; // Empty design can always be formed
-
-        for (int i = 1; i <= n; i++) {
-            for (String pattern : towelPatterns) {
-                int len = pattern.length();
-                if (i >= len && design.substring(i - len, i).equals(pattern)) {
-                    dp[i] = dp[i] || dp[i - len];
-                }
-            }
-        }
-        return dp[n];
-    }
-
     private record InputData(Set<String> towelPatterns, List<String> designList) {}
 
     private InputData getInputData(String fileName) {
@@ -53,6 +36,23 @@ public class TowelArrangement {
         Set<String> towelPatterns = new HashSet<>(patternsList);
 
         return new InputData(towelPatterns, designsList);
+    }
+
+    // Function to determine if a design can be formed using the available patterns
+    public boolean canFormDesign(String design, Set<String> towelPatterns) {
+        int n = design.length();
+        boolean[] dp = new boolean[n + 1];
+        dp[0] = true; // Empty design can always be formed
+
+        for (int i = 1; i <= n; i++) {
+            for (String pattern : towelPatterns) {
+                int len = pattern.length();
+                if (i >= len && design.substring(i - len, i).equals(pattern)) {
+                    dp[i] = dp[i] || dp[i - len];
+                }
+            }
+        }
+        return dp[n];
     }
 
     public Long solve1(String fileName) {
