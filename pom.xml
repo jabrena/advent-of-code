@@ -134,12 +134,12 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <!-- Testing -->
         <dependency>
             <groupId>org.openjdk.jol</groupId>
             <artifactId>jol-core</artifactId>
-            <scope>test</scope>
         </dependency>
+
+        <!-- Testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -169,7 +169,7 @@
                                     <version>3.9.9</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>23</version>
+                                    <version>24</version>
                                 </requireJavaVersion>
                                 <bannedDependencies>
                                     <excludes>
@@ -204,6 +204,11 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.18.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
             </plugin>
         </plugins>
     </build>
