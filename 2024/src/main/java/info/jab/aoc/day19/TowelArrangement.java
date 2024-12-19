@@ -69,7 +69,7 @@ public class TowelArrangement {
     }
 
     // Function to calculate the number of ways to form a design
-    Long countWaysToFormDesign(String design, Set<String> towelPatterns) {
+    private Long countWaysToFormDesign(String design, Set<String> towelPatterns) {
         int n = design.length();
         long[] dp = new long[n + 1];
         dp[0] = 1; // There's one way to form an empty design
@@ -85,7 +85,7 @@ public class TowelArrangement {
         return dp[n];
     }
 
-    public Long solve2(String fileName) {
+    Long solve2(String fileName) {
         var inputData = getInputData(fileName);
 
         // Calculate the total number of ways to form all designs
