@@ -18,7 +18,7 @@
 
 - Day 7
 
-# Specials
+# Special
 
 - Day 14
 - Day 16
@@ -30,3 +30,4 @@
 - Day 8
 - Day 10
 - Day 15
+- Day 20
