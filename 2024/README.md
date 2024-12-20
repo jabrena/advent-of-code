@@ -21,7 +21,6 @@
 # Special
 
 - Day 14
-- Day 16
 
 ## Grid
 
@@ -30,4 +29,5 @@
 - Day 8
 - Day 10
 - Day 15
-- Day 20
+- Day 16 *
+- Day 20 *
