@@ -11,7 +11,7 @@ java -version
 ./mvnw clean verify
 ./mvnw -pl 2024 clean verify -am
 ./mvnw -pl 2024 compile exec:java -Dexec.mainClass="info.jab.aoc.day19.TowelArrangement"
-./mvnw -pl 2024 clean test -Dtest=Day19Test
+./mvnw -pl 2024 clean test -Dtest=Day20Test
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
 jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
@@ -32,6 +32,10 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://github.com/bertjan/advent-of-code-2024/blob/main/src/main/java/utils/Matrix.java
 - https://github.com/p-kovacs/advent-of-code-2024/tree/master/src/main/java/com/github/pkovacs/util
 - https://github.com/hlipka/AdventOfCode/tree/main/java/src/util/de/hendriklipka/aoc
+- https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/common/Direction.java
+- https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/common/location/Loc.java
+- https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/util/AoCUtils.java
+- https://github.com/zodac/advent-of-code/tree/master/common-utils
 - https://openjdk.org/projects/code-tools/jol/
 
 ### Examples
@@ -42,6 +46,9 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://github.com/nipafx/advent-of-code-2023 (Java)
 - https://github.com/bertjan/advent-of-code-2024 (Java)
 - https://github.com/nilederg/AOC-2024 (Java)
+- https://github.com/SimonBaars/AdventOfCode-Java (Java)
+- https://github.com/p-kovacs/advent-of-code-2024 (Java)
+- https://github.com/michaelmountain-8451/advent-of-code (Java)
 - https://github.com/juan-medina/adventofcode2024 (C#)
 - https://github.com/TheJare/aoc2024 (Ruby)
 - https://github.com/jmgimeno/aoc2024/tree/master (Scala)
