@@ -19,6 +19,7 @@ mkdir -p "$FOLDER_PATH"
 mkdir -p "$FOLDER_PATH2"
 mkdir -p "$FOLDER_PATH3"
 cp 2016/src/main/java/info/jab/aoc/day1/Day1.java "$FOLDER_PATH/Day$DAY.java"
+cp 2016/src/tes/java/info/jab/aoc/day1/Day1Test.java "$FOLDER_PATH2/Day$DAYTest.java"
 
 # Confirm folder creation
 if [ $? -eq 0 ]; then
