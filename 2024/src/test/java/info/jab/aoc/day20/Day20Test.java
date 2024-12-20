@@ -20,10 +20,40 @@ class Day20Test {
 
             //When
             var day = new Day20();
-            var result = day.getPart1Result(fileName);
+            var result = day.getPart1Result(fileName, 64);
 
             //Then
-            then(result).isEqualTo(6);
+            then(result).isEqualTo(1);
+        });
+    }
+
+    @Test
+    void should_solve_day20_part1() {
+        Timer.run(() -> {
+            //Given
+            String fileName = "/day20/day20-input.txt";
+
+            //When
+            var day = new Day20();
+            var result = day.getPart1Result(fileName, 100);
+
+            //Then
+            then(result).isEqualTo(1452);
+        });
+    }
+
+    @Test
+    void should_solve_day20_part2() {
+        Timer.run(() -> {
+            //Given
+            String fileName = "/day20/day20-input.txt";
+
+            //When
+            var day = new Day20();
+            var result = day.getPart2Result(fileName, 100);
+
+            //Then
+            then(result).isEqualTo(999556);
         });
     }
 
