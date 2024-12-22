@@ -13,14 +13,19 @@
 - Day 17
 - Day 18
 - Day 19
+- Day 22
 
-# Recursion
+## Recursion
 
 - Day 7
 
-# Special
+## Special
 
 - Day 14
+
+## Direction
+
+- Day 21 *
 
 ## Grid
 
