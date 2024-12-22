@@ -13,6 +13,7 @@
 - Day 17
 - Day 18
 - Day 19
+- Day 22
 
 ## Recursion
 
@@ -24,7 +25,7 @@
 
 ## Direction
 
-- Day 21
+- Day 21 *
 
 ## Grid
 
