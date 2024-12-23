@@ -87,7 +87,6 @@ public class LanParty {
                     String node = entry.getKey();
                     Set<String> neighbors = entry.getValue();
 
-                    // Generate all pairs of neighbors using Guava's cartesian product
                     return Sets.cartesianProduct(neighbors, neighbors).stream()
                             .filter(pair -> !pair.get(0).equals(pair.get(1))) // Exclude self-loops
                             .filter(pair -> graph.get(pair.get(0)).contains(pair.get(1))) // Ensure mutual connection
@@ -98,18 +97,13 @@ public class LanParty {
 
     private Set<Set<String>> findTriangles4(Map<String, Set<String>> graph) {
         Set<Set<String>> triangles = new HashSet<>();
-
         for (String node : graph.keySet()) {
             Set<String> neighbors = graph.get(node);
-
-            // Use Guava's Sets.cartesianProduct to generate all pairs of neighbors
             for (List<String> pair : Sets.cartesianProduct(neighbors, neighbors)) {
                 String neighbor1 = pair.get(0);
                 String neighbor2 = pair.get(1);
 
-                // Ensure that we don't check the same node twice and check if both neighbors are connected
                 if (!neighbor1.equals(neighbor2) && graph.get(neighbor1).contains(neighbor2)) {
-                    // Add the triangle as a sorted set to avoid duplicates
                     Set<String> triangle = new TreeSet<>(Arrays.asList(node, neighbor1, neighbor2));
                     triangles.add(triangle);
                 }
@@ -146,7 +140,7 @@ public class LanParty {
 
         // Find all maximal cliques using Bron-Kerbosch algorithm
         findCliquesIterative(new HashSet<>(), new HashSet<>(graph.keySet()), new HashSet<>(), graph, largestClique);
-        //findCliques(new HashSet<>(), new HashSet<>(graph.keySet()), new HashSet<>(), graph, largestClique);
+        //findCliquesRecursive(new HashSet<>(), new HashSet<>(graph.keySet()), new HashSet<>(), graph, largestClique);
 
         // Sort the largest clique and create the password
         return largestClique.stream().sorted().reduce((a, b) -> a + "," + b).orElseThrow();
@@ -242,7 +236,7 @@ public class LanParty {
      * @param graph The graph represented as a map of nodes and their neighbors.
      * @param largestClique The set to store the largest clique found.
      */
-    private void findCliques(
+    private void findCliquesRecursive(
         Set<String> r,
         Set<String> p,
         Set<String> x,
@@ -260,7 +254,7 @@ public class LanParty {
         Set<String> pCopy = new HashSet<>(p);
         for (String node : pCopy) {
             Set<String> neighbors = graph.get(node);
-            findCliques(
+            findCliquesRecursive(
                     union(r, node),
                     intersection(p, neighbors),
                     intersection(x, neighbors),
