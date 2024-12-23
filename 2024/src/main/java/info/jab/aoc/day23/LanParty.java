@@ -52,6 +52,7 @@ public class LanParty {
                 );
     }
 
+    //Imperative
     private Set<Set<String>> findTriangles(Map<String, Set<String>> graph) {
         Set<Set<String>> triangles = new HashSet<>();
         for (String node : graph.keySet()) {
@@ -68,6 +69,7 @@ public class LanParty {
         return triangles;
     }
 
+    // Using Java Streams API, Awful, not easy to follow
     // Method to find all triangles in the graph
     private Set<Set<String>> findTriangles2(Map<String, Set<String>> graph) {
         return graph.entrySet().stream()
@@ -81,6 +83,7 @@ public class LanParty {
                 .collect(Collectors.toSet());
     }
 
+    //Using Guava & functional style
     private Set<Set<String>> findTriangles3(Map<String, Set<String>> graph) {
         return graph.entrySet().stream()
                 .flatMap(entry -> {
@@ -95,6 +98,7 @@ public class LanParty {
                 .collect(Collectors.toSet());
     }
 
+    //Using Guava & Imperative style
     private Set<Set<String>> findTriangles4(Map<String, Set<String>> graph) {
         Set<Set<String>> triangles = new HashSet<>();
         for (String node : graph.keySet()) {
@@ -114,36 +118,33 @@ public class LanParty {
 
     public String solvePartOne(String fileName) {
 
+        //Load data
         Map<String, Set<String>> graph = getInputData2(fileName);
 
         // Find all triangles
         Set<Set<String>> triangles = findTriangles4(graph);
 
         // Filter triangles where at least one name starts with 't'
-        long countTrianglesWithT = triangles.stream()
+        return "" + triangles.stream()
             .filter(triangle -> triangle.stream().anyMatch(name -> name.startsWith("t")))
             .count();
-
-        return "" + countTrianglesWithT;
     }
 
     public String solvePartTwo(String fileName) {
 
+        //Load data
         Map<String, Set<String>> graph = getInputData2(fileName);
 
-        return findLargestCliquePassword(graph);
-    }
-
-    // Method to find the password for the LAN party (largest clique)
-    private String findLargestCliquePassword(Map<String, Set<String>> graph) {
-        Set<String> largestClique = new HashSet<>();
-
         // Find all maximal cliques using Bron-Kerbosch algorithm
+        Set<String> largestClique = new HashSet<>();
         findCliquesIterative(new HashSet<>(), new HashSet<>(graph.keySet()), new HashSet<>(), graph, largestClique);
         //findCliquesRecursive(new HashSet<>(), new HashSet<>(graph.keySet()), new HashSet<>(), graph, largestClique);
 
         // Sort the largest clique and create the password
-        return largestClique.stream().sorted().reduce((a, b) -> a + "," + b).orElseThrow();
+        return largestClique.stream()
+            .sorted()
+            .reduce((a, b) -> a + "," + b)
+            .orElseThrow();
     }
 
     /**
