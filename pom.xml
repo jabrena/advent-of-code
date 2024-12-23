@@ -26,7 +26,9 @@
         <putoet.aoc.version>1.7.0</putoet.aoc.version>
         <combinatoricslib3.version>3.4.0</combinatoricslib3.version>
         <guava.version>31.1-jre</guava.version>
+        <commons-lang3.version>3.17.0</commons-lang3.version>
 
+        <jol.version>0.17</jol.version>
         <junit-jupiter.version>5.11.3</junit-jupiter.version>
         <assertj-core.version>3.26.3</assertj-core.version>
 
@@ -77,6 +79,18 @@
                 <version>${guava.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+
+            <!-- Testing -->
+            <dependency>
+                <groupId>org.openjdk.jol</groupId>
+                <artifactId>jol-core</artifactId>
+                <version>${jol.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
                 <version>${junit-jupiter.version}</version>
@@ -115,6 +129,15 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjdk.jol</groupId>
+            <artifactId>jol-core</artifactId>
+        </dependency>
 
         <!-- Testing -->
         <dependency>
@@ -146,7 +169,7 @@
                                     <version>3.9.9</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>23</version>
+                                    <version>24</version>
                                 </requireJavaVersion>
                                 <bannedDependencies>
                                     <excludes>
@@ -169,7 +192,7 @@
                 <version>3.13.0</version>
                 <configuration>
                     <compilerArgument>-Xlint:all</compilerArgument><!-- -Werror -->
-                    <compilerArgument>--enable-preview</compilerArgument>
+                    <!-- <compilerArgument>- -enable-preview</compilerArgument> -->
                     <release>${java.version}</release>
                 </configuration>
             </plugin>
@@ -181,6 +204,11 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.18.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
             </plugin>
         </plugins>
     </build>
