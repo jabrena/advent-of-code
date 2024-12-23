@@ -15,7 +15,7 @@ public class Day16 implements Day<Integer> {
 
     @Override
     public Integer getPart2Result(String fileName) {
-        ReindeerMaze2 reindeerMaze3 = new ReindeerMaze2(fileName);
-        return reindeerMaze3.getBestPathPoints();
+        ReindeerMaze2 reindeerMaze = new ReindeerMaze2(fileName);
+        return reindeerMaze.getBestPathPoints();
     }
 }
