@@ -145,7 +145,7 @@ public class LanParty {
     /**
      * Helper class to store the state of the Bron-Kerbosch algorithm (used for finding maximal cliques).
      */
-    private static record State(Set<String> r, Set<String> p, Set<String> x) { }
+    private record State(Set<String> r, Set<String> p, Set<String> x) { }
 
     /**
      * Finds all maximal cliques in the graph using an iterative version of the Bron-Kerbosch algorithm.
