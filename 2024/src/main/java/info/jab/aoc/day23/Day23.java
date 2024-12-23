@@ -5,17 +5,19 @@ import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
 
 /**
- * https://adventofcode.com/2016/day/1
+ * https://adventofcode.com/2024/day/23
  **/
-public class Day23 implements Day<Integer> {
+public class Day23 implements Day<String> {
 
     @Override
-    public Integer getPart1Result(String fileName) {
-        throw new UnsupportedOperationException();
+    public String getPart1Result(String fileName) {
+        LanParty lanParty = new LanParty();
+        return lanParty.solvePartOne(fileName);
     }
 
     @Override
-    public Integer getPart2Result(String fileName) {
-        throw new UnsupportedOperationException();
+    public String getPart2Result(String fileName) {
+        LanParty lanParty = new LanParty();
+        return lanParty.solvePartTwo(fileName);
     }
 }
