@@ -116,37 +116,6 @@ public class LanParty {
         return triangles;
     }
 
-    public String solvePartOne(String fileName) {
-
-        //Load data
-        Map<String, Set<String>> graph = getInputData2(fileName);
-
-        // Find all triangles
-        Set<Set<String>> triangles = findTriangles4(graph);
-
-        // Filter triangles where at least one name starts with 't'
-        return "" + triangles.stream()
-            .filter(triangle -> triangle.stream().anyMatch(name -> name.startsWith("t")))
-            .count();
-    }
-
-    public String solvePartTwo(String fileName) {
-
-        //Load data
-        Map<String, Set<String>> graph = getInputData2(fileName);
-
-        // Find all maximal cliques using Bron-Kerbosch algorithm
-        Set<String> largestClique = new HashSet<>();
-        findCliquesIterative(new HashSet<>(), new HashSet<>(graph.keySet()), new HashSet<>(), graph, largestClique);
-        //findCliquesRecursive(new HashSet<>(), new HashSet<>(graph.keySet()), new HashSet<>(), graph, largestClique);
-
-        // Sort the largest clique and create the password
-        return largestClique.stream()
-            .sorted()
-            .reduce((a, b) -> a + "," + b)
-            .orElseThrow();
-    }
-
     /**
      * Returns a new set containing all elements of the given set and the specified element.
      *
@@ -265,5 +234,34 @@ public class LanParty {
             p.remove(node);
             x.add(node);
         }
+    }
+
+    public String solvePartOne(String fileName) {
+        //Load data
+        Map<String, Set<String>> graph = getInputData2(fileName);
+
+        // Find all triangles
+        Set<Set<String>> triangles = findTriangles4(graph);
+
+        // Filter triangles where at least one name starts with 't'
+        return "" + triangles.stream()
+            .filter(triangle -> triangle.stream().anyMatch(name -> name.startsWith("t")))
+            .count();
+    }
+
+    public String solvePartTwo(String fileName) {
+        //Load data
+        Map<String, Set<String>> graph = getInputData2(fileName);
+
+        // Find all maximal cliques using Bron-Kerbosch algorithm
+        Set<String> largestClique = new HashSet<>();
+        findCliquesIterative(new HashSet<>(), new HashSet<>(graph.keySet()), new HashSet<>(), graph, largestClique);
+        //findCliquesRecursive(new HashSet<>(), new HashSet<>(graph.keySet()), new HashSet<>(), graph, largestClique);
+
+        // Sort the largest clique and create the password
+        return largestClique.stream()
+            .sorted()
+            .reduce((a, b) -> a + "," + b)
+            .orElseThrow();
     }
 }
