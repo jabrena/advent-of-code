@@ -17,11 +17,11 @@
 | Day 23| Data processing | **         |
 | Day 7 | Recursion       |            |
 | Day 14| Special         |            |
+| Day 16| Direction       | *****      |
 | Day 21| Direction       | *****      |
 | Day 4 | Grid            |            |
 | Day 6 | Grid            |            |
 | Day 8 | Grid            |            |
 | Day 10| Grid            |            |
 | Day 15| Grid            |            |
-| Day 16| Grid            | *****      |
 | Day 20| Grid            | *****      |
