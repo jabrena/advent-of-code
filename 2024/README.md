@@ -27,6 +27,7 @@
 ## Direction
 
 - Day 21 *
+- Day 16 *
 
 ## Grid
 
@@ -35,5 +36,4 @@
 - Day 8
 - Day 10
 - Day 15
-- Day 16 *
 - Day 20 *
