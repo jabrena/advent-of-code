@@ -9,17 +9,13 @@ public class Day16 implements Day<Integer> {
 
     @Override
     public Integer getPart1Result(String fileName) {
-        //var list = ResourceLines.list(fileName);
-        //Grid grid = new Grid(GridUtils.of(list));
-        //ReindeerMaze reindeerMaze = new ReindeerMaze();
-        //return reindeerMaze.findMinimumScore(grid.grid());
-        ReindeerMaze3 reindeerMaze3 = new ReindeerMaze3(fileName);
-        return reindeerMaze3.getMinPrice();
+        ReindeerMaze reindeerMaze = new ReindeerMaze();
+        return reindeerMaze.findMinimumScore(fileName);
     }
 
     @Override
     public Integer getPart2Result(String fileName) {
-        ReindeerMaze3 reindeerMaze3 = new ReindeerMaze3(fileName);
+        ReindeerMaze2 reindeerMaze3 = new ReindeerMaze2(fileName);
         return reindeerMaze3.getBestPathPoints();
     }
 }
