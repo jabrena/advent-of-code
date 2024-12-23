@@ -4,13 +4,19 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 
 [![Java CI](https://github.com/jabrena/advent-of-code-collection/actions/workflows/maven.yml/badge.svg)](https://github.com/jabrena/advent-of-code-collection/actions/workflows/maven.yml)
 
+## Cloud IDEs
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/jabrena/advent-of-code-collection)
+
+[![](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/jabrena/advent-of-code-collection)
+
 ## How to build in local?
 
 ```bash
 java -version
 ./mvnw clean verify
 ./mvnw -pl 2024 clean verify -am
-./mvnw -pl 2024 clean test -Dtest=Day22Test
+./mvnw -pl 2024 clean test -Dtest=Day23Test
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
 jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
@@ -72,6 +78,7 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://adventofcode.com/2017
 - https://adventofcode.com/2016
 - https://adventofcode.com/2015
+- https://github.com/jasonmuzzy/aoc-copilot
 - https://www.reddit.com/r/adventofcode/
 - https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Funny%22
 - https://www.reddit.com/r/adventofcode/search/?q=flair_name%3A%22SOLUTION%20MEGATHREAD%22&restrict_sr=1
