@@ -16,7 +16,7 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 java -version
 ./mvnw clean verify
 ./mvnw -pl 2024 clean verify -am
-./mvnw -pl 2024 clean test -Dtest=Day23Test
+./mvnw -pl 2024 clean test -Dtest=Day24Test
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
 jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
