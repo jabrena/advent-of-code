@@ -2,3 +2,5 @@ target
 2019/.kotlintest/*
 2019/tests.log
 .vscode/*
+
+2024/day24.txt

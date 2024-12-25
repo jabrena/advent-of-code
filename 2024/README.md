@@ -15,10 +15,12 @@
 | Day 19| Data processing |            |
 | Day 22| Data processing | **         |
 | Day 23| Data processing | **         |
+| Day 24| Data processing | ********** |
+| Day 25| Data processing | ** |
 | Day 7 | Recursion       |            |
 | Day 14| Special         |            |
-| Day 16| Direction       | *****      |
-| Day 21| Direction       | *****      |
+| Day 16| Direction       | ********** |
+| Day 21| Direction       | ********** |
 | Day 4 | Grid            |            |
 | Day 6 | Grid            |            |
 | Day 8 | Grid            |            |
