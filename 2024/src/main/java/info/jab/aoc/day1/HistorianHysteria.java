@@ -1,6 +1,9 @@
 package info.jab.aoc.day1;
 
 import com.putoet.resources.ResourceLines;
+
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -34,6 +37,30 @@ class HistorianHysteria {
             ));
     };
 
+    Function<List<String>, ListSplitted> splitInto2Lists3 = lines -> {
+        var result = lines.stream()
+            .collect(
+                // Supplier: Initialize a ListSplitted with two empty lists
+                () -> new ListSplitted(new ArrayList<Integer>(), new ArrayList<Integer>()),
+                // Accumulator: Split lines and add to respective lists
+                (ListSplitted accumulator, String line) -> {
+                    String[] parts = SEPARATOR_PATTERN.split(line);
+                    accumulator.listLeft().add(Integer.parseInt(parts[0]));
+                    accumulator.listRight().add(Integer.parseInt(parts[1]));
+                },
+                // Combiner: Merge lists
+                (ListSplitted acc1, ListSplitted acc2) -> {
+                    acc1.listLeft().addAll(acc2.listLeft());
+                    acc1.listRight().addAll(acc2.listRight());
+                }
+            );
+        // Convert lists to sorted lists
+        return new ListSplitted(
+            result.listLeft().stream().sorted().toList(),
+            result.listRight().stream().sorted().toList()
+        );
+    };
+
     Function<ListSplitted, Integer> calculateDistance = parameter -> {
         return IntStream.range(0, parameter.listLeft().size())
             .map(i -> {
@@ -59,11 +86,10 @@ class HistorianHysteria {
     };
 
     public Integer partOne(String fileName) {
-        return loadFle.andThen(splitInto2Lists).andThen(calculateDistance).apply(fileName);
+        return loadFle.andThen(splitInto2Lists3).andThen(calculateDistance).apply(fileName);
     }
 
     public Integer partTwo(String fileName) {
-        return loadFle.andThen(splitInto2Lists2).andThen(calculateOcurrences).apply(fileName);
+        return loadFle.andThen(splitInto2Lists3).andThen(calculateOcurrences).apply(fileName);
     }
-
 }
