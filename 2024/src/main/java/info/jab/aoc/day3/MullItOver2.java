@@ -29,12 +29,21 @@ public class MullItOver2 {
     record Do() implements Instruction { }
     record Dont() implements Instruction { }
 
-    public Integer solvePartOne(String fileName) {
+    public Integer solvePartOne1(String fileName) {
         var input = ResourceLines.list(fileName);
         return input.stream()
                 .flatMap(line -> parseLine(line))
                 .filter(instruction -> instruction instanceof Mul)
                 .map(instruction -> (Mul) instruction)
+                .mapToInt(mul -> mul.m() * mul.n())
+                .sum();
+    }
+
+    public Integer solvePartOne(String fileName) {
+        var input = ResourceLines.list(fileName);
+        return input.stream()
+                .flatMap(this::parseLine)
+                .flatMap(instruction -> instruction instanceof Mul mul ? Stream.of(mul) : Stream.empty())
                 .mapToInt(mul -> mul.m() * mul.n())
                 .sum();
     }
