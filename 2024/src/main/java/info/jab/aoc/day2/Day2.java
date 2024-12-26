@@ -10,18 +10,13 @@ public class Day2 implements Day<Integer> {
 
     @Override
     public Integer getPart1Result(String fileName) {
-        var list = ResourceLines.list(fileName);
-        return (int) list.stream().map(ReportAnalyzer.toList).filter(ReportAnalyzer.isSafePart1).count();
+        SafeReports2 safeReports = new SafeReports2();
+        return safeReports.solvePartOne(fileName);
     }
 
     @Override
     public Integer getPart2Result(String fileName) {
-        var list = ResourceLines.list(fileName);
-        return (int) list.stream().map(ReportAnalyzer.toList).filter(ReportAnalyzer.isSafePart2).count();
-    }
-
-    public Integer getPart1Result2(String fileName) {
-        var list = ResourceLines.list(fileName);
-        return ReportAnalyzer2.solvePart12(list);
+        SafeReports2 safeReports = new SafeReports2();
+        return safeReports.solvePartTwo(fileName);
     }
 }

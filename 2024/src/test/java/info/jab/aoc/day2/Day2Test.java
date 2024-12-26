@@ -17,8 +17,8 @@ class Day2Test {
             String fileName = "/day2/day2-input-sample.txt";
 
             //When
-            var day1 = new Day2();
-            var result = day1.getPart1Result(fileName);
+            var day = new Day2();
+            var result = day.getPart1Result(fileName);
 
             //Then
             then(result).isEqualTo(2);
@@ -32,24 +32,8 @@ class Day2Test {
             String fileName = "/day2/day2-input.txt";
 
             //When
-            var day1 = new Day2();
-            var result = day1.getPart1Result(fileName);
-
-            //Then
-            then(result).isEqualTo(383);
-        });
-    }
-
-    @Disabled
-    @Test
-    void should_solve_day2_part1_solution2() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day2/day2-input.txt";
-
-            //When
-            var day1 = new Day2();
-            var result = day1.getPart1Result2(fileName);
+            var day = new Day2();
+            var result = day.getPart1Result(fileName);
 
             //Then
             then(result).isEqualTo(383);
@@ -90,8 +74,8 @@ Ok
             String fileName = "/day2/day2-input-sample.txt";
 
             //When
-            var day1 = new Day2();
-            var result = day1.getPart2Result(fileName);
+            var day = new Day2();
+            var result = day.getPart2Result(fileName);
 
             //Then
             then(result).isEqualTo(4);
@@ -105,8 +89,8 @@ Ok
             String fileName = "/day2/day2-input.txt";
 
             //When
-            var day1 = new Day2();
-            var result = day1.getPart2Result(fileName);
+            var day = new Day2();
+            var result = day.getPart2Result(fileName);
 
             //Then
             then(result).isEqualTo(436);
