@@ -2,7 +2,8 @@ package info.jab.aoc.day1;
 
 import com.putoet.resources.ResourceLines;
 
-import java.util.AbstractMap;
+import info.jab.aoc.Solver;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -11,7 +12,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Collectors;
 import java.util.regex.Pattern;
 
-class HistorianHysteria {
+class HistorianHysteria implements Solver<Integer> {
 
     private static final String SEPARATOR = "\\s+";
     private static final Pattern SEPARATOR_PATTERN = Pattern.compile(SEPARATOR);
@@ -85,11 +86,13 @@ class HistorianHysteria {
             .sum();
     };
 
-    public Integer partOne(String fileName) {
+    @Override
+    public Integer solvePartOne(String fileName) {
         return loadFle.andThen(splitInto2Lists3).andThen(calculateDistance).apply(fileName);
     }
 
-    public Integer partTwo(String fileName) {
+    @Override
+    public Integer solvePartTwo(String fileName) {
         return loadFle.andThen(splitInto2Lists3).andThen(calculateOcurrences).apply(fileName);
     }
 }

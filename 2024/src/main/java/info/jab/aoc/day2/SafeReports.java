@@ -10,7 +10,9 @@ import java.util.stream.IntStream;
 
 import com.putoet.resources.ResourceLines;
 
-public class SafeReports {
+import info.jab.aoc.Solver;
+
+public class SafeReports implements Solver<Integer> {
 
     private boolean isMonotonic(List<Integer> numbers, BiPredicate<Integer, Integer> comparator) {
         return IntStream.range(0, numbers.size() - 1)
@@ -65,11 +67,13 @@ public class SafeReports {
             });
     };
 
+    @Override
     public Integer solvePartOne(String fileName) {
         var list = ResourceLines.list(fileName);
         return (int) list.stream().map(toList).filter(isSafePart1).count();
     }
 
+    @Override
     public Integer solvePartTwo(String fileName) {
         var list = ResourceLines.list(fileName);
         return (int) list.stream().map(toList).filter(isSafePart2).count();

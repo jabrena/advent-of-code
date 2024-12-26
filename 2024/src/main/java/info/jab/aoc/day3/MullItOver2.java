@@ -9,7 +9,9 @@ import java.util.ArrayList;
 
 import com.putoet.resources.ResourceLines;
 
-public class MullItOver2 {
+import info.jab.aoc.Solver;
+
+public class MullItOver2 implements Solver<Integer> {
 
     private static final Pattern PATTERN = Pattern.compile("mul\\((\\d+),(\\d+)\\)|do\\(\\)|don't\\(\\)");
 
@@ -39,6 +41,7 @@ public class MullItOver2 {
                 .sum();
     }
 
+    @Override
     public Integer solvePartOne(String fileName) {
         var input = ResourceLines.list(fileName);
         return input.stream()
@@ -66,6 +69,7 @@ public class MullItOver2 {
                 .sum();
     }
 
+    @Override
     public Integer solvePartTwo(String fileName) {
         var input = ResourceLines.list(fileName);
         return (int) input.stream()

@@ -7,7 +7,9 @@ import java.util.ArrayList;
 
 import com.putoet.resources.ResourceLines;
 
-public class MullItOver {
+import info.jab.aoc.Solver;
+
+public class MullItOver implements Solver<Integer> {
 
     // Define the regex patterns as constants
     private static final String REGEX = "mul\\((\\d+),(\\d+)\\)";
@@ -56,11 +58,13 @@ public class MullItOver {
         return results.stream().reduce(0, Integer::sum);
     }
 
+    @Override
     public Integer solvePartOne(String fileName) {
         var input = ResourceLines.line(fileName);
         return calculateSumFromMultiplications(input, PATTERN);
     }
 
+    @Override
     public Integer solvePartTwo(String fileName) {
         var input = ResourceLines.line(fileName);
         return calculateSumWithConditional(input, PATTERN2);

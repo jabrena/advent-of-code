@@ -15,7 +15,9 @@ import java.util.stream.Collectors;
 
 import com.putoet.resources.ResourceLines;
 
-public class SafeReports2 {
+import info.jab.aoc.Solver;
+
+public class SafeReports2 implements Solver<Integer> {
 
     Function<String, List<Integer>> toList = param ->
         Arrays.asList(param.split(" ")).stream().map(Integer::parseInt).toList();
@@ -46,6 +48,7 @@ public class SafeReports2 {
                 isValidDifference.test(nums) &&
                 isSortedOrReverseSorted.test(nums));
 
+    @Override
     public Integer solvePartOne(String fileName) {
         var list = ResourceLines.list(fileName);
         return (int) list.stream()
@@ -55,6 +58,7 @@ public class SafeReports2 {
                 .count();
     }
 
+    @Override
     public Integer solvePartTwo(String fileName) {
         var input = ResourceLines.list(fileName);
         return (int) input.stream()
