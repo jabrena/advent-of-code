@@ -10,6 +10,10 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 
 [![](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/jabrena/advent-of-code-collection)
 
+## Summary
+
+- [2024](./2024/README.md)
+
 ## How to build in local?
 
 ```bash
@@ -26,10 +30,6 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates
 ```
-
-## Summary
-
-- [2024](./2024/README.md)
 
 ## References
 
