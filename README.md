@@ -21,7 +21,7 @@ java -version
 ./mvnw clean verify
 ./mvnw -pl 2024 clean compile -am
 ./mvnw -pl 2024 clean verify -am
-./mvnw -pl 2024 clean test -Dtest=Day3Test
+./mvnw -pl 2024 clean test -Dtest=Day7Test
 ./mvnw -pl 2024 clean test -Dtest=AlternativesBenchmarkTest
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
@@ -47,7 +47,6 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/common/location/Loc.java
 - https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/util/AoCUtils.java
 - https://github.com/zodac/advent-of-code/tree/master/common-utils
-- https://openjdk.org/projects/code-tools/jol/
 
 ### Examples
 
@@ -73,12 +72,14 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 
 ### Others
 
-- https://jmh.morethan.io/
+
 - https://adventofcode.com/
 - https://github.com/jasonmuzzy/aoc-copilot
 - https://www.reddit.com/r/adventofcode/
 - https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Funny%22
 - https://www.reddit.com/r/adventofcode/search/?q=flair_name%3A%22SOLUTION%20MEGATHREAD%22&restrict_sr=1
+- https://openjdk.org/projects/code-tools/jol/
+- https://jmh.morethan.io/
 
 ## Acknowledgements
 

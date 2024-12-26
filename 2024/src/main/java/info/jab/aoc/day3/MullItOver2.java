@@ -13,6 +13,11 @@ public class MullItOver2 {
 
     private static final Pattern PATTERN = Pattern.compile("mul\\((\\d+),(\\d+)\\)|do\\(\\)|don't\\(\\)");
 
+    sealed interface Instruction permits Mul, Do, Dont { }
+    record Mul(int m, int n) implements Instruction { }
+    record Do() implements Instruction { }
+    record Dont() implements Instruction { }
+
     private Stream<Instruction> parseLine(final String line) {
         return PATTERN.matcher(line).results()
             .map(result -> switch (result.group()) {
@@ -23,11 +28,6 @@ public class MullItOver2 {
                     Integer.parseInt(result.group(2)));
             });
     }
-
-    sealed interface Instruction permits Mul, Do, Dont { }
-    record Mul(int m, int n) implements Instruction { }
-    record Do() implements Instruction { }
-    record Dont() implements Instruction { }
 
     public Integer solvePartOne1(String fileName) {
         var input = ResourceLines.list(fileName);
