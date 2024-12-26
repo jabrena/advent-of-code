@@ -17,7 +17,7 @@ java -version
 ./mvnw clean verify
 ./mvnw -pl 2024 clean compile -am
 ./mvnw -pl 2024 clean verify -am
-./mvnw -pl 2024 clean test -Dtest=Day2Test
+./mvnw -pl 2024 clean test -Dtest=Day3Test
 ./mvnw -pl 2024 clean test -Dtest=AlternativesBenchmarkTest
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
@@ -26,6 +26,10 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 ./mvnw versions:display-dependency-updates
 ./mvnw versions:display-plugin-updates
 ```
+
+## Summary
+
+- [2024](./2024/README.md)
 
 ## References
 
