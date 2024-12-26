@@ -10,7 +10,7 @@
 | Day 4 | Grid            |            |            |          |                       |      |
 | Day 5 | Data processing | *****      | *****      | 01:39:50 | [PrintQueue2](./src/main/java/info/jab/aoc/day5/PrintQueue2.java) | ADT + Pattern Matching |
 | Day 6 | Grid            |            |            |          |                       |      |
-| Day 7 | Data processing | *******    | *******    |          | [BridgeRepair](./src/main/java/info/jab/aoc/day7/BridgeRepair.java) | Recursion |
+| Day 7 | Data processing | *******    | *******    | 02:53:22 | [BridgeRepair](./src/main/java/info/jab/aoc/day7/BridgeRepair.java) | Recursion |
 | Day 8 | Grid            |            |            |          |                       |      |
 | Day 9 | Data processing |            |            |          |                       |      |
 | Day 10| Grid            |            |            |          |                       |      |
