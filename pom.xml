@@ -28,11 +28,11 @@
         <guava.version>31.1-jre</guava.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
 
-        <jol.version>0.17</jol.version>
-        <junit-jupiter.version>5.11.3</junit-jupiter.version>
+        <junit-jupiter.version>5.11.4</junit-jupiter.version>
         <assertj-core.version>3.26.3</assertj-core.version>
 
-        <checkstyle.skip>true</checkstyle.skip>
+        <jol.version>0.17</jol.version>
+        <jmh.version>1.37</jmh.version>
     </properties>
 
     <modules>
@@ -91,9 +91,10 @@
 
             <!-- Testing -->
             <dependency>
-                <groupId>org.openjdk.jol</groupId>
-                <artifactId>jol-core</artifactId>
-                <version>${jol.version}</version>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit-jupiter.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -109,6 +110,27 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj-core.version}</version>
+            </dependency>
+
+            <!-- JOL -->
+            <dependency>
+                <groupId>org.openjdk.jol</groupId>
+                <artifactId>jol-core</artifactId>
+                <version>${jol.version}</version>
+            </dependency>
+
+            <!-- JMH -->
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-core</artifactId>
+                <version>${jmh.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-generator-annprocess</artifactId>
+                <version>${jmh.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -159,6 +181,19 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- JMH -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -203,6 +238,13 @@
                     <compilerArgument>-Xlint:all</compilerArgument><!-- -Werror -->
                     <!-- <compilerArgument>- -enable-preview</compilerArgument> -->
                     <release>${java.version}</release>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.openjdk.jmh</groupId>
+                            <artifactId>jmh-generator-annprocess</artifactId>
+                            <version>${jmh.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
