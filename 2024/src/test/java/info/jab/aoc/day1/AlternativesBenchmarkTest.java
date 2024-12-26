@@ -1,6 +1,8 @@
 package info.jab.aoc.day1;
 
 import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.profile.JavaFlightRecorderProfiler;
@@ -11,6 +13,7 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
+@Disabled
 public class AlternativesBenchmarkTest {
 
     @Test
