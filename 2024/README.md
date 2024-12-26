@@ -8,7 +8,7 @@
 | Day 2 | Data processing | *****      | *****      | 01:27:00 | [SafeReports2](./src/main/java/info/jab/aoc/day2/SafeReports2.java) | Java Streams API |
 | Day 3 | Data processing | *****      | *****      | 00:51:27 | [MullItOver2](./src/main/java/info/jab/aoc/day3/MullItOver2.java) | ADT + Pattern Matching |
 | Day 4 | Grid            |            |            |          |                       |      |
-| Day 5 | Data processing | *****      | *****      | 01:39:50 | [PrintQueue2](./src/main/java/info/jab/aoc/day5/PrintQueue2.java) | ADT + Pattern Matching |
+| Day 5 | Data processing | *****      | *****      | 01:39:50 | [PrintQueue2](./src/main/java/info/jab/aoc/day5/PrintQueue2.java) |      |
 | Day 6 | Grid            |            |            |          |                       |      |
 | Day 7 | Data processing | *******    | *******    | 02:53:22 | [BridgeRepair](./src/main/java/info/jab/aoc/day7/BridgeRepair.java) | Recursion |
 | Day 8 | Grid            |            |            |          |                       |      |
