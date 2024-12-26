@@ -26,11 +26,13 @@
         <putoet.aoc.version>1.7.0</putoet.aoc.version>
         <combinatoricslib3.version>3.4.0</combinatoricslib3.version>
         <guava.version>31.1-jre</guava.version>
+        <commons-lang3.version>3.17.0</commons-lang3.version>
 
-        <junit-jupiter.version>5.11.3</junit-jupiter.version>
+        <junit-jupiter.version>5.11.4</junit-jupiter.version>
         <assertj-core.version>3.26.3</assertj-core.version>
 
-        <checkstyle.skip>true</checkstyle.skip>
+        <jol.version>0.17</jol.version>
+        <jmh.version>1.37</jmh.version>
     </properties>
 
     <modules>
@@ -77,6 +79,24 @@
                 <version>${guava.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jool</artifactId>
+                <version>0.9.15</version>
+            </dependency>
+
+            <!-- Testing -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit-jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
                 <version>${junit-jupiter.version}</version>
@@ -90,6 +110,27 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj-core.version}</version>
+            </dependency>
+
+            <!-- JOL -->
+            <dependency>
+                <groupId>org.openjdk.jol</groupId>
+                <artifactId>jol-core</artifactId>
+                <version>${jol.version}</version>
+            </dependency>
+
+            <!-- JMH -->
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-core</artifactId>
+                <version>${jmh.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-generator-annprocess</artifactId>
+                <version>${jmh.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -115,6 +156,19 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jool</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjdk.jol</groupId>
+            <artifactId>jol-core</artifactId>
+        </dependency>
 
         <!-- Testing -->
         <dependency>
@@ -127,78 +181,23 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- JMH -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
-
-            <!-- Checkstyle -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.6.0</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>10.20.1</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <!--
-                    https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml -->
-                    <configLocation>src/main/checkstyle/google_checks.xml</configLocation>
-                    <suppressionsLocation>src/main/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <consoleOutput>true</consoleOutput>
-                    <failsOnError>true</failsOnError>
-                    <violationSeverity>warning</violationSeverity>
-                    <failOnViolation>true</failOnViolation>
-                    <maxAllowedViolations>0</maxAllowedViolations>
-                    <linkXRef>false</linkXRef>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>process-sources</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- https://mvnrepository.com/artifact/com.hubspot.maven.plugins/prettier-maven-plugin/ -->
-            <!-- https://github.com/jhipster/prettier-java/blob/main/CHANGELOG.md -->
-            <!--
-            <plugin>
-                <groupId>com.hubspot.maven.plugins</groupId>
-                <artifactId>prettier-maven-plugin</artifactId>
-                <version>0.22</version>
-                <configuration>
-                    <prettierJavaVersion>2.6.0</prettierJavaVersion>
-                    <printWidth>150</printWidth>
-                    <tabWidth>4</tabWidth>
-                    <useTabs>false</useTabs>
-                    <ignoreConfigFile>true</ignoreConfigFile>
-                    <ignoreEditorConfig>true</ignoreEditorConfig>
-                    <inputGlobs>
-                        <inputGlob>src/main/java/**/*.java</inputGlob>
-                        <inputGlob>src/test/java/**/*.java</inputGlob>
-                    </inputGlobs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>process-sources</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -214,7 +213,7 @@
                                     <version>3.9.9</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>23</version>
+                                    <version>24</version>
                                 </requireJavaVersion>
                                 <bannedDependencies>
                                     <excludes>
@@ -239,6 +238,13 @@
                     <compilerArgument>-Xlint:all</compilerArgument><!-- -Werror -->
                     <compilerArgument>--enable-preview</compilerArgument>
                     <release>${java.version}</release>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.openjdk.jmh</groupId>
+                            <artifactId>jmh-generator-annprocess</artifactId>
+                            <version>${jmh.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
@@ -249,6 +255,11 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.18.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
             </plugin>
         </plugins>
     </build>

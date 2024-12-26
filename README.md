@@ -4,13 +4,21 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 
 [![Java CI](https://github.com/jabrena/advent-of-code-collection/actions/workflows/maven.yml/badge.svg)](https://github.com/jabrena/advent-of-code-collection/actions/workflows/maven.yml)
 
+## Cloud IDEs
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/jabrena/advent-of-code-collection)
+
+[![](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/jabrena/advent-of-code-collection)
+
 ## How to build in local?
 
 ```bash
-sdk env install
+java -version
 ./mvnw clean verify
+./mvnw -pl 2024 clean compile -am
 ./mvnw -pl 2024 clean verify -am
 ./mvnw -pl 2024 clean test -Dtest=Day2Test
+./mvnw -pl 2024 clean test -Dtest=AlternativesBenchmarkTest
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false
 jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
@@ -30,6 +38,12 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://github.com/sim642/adventofcode/tree/master/src/main/scala/eu/sim642/adventofcodelib
 - https://github.com/bertjan/advent-of-code-2024/blob/main/src/main/java/utils/Matrix.java
 - https://github.com/p-kovacs/advent-of-code-2024/tree/master/src/main/java/com/github/pkovacs/util
+- https://github.com/hlipka/AdventOfCode/tree/main/java/src/util/de/hendriklipka/aoc
+- https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/common/Direction.java
+- https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/common/location/Loc.java
+- https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/util/AoCUtils.java
+- https://github.com/zodac/advent-of-code/tree/master/common-utils
+- https://openjdk.org/projects/code-tools/jol/
 
 ### Examples
 
@@ -37,25 +51,27 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://github.com/forax/advent-of-code-2023 (Java)
 - https://github.com/forax/advent-of-code-2024 (Java)
 - https://github.com/nipafx/advent-of-code-2023 (Java)
-- https://github.com/juan-medina/adventofcode2024 (C#)
-- https://github.com/jmgimeno/aoc2024/tree/master (Scala)
 - https://github.com/bertjan/advent-of-code-2024 (Java)
+- https://github.com/nilederg/AOC-2024 (Java)
+- https://github.com/SimonBaars/AdventOfCode-Java (Java)
+- https://github.com/p-kovacs/advent-of-code-2024 (Java)
+- https://github.com/michaelmountain-8451/advent-of-code (Java)
+- https://github.com/juan-medina/adventofcode2024 (C#)
+- https://github.com/TheJare/aoc2024 (Ruby)
+- https://github.com/jmgimeno/aoc2024/tree/master (Scala)
 - https://github.com/neutropolis/aoc (APL)
+
+### Searches
+
+- https://github.com/search?q=advent+of+code++language%3AJava&type=repositories&s=updated&o=desc
+- https://github.com/search?q=aoc+2024+language%3AJava&type=repositories&s=updated&o=desc
 - https://github.com/search?q=advent+of+code+2024++language%3AJava&type=repositories&l=Java&s=updated&o=desc
 
 ### Others
 
+- https://jmh.morethan.io/
 - https://adventofcode.com/
-- https://adventofcode.com/2024
-- https://adventofcode.com/2023
-- https://adventofcode.com/2022
-- https://adventofcode.com/2021
-- https://adventofcode.com/2020
-- https://adventofcode.com/2019
-- https://adventofcode.com/2018
-- https://adventofcode.com/2017
-- https://adventofcode.com/2016
-- https://adventofcode.com/2015
+- https://github.com/jasonmuzzy/aoc-copilot
 - https://www.reddit.com/r/adventofcode/
 - https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Funny%22
 - https://www.reddit.com/r/adventofcode/search/?q=flair_name%3A%22SOLUTION%20MEGATHREAD%22&restrict_sr=1
@@ -68,4 +84,4 @@ I'm also deeply grateful to my friend [Juan Antonio Medina](https://www.github.c
 for the continuous and inspiring conversations throughout the day,
 and to [Rene van Putten](https://github.com/z669016/) for their invaluable inspiration.
 
-**Powered by Java 24**
+**Powered by Java 24 EA**

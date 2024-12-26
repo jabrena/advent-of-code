@@ -25,6 +25,15 @@ public interface GridType {
      */
     void set(int x, int y, char c);
 
+    //TODO PR to send the new method
+    /**
+     * Set the character at the given a Point.
+     * @param p a Point
+     * @param c the character to set
+     * @throws IllegalArgumentException if the x or y position is outside the grid
+     */
+    void set(Point p, char c);
+
     /**
      * Get the character at the given x and y position.
      * @param x the x position
@@ -34,6 +43,16 @@ public interface GridType {
      */
     char get(int x, int y);
 
+    //TODO PR to send the new method
+    /**
+     * Get the character at the given a Point.
+     *
+     * @param p a Point
+     * @return the character at the given x and y position
+     * @throws IllegalArgumentException if the x or y position is outside the grid
+     */
+    char get(Point p);
+
     /**
      * Check if the given x and y position is within the grid
      * @param x the x position
@@ -41,6 +60,14 @@ public interface GridType {
      * @return true if the x and y position is within the grid, false otherwise
      */
     boolean contains(int x, int y);
+
+    //TODO PR to send the new method
+    /**
+     * Check if the given Point is within the grid
+     * @param p a Point
+     * @return true if the x and y position is within the grid, false otherwise
+     */
+    boolean contains(Point p);
 
     /**
      * Get the minimum x position of the grid

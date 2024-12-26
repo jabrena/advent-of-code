@@ -23,7 +23,6 @@ class Day6Test {
         });
     }
 
-    @Disabled
     @Test
     void should_solve_day6_part1() {
         Timer.run(() -> {
