@@ -17,7 +17,7 @@ java -version
 ./mvnw clean verify
 ./mvnw -pl 2024 clean compile -am
 ./mvnw -pl 2024 clean verify -am
-./mvnw -pl 2024 clean test -Dtest=Day1Test
+./mvnw -pl 2024 clean test -Dtest=Day2Test
 ./mvnw -pl 2024 clean test -Dtest=AlternativesBenchmarkTest
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false

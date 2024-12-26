@@ -236,7 +236,7 @@
                 <version>3.13.0</version>
                 <configuration>
                     <compilerArgument>-Xlint:all</compilerArgument><!-- -Werror -->
-                    <!-- <compilerArgument>- -enable-preview</compilerArgument> -->
+                    <compilerArgument>--enable-preview</compilerArgument>
                     <release>${java.version}</release>
                     <annotationProcessorPaths>
                         <path>
