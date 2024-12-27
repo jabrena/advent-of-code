@@ -7,7 +7,7 @@
 | 1  | 01:12:03 | [HistorianHysteria](./src/main/java/info/jab/aoc/day1/HistorianHysteria.java) | Java Streams API | Data processing |
 | 2  | 01:27:00 | [SafeReports2](./src/main/java/info/jab/aoc/day2/SafeReports2.java) | Java Streams API | Data processing |
 | 3  | 00:51:27 | [MullItOver2](./src/main/java/info/jab/aoc/day3/MullItOver2.java) | ADT + Pattern Matching | Data processing |
-| 4  | KO       |                       |                         | Grid                         |
+| 4  | KO       | [SoupLetter2](./src/main/java/info/jab/aoc/day4/SoupLetter2.java) | 2D Grid | Grid |
 | 5  | 01:39:50 | [PrintQueue2](./src/main/java/info/jab/aoc/day5/PrintQueue2.java) |      | Data processing |
 | 6  | KO       |                       |                         | Grid                         |
 | 7  | 02:53:22 | [BridgeRepair](./src/main/java/info/jab/aoc/day7/BridgeRepair.java) | Recursion | Data processing |
@@ -15,7 +15,7 @@
 | 9  | 02:00:21 | [DiskCompactor](./src/main/java/info/jab/aoc/day9/DiskCompactor.java) |      | Data processing |
 | 10 | 01:35:27 |                       |      | Grid            |
 | 11 | 02:57:09 | [PlutonianPebbles](./src/main/java/info/jab/aoc/day11/PlutonianPebbles.java) | Recursion     | Data processing |
-| 12 | 12:43:54 |                       |      | Data processing |
+| 12 | 12:43:54 | [LavaHikingTrails2](./src/main/java/info/jab/aoc/day12/LavaHikingTrails2.java) | BFS & Recursion | Data processing |
 | 13 | 07:40:51 |                       |      | Special         |
 | 14 | 03:49:03 |                       |      | Grid            |
 | 15 | 02:31:16 |                       |      | Direction       |

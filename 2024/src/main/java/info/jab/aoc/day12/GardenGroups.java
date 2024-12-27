@@ -5,15 +5,20 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.stream.IntStream;
 
+import com.putoet.grid.Grid;
+import com.putoet.grid.GridUtils;
 import com.putoet.grid.Point;
+import com.putoet.resources.ResourceLines;
+
+import info.jab.aoc.Solver;
 
 //TODO Pending to be simplified
-public class GardenGroups {
+public class GardenGroups implements Solver<Integer> {
 
-    public record RegionPart1(int area, int perimeter) {}
-    public record RegionPart2(int area, int sides) {}
+    private record RegionPart1(int area, int perimeter) {}
+    private record RegionPart2(int area, int sides) {}
 
-    public int calculateTotalPricePart1(char[][] garden) {
+    private int calculateTotalPricePart1(char[][] garden) {
         int rows = garden.length;
         int cols = garden[0].length;
         Set<Point> visited = new HashSet<>();
@@ -26,7 +31,7 @@ public class GardenGroups {
                 .sum();
     }
 
-    public int calculateTotalPricePart2(char[][] garden) {
+    private int calculateTotalPricePart2(char[][] garden) {
         int rows = garden.length;
         int cols = garden[0].length;
         Set<Point> visited = new HashSet<>();
@@ -81,7 +86,7 @@ public class GardenGroups {
         return new RegionPart1(area, perimeter);
     }
 
-    private static RegionPart2 exploreRegionPart2(char[][] garden, Set<Point> visited, int startRow, int startCol) {
+    private RegionPart2 exploreRegionPart2(char[][] garden, Set<Point> visited, int startRow, int startCol) {
         int rows = garden.length;
         int cols = garden[0].length;
         char plantType = garden[startRow][startCol];
@@ -125,6 +130,19 @@ public class GardenGroups {
         }
 
         return new RegionPart2(area, sides);
+    }
+
+    @Override
+    public Integer solvePartOne(String fileName) {
+        var list = ResourceLines.list(fileName);
+        Grid grid = new Grid(GridUtils.of(list));
+        return calculateTotalPricePart1(grid.grid());
+    }
+
+    @Override
+    public Integer solvePartTwo(String fileName) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'solvePartTwo'");
     }
 
 }

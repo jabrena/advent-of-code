@@ -5,6 +5,7 @@ import com.putoet.grid.GridUtils;
 import com.putoet.resources.ResourceLines;
 
 import info.jab.aoc.Day;
+import info.jab.aoc.Solver;
 
 /**
  * https://adventofcode.com/2024/day/10
@@ -18,29 +19,13 @@ public class Day10 implements Day<Integer> {
 
     @Override
     public Integer getPart1Result(String fileName) {
-        var list = ResourceLines.list(fileName);
-        Grid grid = new Grid(GridUtils.of(list));
-        return LavaHikingTrails.sumTrailheadScoresBFS(grid);
+        Solver<Integer> solver = new LavaHikingTrails2();
+        return solver.solvePartOne(fileName);
     }
 
     @Override
     public Integer getPart2Result(String fileName) {
-        var list = ResourceLines.list(fileName);
-        Grid grid = new Grid(GridUtils.of(list));
-        return LavaHikingTrails.sumTrailheadRatingsBFS(grid);
-    }
-
-    //Recursion approach
-
-    public Integer getPart1Result2(String fileName) {
-        var list = ResourceLines.list(fileName);
-        Grid grid = new Grid(GridUtils.of(list));
-        return LavaHikingTrails.sumTrailheadScores(grid);
-    }
-
-    public Integer getPart2Result2(String fileName) {
-        var list = ResourceLines.list(fileName);
-        Grid grid = new Grid(GridUtils.of(list));
-        return LavaHikingTrails.sumTrailheadRatings(grid);
+        Solver<Integer> solver = new LavaHikingTrails2();
+        return solver.solvePartTwo(fileName);
     }
 }

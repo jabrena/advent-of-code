@@ -10,7 +10,7 @@ import com.putoet.utils.Timer;
 class Day12Test {
 
     @Test
-    void should_solve_day11_part1_with_sample() {
+    void should_solve_day12_part1_with_sample() {
         Timer.run(() -> {
             //Given
             String fileName = "/day12/day12-input-sample.txt";
@@ -25,7 +25,7 @@ class Day12Test {
     }
 
     @Test
-    void should_solve_day11_part1_with_sample2() {
+    void should_solve_day12_part1_with_sample2() {
         Timer.run(() -> {
             //Given
             String fileName = "/day12/day12-input-sample2.txt";
@@ -56,7 +56,7 @@ class Day12Test {
 
     @Disabled
     @Test
-    void should_solve_day11_part2_with_sample() {
+    void should_solve_day12_part2_with_sample() {
         Timer.run(() -> {
             //Given
             String fileName = "/day12/day12-input.txt";
