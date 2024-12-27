@@ -6,12 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.putoet.resources.ResourceLines;
+
+import info.jab.aoc.Solver2;
+
 /**
  * Interesting implementations
  * https://github.com/jscharpff/AoC2024/blob/main/src/challenges/day11/PlutonianPebbles.java
  * https://github.com/bertjan/advent-of-code-2024/blob/main/src/main/java/AoC2024Day11.java
  */
-public class PlutonianPebbles {
+public class PlutonianPebbles implements Solver2<Long, String, Integer> {
 
     /**
      * The implementation may cause a Java heap space error due to the exponential growth of the stones list during the simulation, especially if the number of blinks (blinks) is high or if the input string contains many stones.
@@ -27,7 +31,7 @@ public class PlutonianPebbles {
      * No Optimization:
      * The blink method directly creates a new ArrayList for every transformation, which further increases memory usage.
      */
-    public List<String> blink(List<String> stones) {
+    private List<String> blink(List<String> stones) {
         List<String> newStones = new ArrayList<>();
 
         for (String stone : stones) {
@@ -61,9 +65,8 @@ public class PlutonianPebbles {
 
     // Second part, it is real kick in the ass. Well done AOC!
 
-    Map<String,Long> cache = new HashMap<>();
-
-    public long simulateBlinks(String line, int blinks) {
+    private Map<String,Long> cache = new HashMap<>();
+    private long simulateBlinks(String line, int blinks) {
         long result = 0;
         for (long curStone: Arrays.stream(line.split(" ")).mapToLong(Long::valueOf).toArray()) {
             result += count(curStone, blinks, cache);
@@ -81,6 +84,21 @@ public class PlutonianPebbles {
                 : count(stone * 2024, iter-1, cache);
         cache.put(key, count);
         return count;
+    }
+
+    @Override
+    public Long solvePartOne(String fileName, Integer blinks) {
+        String line = ResourceLines.line(fileName);
+        List<String> stones = Arrays.asList(line.split(" "));
+        for (int i = 0; i < blinks; i++) {
+            stones = blink(stones);
+        }
+        return (long) stones.size();    }
+
+    @Override
+    public Long solvePartTwo(String fileName, Integer blinks) {
+        String line = ResourceLines.line(fileName);
+        return simulateBlinks(line, blinks);
     }
 }
 
