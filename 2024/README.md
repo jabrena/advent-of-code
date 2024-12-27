@@ -14,7 +14,7 @@
 | 8  | 12:16:14 |                       |      | Grid |
 | 9  | 02:00:21 | [DiskCompactor](./src/main/java/info/jab/aoc/day9/DiskCompactor.java) |      | Data processing |
 | 10 | 01:35:27 |                       |      | Grid            |
-| 11 | 02:57:09 |                       |      | Data processing |
+| 11 | 02:57:09 | [PlutonianPebbles](./src/main/java/info/jab/aoc/day11/PlutonianPebbles.java) | Recursion     | Data processing |
 | 12 | 12:43:54 |                       |      | Data processing |
 | 13 | 07:40:51 |                       |      | Special         |
 | 14 | 03:49:03 |                       |      | Grid            |
