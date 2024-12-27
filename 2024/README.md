@@ -13,9 +13,9 @@
 | 7  | 02:53:22 | [BridgeRepair](./src/main/java/info/jab/aoc/day7/BridgeRepair.java) | Recursion | Data processing |
 | 8  | 12:16:14 |                       |      | Grid |
 | 9  | 02:00:21 | [DiskCompactor](./src/main/java/info/jab/aoc/day9/DiskCompactor.java) |      | Data processing |
-| 10 | 01:35:27 |                       |      | Grid            |
+| 10 | 01:35:27 | [LavaHikingTrails2](./src/main/java/info/jab/aoc/day10/LavaHikingTrails2.java) | BFS & Recursion | Data processing |
 | 11 | 02:57:09 | [PlutonianPebbles](./src/main/java/info/jab/aoc/day11/PlutonianPebbles.java) | Recursion     | Data processing |
-| 12 | 12:43:54 | [LavaHikingTrails2](./src/main/java/info/jab/aoc/day12/LavaHikingTrails2.java) | BFS & Recursion | Data processing |
+| 12 | 12:43:54 | [GardenGroups](./src/main/java/info/jab/aoc/day12/GardenGroups.java) |  | Grid |
 | 13 | 07:40:51 |                       |      | Special         |
 | 14 | 03:49:03 |                       |      | Grid            |
 | 15 | 02:31:16 |                       |      | Direction       |
