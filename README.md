@@ -12,8 +12,6 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 
 ## Summary
 
-![](./docs/aoc-2024-front.png)
-
 - [2024](./2024/README.md)
 
 ## How to build in local?
