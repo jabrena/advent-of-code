@@ -6,6 +6,7 @@ import com.putoet.resources.ResourceLines;
 
 public class ClawContraption {
 
+    //TODO Candidate to be promoted to Utilities
     private List<List<String>> groupLines(List<String> lines, int groupSize) {
         List<List<String>> grouped = new ArrayList<>();
         List<String> currentGroup = new ArrayList<>();
@@ -21,8 +22,9 @@ public class ClawContraption {
     }
 
     private List<Claw> getInput(String fileName) {
+        var list = ResourceLines.list(fileName);
         var groupBy = 3;
-        return groupLines(ResourceLines.list(fileName), groupBy).stream()
+        return groupLines(list, groupBy).stream()
             .map(group -> new Claw(String.join("\n", group)))
             .toList();
     }

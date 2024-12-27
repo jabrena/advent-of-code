@@ -7,8 +7,11 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-//TODO Refactor
-public class DiskCompactor {
+import com.putoet.resources.ResourceLines;
+
+import info.jab.aoc.Solver;
+
+public class DiskCompactor implements Solver<Long> {
 
     // Function to populate the disk with file IDs and free spaces (-1)
     Function<int[], int[]> populateDisk = parts ->
@@ -107,9 +110,17 @@ public class DiskCompactor {
         }
     }
 
-    private String generateVisualRepresentation(int[] disk) {
-        return IntStream.of(disk)
-                .mapToObj(block -> block == -1 ? "." : String.valueOf(block))
-                .reduce("", String::concat);
+    @Override
+    public Long solvePartOne(String fileName) {
+        var line = ResourceLines.line(fileName);
+        var diskCompactor = new DiskCompactor();
+        return diskCompactor.computeChecksum(line, false);
+    }
+
+    @Override
+    public Long solvePartTwo(String fileName) {
+        var line = ResourceLines.line(fileName);
+        var diskCompactor = new DiskCompactor();
+        return diskCompactor.computeChecksum(line, true);
     }
 }
