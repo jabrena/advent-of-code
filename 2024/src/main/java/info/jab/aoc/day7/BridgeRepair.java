@@ -6,7 +6,7 @@ import com.putoet.resources.ResourceLines;
 
 import info.jab.aoc.Solver;
 
-public class BridgeRepair implements Solver<Long>{
+public class BridgeRepair implements Solver<Long> {
 
     private sealed interface Operator permits Add, Multiply, Concatenate {
         long apply(long a, long b);

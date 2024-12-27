@@ -14,11 +14,10 @@ public class Day6 implements Day<Integer> {
     @Override
     public Integer getPart1Result(String fileName) {
         Game game = new Game(fileName);
-        var count = game.moveGuardian();
-        return count;
+        return game.moveGuardian();
     }
 
-    //TODO Empty on purpose
+    //TODO: I need to recode the second part again.
     @Override
     public Integer getPart2Result(String fileName) {
         throw new UnsupportedOperationException();

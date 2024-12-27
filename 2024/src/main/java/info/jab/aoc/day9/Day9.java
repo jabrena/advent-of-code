@@ -1,6 +1,7 @@
 package info.jab.aoc.day9;
 
 import info.jab.aoc.Day;
+import info.jab.aoc.Solver;
 
 import com.putoet.resources.ResourceLines;
 
@@ -13,15 +14,13 @@ public class Day9 implements Day<Long> {
 
     @Override
     public Long getPart1Result(String fileName) {
-        var line = ResourceLines.line(fileName);
-        var diskCompactor = new DiskCompactor();
-        return diskCompactor.computeChecksum(line, false);
+        Solver<Long> solver = new DiskCompactor();
+        return solver.solvePartOne(fileName);
     }
 
     @Override
     public Long getPart2Result(String fileName) {
-        var line = ResourceLines.line(fileName);
-        var diskCompactor = new DiskCompactor();
-        return diskCompactor.computeChecksum(line, true);
+        Solver<Long> solver = new DiskCompactor();
+        return solver.solvePartTwo(fileName);
     }
 }
