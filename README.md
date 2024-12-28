@@ -13,6 +13,7 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 ## Summary
 
 - [2024](./2024/README.md)
+- [2016](./2016/README.md)
 
 ## How to build in local?
 
@@ -21,7 +22,7 @@ java -version
 ./mvnw clean verify
 ./mvnw -pl 2024 clean compile -am
 ./mvnw -pl 2024 clean verify -am
-./mvnw -pl 2024 clean test -Dtest=Day12Test
+./mvnw -pl 2016 clean test -Dtest=Day2Test
 ./mvnw -pl 2024 clean test -Dtest=AlternativesBenchmarkTest
 ./mvnw -pl 2024 clean dependency:tree
 ./mvnw -pl 2024 clean verify surefire-report:report -DshowSuccess=false

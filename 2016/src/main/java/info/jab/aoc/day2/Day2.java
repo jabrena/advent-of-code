@@ -7,14 +7,14 @@ public class Day2 implements Day<String> {
 
     @Override
     public String getPart1Result(String fileName) {
-        Solver<String> solver = new KeypadNavigator();
+        Solver<String> solver = new BathroomSecurity();
         return solver.solvePartOne(fileName);
     }
     
 
     @Override
     public String getPart2Result(String fileName) {
-        Solver<String> solver = new KeypadNavigator();
+        Solver<String> solver = new BathroomSecurity();
         return solver.solvePartTwo(fileName);
     }
 }
