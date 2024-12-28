@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Disabled;
 
 class Day1Test {
 
-    @Disabled
     @Test
     void should_solve_day1_part1() {
         //Given

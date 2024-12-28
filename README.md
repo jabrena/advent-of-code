@@ -22,7 +22,7 @@ java -version
 ./mvnw clean verify
 ./mvnw -pl 2016 clean compile -am
 ./mvnw -pl 2016 clean verify -am
-./mvnw -pl 2016 clean test -Dtest=Day2Test
+./mvnw -pl 2018 clean test -Dtest=Day1Test
 ./mvnw -pl 2016 clean dependency:tree
 ./mvnw -pl 2016 clean verify surefire-report:report -DshowSuccess=false
 jwebserver -p 9000 -d "$(pwd)/2024/target/reports"

@@ -1,6 +1,5 @@
 package info.jab.aoc.day2;
 
-import java.util.List;
 import com.putoet.grid.Grid;
 import com.putoet.grid.Point;
 import com.putoet.resources.ResourceLines;
