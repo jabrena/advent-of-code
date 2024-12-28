@@ -45,10 +45,7 @@ public class BathroomSecurity2 implements Solver<String>{
     }
 
     private boolean isValidPosition(Point point, Grid grid) {
-        return point.y() >= 0 && 
-               point.y() < grid.maxY() &&
-               point.x() >= 0 && 
-               point.x() < grid.maxX() &&
+        return grid.contains(point) &&
                grid.get(point) != ' ';
     }
 
