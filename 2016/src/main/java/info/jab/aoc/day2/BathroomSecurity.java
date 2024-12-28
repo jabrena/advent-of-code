@@ -8,7 +8,7 @@ import com.putoet.resources.ResourceLines;
 
 import info.jab.aoc.Solver;
 
-public class KeypadNavigator implements Solver<String>{
+public class BathroomSecurity implements Solver<String>{
 
     private static final int[][] KEYPAD = {
         {1, 2, 3},
