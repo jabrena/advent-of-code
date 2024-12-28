@@ -7,7 +7,7 @@ import com.putoet.resources.ResourceLines;
 
 import info.jab.aoc.Solver;
 
-public class BathroomSecurity2 implements Solver<String>{
+public class BathroomSecurity3 implements Solver<String>{
 
     private final char[][] KEYPAD_PART1 = {
         {'1', '2', '3'},
@@ -49,47 +49,50 @@ public class BathroomSecurity2 implements Solver<String>{
         return new Direction(start);
     }
 
+    //The second condition is not required in the first part.
     private boolean isValidPosition(Point point, Grid grid) {
         return grid.contains(point) &&
                grid.get(point) != ' ';
     }
 
+    record State(Direction current, StringBuilder result) {}
+
+    private State processLine(Grid grid, String line, State state) {
+        Direction current = state.current;
+        for (char move : line.toCharArray()) {
+            Direction next = current.move(move);
+            if (isValidPosition(next.point(), grid)) {
+                current = next;
+            }
+        }
+        return new State(current, state.result.append(grid.get(current.point())));
+    }
+
     @Override
     public String solvePartOne(String fileName) {
-        StringBuilder result = new StringBuilder();
-
         Grid grid = new Grid(KEYPAD_PART1);
-        Direction current = initializeStartPosition(grid);
-        List<String> lines = ResourceLines.list(fileName);
-        for (String line : lines) {
-            for (char move : line.toCharArray()) {
-                Direction next = current.move(move);
-                if (grid.contains(next.point())) {
-                    current = next;
-                }
-            }
-            result.append(grid.get(current.point()));
-        }
-        return result.toString();
+        Direction initial = initializeStartPosition(grid);
+        
+        var list = ResourceLines.list(fileName);
+        return list.stream()
+            .reduce(new State(initial, new StringBuilder()),
+                (state, line) -> processLine(grid, line, state),
+                (s1, s2) -> s1
+            )
+            .result().toString();
     }
 
     @Override
     public String solvePartTwo(String fileName) {
-        StringBuilder result = new StringBuilder();
-
         Grid grid = new Grid(KEYPAD_PART2);
-        Direction current = initializeStartPosition(grid);
-    
-        List<String> lines = ResourceLines.list(fileName);
-        for (String line : lines) {
-            for (char move : line.toCharArray()) {
-                Direction next = current.move(move);
-                if (isValidPosition(next.point(), grid)) {
-                    current = next;
-                }
-            }
-            result.append(grid.get(current.point()));
-        }
-        return result.toString();
+        Direction initial = initializeStartPosition(grid);
+        
+        var list = ResourceLines.list(fileName);
+        return list.stream()
+            .reduce(new State(initial, new StringBuilder()),
+                (state, line) -> processLine(grid, line, state),
+                (s1, s2) -> s1
+            )
+            .result().toString();
     }
 }
