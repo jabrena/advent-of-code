@@ -24,12 +24,16 @@ public class BathroomSecurity2 implements Solver<String>{
     };
 
     private enum Move {
-        U, D, L, R
+        U, D, L, R;
+
+        public static Move fromChar(char direction) {
+            return Move.valueOf(String.valueOf(direction));
+        }
     }
 
     private record Direction(Point point) {
         Direction move(char direction) {
-            Move move = Move.valueOf(String.valueOf(direction));
+            Move move = Move.fromChar(direction);
             Point newPoint = calculate(move);
             return new Direction(newPoint);
         }
@@ -40,7 +44,6 @@ public class BathroomSecurity2 implements Solver<String>{
                 case D -> point.sub(Point.SOUTH);
                 case L -> point.add(Point.WEST);
                 case R -> point.add(Point.EAST);
-                default -> throw new IllegalArgumentException("Invalid move " + move);
             };
         }
     }
