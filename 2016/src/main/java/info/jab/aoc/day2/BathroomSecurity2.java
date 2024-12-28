@@ -40,6 +40,7 @@ public class BathroomSecurity2 implements Solver<String>{
                 case D -> point.sub(Point.SOUTH);
                 case L -> point.add(Point.WEST);
                 case R -> point.add(Point.EAST);
+                default -> throw new IllegalArgumentException("Invalid move " + move);
             };
         }
     }
