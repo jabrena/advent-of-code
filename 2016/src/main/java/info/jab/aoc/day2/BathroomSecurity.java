@@ -1,101 +1,111 @@
 package info.jab.aoc.day2;
 
+import java.util.HashMap;
 import java.util.List;
-import com.putoet.grid.Grid;
-import com.putoet.grid.Point;
+import java.util.Map;
+
 import com.putoet.resources.ResourceLines;
 
 import info.jab.aoc.Solver;
 
 public class BathroomSecurity implements Solver<String>{
 
-    private final char[][] KEYPAD_PART1 = {
-        {'1', '2', '3'},
-        {'4', '5', '6'},
-        {'7', '8', '9'}
+    private static final int[][] KEYPAD = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
     };
 
-    private final char[][] KEYPAD_PART2 = {
-        {' ', ' ', '1', ' ', ' '},
-        {' ', '2', '3', '4', ' '},
-        {'5', '6', '7', '8', '9'},
-        {' ', 'A', 'B', 'C', ' '},
-        {' ', ' ', 'D', ' ', ' '}
-    };
+    private static final Map<Position, Character> KEYPAD_PART2 = new HashMap<>();
+    
+    static {
+        // Initialize diamond-shaped keypad
+        KEYPAD_PART2.put(new Position(0, 2), '1');
+        KEYPAD_PART2.put(new Position(1, 1), '2');
+        KEYPAD_PART2.put(new Position(1, 2), '3');
+        KEYPAD_PART2.put(new Position(1, 3), '4');
+        KEYPAD_PART2.put(new Position(2, 0), '5');
+        KEYPAD_PART2.put(new Position(2, 1), '6');
+        KEYPAD_PART2.put(new Position(2, 2), '7');
+        KEYPAD_PART2.put(new Position(2, 3), '8');
+        KEYPAD_PART2.put(new Position(2, 4), '9');
+        KEYPAD_PART2.put(new Position(3, 1), 'A');
+        KEYPAD_PART2.put(new Position(3, 2), 'B');
+        KEYPAD_PART2.put(new Position(3, 3), 'C');
+        KEYPAD_PART2.put(new Position(4, 2), 'D');
+    }
 
-    private enum Move {
-        U, D, L, R;
-
-        public Point apply(Point point) {
-            return switch (this) {
-                case U -> point.sub(Point.NORTH);
-                case D -> point.sub(Point.SOUTH);
-                case L -> point.add(Point.WEST);
-                case R -> point.add(Point.EAST);
-            };
+    private static record Position(int row, int col) {
+        
+        Position move(char direction) {
+            Position newPos = new Position(row, col);
+            switch (direction) {
+                case 'U' -> newPos = new Position(row - 1, col);
+                case 'D' -> newPos = new Position(row + 1, col);
+                case 'L' -> newPos = new Position(row, col - 1);
+                case 'R' -> newPos = new Position(row, col + 1);
+            }
+            return newPos;
         }
     }
 
-    private record Direction(Point point) {
-        Direction move(char direction) {
-            Move move = Move.valueOf(String.valueOf(direction));
-            Point newPoint = move.apply(point);
-            return new Direction(newPoint);
-        }
+    private boolean isValidPosition(int row, int col) {
+        return row >= 0 && row < 3 && col >= 0 && col < 3;
     }
 
-    private boolean isValidPosition(Point point, Grid grid) {
-        return point.y() >= 0 && 
-               point.y() < grid.maxY() &&
-               point.x() >= 0 && 
-               point.x() < grid.maxX() &&
-               grid.get(point) != ' ';
-    }
-
-    private Direction initializeStartPosition(Grid grid) {
-        Point start = grid.findFirst(c -> c == '5').orElseThrow();
-        return new Direction(start);
-    }
 
     @Override
     public String solvePartOne(String fileName) {
-        StringBuilder result = new StringBuilder();
-
-        // Start at 5
-        Grid grid = new Grid(KEYPAD_PART1);
-        Direction current = initializeStartPosition(grid);
-    
         List<String> lines = ResourceLines.list(fileName);
+        StringBuilder code = new StringBuilder();
+        
+        // Start at 5 (position 1,1)
+        int row = 1;
+        int col = 1;
+        
         for (String line : lines) {
             for (char move : line.toCharArray()) {
-                Direction next = current.move(move);
-                if (isValidPosition(next.point(), grid)) {
-                    current = next;
+                int newRow = row;
+                int newCol = col;
+                
+                switch (move) {
+                    case 'U': newRow--; break;
+                    case 'D': newRow++; break;
+                    case 'L': newCol--; break;
+                    case 'R': newCol++; break;
+                }
+                
+                // Only move if valid position
+                if (isValidPosition(newRow, newCol)) {
+                    row = newRow;
+                    col = newCol;
                 }
             }
-            result.append(KEYPAD_PART1[current.point().y()][current.point().x()]);
+            
+            // Add current digit to code
+            code.append(KEYPAD[row][col]);
         }
-        return result.toString();
+        
+        return code.toString();
     }
 
     @Override
     public String solvePartTwo(String fileName) {
-        StringBuilder result = new StringBuilder();
-
-        // Start at 5
-        Grid grid = new Grid(KEYPAD_PART2);
-        Direction current = initializeStartPosition(grid);
-    
         List<String> lines = ResourceLines.list(fileName);
+        StringBuilder code = new StringBuilder();
+        Position current = new Position(2, 0); // Start at '5'
+        
         for (String line : lines) {
             for (char move : line.toCharArray()) {
-                Direction next = current.move(move);
-                if (isValidPosition(next.point(), grid)) {
+                Position next = current.move(move);
+                if (KEYPAD_PART2.containsKey(next)) {
                     current = next;
                 }
             }
-            result.append(KEYPAD_PART2[current.point().y()][current.point().x()]);
+            code.append(KEYPAD_PART2.get(current));
         }
-        return result.toString();
+        
+        return code.toString();
     }
+
 }

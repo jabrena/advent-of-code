@@ -3,4 +3,4 @@
 | #  | Time     | Link                  | Techniques              | Category                     |
 |----|----------|-----------------------|-------------------------|------------------------------|
 | 1  | NA |  |  |  |
-| 2  | NA | [BathroomSecurity](./src/main/java/info/jab/aoc/day2/BathroomSecurity.java) | Pattern Matching, Grid, Point | Direction |
+| 2  | NA | [BathroomSecurity2](./src/main/java/info/jab/aoc/day2/BathroomSecurity2.java) | Pattern Matching, Grid, Point | Direction |
