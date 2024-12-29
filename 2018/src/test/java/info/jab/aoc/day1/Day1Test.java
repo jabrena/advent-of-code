@@ -17,7 +17,7 @@ class Day1Test {
         var result = day1.getPart1Result(fileName);
 
         //Then
-        then(result).isEqualTo(889779);
+        then(result).isEqualTo(477);
     }
 
     @Disabled
