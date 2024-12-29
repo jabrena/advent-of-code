@@ -2,7 +2,12 @@ package info.jab.aoc.day1;
 
 import java.util.List;
 
-public class FrequencyDevice {
+import com.putoet.resources.ResourceLines;
+
+import info.jab.aoc.Solver;
+
+public class FrequencyDevice implements Solver<Integer> {
+
     private int frequency = 0;
     
     public int getFrequency() {
@@ -30,5 +35,20 @@ public class FrequencyDevice {
     
     public void applyChanges(List<String> changes) {
         changes.forEach(this::applyChange);
+    }
+
+    @Override
+    public Integer solvePartOne(String fileName) {
+        List<String> input = ResourceLines.list(fileName);
+        
+        FrequencyDevice device = new FrequencyDevice();
+        device.applyChanges(input);
+        
+        return device.getFrequency();
+    }
+
+    @Override
+    public Integer solvePartTwo(String fileName) {
+        throw new UnsupportedOperationException();
     }
 }
