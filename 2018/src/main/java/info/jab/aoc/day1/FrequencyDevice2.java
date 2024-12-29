@@ -1,6 +1,5 @@
 package info.jab.aoc.day1;
 
-import java.rmi.server.Operation;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,6 +50,9 @@ public class FrequencyDevice2 implements Solver<Integer> {
                    .reduce(0, Integer::sum);
     }
 
+
+    //WIP
+    
     private int findFirstDuplicate(List<String> changes) {
         Set<Integer> frequencies = new HashSet<>();
         int currentFrequency = 0;
