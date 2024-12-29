@@ -9,7 +9,7 @@ import com.putoet.resources.ResourceLines;
 
 import info.jab.aoc.Solver;
 
-public class FrequencyDevice3 implements Solver<Integer> {
+class FrequencyDevice3 implements Solver<Integer> {
     
     private enum Operation {
         PLUS('+'),

@@ -3,13 +3,12 @@ package info.jab.aoc.day1;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import com.putoet.resources.ResourceLines;
 
 import info.jab.aoc.Solver;
 
-public class FrequencyDevice2 implements Solver<Integer> {
+class FrequencyDevice2 implements Solver<Integer> {
     
     private enum Operation {
         PLUS('+'),
