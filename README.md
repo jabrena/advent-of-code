@@ -14,6 +14,13 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 
 - [2024](./2024/README.md)
 - [2016](./2016/README.md)
+- [2015](./2015/README.md)
+
+## Benefits solving AOC problems
+
+- Improve Java programming skills
+- Improve my skills in functional design using (Enums, Streams, Records, ADTs)
+- Learn about new Algorithms and Data Structures (BFS, Dijkstra, A*, etc.)
 
 ## How to build in local?
 
@@ -22,8 +29,8 @@ java -version
 ./mvnw clean verify
 ./mvnw clean verify -T 8C
 ./mvnw -pl 2016 clean compile -am
-./mvnw -pl 2016 clean verify -am
-./mvnw -pl 2018 clean test -Dtest=Day1Test
+./mvnw -pl 2015 clean verify -am
+./mvnw -pl 2015 clean test -Dtest=Day1Test
 ./mvnw -pl 2016 clean dependency:tree
 ./mvnw -pl 2016 clean verify surefire-report:report -DshowSuccess=false
 jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
