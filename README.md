@@ -20,9 +20,10 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 ```bash
 java -version
 ./mvnw clean verify
+./mvnw clean verify -T 8C
 ./mvnw -pl 2016 clean compile -am
 ./mvnw -pl 2016 clean verify -am
-./mvnw -pl 2016 clean test -Dtest=Day2Test
+./mvnw -pl 2018 clean test -Dtest=Day1Test
 ./mvnw -pl 2016 clean dependency:tree
 ./mvnw -pl 2016 clean verify surefire-report:report -DshowSuccess=false
 jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
@@ -72,8 +73,8 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 
 ### Others
 
-
 - https://adventofcode.com/
+- https://adventofcode.com/2024/events
 - https://github.com/jasonmuzzy/aoc-copilot
 - https://www.reddit.com/r/adventofcode/
 - https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Funny%22

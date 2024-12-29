@@ -251,6 +251,13 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
+                <!--
+                <configuration>
+                    <parallel>all</parallel>
+                    <useUnlimitedThreads>true</useUnlimitedThreads>
+                    <perCoreThreadCount>true</perCoreThreadCount>
+                </configuration>
+                -->
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
