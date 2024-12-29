@@ -73,8 +73,8 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 
 ### Others
 
-
 - https://adventofcode.com/
+- https://adventofcode.com/2024/events
 - https://github.com/jasonmuzzy/aoc-copilot
 - https://www.reddit.com/r/adventofcode/
 - https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Funny%22

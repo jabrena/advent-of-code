@@ -25,7 +25,6 @@ class Day1Test {
         });
     }
 
-    @Disabled
     @Test
     void should_solve_day1_part2() {
         //Given
@@ -36,7 +35,7 @@ class Day1Test {
         var result = day.getPart2Result(fileName);
 
         //Then
-        then(result).isEqualTo(76110336);
+        then(result).isEqualTo(390);
     }
 
 }
