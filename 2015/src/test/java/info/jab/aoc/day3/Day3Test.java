@@ -9,7 +9,7 @@ import com.putoet.utils.Timer;
 class Day3Test {
 
     @Test
-    void should_solve_day2_part1() {
+    void should_solve_day3_part1() {
         Timer.run(() -> {
             //Given
             String fileName = "/day3/day3-input.txt";
@@ -19,12 +19,12 @@ class Day3Test {
             var result = day.getPart1Result(fileName);
 
             //Then
-            then(result).isEqualTo(1586300);
+            then(result).isEqualTo(2081);
         });
     }
 
     @Test
-    void should_solve_day2_part2() {
+    void should_solve_day3_part2() {
         Timer.run(() -> {
             //Given
             String fileName = "/day3/day3-input.txt";
@@ -34,7 +34,7 @@ class Day3Test {
             var result = day.getPart2Result(fileName);
 
             //Then
-            then(result).isEqualTo(3737498);
+            then(result).isEqualTo(2341);
         });
     }
 
