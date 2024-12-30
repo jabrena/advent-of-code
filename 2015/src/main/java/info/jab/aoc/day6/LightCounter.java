@@ -1,7 +1,6 @@
 package info.jab.aoc.day6;
 
 import java.util.Arrays;
-import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +40,7 @@ public class LightCounter implements Solver<Long>{
         }
     }
 
-    private void executeCommand(int[][] grid, CommandType command, Point start, Point end) {
+    private void executeCommand1(int[][] grid, CommandType command, Point start, Point end) {
         switch (command) {
             case TURN_ON -> turnOn(grid, start, end);
             case TURN_OFF -> turnOff(grid, start, end);
@@ -61,12 +60,10 @@ public class LightCounter implements Solver<Long>{
         }
 
         public static CommandType fromString(String text) {
-            for (CommandType cmd : CommandType.values()) {
-                if (cmd.text.equals(text)) {
-                    return cmd;
-                }
-            }
-            throw new IllegalArgumentException("Comando no válido: " + text);
+            return Arrays.stream(CommandType.values())
+                    .filter(cmd -> cmd.text.equals(text))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid command: " + text));
         }
     }
 
@@ -86,6 +83,22 @@ public class LightCounter implements Solver<Long>{
                      Integer.parseInt(matcher.group(3).split(",")[1])));
     }
 
+    private void executeCommand2(int[][] grid, CommandType command, Point start, Point end) {
+        for (int i = start.x(); i <= end.x(); i++) {
+            for (int j = start.y(); j <= end.y(); j++) {
+                switch (command) {
+                    case TURN_ON -> grid[i][j]++;
+                    case TURN_OFF -> {
+                        if (grid[i][j] > 0) {
+                            grid[i][j]--;
+                        }
+                    }
+                    case TOGGLE -> grid[i][j] += 2;
+                }
+            }
+        }
+    }
+
     @Override
     public Long solvePartOne(String fileName) {
         var lines = ResourceLines.list(fileName);
@@ -94,7 +107,7 @@ public class LightCounter implements Solver<Long>{
         int[][] grid = new int[GRID_SIZE][GRID_SIZE];
         lines.stream()
             .map(this::parseLightCommand)
-            .forEach(cmd -> executeCommand(grid, cmd.command(), cmd.start(), cmd.end()));
+            .forEach(cmd -> executeCommand1(grid, cmd.command(), cmd.start(), cmd.end()));
 
         return Arrays.stream(grid)
             .flatMapToInt(Arrays::stream)
@@ -102,45 +115,16 @@ public class LightCounter implements Solver<Long>{
             .count();
     }
 
-    //TODO Refactor
-    private void processInstructionsPart2(int[][] grid, String instruction) {
-        String[] parts = instruction.split(" ");
-        if (instruction.startsWith("turn on")) {
-            processCoordinates(grid, parts[2], parts[4], (x, y) -> grid[x][y]++);
-        } else if (instruction.startsWith("turn off")) {
-            processCoordinates(grid, parts[2], parts[4], (x, y) -> {
-                if (grid[x][y] > 0) {
-                    grid[x][y]--;
-                }
-            });
-        } else if (instruction.startsWith("toggle")) {
-            processCoordinates(grid, parts[1], parts[3], (x, y) -> grid[x][y] += 2);
-        }
-    }
-
-    private void processCoordinates(int[][] grid, String start, String end, BiConsumer<Integer, Integer> operation) {
-        String[] startCoord = start.split(",");
-        String[] endCoord = end.split(",");
-        
-        int startX = Integer.parseInt(startCoord[0]);
-        int startY = Integer.parseInt(startCoord[1]);
-        int endX = Integer.parseInt(endCoord[0]);
-        int endY = Integer.parseInt(endCoord[1]);
-        
-        for (int x = startX; x <= endX; x++) {
-            for (int y = startY; y <= endY; y++) {
-                operation.accept(x, y);
-            }
-        }
-    }
-
     @Override
     public Long solvePartTwo(String fileName) {
         var lines = ResourceLines.list(fileName);
 
+        //TODO Avoid mutability
         int[][] grid = new int[GRID_SIZE][GRID_SIZE];
  
-        lines.forEach(line -> processInstructionsPart2(grid, line));
+        lines.stream()
+            .map(this::parseLightCommand)
+            .forEach(cmd -> executeCommand2(grid, cmd.command(), cmd.start(), cmd.end()));
 
         return Arrays.stream(grid)
                     .flatMapToInt(Arrays::stream)
