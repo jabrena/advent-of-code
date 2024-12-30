@@ -1,4 +1,5 @@
 package info.jab.aoc.day6;
+
 public class LightController {
     private LightGrid lightGrid;
 

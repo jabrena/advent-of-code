@@ -19,7 +19,7 @@ class Day6Test {
             var result = day.getPart1Result(fileName);
 
             //Then
-            then(result).isEqualTo(238);
+            then(result).isEqualTo(377891);
         });
     }
 
@@ -34,7 +34,7 @@ class Day6Test {
             var result = day.getPart2Result(fileName);
 
             //Then
-            then(result).isEqualTo(69);
+            then(result).isEqualTo(14110788);
         });
     }
 
