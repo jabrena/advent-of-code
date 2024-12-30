@@ -1,56 +1,19 @@
 package info.jab.aoc.day6;
 
-import com.putoet.grid.Grid;
-
 import java.util.function.BiConsumer;
 
-public class LightGrid {
+import com.putoet.resources.ResourceLines;
+
+import info.jab.aoc.Solver;
+
+class LightAndBrightnessCountger implements Solver<Long>{
 
     private static final int GRID_SIZE = 1000;
     private int[][] grid2;
-    private Grid grid3;
 
-    public LightGrid() {
+    public LightAndBrightnessCountger() {
         grid2 = new int[GRID_SIZE][GRID_SIZE];
-        grid3 = new Grid(new char[GRID_SIZE][GRID_SIZE]);
     }
-
-    public void turnOn(int x1, int y1, int x2, int y2) {
-        for (int i = x1; i <= x2; i++) {
-            for (int j = y1; j <= y2; j++) {
-                grid3.set(i, j, '1');
-            }
-        }
-    }
-
-    public void turnOff(int x1, int y1, int x2, int y2) {
-        for (int i = x1; i <= x2; i++) {
-            for (int j = y1; j <= y2; j++) {
-                grid3.set(i, j, '0');
-            }
-        }
-    }
-
-    public void toggle(int x1, int y1, int x2, int y2) {
-        for (int i = x1; i <= x2; i++) {
-            for (int j = y1; j <= y2; j++) {
-                char currentValue = grid3.get(i, j);
-                grid3.set(i, j, currentValue == '1' ? '0' : '1');
-            }
-        }
-    }
-
-    public int getNumberOfLightsOn() {
-        int count = 0;
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                if (grid3.get(i, j) == '1') count++;
-            }
-        }
-        return count;
-    }
-
-    //Part 2
 
     public void processInstructionsPart2(String instruction) {
         String[] parts = instruction.split(" ");
@@ -92,4 +55,22 @@ public class LightGrid {
         }
         return totalBrightness;
     }
-} 
+
+    @Override
+    public Long solvePartOne(String fileName) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'solvePartTwo'");
+    }
+
+    @Override
+    public Long solvePartTwo(String fileName) {
+        var lines = ResourceLines.list(fileName);
+
+        for (String line : lines) {
+            processInstructionsPart2(line);
+        }
+
+        return getTotalBrightness();
+    }
+
+}
