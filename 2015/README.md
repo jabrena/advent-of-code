@@ -7,3 +7,4 @@
 | 3  | NA | [Houses3](./src/main/java/info/jab/aoc/day3/Houses3.java) |  | Direction |
 | 4  | NA | [AdventCoinMiner](./src/main/java/info/jab/aoc/day4/AdventCoinMiner.java) |  | Data processing |
 | 5  | NA | [StringValidator](./src/main/java/info/jab/aoc/day5/StringValidator.java) |  | Data processing |
+| 6  | NA | [LightCounter](./src/main/java/info/jab/aoc/day6/LightCounter.java) |  | Data processing |
