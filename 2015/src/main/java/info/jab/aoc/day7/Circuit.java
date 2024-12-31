@@ -1,5 +1,6 @@
 package info.jab.aoc.day7;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,33 @@ public class Circuit implements Solver<Integer> {
 
     @Override
     public Integer solvePartTwo(String fileName) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'solvePartTwo'");
+        // Solve part 1 first
+        Integer signalA = solvePartOne(fileName);
+        
+        // Reset the circuit
+        this.wires = new HashMap<>();
+        
+        // Solve again with 'a' value as input for 'b'
+        var lines = ResourceLines.list(fileName);
+        List<Instruction> instructions = lines.stream()
+            .map(Instruction::parse)
+            .collect(Collectors.toList());
+            
+        // Set 'b' wire to previous 'a' result
+        setWireValue("b", signalA);
+        
+        // Process instructions, ignoring any attempt to change 'b'
+        while (!instructions.isEmpty()) {
+            List<Instruction> beforeSize = new ArrayList<>(instructions);
+            instructions.removeIf(instruction -> 
+                instruction.output().equals("b") || tryProcessInstruction(instruction));
+            
+            // If no instructions were processed in this iteration, there's a problem
+            if (beforeSize.size() == instructions.size()) {
+                throw new IllegalStateException("Cannot process more instructions. Possible cycle detected.");
+            }
+        }
+        
+        return getWireSignal("a");
     }
 }

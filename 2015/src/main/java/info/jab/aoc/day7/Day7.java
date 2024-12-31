@@ -11,6 +11,6 @@ public class Day7 implements Day<Integer> {
 
     @Override
     public Integer getPart2Result(String fileName) {
-        throw new UnsupportedOperationException("Not implemented");
+        return new Circuit().solvePartTwo(fileName);
     }
 }

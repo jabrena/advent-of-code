@@ -24,20 +24,18 @@ class Day7Test {
         });
     }
 
-    @Disabled
     @Test
     void should_solve_day7_part2() {
         Timer.run(() -> {
             //Given
-            String fileName = "/day6/day6-input.txt";
+            String fileName = "/day7/day7-input.txt";
 
             //When
             var day = new Day7();
             var result = day.getPart2Result(fileName);
 
             //Then
-            then(result).isEqualTo(14110788);
+            then(result).isEqualTo(14710);
         });
     }
-
 }
