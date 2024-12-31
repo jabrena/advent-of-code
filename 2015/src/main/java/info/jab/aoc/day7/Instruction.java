@@ -1,49 +1,56 @@
 package info.jab.aoc.day7;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 // Instruction.java
-public class Instruction {
-    private final String raw;
+public record Instruction(String input1, String operation, String input2, String output) {
+    
+    private static final String INSTRUCTION_PATTERN = "^(?:(?:([a-z0-9]+)\\s+)?([A-Z]+)\\s+([a-z0-9]+)|([a-z0-9]+))\\s+->\\s+([a-z]+)$";
+    private static final Pattern INSTRUCTION_PATTERN_COMPILED = Pattern.compile(INSTRUCTION_PATTERN);
 
-    public Instruction(String instruction) {
-        this.raw = instruction;
-    }
+    public static Instruction parse(String raw) {
+        Matcher matcher = INSTRUCTION_PATTERN_COMPILED.matcher(raw);
+        if (!matcher.find()) {
+            throw new IllegalArgumentException("Invalid instruction: " + raw);
+        }
 
-    public String[] parse() {
-        String[] parts = new String[4]; // [input1, operation, input2, output]
-        
         String[] splitArrow = raw.split("->");
         String output = splitArrow[1].trim();
         String input = splitArrow[0].trim();
         
+        String input1 = null;
+        String operation = null;
+        String input2 = null;
+        
         if (input.startsWith("NOT")) {
-            parts[0] = input.substring(4).trim();
-            parts[1] = "NOT";
+            input1 = input.substring(4).trim();
+            operation = "NOT";
         } else if (input.contains("AND")) {
             String[] ops = input.split("AND");
-            parts[0] = ops[0].trim();
-            parts[1] = "AND";
-            parts[2] = ops[1].trim();
+            input1 = ops[0].trim();
+            operation = "AND";
+            input2 = ops[1].trim();
         } else if (input.contains("OR")) {
             String[] ops = input.split("OR");
-            parts[0] = ops[0].trim();
-            parts[1] = "OR";
-            parts[2] = ops[1].trim();
+            input1 = ops[0].trim();
+            operation = "OR";
+            input2 = ops[1].trim();
         } else if (input.contains("LSHIFT")) {
             String[] ops = input.split("LSHIFT");
-            parts[0] = ops[0].trim();
-            parts[1] = "LSHIFT";
-            parts[2] = ops[1].trim();
+            input1 = ops[0].trim();
+            operation = "LSHIFT";
+            input2 = ops[1].trim();
         } else if (input.contains("RSHIFT")) {
             String[] ops = input.split("RSHIFT");
-            parts[0] = ops[0].trim();
-            parts[1] = "RSHIFT";
-            parts[2] = ops[1].trim();
+            input1 = ops[0].trim();
+            operation = "RSHIFT";
+            input2 = ops[1].trim();
         } else {
-            parts[0] = input;
-            parts[1] = "->";
+            input1 = input;
+            operation = "->";
         }
         
-        parts[3] = output;
-        return parts;
+        return new Instruction(input1, operation, input2, output);
     }
 }

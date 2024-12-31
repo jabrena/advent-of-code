@@ -1,69 +1,45 @@
 package info.jab.aoc.day7;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import com.putoet.resources.ResourceLines;
-
 import info.jab.aoc.Solver;
 
 public class Circuit implements Solver<Integer> {
 
     private Map<String, Wire> wires;
-    private List<Instruction> instructions;
-    private static final Pattern INSTRUCTION_PATTERN = Pattern.compile("(\\w+|\\d+)\\s*(AND|OR|LSHIFT|RSHIFT|->|NOT)?\\s*(\\w+|\\d+)?\\s*->\\s*(\\w+)");
-
+ 
     public Circuit() {
         this.wires = new HashMap<>();
-        this.instructions = new ArrayList<>();
-    }
-
-    public void addInstruction(String instruction) {
-        Matcher matcher = INSTRUCTION_PATTERN.matcher(instruction);
-        if (matcher.find()) {
-            instructions.add(new Instruction(instruction));
-        }
-    }
-
-    public void processInstructions() {
-        while (!instructions.isEmpty()) {
-            Iterator<Instruction> iterator = instructions.iterator();
-            while (iterator.hasNext()) {
-                Instruction instruction = iterator.next();
-                if (tryProcessInstruction(instruction)) {
-                    iterator.remove();
-                }
-            }
-        }
     }
 
     private boolean tryProcessInstruction(Instruction instruction) {
-        String[] parts = instruction.parse();
-        String operation = parts[1];
-        String output = parts[3];
-
         try {
-            if (operation == null || operation.equals("->")) {
-                int value = getValue(parts[0]);
-                setWireValue(output, value);
+            if (instruction.operation() == null || instruction.operation().equals("->")) {
+                int value = getValue(instruction.input1());
+                setWireValue(instruction.output(), value);
                 return true;
-            } else if (operation.equals("NOT")) {
-                int value = getValue(parts[0]);
-                setWireValue(output, ~value & 0xFFFF);
+            } else if (instruction.operation().equals("NOT")) {
+                int value = getValue(instruction.input1());
+                setWireValue(instruction.output(), ~value & 0xFFFF);
                 return true;
             } else {
-                int left = getValue(parts[0]);
-                int right = getValue(parts[2]);
+                int left = getValue(instruction.input1());
+                int right = getValue(instruction.input2());
                 
-                int result = switch(operation) {
+                int result = switch(instruction.operation()) {
                     case "AND" -> left & right;
                     case "OR" -> left | right;
                     case "LSHIFT" -> (left << right) & 0xFFFF;
                     case "RSHIFT" -> (left >>> right) & 0xFFFF;
-                    default -> throw new IllegalArgumentException("Unknown operation: " + operation);
+                    default -> throw new IllegalArgumentException("Unknown operation: " + instruction.operation());
                 };
                 
-                setWireValue(output, result);
+                setWireValue(instruction.output(), result);
                 return true;
             }
         } catch (NoSuchElementException e) {
@@ -93,13 +69,16 @@ public class Circuit implements Solver<Integer> {
         return wire != null && wire.hasSignal() ? wire.getSignal() : null;
     }
 
-
     @Override
     public Integer solvePartOne(String fileName) {
         var lines = ResourceLines.list(fileName);
-        lines.stream().forEach(this::addInstruction);
+        List<Instruction> instructions = lines.stream()
+            .map(Instruction::parse)
+            .collect(Collectors.toList());//Mutable list
 
-        processInstructions();
+        while (!instructions.isEmpty()) {
+            instructions.removeIf(this::tryProcessInstruction);
+        }
         return getWireSignal("a");
     }
 
