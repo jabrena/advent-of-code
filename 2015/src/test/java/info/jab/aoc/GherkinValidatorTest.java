@@ -3,48 +3,45 @@ package info.jab.aoc;
 import io.cucumber.gherkin.GherkinParser;
 import io.cucumber.messages.types.Envelope;
 import io.cucumber.messages.types.GherkinDocument;
+import io.cucumber.messages.types.Source;
+import io.cucumber.messages.types.SourceMediaType;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 public class GherkinValidatorTest {
 
-    @Disabled
     @Test
     void validateAllGherkinFiles() throws IOException {
-        // Encuentra todos los archivos .feature recursivamente
         try (Stream<Path> paths = Files.walk(Paths.get("src/main/gherkin"))) {
             paths.filter(Files::isRegularFile)
                  .filter(path -> path.toString().endsWith(".feature"))
-                 .forEach(this::validateGherkinFile);
+                 .map(Path::toString)
+                 .peek(System.out::println)
+                 .forEach(this::getGherkinDocument);
         }
     }
 
-    private void validateGherkinFile(Path path) {
+    private GherkinDocument getGherkinDocument(String fileName) {
         try {
-            GherkinParser parser = GherkinParser.builder().build();
+            var feature = Files.readString(Paths.get(fileName));
+            var envelope = Envelope.of(new Source("minimal.feature", feature, SourceMediaType.TEXT_X_CUCUMBER_GHERKIN_PLAIN));
             
-            // Validar el documento - si no hay excepciones, el archivo es válido
-            Optional<GherkinDocument> doc = parser.parse(path)
-                .filter(envelope -> envelope.getGherkinDocument() != null)
-                .map(Envelope::getGherkinDocument)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No se encontró GherkinDocument en " + path));
-            
-            // Si llegamos aquí, el documento es válido
-            System.out.println("Archivo válido: " + path);
-            
-        } catch (Exception e) {
-            throw new AssertionError(
-                "Error validando archivo: " + path + "\n" + e.getMessage(), e);
+            return GherkinParser.builder()
+                .includeSource(false)
+                .includePickles(false)
+                .build()
+                .parse(envelope)
+                .findFirst().get()
+                .getGherkinDocument().get();
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading file: " + fileName, e);
         }
     }
+
 }
