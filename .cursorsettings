@@ -1,0 +1,71 @@
+{
+    "editor": {
+        "formatOnSave": true,
+        "tabSize": 4,
+        "insertSpaces": true,
+        "trimTrailingWhitespace": true,
+        "insertFinalNewline": true
+    },
+    "java": {
+        "compiler.version": "24",
+        "format.settings.profile": "GoogleStyle",
+        "format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+        "saveActions.organizeImports": true
+    },
+    "documentation": {
+        "defaultLanguage": "en-US",
+        "javadoc": {
+            "required": true,
+            "scope": ["public", "protected"],
+            "requiredTags": ["@param", "@return", "@throws"],
+            "style": {
+                "brief": true,
+                "firstSentenceEndPunctuation": true
+            }
+        },
+        "comments": {
+            "language": "en-US",
+            "rules": {
+                "algorithmExplanation": {
+                    "required": true,
+                    "template": [
+                        "Algorithm explanation:",
+                        "1. Time Complexity: O(?)",
+                        "2. Space Complexity: O(?)",
+                        "3. Approach:",
+                        "   - Step 1:",
+                        "   - Step 2:",
+                        "   - Step n:",
+                        "4. Edge cases considered:"
+                    ]
+                },
+                "inlineComments": {
+                    "style": "brief",
+                    "language": "en-US"
+                }
+            }
+        }
+    },
+    "files": {
+        "exclude": {
+            "**/.git": true,
+            "**/.svn": true,
+            "**/.hg": true,
+            "**/CVS": true,
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true,
+            "**/target": true,
+            "**/.settings": true,
+            "**/.classpath": true,
+            "**/.project": true
+        }
+    },
+    "search": {
+        "exclude": {
+            "**/node_modules": true,
+            "**/bower_components": true,
+            "**/target": true,
+            "**/*.class": true
+        }
+    }
+} 
