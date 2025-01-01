@@ -12,6 +12,7 @@ import info.jab.aoc.Solver;
 
 public class Circuit implements Solver<Integer> {
 
+    //TODO Not maintain the state
     private Map<String, Wire> wires;
  
     public Circuit() {

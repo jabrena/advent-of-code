@@ -3,7 +3,6 @@ package info.jab.aoc.day7;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// Instruction.java
 public record Instruction(String input1, String operation, String input2, String output) {
     
     private static final String INSTRUCTION_PATTERN = "^(?:(?:([a-z0-9]+)\\s+)?([A-Z]+)\\s+([a-z0-9]+)|([a-z0-9]+))\\s+->\\s+([a-z]+)$";
