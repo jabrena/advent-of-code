@@ -129,3 +129,12 @@ Item 87: Consider using a custom serialized form
 Item 88: Write readObject methods defensively 
 Item 89: For instance control, prefer enum types to readResolve 
 Item 90: Consider serialization proxies instead of serialized instances 
+
+# Notes to avoid concurency issues
+
+- Try to not maintain state in the class
+
+# Notes to improve functional programming
+
+- Try to use immutable objects
+- Try to not mutate the state of the objects
