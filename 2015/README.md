@@ -9,3 +9,4 @@
 | 5  | NA | [StringValidator](./src/main/java/info/jab/aoc/day5/StringValidator.java) |  | Data processing |
 | 6  | NA | [LightCounter](./src/main/java/info/jab/aoc/day6/LightCounter.java) |  | Data processing |
 | 7  | NA | [Circuit](./src/main/java/info/jab/aoc/day7/Circuit.java) |  | Data processing |
+| 8  | NA | [StringLiteralCalculator](./src/main/java/info/jab/aoc/day8/StringLiteralCalculator.java) |  | Data processing |
