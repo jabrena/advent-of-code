@@ -31,6 +31,7 @@
 
         <junit-jupiter.version>5.11.4</junit-jupiter.version>
         <assertj-core.version>3.26.3</assertj-core.version>
+        <cucumber-gherkin.version>30.0.4</cucumber-gherkin.version>
 
         <jol.version>0.17</jol.version>
         <jmh.version>1.37</jmh.version>
@@ -112,6 +113,16 @@
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj-core.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.cucumber</groupId>
+                <artifactId>cucumber-gherkin</artifactId>
+                <version>${cucumber-gherkin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cucumber</groupId>
+                <artifactId>gherkin</artifactId>
+                <version>${cucumber-gherkin.version}</version>
+            </dependency>
 
             <!-- JOL -->
             <dependency>
@@ -180,6 +191,17 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-gherkin</artifactId>
+            <version>7.15.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>gherkin</artifactId>
             <scope>test</scope>
         </dependency>
 
