@@ -20,6 +20,7 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 
 - Improve Java programming skills
 - Improve my skills in functional design using (Enums, Streams, Records, ADTs)
+- Explore DOP, Data Oriented Programming
 - Learn about new Algorithms and Data Structures (BFS, Dijkstra, A*, etc.)
 
 ## How to build in local?
@@ -41,20 +42,21 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 
 ## References
 
-### Libraries
+### Libraries for AOC
 
 - https://github.com/z669016/aoc
-- https://github.com/z669016/algorithms
-- https://javadoc.io/doc/com.google.guava/guava/latest/index.html
-- https://github.com/dpaukov/combinatoricslib3
 - https://github.com/sim642/adventofcode/tree/master/src/main/scala/eu/sim642/adventofcodelib
 - https://github.com/bertjan/advent-of-code-2024/blob/main/src/main/java/utils/Matrix.java
 - https://github.com/p-kovacs/advent-of-code-2024/tree/master/src/main/java/com/github/pkovacs/util
 - https://github.com/hlipka/AdventOfCode/tree/main/java/src/util/de/hendriklipka/aoc
 - https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/common/Direction.java
-- https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/common/location/Loc.java
 - https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/util/AoCUtils.java
 - https://github.com/zodac/advent-of-code/tree/master/common-utils
+
+### General purpose libraries
+
+- https://javadoc.io/doc/com.google.guava/guava/latest/index.html
+- https://github.com/dpaukov/combinatoricslib3
 
 ### Examples
 
@@ -78,6 +80,12 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://github.com/search?q=aoc+2024+language%3AJava&type=repositories&s=updated&o=desc
 - https://github.com/search?q=advent+of+code+2024++language%3AJava&type=repositories&l=Java&s=updated&o=desc
 
+### JVM Links
+
+- https://openjdk.org/projects/code-tools/jol/
+- https://jmh.morethan.io/
+- https://inside.java/2024/05/23/dop-v1-1-introduction/
+
 ### Others
 
 - https://adventofcode.com/
@@ -86,8 +94,6 @@ jwebserver -p 9000 -d "$(pwd)/2024/target/reports"
 - https://www.reddit.com/r/adventofcode/
 - https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Funny%22
 - https://www.reddit.com/r/adventofcode/search/?q=flair_name%3A%22SOLUTION%20MEGATHREAD%22&restrict_sr=1
-- https://openjdk.org/projects/code-tools/jol/
-- https://jmh.morethan.io/
 
 ## Acknowledgements
 
