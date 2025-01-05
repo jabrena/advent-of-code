@@ -11,3 +11,5 @@
 | 7  | NA | [Circuit](./src/main/java/info/jab/aoc/day7/Circuit.java) | Complex String parsing | Data processing |
 | 8  | NA | [StringLiteralCalculator](./src/main/java/info/jab/aoc/day8/StringLiteralCalculator.java) |  | Data processing |
 | 9  | NA | [RouteOptimizer](./src/main/java/info/jab/aoc/day9/RouteOptimizer.java) |  | Data processing |
+| 10 | NA | [LookAndSay](./src/main/java/info/jab/aoc/day10/LookAndSay.java) |  | Data processing |
+| 11 | NA | [PasswordValidator](./src/main/java/info/jab/aoc/day11/PasswordValidator.java) |  | Data processing |
