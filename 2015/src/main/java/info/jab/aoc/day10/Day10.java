@@ -8,20 +8,16 @@ import info.jab.aoc.Day;
 public class Day10 implements Day<Integer> {
 
     @Override
-    public Integer getPart1Result(String fileName) {
-        String input = "1321131112";
+    public Integer getPart1Result(String input) {
         int iterations = 40;
-
-        String result = new LookAndSay3().applyLookAndSay(input, iterations);
+        String result = new LookAndSay().applyLookAndSay(input, iterations);
         return Integer.valueOf(result.length());
     }
 
     @Override
-    public Integer getPart2Result(String fileName) {
-        String input = "1321131112";
+    public Integer getPart2Result(String input) {
         int iterations = 50;
-
-        String result = new LookAndSay3().applyLookAndSay(input, iterations);
+        String result = new LookAndSay().applyLookAndSay(input, iterations);
         return Integer.valueOf(result.length());
     }
 }

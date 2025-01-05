@@ -6,8 +6,7 @@ import java.util.stream.IntStream;
 public class LookAndSay2 {
 
     public String applyLookAndSay(String input, int iterations) {
-        return IntStream.range(0, iterations)
-                .boxed()
+        return IntStream.range(0, iterations).boxed()
                 .reduce(input, (seq, step) -> generateNextSequence(seq), (s1, s2) -> s2);
     }
 
@@ -24,10 +23,9 @@ public class LookAndSay2 {
         return result.toString();
     }
 
-    private static int countConsecutive(String sequence, int endIndex) {
+    private int countConsecutive(String sequence, int endIndex) {
         char currentChar = sequence.charAt(endIndex);
         int count = 0;
-
         for (int i = endIndex; i >= 0 && sequence.charAt(i) == currentChar; i--) {
             count++;
         }

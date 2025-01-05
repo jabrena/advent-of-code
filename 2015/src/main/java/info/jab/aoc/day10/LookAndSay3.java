@@ -12,7 +12,6 @@ public class LookAndSay3 {
     public String generateNextSequence(String sequence) {
         StringBuilder nextSequence = new StringBuilder();
         int count = 1;
-
         for (int i = 1; i < sequence.length(); i++) {
             if (sequence.charAt(i) == sequence.charAt(i - 1)) {
                 count++;

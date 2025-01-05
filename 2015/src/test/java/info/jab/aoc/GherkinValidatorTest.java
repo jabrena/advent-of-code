@@ -16,32 +16,16 @@ import java.util.stream.Stream;
 
 public class GherkinValidatorTest {
 
+    private static final String GHERKIN_DIR = "src/test/gherkin";
+
     @Test
     void validateAllGherkinFiles() throws IOException {
-        try (Stream<Path> paths = Files.walk(Paths.get("src/main/gherkin"))) {
+        try (Stream<Path> paths = Files.walk(Paths.get(GHERKIN_DIR))) {
             paths.filter(Files::isRegularFile)
                  .filter(path -> path.toString().endsWith(".feature"))
                  .map(Path::toString)
                  .peek(System.out::println)
-                 .forEach(this::getGherkinDocument);
+                 .forEach(GherkinUtils::getGherkinDocument);
         }
     }
-
-    private GherkinDocument getGherkinDocument(String fileName) {
-        try {
-            var feature = Files.readString(Paths.get(fileName));
-            var envelope = Envelope.of(new Source("minimal.feature", feature, SourceMediaType.TEXT_X_CUCUMBER_GHERKIN_PLAIN));
-            
-            return GherkinParser.builder()
-                .includeSource(false)
-                .includePickles(false)
-                .build()
-                .parse(envelope)
-                .findFirst().get()
-                .getGherkinDocument().get();
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading file: " + fileName, e);
-        }
-    }
-
 }

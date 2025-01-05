@@ -4,11 +4,9 @@ public class LookAndSay {
 
     public String applyLookAndSay(String input, int iterations) {
         String sequence = input;
-
         for (int i = 0; i < iterations; i++) {
             sequence = generateNextSequence(sequence);
         }
-
         return sequence;
     }
 
@@ -23,6 +21,8 @@ public class LookAndSay {
                 count = 1;
             }
         }
+        
+        // Append the last run
         nextSequence.append(count).append(sequence.charAt(sequence.length() - 1));
         return nextSequence.toString();
     }
