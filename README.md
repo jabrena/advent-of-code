@@ -32,7 +32,7 @@ sdk env install
 ./mvnw clean verify -T 8C
 ./mvnw -pl 2015 clean compile -am
 ./mvnw -pl 2015 clean verify -am
-./mvnw -pl 2015 clean test -Dtest=Day12Test
+./mvnw -pl 2015 clean test -Dtest=Day13Test
 ./mvnw -pl 2015 clean test -Dtest=GherkinValidatorTest
 ./mvnw -pl 2015 clean dependency:tree
 ./mvnw -pl 2016 clean verify surefire-report:report -DshowSuccess=false
