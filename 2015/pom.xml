@@ -13,4 +13,12 @@
     <groupId>info.jab</groupId>
     <artifactId>advent-of-code-2015</artifactId>
     <version>0.1.0</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.18.2</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -13,3 +13,4 @@
 | 9  | NA | [RouteOptimizer](./src/main/java/info/jab/aoc/day9/RouteOptimizer.java) |  | Data processing |
 | 10 | NA | [LookAndSay](./src/main/java/info/jab/aoc/day10/LookAndSay.java) |  | Data processing |
 | 11 | NA | [PasswordValidator](./src/main/java/info/jab/aoc/day11/PasswordValidator.java) |  | Data processing |
+| 12 | NA | [JSONAbacus](./src/main/java/info/jab/aoc/day12/JSONAbacus.java) | Recursion | Data processing |
