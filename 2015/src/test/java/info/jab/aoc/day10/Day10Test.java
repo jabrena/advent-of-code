@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import com.putoet.utils.Timer;
 
-import info.jab.aoc.GherkinUtils;
-
 class Day10Test {
 
     @Test
@@ -17,10 +15,6 @@ class Day10Test {
             //Given
             String input = "1321131112";
 
-            //var gherkinFileName = "src/test/gherkin/day10-part1.feature";
-            //var gherkinDocument = GherkinUtils.getGherkinDocument(gherkinFileName);
-            //System.out.println(gherkinDocument.getFeature().get().getChildren().get(0));
-            
             //When
             var day = new Day10();
             var result = day.getPart1Result(input);

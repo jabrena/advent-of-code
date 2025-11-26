@@ -20,7 +20,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>24</java.version>
+        <java.version>25</java.version>
 
         <jcolor.version>5.5.1</jcolor.version>
         <putoet.aoc.version>1.7.0</putoet.aoc.version>
@@ -44,7 +44,7 @@
         <module>2022</module>
         <module>2021</module>
         <module>2020</module>
-        <module>2019</module>
+        <!--<module>2019</module>-->
         <module>2018</module>
         <module>2017</module>
         <module>2016</module>

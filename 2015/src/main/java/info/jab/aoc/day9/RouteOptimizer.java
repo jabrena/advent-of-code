@@ -101,7 +101,7 @@ public class RouteOptimizer implements Solver<Integer> {
         return new RouteResult(routePath.toString(), totalDistance);
     }
 
-    private RouteResult findRouteFromCity2(Map<String, Map<String, Integer>> distances, String startCity) {
+    private RouteResult findShortestRouteFromCity(Map<String, Map<String, Integer>> distances, String startCity) {
         List<String> cities = new ArrayList<>(distances.keySet());
         cities.remove(startCity);
         cities.add(0, startCity);
@@ -112,10 +112,29 @@ public class RouteOptimizer implements Solver<Integer> {
             .orElseThrow(() -> new IllegalStateException("No valid route found"));
     }
 
+    private RouteResult findLongestRouteFromCity(Map<String, Map<String, Integer>> distances, String startCity) {
+        List<String> cities = new ArrayList<>(distances.keySet());
+        cities.remove(startCity);
+        cities.add(0, startCity);
+        
+        return generateAllPermutations(cities).stream()
+            .map(route -> calculateRouteDistance(route, distances))
+            .max(Comparator.comparing(RouteResult::distance))
+            .orElseThrow(() -> new IllegalStateException("No valid route found"));
+    }
+
     private Pair<String, Integer> findShortestRoute(Map<String, Map<String, Integer>> distances) {
         return distances.keySet().stream()
-                .map(startCity -> findRouteFromCity2(distances, startCity))
+                .map(startCity -> findShortestRouteFromCity(distances, startCity))
                 .min(Comparator.comparing(RouteResult::distance))
+                .map(result -> Pair.of(result.route(), result.distance()))
+                .orElseThrow(() -> new IllegalStateException("No cities registered"));
+    }
+
+    private Pair<String, Integer> findLongestRoute(Map<String, Map<String, Integer>> distances) {
+        return distances.keySet().stream()
+                .map(startCity -> findLongestRouteFromCity(distances, startCity))
+                .max(Comparator.comparing(RouteResult::distance))
                 .map(result -> Pair.of(result.route(), result.distance()))
                 .orElseThrow(() -> new IllegalStateException("No cities registered"));
     }
@@ -160,6 +179,12 @@ public class RouteOptimizer implements Solver<Integer> {
 
     @Override
     public Integer solvePartTwo(String fileName) {
-        throw new UnsupportedOperationException("Not implemented");
+        //TODO Avoid the mutation is more complex to follow that current approach
+        var distances = new HashMap<String, Map<String, Integer>>();
+        var lines = ResourceLines.list(fileName);
+        lines.forEach(line -> parseLine(distances, line));
+        
+        Pair<String, Integer> longestRoute = findLongestRoute(distances);
+        return longestRoute.getRight();
     }
 } 
