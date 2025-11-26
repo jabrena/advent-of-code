@@ -41,19 +41,33 @@ class Day9Test {
         });
     }
 
-    @Disabled
     @Test
-    void should_solve_day9_part2() {
+    void should_solve_day9_part2_sample() {
         Timer.run(() -> {
             //Given
-            String fileName = "/day8/day8-input.txt";
+            String fileName = "/day9/day9-input-sample.txt";
 
             //When
             var day = new Day9();
             var result = day.getPart2Result(fileName);
 
             //Then
-            then(result).isEqualTo(2085);
+            then(result).isEqualTo(982);
+        });
+    }
+
+    @Test
+    void should_solve_day9_part2() {
+        Timer.run(() -> {
+            //Given
+            String fileName = "/day9/day9-input.txt";
+
+            //When
+            var day = new Day9();
+            var result = day.getPart2Result(fileName);
+
+            //Then
+            then(result).isEqualTo(909);
         });
     }
 
