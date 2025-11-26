@@ -106,4 +106,4 @@ I'm also deeply grateful to my friend [Juan Antonio Medina](https://www.github.c
 for the continuous and inspiring conversations throughout the day,
 and to [Rene van Putten](https://github.com/z669016/) for their invaluable inspiration.
 
-**Powered by Java 24 EA**
+**Powered by Java 25**
