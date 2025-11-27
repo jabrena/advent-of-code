@@ -28,7 +28,7 @@
         <guava.version>33.5.0-jre</guava.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
-        <jackson.version>2.18.1</jackson.version>
+        <jackson.version>2.20.1</jackson.version>
 
         <junit-jupiter.version>6.0.1</junit-jupiter.version>
         <assertj-core.version>3.26.3</assertj-core.version>
