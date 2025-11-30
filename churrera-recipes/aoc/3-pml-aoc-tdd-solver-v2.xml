@@ -90,10 +90,10 @@
                 ```bash
                 jbang aoc@jabrena problem YEAR X
                 ```
+                review the problem statement and once you understand the problem.
+                invest time to understand the problem and the input data and create a plan to solve the problem.
 
-                review the problem statement and once you understand the problem,
-
-                create the Unit Test in the package `dayX`, where X is the value of DAY, with the name `DayXTest.java`
+                Once you have a plan, create the Unit Test in the package `dayX`, where X is the value of DAY, with the name `DayXTest.java`
                 and add a Java Unit Test for First part only.
 
                 In the Test implementation if you need to define a future Java class which will be implemented in the next step,
