@@ -226,18 +226,26 @@ public class DayX implements Solver<Integer> {
                 </step-constraint-list>
             </step-constraints>
         </step>
+        <step number="6">
+            <step-title>Solve the problem for part 2</step-title>
+            <step-content>
+                Repeat the steps 4 and 5 for part 2.
+            </step-content>
+        </step>
 
     </steps>
 
     <safeguards>
         <safeguards-list>
             <safeguards-item>Verify that in the maven module YEAR is successfully built with `./mvnw clean verify` and the tests pass</safeguards-item>
+            <safeguards-item>Verify that the problem is solved for part 1 with the verification of the command `jbang aoc@jabrena submit YEAR DAY PART RESULT`</safeguards-item>
+            <safeguards-item>Verify that the problem is solved for part 2 with the verification of the command `jbang aoc@jabrena submit YEAR DAY PART RESULT`</safeguards-item>
         </safeguards-list>
     </safeguards>
 
     <acceptance-criteria>
         <acceptance-criteria-list>
-            <acceptance-criteria-item>The problem is solved with the verification of the command `jbang aoc@jabrena submit YEAR DAY PART RESULT`</acceptance-criteria-item>
+            <acceptance-criteria-item>The problem is solved with the verification of the command `jbang aoc@jabrena submit YEAR DAY PART RESULT` for part 1 and part 2</acceptance-criteria-item>
             <acceptance-criteria-item>The unit test is successful with the verification of the command `./mvnw clean test -pl YEAR -am`</acceptance-criteria-item>
         </acceptance-criteria-list>
     </acceptance-criteria>
