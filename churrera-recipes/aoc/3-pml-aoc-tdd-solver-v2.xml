@@ -241,6 +241,7 @@ public class DayX implements Solver<Integer> {
             <safeguards-item>Verify that the problem is implemented and solved for part 1 and 2 in the repository</safeguards-item>
             <safeguards-item>Verify that the problem is solved for part 1 with the verification of the command `jbang aoc@jabrena submit YEAR DAY PART RESULT`</safeguards-item>
             <safeguards-item>Verify that the problem is solved for part 2 with the verification of the command `jbang aoc@jabrena submit YEAR DAY PART RESULT`</safeguards-item>
+            <safeguards-item>Review that it is not committed any .class file in other case, remove it from the PR.</safeguards-item>
         </safeguards-list>
     </safeguards>
 
