@@ -8,6 +8,7 @@
 
         <prompt src="1-pml-java25-installation.xml" />
         <prompt src="2-pml-jbang-aoc-cli-installation.xml" />
-        <prompt src="3-pml-aoc-tdd-solver.xml" />
+        <prompt src="3-pml-aoc-tdd-solver-v2.xml" /> <!-- TDD Part 1-->
+        <prompt src="3-pml-aoc-tdd-solver-v2.xml" /> <!-- TDD Part 2-->
     </sequence>
 </pml-workflow>
