@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<prompt xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://jabrena.github.io/pml/schemas/0.3.0/pml.xsd">
-
+<prompt>
     <title>Install Java 25 in Cursor Cloud Agent</title>
 
     <role>System Administrator with expertise in Java development environments and package management for Linux systems</role>
@@ -10,15 +8,11 @@
 
     <steps>
         <step number="1">
-            <step-title>Install Java 25 with SDKMAN</step-title>
+            <step-title>Install Java 25 using a debian package</step-title>
             <step-content>
                 ```bash
                 sudo apt update
-                # Install SDKMAN
-                curl -s "https://get.sdkman.io" | bash
-                source "$HOME/.sdkman/bin/sdkman-init.sh"
-                sdk install java 25.0.1-graalce
-                sdk default java 25.0.1-graalce
+                sudo apt install -y openjdk-25-jdk
                 java -version
                 ```
             </step-content>
