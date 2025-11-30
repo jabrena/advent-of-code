@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<prompt xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://jabrena.github.io/pml/schemas/0.3.0/pml.xsd">
+
+    <title>Solve a AOC puzzle using TDD</title>
+
+    <role>You are a Senior software engineer with extensive experience in Java software development</role>
+
+    <goal>
+        Solve a AOC puzzle using TDD.
+        Follow the next steps to achieve the goal.
+    </goal>
+
+    <steps>
+        <step number="1">
+            <step-title>Understand the whole project</step-title>
+            <step-content>
+                Review the whole repository to understand the different maven modules and the purpose of each module.
+
+                Put focus in the module `commons` to understand how to desing the classes
+                Put focus in the module third-party/aoc just in case you could use one of the classes to model your solutions
+                Review the modules with a numerical name to understand problems solved in the past years.
+            </step-content>
+        </step>
+        <step number="2">
+            <step-title>Identify what problem to solve</step-title>
+            <step-content>
+                Execute the command:
+
+                ```bash
+                jbang aoc@jabrena pending
+                ```
+
+                to return what years has pending problem to solve.
+
+                It will return a list of years like: `2015 2016 2017 2018 2019 2020 2021 2022 2023
+                2024 2025`
+
+                Use 2018 as YEAR.
+
+                and pass that YEAR to the following command:
+
+                ```bash
+                jbang aoc@jabrena pending YEAR
+                ```
+
+                that command will return a list of strings representing the days and parts pending
+                to be solved.
+
+                Example: `1_1 2_1 3_1 4_1 5_1 6_1 7_1 8_1 9_1 10_1 11_1 12_1 13_1 14_1 15_1 16_1
+                17_1 18_1 19_1 20_1 21_1 22_1 23_1 24_1 25_1`
+
+                From that result, get the FIRST value from the list which has the following schema:
+
+                ```bash
+                Example: `1_1` which it means DAY=1 (First part in the string) and PART=1 (Second
+                part in the string);
+
+                DAY contains values from 1-25 and PART could have values 1 or 2 and in this case,
+                PART=1
+
+                Know you have that you are going to resolve a problem for YEAR, DAY and PART.
+            </step-content>
+        </step>
+        <step number="3">
+            <step-title>Create input data</step-title>
+            <step-content>
+                In the maven module YEAR identified in the previous step,
+
+                review if exist in path `src/test/resources` the folder named `dayX`, where X is the value of DAY
+                in other case, create in the path: `src/test/resources` create a folder named `dayX` where X is the value of DAY.
+
+                inside of that folder review if exist the file `dayX-input.txt`, where X is the value of DAY
+                in other case, create a file named `dayX-input.txt` and put the content from the output of the command:
+
+                ```bash
+                jbang aoc@jabrena input YEAR DAY
+                ```
+            </step-content>
+        </step>
+        <step number="4">
+            <step-title>Create a Unit Test (Red phase of TDD for part 1 or part 2)</step-title>
+            <step-content>
+                In the maven module YEAR, review if exist in path `src/test/java/info/jab/aoc` a previous package
+                for dayX where X is the value of DAY in other case, create the unit test.
+                Create a new package in the path `YEAR/src/test/java/info/jab/aoc` named `dayX` where X is the value of DAY.
+
+                In order to desing a goog Unit Test, you need to undertand the problem with the command:
+
+                ```bash
+                jbang aoc@jabrena problem YEAR X
+                ```
+                review the problem statement and once you understand the problem.
+                invest time to understand the problem and the input data and create a plan to solve the problem.
+
+                Once you have a plan, create the Unit Test in the package `dayX`, where X is the value of DAY, with the name `DayXTest.java`
+                and add a Java Unit Test for First part only.
+
+                In the Test implementation if you need to define a future Java class which will be implemented in the next step,
+                take this example:
+
+<![CDATA[
+```java
+package info.jab.aoc.dayX;
+
+import info.jab.aoc.Solver;
+
+public class DayX implements Solver<Integer> {
+
+    @Override
+    public Integer solvePartOne(String fileName) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Integer solvePartTwo(String fileName) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+}
+```
+]]>
+
+                Note: Review if exist the class `DayX.java` in the path
+                `YEAR/src/main/java/info/jab/aoc/dayX/DayX.java`
+                in other case, create it with the name `DayX.java` where X is the value of DAY.
+                Note: Not create any solution, just the class implementing the interface <![CDATA[ `Solver<T>` ]]> throwing an
+                UnsupportedOperationException if the class didn´t exist before.
+
+                In this phase following TDD, the test will pass the file name representing the input
+                data to the future Java solution.
+
+                Review examples in the path `YEAR/src/test/java/info/jab/aoc/dayX/DayXTest.java`,
+                where X is the value of DAY.
+
+                If you execute the tests with:
+
+                ```bash
+                ./mvnw clean test -pl YEAR -am
+                ```
+
+                Note: Replace YEAR with the value of the year that you are working on and DAY with
+                the value of the day that you are working on.
+
+                It will fail, but it is fine, it is part of the TDD process to achieve the Green
+                phase.
+
+                Note: Remember to add Timeout (30 seconds) limits for Junit test to avoid a infinite
+                waiting behaviour.
+
+                Print in the console that you are in the Red phase of TDD.
+
+                Commit and push the initial test and the java class empty to the repository.
+            </step-content>
+        </step>
+        <step number="5">
+            <step-title>Create a Java class with the solution (Green phase of TDD for part 1 or part 2)</step-title>
+            <step-content>
+                In the maven module YEAR, in the package `info.jab.aoc`,
+
+                review if exist a class `DayX.java` in the path
+                `YEAR/src/main/java/info/jab/aoc/dayX/DayX.java` where X is the value of DAY
+                in other case, create the new java class with the name `DayX.java` in the path
+                `YEAR/src/main/java/info/jab/aoc/dayX/DayX.java` where X is the value of DAY.
+
+                In this Java class implement the solution to resolve the problem returned from the
+                command:
+
+                ```bash
+                jbang aoc@jabrena problem YEAR DAY
+                ```
+
+                using the imput from:
+
+                ```bash
+                jbang aoc@jabrena input YEAR DAY
+                ```
+
+                Note: change the value DAY with the day that you processed previously.
+
+                With the problem statement and the input, develop the solution in the Java class.
+                Note: Only resolve the solution for the part 1 or part 2 that you are working on
+                depending of the value of PART.
+
+                print the solution in the test and extract from that maven test execution the RESULT
+                of the part 1 or part 2.
+
+                use that RESULT to verify if the problem was resolved with the following command:
+                ```bash
+                jbang aoc@jabrena submit YEAR DAY PART RESULT
+                ```
+
+                Note: Replace YEAR with the value of the year that you are working on
+                and DAY with the value of the day that you are working on
+                and PART with the value of the part that you are working on (1 or 2).
+
+                if the command returns: "Wrong answer", you need to iterate the solution because it
+                was not resolved.
+                if the command returns: "Correct answer", you need to update the unit test with the
+                right assert asserting the result.
+                if the command returns: "Rate limited", you need to wait 1 minute and try again
+                before submit the answer.
+                if the command returns: "Unexpected response", you need to update the unit test with
+                the right assert asserting the result.
+
+                Verify that everything works with
+
+                ```bash
+                ./mvnw clean verify
+                ```
+
+                Print in the console that you are in the Green phase of TDD.
+
+                Commit the Java Class with the solution to the repository
+                and the Unit Test to the repository if it was updated.
+
+                If everything goes well, you achieved the goal.
+            </step-content>
+            <step-constraints>
+                <step-constraint-list>
+                    <step-constraint>Verify that test load the input file</step-constraint>
+                    <step-constraint>Verify that java solution take the input from the test</step-constraint>
+                    <step-constraint>Verify that test has the right assert asserting the result</step-constraint>
+                    <step-constraint>Verify that the java solution doesn't have any main method</step-constraint>
+                    <step-constraint>Verify that the input file has the right format: `dayX-input.txt`</step-constraint>
+                    <step-constraint>Verify that tests has timeout of 30 seconds</step-constraint>
+                </step-constraint-list>
+            </step-constraints>
+        </step>
+        <step number="6">
+            <step-title>Solve the problem for part 2</step-title>
+            <step-content>
+                Repeat the steps 4 and 5 for part 2.
+            </step-content>
+        </step>
+
+    </steps>
+
+    <safeguards>
+        <safeguards-list>
+            <safeguards-item>Verify that in the maven module YEAR is successfully built with `./mvnw clean verify` and the tests pass</safeguards-item>
+            <safeguards-item>Verify that the problem is implemented and solved for part 1 and 2 in the repository</safeguards-item>
+            <safeguards-item>Verify that the problem is solved for part 1 with the verification of the command `jbang aoc@jabrena submit YEAR DAY PART RESULT`</safeguards-item>
+            <safeguards-item>Verify that the problem is solved for part 2 with the verification of the command `jbang aoc@jabrena submit YEAR DAY PART RESULT`</safeguards-item>
+            <safeguards-item>Review that it is not committed any .class file in other case, remove it from the PR.</safeguards-item>
+        </safeguards-list>
+    </safeguards>
+
+    <acceptance-criteria>
+        <acceptance-criteria-list>
+            <acceptance-criteria-item>The problem is solved with the verification of the command `jbang aoc@jabrena submit YEAR DAY PART RESULT` for part 1 and part 2</acceptance-criteria-item>
+            <acceptance-criteria-item>The unit test is successful with the verification of the command `./mvnw clean test -pl YEAR -am`</acceptance-criteria-item>
+        </acceptance-criteria-list>
+    </acceptance-criteria>
+</prompt>
