@@ -1,4 +1,4 @@
-package info.jab.aoc.day4;
+package info.jab.aoc2018.day4;
 
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;

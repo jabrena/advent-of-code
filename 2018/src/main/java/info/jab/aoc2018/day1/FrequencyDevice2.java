@@ -1,15 +1,14 @@
-package info.jab.aoc.day1;
+package info.jab.aoc2018.day1;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import com.putoet.resources.ResourceLines;
 
 import info.jab.aoc.Solver;
 
-class FrequencyDevice3 implements Solver<Integer> {
+class FrequencyDevice2 implements Solver<Integer> {
     
     private enum Operation {
         PLUS('+'),
@@ -50,40 +49,20 @@ class FrequencyDevice3 implements Solver<Integer> {
                    .reduce(0, Integer::sum);
     }
     
-    private record State(Set<Integer> frequencies, int currentFrequency) {
-        public State next(int change) {
-            int newFrequency = currentFrequency + change;
-            return new State(
-                new HashSet<>(frequencies) {{ add(newFrequency); }},
-                newFrequency
-            );
-        }
-        
-        public boolean isDuplicate(int newFrequency) {
-            return frequencies.contains(newFrequency);
-        }
-    }
-
-    //TODO Improve the functional approach without mutability
     private int findFirstDuplicate(List<String> changes) {
+        List<Tuple> tuples = changes.stream().map(Tuple::from).toList();
+         
         Set<Integer> frequencies = new HashSet<>();
-        int[] currentFrequency = {0};  // Usando array para permitir modificación en lambda
-        frequencies.add(currentFrequency[0]);
-        
-        List<Tuple> tuples = changes.stream()
-                                  .map(Tuple::from)
-                                  .toList();
-                                  
-        return Stream.generate(() -> tuples)
-                    .flatMap(List::stream)
-                    .map(this::calculateChange)
-                    .map(change -> {
-                        currentFrequency[0] += change;
-                        return currentFrequency[0];
-                    })
-                    .filter(freq -> !frequencies.add(freq))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("No duplicate frequency found"));
+        int currentFrequency = 0;
+        frequencies.add(currentFrequency);
+        while (true) { 
+            for (Tuple tuple : tuples) {
+                currentFrequency += calculateChange(tuple);;
+                if (!frequencies.add(currentFrequency)) {
+                    return currentFrequency;
+                }
+            }
+        }
     }
 
     @Override
