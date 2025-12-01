@@ -5,82 +5,70 @@ import static org.assertj.core.api.BDDAssertions.then;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
 
-import com.putoet.utils.Timer;
-
 class Day15Test {
 
     @Test
     void should_solve_day15_part1_sample() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day15/day15-input-sample.txt";
+        //Given
+        String fileName = "/day15/day15-input-sample.txt";
 
-            //When
-            var day1 = new Day15();
-            var result = day1.getPart1Result(fileName, false);
+        //When
+        var day1 = new Day15();
+        var result = day1.getPart1Result(fileName, false);
 
-            //Then
-            then(result).isEqualTo(2028);
-        });
+        //Then
+        then(result).isEqualTo(2028);
     }
 
     @Test
     void should_solve_day15_part1_sample2() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day15/day15-input-sample2.txt";
+        //Given
+        String fileName = "/day15/day15-input-sample2.txt";
 
-            //When
-            var day1 = new Day15();
-            var result = day1.getPart1Result(fileName, false);
+        //When
+        var day1 = new Day15();
+        var result = day1.getPart1Result(fileName, false);
 
-            //Then
-            then(result).isEqualTo(10092);
-        });
+        //Then
+        then(result).isEqualTo(10092);
     }
 
     @Test
     void should_solve_day15_part1() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day15/day15-input.txt";
+        //Given
+        String fileName = "/day15/day15-input.txt";
 
-            //When
-            var day1 = new Day15();
-            var result = day1.getPart1Result(fileName, false);
+        //When
+        var day1 = new Day15();
+        var result = day1.getPart1Result(fileName, false);
 
-            //Then
-            then(result).isEqualTo(1465523);
-        });
+        //Then
+        then(result).isEqualTo(1465523);
     }
 
     @Test
     void should_solve_day15_part2_sample() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day15/day15-input-sample3.txt";
+        //Given
+        String fileName = "/day15/day15-input-sample3.txt";
 
-            //When
-            var day1 = new Day15();
-            var result = day1.getPart2Result(fileName, true);
+        //When
+        var day1 = new Day15();
+        var result = day1.getPart2Result(fileName, true);
 
-            //Then
-            then(result).isEqualTo(618);
-        });
+        //Then
+        then(result).isEqualTo(618);
     }
 
     @Test
     void should_solve_day15_part2() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day15/day15-input.txt";
+        //Given
+        String fileName = "/day15/day15-input.txt";
 
-            //When
-            var day1 = new Day15();
-            var result = day1.getPart2Result(fileName, true);
+        //When
+        var day1 = new Day15();
+        var result = day1.getPart2Result(fileName, true);
 
-            //Then
-            then(result).isEqualTo(1471049);
-        });
+        //Then
+        then(result).isEqualTo(1471049);
     }
 }
