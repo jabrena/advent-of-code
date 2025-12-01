@@ -1,7 +1,5 @@
 package info.jab.aoc.day14;
 
-import com.putoet.utils.Timer;
-
 import static org.assertj.core.api.BDDAssertions.then;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -19,17 +17,15 @@ class Day14Test {
     
     @Test
     void should_solve_day14_part1() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day14/day14-input.txt";
+        //Given
+        String fileName = "/day14/day14-input.txt";
 
-            //When
-            var day = new Day14();
-            var result = day.getPart1Result(fileName);
+        //When
+        var day = new Day14();
+        var result = day.getPart1Result(fileName);
 
-            //Then
-            then(result).isEqualTo(15168);
-        });
+        //Then
+        then(result).isEqualTo(15168);
     }
     
     @Test
@@ -42,16 +38,14 @@ class Day14Test {
     
     @Test
     void should_solve_day14_part2() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day14/day14-input.txt";
+        //Given
+        String fileName = "/day14/day14-input.txt";
 
-            //When
-            var day = new Day14();
-            var result = day.getPart2Result(fileName);
+        //When
+        var day = new Day14();
+        var result = day.getPart2Result(fileName);
 
-            //Then
-            then(result).isEqualTo(20864);
-        });
+        //Then
+        then(result).isEqualTo(20864);
     }
 }
