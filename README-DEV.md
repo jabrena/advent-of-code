@@ -19,6 +19,8 @@
 # Clean and package in one command
 ./mvnw clean package
 
+./mvnw clean test
+
 # Run integration tests
 ./mvnw clean verify
 
