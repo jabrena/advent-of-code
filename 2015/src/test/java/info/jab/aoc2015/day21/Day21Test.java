@@ -1,0 +1,36 @@
+package info.jab.aoc2015.day21;
+
+import static org.assertj.core.api.BDDAssertions.then;
+
+import org.junit.jupiter.api.Test;
+
+class Day21Test {
+
+    @Test
+    void should_solve_day21_part1() {
+        //Given
+        String fileName = "/day21/day21-input.txt";
+
+        //When
+        var day = new Day21();
+        var result = day.getPart1Result(fileName);
+        System.out.println("Day 21 Part 1 result: " + result);
+
+        //Then
+        then(result).isEqualTo(78);
+    }
+
+    @Test
+    void should_solve_day21_part2() {
+        //Given
+        String fileName = "/day21/day21-input.txt";
+
+        //When
+        var day = new Day21();
+        var result = day.getPart2Result(fileName);
+        System.out.println("Day 21 Part 2 result: " + result);
+
+        //Then
+        then(result).isEqualTo(148);
+    }
+}

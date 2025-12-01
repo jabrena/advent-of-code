@@ -81,9 +81,13 @@
         <step number="4">
             <step-title>Create a Unit Test (Red phase of TDD for part 1 or part 2)</step-title>
             <step-content>
-                In the maven module YEAR, review if exist in path `src/test/java/info/jab/aoc` a previous package
-                for dayX where X is the value of DAY in other case, create the unit test.
-                Create a new package in the path `YEAR/src/test/java/info/jab/aoc` named `dayX` where X is the value of DAY.
+                In the maven module YEAR, review if exist in path `src/test/java/info/jab/aocYEAR` a
+                previous package for dayX where X is the value of DAY in other case, create the unit test.
+
+                Create a new package in the path `YEAR/src/test/java/info/jab/aocYEAR/` named `dayX`
+                where X is the value of DAY.
+
+                Note: Example, if YEAR is 2025, the package should be: `2025/src/test/java/info/jab/aoc2025/dayX`
 
                 In order to desing a goog Unit Test, you need to undertand the problem with the command:
 
@@ -93,15 +97,15 @@
                 review the problem statement and once you understand the problem.
                 invest time to understand the problem and the input data and create a plan to solve the problem.
 
-                Once you have a plan, create the Unit Test in the package `dayX`, where X is the value of DAY, with the name `DayXTest.java`
-                and add a Java Unit Test for First part only.
+                Once you have a plan, create the Unit Test in the package `dayX`, where X is the
+                value of DAY, with the name `DayXTest.java` and add a Java Unit Test for First part only.
 
-                In the Test implementation if you need to define a future Java class which will be implemented in the next step,
-                take this example:
+                In the Test implementation if you need to define a future Java class which will be
+                implemented in the next step, take this example:
 
 <![CDATA[
 ```java
-package info.jab.aoc.dayX;
+package info.jab.aoc2025.dayX;
 
 import info.jab.aoc.Solver;
 
@@ -121,15 +125,15 @@ public class DayX implements Solver<Integer> {
 ]]>
 
                 Note: Review if exist the class `DayX.java` in the path
-                `YEAR/src/main/java/info/jab/aoc/dayX/DayX.java`
+                `YEAR/src/main/java/info/jab/aocYEAR/dayX/DayX.java`
                 in other case, create it with the name `DayX.java` where X is the value of DAY.
                 Note: Not create any solution, just the class implementing the interface <![CDATA[ `Solver<T>` ]]> throwing an
-                UnsupportedOperationException if the class didn´t exist before.
+                UnsupportedOperationException if the class didn't exist before.
 
                 In this phase following TDD, the test will pass the file name representing the input
                 data to the future Java solution.
 
-                Review examples in the path `YEAR/src/test/java/info/jab/aoc/dayX/DayXTest.java`,
+                Review examples in the path `YEAR/src/test/java/info/jab/aocYEAR/dayX/DayXTest.java`,
                 where X is the value of DAY.
 
                 If you execute the tests with:
@@ -155,10 +159,10 @@ public class DayX implements Solver<Integer> {
         <step number="5">
             <step-title>Create a Java class with the solution (Green phase of TDD for part 1 or part 2)</step-title>
             <step-content>
-                In the maven module YEAR, in the package `info.jab.aoc`,
+                In the maven module YEAR, in the package `info.jab.aocYEAR`,
 
                 review if exist a class `DayX.java` in the path
-                `YEAR/src/main/java/info/jab/aoc/dayX/DayX.java` where X is the value of DAY
+                `YEAR/src/main/java/info/jab/aocYEAR/dayX/DayX.java` where X is the value of DAY
                 in other case, create the new java class with the name `DayX.java` in the path
                 `YEAR/src/main/java/info/jab/aoc/dayX/DayX.java` where X is the value of DAY.
 

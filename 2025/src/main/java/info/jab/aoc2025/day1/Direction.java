@@ -1,0 +1,32 @@
+package info.jab.aoc2025.day1;
+
+import java.util.Arrays;
+
+/**
+ * Enum representing the possible rotation directions.
+ */
+public enum Direction {
+    LEFT('L'),
+    RIGHT('R');
+
+    private final char symbol;
+
+    Direction(final char symbol) {
+        this.symbol = symbol;
+    }
+
+    /**
+     * Converts a character to a Direction enum value.
+     * Uses Stream API for functional transformation.
+     *
+     * @param symbol Character representing the direction ('L' or 'R')
+     * @return Direction enum value
+     * @throws IllegalArgumentException if the character is not a valid direction
+     */
+    public static Direction from(final char symbol) {
+        return Arrays.stream(values())
+                .filter(direction -> direction.symbol == symbol)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Direction must be 'L' or 'R', got: " + symbol));
+    }
+}

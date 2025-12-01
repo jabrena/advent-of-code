@@ -28,7 +28,12 @@
 ./mvnw versions:display-plugin-updates
 
 # Generate project reports
-./mvnw site
-jwebserver -p 8005 -d "$(pwd)/target/site/"
+# Generate aggregated surefire report (requires tests to be run first)
+./mvnw clean test surefire-report:report-only
+# Or generate full site with aggregated reports
+./mvnw clean test site
+# View reports
+jwebserver -p 8005 -d "$(pwd)/target/site"
+# Aggregated report will be at: http://127.0.0.1:8005/target/reports/surefire-report.html
 ```
 
