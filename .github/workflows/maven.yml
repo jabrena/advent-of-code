@@ -7,7 +7,7 @@ jobs:
     name: Build ${{ matrix.module }}
     strategy:
       matrix:
-        module: [2015, 2016, 2017, 2018, 2020, 2021, 2022, 2023, 2024, 2025]
+        module: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
