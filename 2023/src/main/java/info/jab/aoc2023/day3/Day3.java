@@ -1,4 +1,4 @@
-package info.jab.aoc.day3;
+package info.jab.aoc2023.day3;
 
 import java.util.ArrayList;
 import java.util.HashSet;

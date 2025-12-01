@@ -1,4 +1,4 @@
-package info.jab.aoc.day2;
+package info.jab.aoc2023.day2;
 
 import info.jab.aoc.Day;
 import info.jab.aoc.Utils;
