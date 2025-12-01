@@ -5,40 +5,34 @@ import static org.assertj.core.api.BDDAssertions.then;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import com.putoet.utils.Timer;
-
 class Day1Test {
 
     @Test
     @Timeout(30)
     void should_solve_day1_part1() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day1/day1-input.txt";
+        //Given
+        String fileName = "/day1/day1-input.txt";
 
-            //When
-            var day1 = new Day1();
-            var result = day1.solvePartOne(fileName);
+        //When
+        var day1 = new Day1();
+        var result = day1.solvePartOne(fileName);
 
-            //Then
-            then(result).isEqualTo(1034);
-        });
+        //Then
+        then(result).isEqualTo(1034);
     }
 
     @Test
     @Timeout(30)
     void should_solve_day1_part2() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day1/day1-input.txt";
+        //Given
+        String fileName = "/day1/day1-input.txt";
 
-            //When
-            var day1 = new Day1();
-            var result = day1.solvePartTwo(fileName);
+        //When
+        var day1 = new Day1();
+        var result = day1.solvePartTwo(fileName);
 
-            //Then
-            then(result).isEqualTo(6166);
-        });
+        //Then
+        then(result).isEqualTo(6166);
     }
 
 }

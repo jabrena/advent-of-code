@@ -7,40 +7,34 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import com.putoet.utils.Timer;
-
 class Day19Test {
 
     @Test
     @Timeout(value = 5, unit = TimeUnit.SECONDS)
     void should_solve_day19_part1() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day19/day19-input.txt";
+        //Given
+        String fileName = "/day19/day19-input.txt";
 
-            //When
-            var day = new Day19();
-            var result = day.getPart1Result(fileName);
+        //When
+        var day = new Day19();
+        var result = day.getPart1Result(fileName);
 
-            //Then
-            then(result).isEqualTo(1834471);
-        });
+        //Then
+        then(result).isEqualTo(1834471);
     }
 
     @Test
     @Timeout(value = 5, unit = TimeUnit.SECONDS)
     void should_solve_day19_part2() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day19/day19-input.txt";
+        //Given
+        String fileName = "/day19/day19-input.txt";
 
-            //When
-            var day = new Day19();
-            var result = day.getPart2Result(fileName);
+        //When
+        var day = new Day19();
+        var result = day.getPart2Result(fileName);
 
-            //Then
-            then(result).isEqualTo(1420064);
-        });
+        //Then
+        then(result).isEqualTo(1420064);
     }
 
 }

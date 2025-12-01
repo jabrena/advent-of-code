@@ -1,7 +1,5 @@
 package info.jab.aoc.day4;
 
-import com.putoet.utils.Timer;
-
 import static org.assertj.core.api.BDDAssertions.then;
 import org.junit.jupiter.api.Test;
 
@@ -37,31 +35,27 @@ class Day4Test {
     
     @Test
     void should_solve_day4_part1() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day4/day4-input.txt";
+        //Given
+        String fileName = "/day4/day4-input.txt";
 
-            //When
-            var day = new Day4();
-            var result = day.getPart1Result(fileName);
+        //When
+        var day = new Day4();
+        var result = day.getPart1Result(fileName);
 
-            //Then
-            then(result).isEqualTo(409147);
-        });
+        //Then
+        then(result).isEqualTo(409147);
     }
     
     @Test
     void should_solve_day4_part2() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day4/day4-input.txt";
+        //Given
+        String fileName = "/day4/day4-input.txt";
 
-            //When
-            var day = new Day4();
-            var result = day.getPart2Result(fileName);
+        //When
+        var day = new Day4();
+        var result = day.getPart2Result(fileName);
 
-            //Then
-            then(result).isEqualTo(991);
-        });
+        //Then
+        then(result).isEqualTo(991);
     }
 }

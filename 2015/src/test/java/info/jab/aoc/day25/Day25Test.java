@@ -4,23 +4,19 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 import org.junit.jupiter.api.Test;
 
-import com.putoet.utils.Timer;
-
 class Day25Test {
 
     @Test
     void should_solve_day25_part1() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "day25/day25-input.txt";
+        //Given
+        String fileName = "day25/day25-input.txt";
 
-            //When
-            var day = new Day25();
-            var result = day.getPart1Result(fileName);
+        //When
+        var day = new Day25();
+        var result = day.getPart1Result(fileName);
 
-            //Then
-            then(result).isEqualTo(8997277L);
-        });
+        //Then
+        then(result).isEqualTo(8997277L);
     }
 
 }

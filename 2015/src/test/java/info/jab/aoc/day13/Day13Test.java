@@ -5,54 +5,46 @@ import static org.assertj.core.api.BDDAssertions.then;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import com.putoet.utils.Timer;
-
 
 class Day13Test {
 
     @Test
     void should_solve_day13_part1_sample() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day13/day13-input-sample.txt";
+        //Given
+        String fileName = "/day13/day13-input-sample.txt";
 
-            //When
-            var day = new Day13();
-            var result = day.getPart1Result(fileName);
+        //When
+        var day = new Day13();
+        var result = day.getPart1Result(fileName);
 
-            //Then
-            then(result).isEqualTo(330);
-        });
+        //Then
+        then(result).isEqualTo(330);
     }
 
     @Test
     void should_solve_day13_part1() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day13/day13-input.txt";
+        //Given
+        String fileName = "/day13/day13-input.txt";
 
-            //When
-            var day = new Day13();
-            var result = day.getPart1Result(fileName);
+        //When
+        var day = new Day13();
+        var result = day.getPart1Result(fileName);
 
-            //Then
-            then(result).isEqualTo(664);
-        });
+        //Then
+        then(result).isEqualTo(664);
     }
 
     @Test
     void should_solve_day11_part2() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day13/day13-input.txt";
+        //Given
+        String fileName = "/day13/day13-input.txt";
 
-            //When
-            var day = new Day13();
-            var result = day.getPart2Result(fileName);
+        //When
+        var day = new Day13();
+        var result = day.getPart2Result(fileName);
 
-            //Then
-            then(result).isEqualTo(640);
-        });
+        //Then
+        then(result).isEqualTo(640);
     }
 
 }

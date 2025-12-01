@@ -1,7 +1,5 @@
 package info.jab.aoc.day8;
 
-import com.putoet.utils.Timer;
-
 import static org.assertj.core.api.BDDAssertions.then;
 import org.junit.jupiter.api.Test;
 
@@ -25,31 +23,27 @@ class Day8Test {
 
     @Test
     void should_solve_day8_part1() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day8/day8-input.txt";
+        //Given
+        String fileName = "/day8/day8-input.txt";
 
-            //When
-            var day = new Day8();
-            var result = day.getPart1Result(fileName);
+        //When
+        var day = new Day8();
+        var result = day.getPart1Result(fileName);
 
-            //Then
-            then(result).isEqualTo("123");
-        });
+        //Then
+        then(result).isEqualTo("123");
     }
 
     @Test
     void should_solve_day8_part2() {
-        Timer.run(() -> {
-            //Given
-            String fileName = "/day8/day8-input.txt";
+        //Given
+        String fileName = "/day8/day8-input.txt";
 
-            //When
-            var day = new Day8();
-            var result = day.getPart2Result(fileName);
+        //When
+        var day = new Day8();
+        var result = day.getPart2Result(fileName);
 
-            //Then
-            then(result).isEqualTo("AFBUPZBJPS");
-        });
+        //Then
+        then(result).isEqualTo("AFBUPZBJPS");
     }
 }
