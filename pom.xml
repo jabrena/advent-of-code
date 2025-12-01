@@ -19,9 +19,13 @@
     </developers>
 
     <properties>
+        <!-- Core build properties -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>25</java.version>
+        <maven.version>3.9.10</maven.version>
 
+        <!-- Dependency versions -->
         <jcolor.version>5.5.1</jcolor.version>
         <putoet.aoc.version>1.7.0</putoet.aoc.version>
         <combinatoricslib3.version>3.4.0</combinatoricslib3.version>
@@ -29,15 +33,24 @@
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
         <jackson.version>2.20.1</jackson.version>
-
-        <junit-jupiter.version>6.0.1</junit-jupiter.version>
-        <assertj-core.version>3.27.6</assertj-core.version>
-        <cucumber-gherkin.version>37.0.0</cucumber-gherkin.version>
-
         <jol.version>0.17</jol.version>
         <jmh.version>1.37</jmh.version>
+        <javafx.version>21.0.2</javafx.version>
+
+        <!-- Testing dependency versions -->
+        <junit-jupiter.version>6.0.1</junit-jupiter.version>
+        <assertj-core.version>3.27.6</assertj-core.version>
+
+        <!-- Maven plugin versions -->
+        <maven-plugin-enforcer.version>3.6.2</maven-plugin-enforcer.version>
+        <maven-plugin-compiler.version>3.14.1</maven-plugin-compiler.version>
+        <maven-plugin-surefire.version>3.5.4</maven-plugin-surefire.version>
+        <maven-plugin-surefire-report.version>3.5.4</maven-plugin-surefire-report.version>
+        <maven-plugin-versions.version>2.20.1</maven-plugin-versions.version>
+        <maven-plugin-exec.version>3.6.2</maven-plugin-exec.version>
     </properties>
 
+    <!-- Modules -->
     <modules>
         <module>commons</module>
         <module>2025</module>
@@ -51,10 +64,10 @@
         <module>2017</module>
         <module>2016</module>
         <module>2015</module>
-
         <module>third-party</module>
     </modules>
 
+    <!-- Dependency Management -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -98,6 +111,18 @@
                 <version>${jackson.version}</version>
             </dependency>
 
+            <!-- JavaFX -->
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-controls</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-graphics</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+
             <!-- Testing -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -119,12 +144,6 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj-core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.cucumber</groupId>
-                <artifactId>gherkin</artifactId>
-                <version>${cucumber-gherkin.version}</version>
-                <scope>test</scope>
             </dependency>
 
             <!-- JOL -->
@@ -150,6 +169,7 @@
         </dependencies>
     </dependencyManagement>
 
+    <!-- Dependencies -->
     <dependencies>
         <dependency>
             <groupId>info.jab.aoc</groupId>
@@ -179,10 +199,13 @@
             <groupId>org.eclipse.collections</groupId>
             <artifactId>eclipse-collections</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.openjdk.jol</groupId>
             <artifactId>jol-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
 
         <!-- Testing -->
@@ -195,10 +218,6 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>gherkin</artifactId>
         </dependency>
 
         <!-- JMH -->
@@ -215,12 +234,13 @@
 
     </dependencies>
 
+    <!-- Build Configuration -->
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>${maven-plugin-enforcer.version}</version>
                 <executions>
                     <execution>
                         <id>enforce</id>
@@ -229,10 +249,10 @@
                                 <dependencyConvergence />
                                 <banDuplicatePomDependencyVersions />
                                 <requireMavenVersion>
-                                    <version>3.9.9</version>
+                                    <version>${maven.version}</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>24</version>
+                                    <version>${java.version}</version>
                                 </requireJavaVersion>
                                 <bannedDependencies>
                                     <excludes>
@@ -252,7 +272,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.1</version>
+                <version>${maven-plugin-compiler.version}</version>
                 <configuration>
                     <compilerArgument>-Xlint:all</compilerArgument><!-- -Werror -->
                     <compilerArgument>--enable-preview</compilerArgument>
@@ -268,34 +288,28 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.4</version>
-                <!--
-                <configuration>
-                    <parallel>all</parallel>
-                    <useUnlimitedThreads>true</useUnlimitedThreads>
-                    <perCoreThreadCount>true</perCoreThreadCount>
-                </configuration>
-                -->
+                <version>${maven-plugin-surefire.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.20.1</version>
+                <version>${maven-plugin-versions.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>${maven-plugin-exec.version}</version>
             </plugin>
         </plugins>
     </build>
 
+    <!-- Reporting Configuration -->
     <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.5.4</version>
+                <version>${maven-plugin-surefire-report.version}</version>
                 <configuration>
                     <showSuccess>false</showSuccess>
                 </configuration>
