@@ -1,4 +1,4 @@
-package info.jab.aoc.day1;
+package info.jab.aoc2025.day1;
 
 /**
  * Record representing a dial rotation.
