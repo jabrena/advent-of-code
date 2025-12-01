@@ -26,7 +26,7 @@
         <putoet.aoc.version>1.7.0</putoet.aoc.version>
         <combinatoricslib3.version>3.4.0</combinatoricslib3.version>
         <guava.version>33.5.0-jre</guava.version>
-        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
         <jackson.version>2.20.1</jackson.version>
 
