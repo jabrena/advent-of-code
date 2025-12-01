@@ -5,3 +5,5 @@ target
 .vscode/*
 
 2024/day24.txt
+.cursor
+CURSOR-RULES-JAVA.md
