@@ -1,4 +1,4 @@
-package info.jab.aoc.day2;
+package info.jab.aoc2017.day2;
 
 import static org.assertj.core.api.BDDAssertions.then;
 

@@ -1,4 +1,4 @@
-package info.jab.aoc.day1;
+package info.jab.aoc2017.day1;
 
 import info.jab.aoc.Day;
 import java.util.stream.IntStream;
