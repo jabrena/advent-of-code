@@ -25,3 +25,6 @@ jobs:
           key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
       - name: Maven build ${{ matrix.module }}
         run: ./mvnw --batch-mode --no-transfer-progress verify -pl ${{ matrix.module }} -am
+
+      - name: Upload SonarQube analysis results
+        run: ./mvnw --batch-mode --no-transfer-progress package -DskipTests sonar:sonar -Psonar

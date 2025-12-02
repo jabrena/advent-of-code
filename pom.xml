@@ -48,6 +48,8 @@
         <maven-plugin-surefire-report.version>3.5.4</maven-plugin-surefire-report.version>
         <maven-plugin-versions.version>2.20.1</maven-plugin-versions.version>
         <maven-plugin-exec.version>3.6.2</maven-plugin-exec.version>
+        <maven-plugin-sonar.version>5.3.0.6276</maven-plugin-sonar.version>
+
     </properties>
 
     <!-- Modules -->
@@ -331,4 +333,32 @@
             </plugin>
         </plugins>
     </reporting>
+
+    <profiles>
+        <!-- SonarQube Analysis Profile -->
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <!-- SonarCloud configuration -->
+                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+                <sonar.organization>jabrena</sonar.organization>
+                <sonar.projectKey>jabrena_advent-of-code</sonar.projectKey>
+                <sonar.projectName>Advent of Code</sonar.projectName>
+                <sonar.projectVersion>${project.version}</sonar.projectVersion>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <version>${maven-plugin-sonar.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
