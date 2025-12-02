@@ -15,7 +15,7 @@ class Day1Test {
 
         //When
         var day1 = new Day1();
-        var result = day1.solvePartOne(fileName);
+        var result = day1.getPart1Result(fileName);
 
         //Then
         then(result).isEqualTo(1034);
@@ -29,7 +29,7 @@ class Day1Test {
 
         //When
         var day1 = new Day1();
-        var result = day1.solvePartTwo(fileName);
+        var result = day1.getPart2Result(fileName);
 
         //Then
         then(result).isEqualTo(6166);

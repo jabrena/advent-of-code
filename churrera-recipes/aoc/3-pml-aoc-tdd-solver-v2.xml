@@ -107,17 +107,17 @@
 ```java
 package info.jab.aoc2025.dayX;
 
-import info.jab.aoc.Solver;
+import info.jab.aoc.Day;
 
-public class DayX implements Solver<Integer> {
+public class DayX implements Day<Integer> {
 
     @Override
-    public Integer solvePartOne(String fileName) {
+    public Integer getPart1Result(String fileName) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public Integer solvePartTwo(String fileName) {
+    public Integer getPart2Result(String fileName) {
         throw new UnsupportedOperationException("Not implemented");
     }
 }

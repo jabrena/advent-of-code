@@ -14,4 +14,11 @@
     <artifactId>advent-of-code-2018</artifactId>
     <version>0.1.0</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>info.jab.aoc</groupId>
+            <artifactId>commons</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

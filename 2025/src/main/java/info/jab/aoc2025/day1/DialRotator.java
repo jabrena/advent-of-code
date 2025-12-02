@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import info.jab.aoc.Solver;
+import com.putoet.resources.ResourceLines;
+
 /**
  * Handles dial rotation logic for a 0-99 dial.
  * The dial can be rotated left (L) or right (R) by a specified distance.
  */
-public final class DialRotator {
+public final class DialRotator implements Solver<Integer> {
 
     private static final int DIAL_MAX = 100;
     private static final int INITIAL_POSITION = 50;
@@ -22,7 +25,9 @@ public final class DialRotator {
      * @param rotations List of rotation strings in format "L{distance}" or "R{distance}"
      * @return The count of times the dial points at 0 after rotations
      */
-    public int countZerosAfterRotations(final List<String> rotations) {
+    @Override
+    public Integer solvePartOne(final String fileName) {
+        final List<String> rotations = ResourceLines.list(fileName);
         return rotations.stream()
                 .filter(this::isValidRotation)
                 .map(Rotation::from)
@@ -43,7 +48,10 @@ public final class DialRotator {
      * @param rotations List of rotation strings in format "L{distance}" or "R{distance}"
      * @return The count of times the dial points at 0 during rotations
      */
-    public int countZerosDuringRotations(final List<String> rotations) {
+    @Override
+    public Integer solvePartTwo(final String fileName) {
+        final List<String> rotations = ResourceLines.list(fileName);
+
         return rotations.stream()
                 .filter(this::isValidRotation)
                 .map(Rotation::from)
