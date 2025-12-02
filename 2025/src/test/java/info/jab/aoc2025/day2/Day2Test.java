@@ -15,7 +15,7 @@ class Day2Test {
 
         //When
         var day2 = new Day2();
-        var result = day2.solvePartOne(fileName);
+        var result = day2.getPart1Result(fileName);
 
         //Then
         then(result).isEqualTo(1227775554L);
@@ -29,7 +29,7 @@ class Day2Test {
 
         //When
         var day2 = new Day2();
-        var result = day2.solvePartOne(fileName);
+        var result = day2.getPart1Result(fileName);
 
         //Then
         then(result).isEqualTo(21898734247L);
@@ -43,7 +43,7 @@ class Day2Test {
 
         //When
         var day2 = new Day2();
-        var result = day2.solvePartTwo(fileName);
+        var result = day2.getPart2Result(fileName);
 
         //Then
         then(result).isEqualTo(4174379265L);
@@ -57,7 +57,7 @@ class Day2Test {
 
         //When
         var day2 = new Day2();
-        var result = day2.solvePartTwo(fileName);
+        var result = day2.getPart2Result(fileName);
 
         //Then
         then(result).isEqualTo(28915664389L);
