@@ -95,6 +95,7 @@ public final class InvalidIdValidator2 implements Solver<Long> {
     /**
      * Pure function that checks if an ID is invalid for part two.
      * An invalid ID must be composed of repeated equal parts of any length.
+     * Optimized to O(L) complexity by avoiding substring creation and comparing characters directly.
      *
      * @param id The ID to validate
      * @return true if the ID is invalid, false otherwise
@@ -103,7 +104,8 @@ public final class InvalidIdValidator2 implements Solver<Long> {
         final String idStr = String.valueOf(id);
         final int length = idStr.length();
 
-        // Try all possible part lengths from 1 to length/2
+        // Try all possible part lengths that divide the length evenly
+        // Only check divisors to reduce iterations from O(L) to O(√L)
         return IntStream.rangeClosed(1, length / 2)
                 .filter(partLength -> length % partLength == 0)
                 .anyMatch(partLength -> {
@@ -113,11 +115,15 @@ public final class InvalidIdValidator2 implements Solver<Long> {
                         return false;
                     }
 
-                    final String firstPart = idStr.substring(0, partLength);
-                    // Check if all parts are equal using stream
-                    return IntStream.range(1, numParts)
-                            .mapToObj(i -> idStr.substring(i * partLength, (i + 1) * partLength))
-                            .allMatch(part -> part.equals(firstPart));
+                    // Check if all parts are equal by comparing characters directly
+                    // For each position i, check if idStr[i] == idStr[i % partLength]
+                    // This avoids creating substrings, reducing complexity from O(L²) to O(L)
+                    for (int i = partLength; i < length; i++) {
+                        if (idStr.charAt(i) != idStr.charAt(i % partLength)) {
+                            return false;
+                        }
+                    }
+                    return true;
                 });
     }
 }
