@@ -26,7 +26,7 @@ public class Day3Visualization extends Application {
 
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 600;
-    private static final String INPUT_FILE_PATH = "2025/src/test/resources/day3/day3-input.txt";
+    private static final String INPUT_FILE_PATH = "2025/src/test/resources/day3/day3-input-sample.txt";
     private static final int TARGET_LENGTH = 12; // Part 2 length
 
     private List<String> inputLines;
