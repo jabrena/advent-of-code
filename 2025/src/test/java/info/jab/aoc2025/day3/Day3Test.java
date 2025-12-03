@@ -32,9 +32,6 @@ class Day3Test {
         var result = day3.getPart1Result(fileName);
 
         //Then
-        // We don't know the result yet, but we assert something to verify it runs.
-        // Or we can leave it commented out or failing.
-        // The instructions say: "print the solution in the test and extract from that maven test execution the RESULT".
-        System.out.println("Day 3 Part 1 Result: " + result);
+        then(result).isEqualTo(17383L);
     }
 }
