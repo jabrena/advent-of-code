@@ -8,40 +8,48 @@ public class Day3 implements Day<Long> {
 
     @Override
     public Long getPart1Result(String fileName) {
+        return solve(fileName, 2);
+    }
+
+    @Override
+    public Long getPart2Result(String fileName) {
+        return solve(fileName, 12);
+    }
+
+    private Long solve(String fileName, int length) {
         List<String> lines = Utils.readFileToList(fileName);
         long totalJoltage = 0;
         for (String line : lines) {
-            totalJoltage += getMaxJoltage(line);
+            if (line.length() >= length) {
+                totalJoltage += getMaxJoltage(line, length);
+            }
         }
         return totalJoltage;
     }
 
-    private int getMaxJoltage(String line) {
-        int maxJoltage = 0;
+    private long getMaxJoltage(String line, int length) {
         int n = line.length();
         int[] digits = new int[n];
         for (int i = 0; i < n; i++) {
             digits[i] = line.charAt(i) - '0';
         }
 
-        for (int i = 0; i < n - 1; i++) {
-            int tens = digits[i];
-            int maxUnits = -1;
-            for (int j = i + 1; j < n; j++) {
-                if (digits[j] > maxUnits) {
-                    maxUnits = digits[j];
+        long result = 0;
+        int currentPos = 0;
+        for (int rem = length; rem > 0; rem--) {
+            int maxVal = -1;
+            int maxIdx = -1;
+            for (int i = currentPos; i <= n - rem; i++) {
+                if (digits[i] > maxVal) {
+                    maxVal = digits[i];
+                    maxIdx = i;
                 }
             }
-            int joltage = tens * 10 + maxUnits;
-            if (joltage > maxJoltage) {
-                maxJoltage = joltage;
+            if (maxIdx != -1) {
+                result = result * 10 + maxVal;
+                currentPos = maxIdx + 1;
             }
         }
-        return maxJoltage;
-    }
-
-    @Override
-    public Long getPart2Result(String fileName) {
-        throw new UnsupportedOperationException("Not implemented");
+        return result;
     }
 }
