@@ -42,5 +42,20 @@ public record DialState(int position, int zeroCount) {
         final int newZeroCount = this.zeroCount + (newPosition == 0 ? 1 : 0);
         return new DialState(newPosition, newZeroCount);
     }
+
+    /**
+     * Applies a rotation and counts zero crossings during the rotation.
+     * Optimized version that calculates zero crossings directly without expanding to steps.
+     *
+     * @param rotation Rotation to apply
+     * @param rotator DialRotator instance to perform rotation and count zero crossings
+     * @return New state after rotation with updated zero count
+     */
+    public DialState applyRotationWithZeroCount(final Rotation rotation, final DialRotator rotator) {
+        final int zeroCrossings = rotator.countZeroCrossings(this.position, rotation.direction(), rotation.distance());
+        final int newPosition = rotator.rotateDial(this.position, rotation.direction(), rotation.distance());
+        final int newZeroCount = this.zeroCount + zeroCrossings;
+        return new DialState(newPosition, newZeroCount);
+    }
 }
 
