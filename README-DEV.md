@@ -34,23 +34,25 @@
 ./mvnw clean test surefire-report:report-only
 # Or generate full site with aggregated reports
 ./mvnw clean test site
-# View reports
-jwebserver -p 8005 -d "$(pwd)/target/site"
-# Aggregated report will be at: http://127.0.0.1:8005/target/reports/surefire-report.html
 
 # Generate Allure reports
 # Run tests first (this generates both Surefire XML and Allure results)
 ./mvnw clean test
-# Generate Allure report from test results
-./mvnw allure:report
+# Generate Allure report from test results (use full plugin coordinates)
+./mvnw io.qameta.allure:allure-maven:report
 # Or combine both commands
-./mvnw clean test allure:report
+./mvnw clean test io.qameta.allure:allure-maven:report
 # Serve Allure report locally (opens browser automatically)
-./mvnw allure:serve
-# Allure report location: target/allure-report/index.html
+./mvnw io.qameta.allure:allure-maven:serve
+# Allure report location: target/allure-report/allure-maven.html
 # Allure results location: target/allure-results/
 
 # Generate both Surefire and Allure reports
-./mvnw clean test surefire-report:report-only allure:report
-```
+./mvnw clean test surefire-report:report-only io.qameta.allure:allure-maven:report
 
+# View reports
+jwebserver -p 8005 -d "$(pwd)/target/"
+# Surefire report: http://127.0.0.1:8005/site/surefire-report.html
+# Allure report: http://127.0.0.1:8005/allure-report/allure-maven.html
+
+```

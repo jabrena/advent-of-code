@@ -36,11 +36,12 @@
         <jol.version>0.17</jol.version>
         <jmh.version>1.37</jmh.version>
         <javafx.version>25.0.1</javafx.version>
+        <aspectj.version>1.9.22</aspectj.version>
 
         <!-- Testing dependency versions -->
         <junit-jupiter.version>6.0.1</junit-jupiter.version>
         <assertj-core.version>3.27.6</assertj-core.version>
-        <allure.version>2.24.0</allure.version>
+        <allure.version>2.31.0</allure.version>
 
         <!-- Maven plugin versions -->
         <maven-plugin-enforcer.version>3.6.2</maven-plugin-enforcer.version>
@@ -50,7 +51,8 @@
         <maven-plugin-versions.version>2.20.1</maven-plugin-versions.version>
         <maven-plugin-exec.version>3.6.2</maven-plugin-exec.version>
         <maven-plugin-sonar.version>5.3.0.6276</maven-plugin-sonar.version>
-        <maven-plugin-allure.version>2.12.0</maven-plugin-allure.version>
+        <maven-plugin-allure.version>2.16.1</maven-plugin-allure.version>
+        <skip.allure.report>true</skip.allure.report>
 
     </properties>
 
@@ -221,6 +223,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
@@ -228,6 +235,18 @@
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit5</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.platform</groupId>
+                    <artifactId>junit-platform-launcher</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -247,6 +266,20 @@
 
     <!-- Build Configuration -->
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>io.qameta.allure</groupId>
+                    <artifactId>allure-maven</artifactId>
+                    <version>${maven-plugin-allure.version}</version>
+                    <configuration>
+                        <reportVersion>${allure.version}</reportVersion>
+                        <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
+                        <reportDirectory>${project.build.directory}/site/allure-report</reportDirectory>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -330,7 +363,6 @@
                 <version>${maven-plugin-allure.version}</version>
                 <configuration>
                     <reportVersion>${allure.version}</reportVersion>
-                    <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
                     <reportDirectory>${project.build.directory}/allure-report</reportDirectory>
                 </configuration>
             </plugin>
@@ -358,6 +390,19 @@
     </reporting>
 
     <profiles>
+        <!-- Profile to enable Allure report only on the root project -->
+        <profile>
+            <id>allure-root</id>
+            <activation>
+                <file>
+                    <exists>LICENCE</exists>
+                </file>
+            </activation>
+            <properties>
+                <skip.allure.report>false</skip.allure.report>
+            </properties>
+        </profile>
+
         <!-- SonarQube Analysis Profile -->
         <profile>
             <id>sonar</id>

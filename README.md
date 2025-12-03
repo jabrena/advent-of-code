@@ -12,17 +12,11 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/jabrena/advent-of-code-collection)
 
-## Summary
-
-- [2024](./2024/README.md)
-- [2016](./2016/README.md)
-- [2015](./2015/README.md)
-
 ## Benefits solving AOC problems
 
 - Improve Java programming skills
 - Improve my skills in functional design using (Enums, Streams, Records, ADTs)
-- Explore DOP, Data Oriented Programming
+- Explore Functional programming principles
 - Learn about new Algorithms and Data Structures (BFS, Dijkstra, A*, etc.)
 
 ## References
