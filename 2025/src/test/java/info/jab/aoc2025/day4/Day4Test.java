@@ -18,6 +18,6 @@ class Day4Test {
         var result = day4.getPart1Result(fileName);
 
         //Then
-        then(result).isEqualTo(0);
+        then(result).isEqualTo(1370);
     }
 }
