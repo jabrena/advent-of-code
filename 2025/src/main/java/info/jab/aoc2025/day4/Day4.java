@@ -5,7 +5,7 @@ import info.jab.aoc.Solver;
 
 public class Day4 implements Day<Integer> {
 
-    private final Solver<Integer> solver = new GridNeighborSolver();
+    private final Solver<Integer> solver = new GridNeighborSolverV2();
 
     @Override
     public Integer getPart1Result(final String fileName) {
