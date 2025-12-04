@@ -13,16 +13,6 @@
 
     <steps>
         <step number="1">
-            <step-title>Understand the whole project</step-title>
-            <step-content>
-                Review the whole repository to understand the different maven modules and the purpose of each module.
-
-                Put focus in the module `commons` to understand how to desing the classes
-                Put focus in the module third-party/aoc just in case you could use one of the classes to model your solutions
-                Review the modules with a numerical name to understand problems solved in the past years.
-            </step-content>
-        </step>
-        <step number="2">
             <step-title>Identify what problem to solve</step-title>
             <step-content>
                 Execute the command:
@@ -60,6 +50,16 @@
                 PART=1
 
                 Know you have that you are going to resolve a problem for YEAR, DAY and PART.
+            </step-content>
+        </step>
+        <step number="2">
+            <step-title>Understand the whole project</step-title>
+            <step-content>
+                Review the whole repository to understand the different maven modules and
+                the purpose of each module. Put focus in the module `commons` to understand how to
+                desing the classes Put focus in the module third-party/aoc just in case you could
+                use one of the classes to model your solutions Review the modules with a numerical
+                name to understand problems solved in the past years.
             </step-content>
         </step>
         <step number="3">
