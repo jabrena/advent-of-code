@@ -1,5 +1,6 @@
 package info.jab.aoc2025.day4;
 
+import com.putoet.grid.Grid;
 import com.putoet.grid.Point;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @param totalRemoved  The total number of cells removed so far
  */
 record RemovalState(
-        char[][] grid,
+        Grid grid,
         List<Point> cellsToRemove,
         int totalRemoved
 ) {

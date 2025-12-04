@@ -1,13 +1,13 @@
 package info.jab.aoc2025.day4;
 
+import com.putoet.grid.Grid;
 import com.putoet.grid.GridUtils;
 import com.putoet.grid.Point;
+import com.putoet.grid.Points;
 import info.jab.aoc.Solver;
 import info.jab.aoc.Utils;
 import java.util.List;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import java.util.stream.Collectors;
 
 /**
  * Solver for counting and removing grid cells based on neighbor count.
@@ -25,8 +25,7 @@ public final class GridNeighborSolverV2 implements Solver<Integer> {
     private static final char TARGET_CELL = '@';
     private static final char EMPTY_CELL = '.';
     private static final int MIN_NEIGHBORS = 4;
-    private static final int[] NEIGHBOR_DX = {-1, 0, 1, -1, 1, -1, 0, 1};
-    private static final int[] NEIGHBOR_DY = {-1, -1, -1, 0, 0, 1, 1, 1};
+    private static final List<Point> NEIGHBOR_DIRECTIONS = Points.directionsAll();
 
     /**
      * Counts '@' symbols that have fewer than 4 neighbors.
@@ -37,15 +36,44 @@ public final class GridNeighborSolverV2 implements Solver<Integer> {
      */
     @Override
     public Integer solvePartOne(final String fileName) {
-        final char[][] grid = createGrid(fileName);
-        final int rows = grid.length;
-        final int cols = grid[0].length;
+        final Grid grid = createGrid(fileName);
 
-        return generateCoordinates(rows, cols)
-                .filter(p -> grid[p.y()][p.x()] == TARGET_CELL)
-                .filter(p -> countNeighbors(grid, p.x(), p.y(), rows, cols) < MIN_NEIGHBORS)
+        return grid.findAll(c -> c == TARGET_CELL).stream()
+                .filter(p -> countNeighbors(grid, p) < MIN_NEIGHBORS)
                 .mapToInt(p -> 1)
                 .sum();
+    }
+
+    /**
+     * Pure function that creates a grid from file input.
+     * Separates I/O from pure transformation logic.
+     *
+     * @param fileName The input file name
+     * @return A Grid object representing the grid
+     */
+    private Grid createGrid(final String fileName) {
+        final List<String> lines = Utils.readFileToList(fileName).stream()
+                .filter(line -> !line.isEmpty())
+                .toList();
+        return new Grid(GridUtils.of(lines));
+    }
+
+
+    /**
+     * Pure function that counts the number of '@' neighbors around a cell.
+     * Checks all 8 adjacent cells (including diagonals).
+     * Uses Point objects and Stream API for functional neighbor checking.
+     *
+     * @param grid The grid
+     * @param point The point to check neighbors for
+     * @return The count of '@' neighbors
+     */
+    private int countNeighbors(final Grid grid, final Point point) {
+        return (int) NEIGHBOR_DIRECTIONS.stream()
+                .map(point::add)
+                .filter(grid::contains)
+                .filter(p -> grid.get(p) == TARGET_CELL)
+                .count();
     }
 
     /**
@@ -58,11 +86,9 @@ public final class GridNeighborSolverV2 implements Solver<Integer> {
      */
     @Override
     public Integer solvePartTwo(final String fileName) {
-        final char[][] grid = createGrid(fileName);
-        final int rows = grid.length;
-        final int cols = grid[0].length;
+        final Grid grid = createGrid(fileName);
 
-        final List<Point> initialCellsToRemove = findCellsToRemove(grid, rows, cols);
+        final List<Point> initialCellsToRemove = findCellsToRemove(grid);
         if (initialCellsToRemove.isEmpty()) {
             return 0;
         }
@@ -73,8 +99,7 @@ public final class GridNeighborSolverV2 implements Solver<Integer> {
                         state -> {
                             final int cellsRemovedThisIteration = state.cellsToRemove().size();
                             removeCells(state.grid(), state.cellsToRemove());
-                            final List<Point> nextCellsToRemove = findCellsToRemove(
-                                    state.grid(), rows, cols);
+                            final List<Point> nextCellsToRemove = findCellsToRemove(state.grid());
                             return new RemovalState(
                                     state.grid(),
                                     nextCellsToRemove,
@@ -96,75 +121,17 @@ public final class GridNeighborSolverV2 implements Solver<Integer> {
     }
 
     /**
-     * Pure function that creates a grid from file input.
-     * Separates I/O from pure transformation logic.
-     *
-     * @param fileName The input file name
-     * @return A 2D character array representing the grid
-     */
-    private char[][] createGrid(final String fileName) {
-        return Utils.readFileToList(fileName).stream()
-                .filter(line -> !line.isEmpty())
-                .collect(Collectors.collectingAndThen(
-                        Collectors.toList(),
-                        GridUtils::of
-                ));
-    }
-
-    /**
-     * Pure function that counts the number of '@' neighbors around a cell.
-     * Checks all 8 adjacent cells (including diagonals).
-     * Uses IntStream for functional neighbor checking.
-     *
-     * @param grid The grid
-     * @param x    The x coordinate of the cell
-     * @param y    The y coordinate of the cell
-     * @param rows The number of rows in the grid
-     * @param cols The number of columns in the grid
-     * @return The count of '@' neighbors
-     */
-    private int countNeighbors(final char[][] grid, final int x, final int y,
-                               final int rows, final int cols) {
-        return IntStream.range(0, NEIGHBOR_DX.length)
-                .map(i -> {
-                    final int nx = x + NEIGHBOR_DX[i];
-                    final int ny = y + NEIGHBOR_DY[i];
-                    return (nx >= 0 && nx < cols && ny >= 0 && ny < rows
-                            && grid[ny][nx] == TARGET_CELL) ? 1 : 0;
-                })
-                .sum();
-    }
-
-    /**
      * Pure function that finds all cells that should be removed.
      * Returns an immutable list of points to remove.
      * Uses Stream API for declarative processing.
      *
      * @param grid The grid
-     * @param rows The number of rows in the grid
-     * @param cols The number of columns in the grid
      * @return An immutable list of points to remove
      */
-    private List<Point> findCellsToRemove(final char[][] grid, final int rows, final int cols) {
-        return generateCoordinates(rows, cols)
-                .filter(p -> grid[p.y()][p.x()] == TARGET_CELL)
-                .filter(p -> countNeighbors(grid, p.x(), p.y(), rows, cols) < MIN_NEIGHBORS)
+    private List<Point> findCellsToRemove(final Grid grid) {
+        return grid.findAll(c -> c == TARGET_CELL).stream()
+                .filter(p -> countNeighbors(grid, p) < MIN_NEIGHBORS)
                 .toList();
-    }
-
-    /**
-     * Pure function that generates all coordinate points in the grid.
-     * Uses IntStream for functional coordinate generation.
-     *
-     * @param rows The number of rows
-     * @param cols The number of columns
-     * @return A stream of all coordinate points
-     */
-    private Stream<Point> generateCoordinates(final int rows, final int cols) {
-        return IntStream.range(0, rows)
-                .boxed()
-                .flatMap(y -> IntStream.range(0, cols)
-                        .mapToObj(x -> Point.of(x, y)));
     }
 
     /**
@@ -174,7 +141,7 @@ public final class GridNeighborSolverV2 implements Solver<Integer> {
      * @param grid     The grid to mutate
      * @param toRemove The list of points to remove
      */
-    private void removeCells(final char[][] grid, final List<Point> toRemove) {
-        toRemove.forEach(p -> grid[p.y()][p.x()] = EMPTY_CELL);
+    private void removeCells(final Grid grid, final List<Point> toRemove) {
+        toRemove.forEach(p -> grid.set(p, EMPTY_CELL));
     }
 }
