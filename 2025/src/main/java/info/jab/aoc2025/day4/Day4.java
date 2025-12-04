@@ -5,6 +5,9 @@ import info.jab.aoc.Day;
 import info.jab.aoc.Utils;
 import java.util.List;
 
+import com.putoet.grid.Point;
+import java.util.ArrayList;
+
 public class Day4 implements Day<Integer> {
 
     @Override
@@ -49,6 +52,36 @@ public class Day4 implements Day<Integer> {
 
     @Override
     public Integer getPart2Result(String fileName) {
-        throw new UnsupportedOperationException("Not implemented");
+        List<String> lines = Utils.readFileToList(fileName).stream()
+                .filter(line -> !line.isEmpty())
+                .toList();
+        char[][] grid = GridUtils.of(lines);
+        int rows = grid.length;
+        int cols = grid[0].length;
+        int totalRemoved = 0;
+
+        while (true) {
+            List<Point> toRemove = new ArrayList<>();
+            for (int y = 0; y < rows; y++) {
+                for (int x = 0; x < cols; x++) {
+                    if (grid[y][x] == '@') {
+                        if (countNeighbors(grid, x, y, rows, cols) < 4) {
+                            toRemove.add(Point.of(x, y));
+                        }
+                    }
+                }
+            }
+
+            if (toRemove.isEmpty()) {
+                break;
+            }
+
+            for (Point p : toRemove) {
+                grid[p.y()][p.x()] = '.';
+            }
+            totalRemoved += toRemove.size();
+        }
+
+        return totalRemoved;
     }
 }

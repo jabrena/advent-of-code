@@ -20,4 +20,18 @@ class Day4Test {
         //Then
         then(result).isEqualTo(1370);
     }
+
+    @Test
+    @Timeout(30)
+    void should_solve_day4_part2() {
+        //Given
+        String fileName = "day4/day4-input.txt";
+
+        //When
+        var day4 = new Day4();
+        var result = day4.getPart2Result(fileName);
+
+        //Then
+        then(result).isEqualTo(8437);
+    }
 }
