@@ -125,6 +125,10 @@ class GridSectionTest {
 
     @Test
     void print() {
+        assertNotNull(grid);
+        assertNotNull(sections);
+        assertEquals(4, sections.length);
+        
         System.out.println(grid);
 
         for (int i = 0; i < sections.length; i++) {

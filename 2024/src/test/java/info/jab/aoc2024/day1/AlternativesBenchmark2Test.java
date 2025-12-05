@@ -4,6 +4,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -61,6 +63,6 @@ public class AlternativesBenchmark2Test {
     @Test
     public void benchmark() throws Exception {
         String[] argv = {};
-        org.openjdk.jmh.Main.main(argv);
+        assertDoesNotThrow(() -> org.openjdk.jmh.Main.main(argv));
     }
 }
