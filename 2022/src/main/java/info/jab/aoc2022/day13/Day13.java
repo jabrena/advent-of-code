@@ -14,13 +14,16 @@ public class Day13 implements Day<Integer> {
         List<Object> list = new ArrayList<>();
         Deque<List<Object>> stack = new ArrayDeque<>();
         char[] charArray = line.toCharArray();
-        for (int i = 1; i < charArray.length - 1; i++) {
+        int i = 1;
+        while (i < charArray.length - 1) {
             char c = charArray[i];
             if (c == ',') {
+                i++;
                 continue;
             }
             if (c == '[') {
                 stack.addLast(new ArrayList<>());
+                i++;
                 continue;
             }
             if (c == ']') {
@@ -30,14 +33,15 @@ public class Day13 implements Day<Integer> {
                 } else {
                     list.add(stackTop);
                 }
+                i++;
                 continue;
             }
-            String next = "";
-            if (i + 1 < charArray.length - 1 && Character.isDigit(charArray[i + 1])) {
-                next = String.valueOf(charArray[i + 1]);
+            StringBuilder numStr = new StringBuilder();
+            while (i < charArray.length - 1 && Character.isDigit(charArray[i])) {
+                numStr.append(charArray[i]);
                 i++;
             }
-            Integer num = Integer.parseInt(c + next);
+            Integer num = Integer.parseInt(numStr.toString());
             if (!stack.isEmpty()) {
                 stack.getLast().add(num);
             } else {
