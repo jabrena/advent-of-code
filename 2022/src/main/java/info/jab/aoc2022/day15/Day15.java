@@ -12,9 +12,9 @@ import java.util.stream.IntStream;
 public class Day15 {
 
     // @formatter:off
-    private static final String regex =
+    private static final String REGEX =
             "Sensor at x=(-?\\d+), y=(-?\\d+): closest beacon is at x=(-?\\d+), y=(-?\\d+)";
-    private static final Pattern PATTERN = Pattern.compile(regex);
+    private static final Pattern PATTERN = Pattern.compile(REGEX);
 
     // @formatter:on
 

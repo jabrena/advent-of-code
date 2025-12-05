@@ -97,6 +97,9 @@ public class CrossedWires {
                     case "XOR":
                         result = value1 ^ value2;
                         break;
+                    default:
+                        // Unknown operation, cannot process gate
+                        return false;
                 }
 
                 wireValues.put(output, result);

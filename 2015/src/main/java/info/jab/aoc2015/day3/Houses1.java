@@ -24,6 +24,9 @@ class Houses1 implements Solver<Integer> {
                 case 'v' -> y--;
                 case '>' -> x++;
                 case '<' -> x--;
+                default -> {
+                    // Ignore unknown characters
+                }
             }
             visitedHouses.add(new Point(x, y));
         }
@@ -54,6 +57,9 @@ class Houses1 implements Solver<Integer> {
                     case 'v' -> santaY--;
                     case '>' -> santaX++;
                     case '<' -> santaX--;
+                    default -> {
+                        // Ignore unknown characters
+                    }
                 }
                 visitedHouses.add(new Point(santaX, santaY));
             } else {
@@ -63,6 +69,9 @@ class Houses1 implements Solver<Integer> {
                     case 'v' -> roboY--;
                     case '>' -> roboX++;
                     case '<' -> roboX--;
+                    default -> {
+                        // Ignore unknown characters
+                    }
                 }
                 visitedHouses.add(new Point(roboX, roboY));
             }

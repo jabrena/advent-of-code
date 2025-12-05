@@ -4,6 +4,10 @@ import com.putoet.resources.ResourceLines;
 
 public class Day15Old {
 
+    private static final String SENSOR_AT_X_PREFIX = "Sensor at x=";
+    private static final String CLOSEST_BEACON_IS_AT_X_PREFIX = "closest beacon is at x=";
+    private static final String Y_EQUALS_PREFIX = "y=";
+
     private String[][] createMatrix(String fileName) {
         System.out.println("1. Calculate matrix dimensions");
 
@@ -12,7 +16,7 @@ public class Day15Old {
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[0])
-            .map(str -> str.replaceAll("Sensor at x=", ""))
+            .map(str -> str.replace(SENSOR_AT_X_PREFIX, ""))
             .map(str -> str.split(","))
             .map(arr -> arr[0])
             //.peek(System.out::println)
@@ -25,7 +29,7 @@ public class Day15Old {
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[0])
-            .map(str -> str.replaceAll("Sensor at x=", ""))
+            .map(str -> str.replace(SENSOR_AT_X_PREFIX, ""))
             .map(str -> str.split(","))
             .map(arr -> arr[0])
             //.peek(System.out::println)
@@ -38,10 +42,10 @@ public class Day15Old {
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[0])
-            .map(str -> str.replaceAll("Sensor at x=", ""))
+            .map(str -> str.replace(SENSOR_AT_X_PREFIX, ""))
             .map(str -> str.split(","))
             .map(arr -> arr[1])
-            .map(str -> str.replaceAll("y=", ""))
+            .map(str -> str.replace(Y_EQUALS_PREFIX, ""))
             .map(String::trim)
             //.peek(System.out::println)
             .mapToLong(Long::valueOf)
@@ -53,10 +57,10 @@ public class Day15Old {
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[0])
-            .map(str -> str.replaceAll("Sensor at x=", ""))
+            .map(str -> str.replace(SENSOR_AT_X_PREFIX, ""))
             .map(str -> str.split(","))
             .map(arr -> arr[1])
-            .map(str -> str.replaceAll("y=", ""))
+            .map(str -> str.replace(Y_EQUALS_PREFIX, ""))
             .map(String::trim)
             //.peek(System.out::println)
             .mapToLong(Long::valueOf)
@@ -73,7 +77,7 @@ public class Day15Old {
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[1])
-            .map(str -> str.replaceAll("closest beacon is at x=", ""))
+            .map(str -> str.replace(CLOSEST_BEACON_IS_AT_X_PREFIX, ""))
             .map(str -> str.split(","))
             .map(str -> str[0])
             .map(String::trim)
@@ -86,7 +90,7 @@ public class Day15Old {
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[1])
-            .map(str -> str.replaceAll("closest beacon is at x=", ""))
+            .map(str -> str.replace(CLOSEST_BEACON_IS_AT_X_PREFIX, ""))
             .map(str -> str.split(","))
             .map(str -> str[0])
             .map(String::trim)
@@ -99,10 +103,10 @@ public class Day15Old {
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[1])
-            .map(str -> str.replaceAll("closest beacon is at x=", ""))
+            .map(str -> str.replace(CLOSEST_BEACON_IS_AT_X_PREFIX, ""))
             .map(str -> str.split(","))
             .map(str -> str[1])
-            .map(str -> str.replaceAll("y=", ""))
+            .map(str -> str.replace(Y_EQUALS_PREFIX, ""))
             .map(String::trim)
             .mapToLong(Long::valueOf)
             .min()
@@ -113,10 +117,10 @@ public class Day15Old {
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[1])
-            .map(str -> str.replaceAll("closest beacon is at x=", ""))
+            .map(str -> str.replace(CLOSEST_BEACON_IS_AT_X_PREFIX, ""))
             .map(str -> str.split(","))
             .map(str -> str[1])
-            .map(str -> str.replaceAll("y=", ""))
+            .map(str -> str.replace(Y_EQUALS_PREFIX, ""))
             .map(String::trim)
             .mapToLong(Long::valueOf)
             .max()
@@ -149,11 +153,11 @@ public class Day15Old {
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[0])
-            .map(str -> str.replaceAll("Sensor at x=", ""))
+            .map(str -> str.replace(SENSOR_AT_X_PREFIX, ""))
             .forEach(str -> {
                 var parts = str.split(",");
                 int x = Integer.parseInt(parts[0].trim()) + (int) Math.abs(absoluteMinX);
-                int y = Integer.parseInt(parts[1].trim().replaceAll("y=", ""));
+                int y = Integer.parseInt(parts[1].trim().replace(Y_EQUALS_PREFIX, ""));
 
                 matrix[y][x] = "S";
             });
@@ -164,11 +168,11 @@ public class Day15Old {
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[1])
-            .map(str -> str.replaceAll("closest beacon is at x=", ""))
+            .map(str -> str.replace(CLOSEST_BEACON_IS_AT_X_PREFIX, ""))
             .forEach(str -> {
                 var parts = str.split(",");
                 int x = Integer.parseInt(parts[0].trim()) + (int) Math.abs(absoluteMinX);
-                int y = Integer.parseInt(parts[1].trim().replaceAll("y=", ""));
+                int y = Integer.parseInt(parts[1].trim().replace(Y_EQUALS_PREFIX, ""));
 
                 matrix[y][x] = "B";
             });

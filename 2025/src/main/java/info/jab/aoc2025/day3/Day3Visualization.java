@@ -28,6 +28,7 @@ public class Day3Visualization extends Application {
     private static final int WINDOW_HEIGHT = 600;
     private static final String INPUT_FILE_PATH = "2025/src/test/resources/day3/day3-input-sample.txt";
     private static final int TARGET_LENGTH = 12; // Part 2 length
+    private static final String MONOSPACED_FONT = "Monospaced";
 
     private List<String> inputLines;
     private int currentLineIndex = 0;
@@ -103,11 +104,11 @@ public class Day3Visualization extends Application {
 
         statusLabel = new Label("Ready");
         statusLabel.setTextFill(Color.WHITE);
-        statusLabel.setFont(Font.font("Monospaced", FontWeight.BOLD, 16));
+        statusLabel.setFont(Font.font(MONOSPACED_FONT, FontWeight.BOLD, 16));
 
         totalLabel = new Label("Total Max Joltage: 0");
         totalLabel.setTextFill(Color.CYAN);
-        totalLabel.setFont(Font.font("Monospaced", FontWeight.BOLD, 16));
+        totalLabel.setFont(Font.font(MONOSPACED_FONT, FontWeight.BOLD, 16));
 
         topBar.getChildren().addAll(statusLabel, totalLabel);
         root.setTop(topBar);
@@ -283,7 +284,7 @@ public class Day3Visualization extends Application {
         gc.fillText("Line " + (currentLineIndex + 1) + " / " + inputLines.size(), 20, 40);
 
         // Draw digits
-        gc.setFont(Font.font("Monospaced", 16));
+        gc.setFont(Font.font(MONOSPACED_FONT, 16));
 
         for (int i = 0; i < digits.size(); i++) {
             double x = startX + (i % digitsPerRow) * (boxSize + gap);
@@ -319,7 +320,7 @@ public class Day3Visualization extends Application {
         // Draw Constructed Number
         double resultY = 300;
         gc.setFill(Color.CYAN);
-        gc.setFont(Font.font("Monospaced", FontWeight.BOLD, 30));
+        gc.setFont(Font.font(MONOSPACED_FONT, FontWeight.BOLD, 30));
         gc.fillText("Result so far: ", 20, resultY);
 
         double resX = 250;

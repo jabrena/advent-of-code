@@ -7,6 +7,8 @@ public record Instruction(String input1, String operation, String input2, String
     
     private static final String INSTRUCTION_PATTERN = "^(?:(?:([a-z0-9]+)\\s+)?([A-Z]+)\\s+([a-z0-9]+)|([a-z0-9]+))\\s+->\\s+([a-z]+)$";
     private static final Pattern INSTRUCTION_PATTERN_COMPILED = Pattern.compile(INSTRUCTION_PATTERN);
+    private static final String LSHIFT_OPERATION = "LSHIFT";
+    private static final String RSHIFT_OPERATION = "RSHIFT";
 
     public static Instruction parse(String raw) {
         Matcher matcher = INSTRUCTION_PATTERN_COMPILED.matcher(raw);
@@ -35,15 +37,15 @@ public record Instruction(String input1, String operation, String input2, String
             input1 = ops[0].trim();
             operation = "OR";
             input2 = ops[1].trim();
-        } else if (input.contains("LSHIFT")) {
-            String[] ops = input.split("LSHIFT");
+        } else if (input.contains(LSHIFT_OPERATION)) {
+            String[] ops = input.split(LSHIFT_OPERATION);
             input1 = ops[0].trim();
-            operation = "LSHIFT";
+            operation = LSHIFT_OPERATION;
             input2 = ops[1].trim();
-        } else if (input.contains("RSHIFT")) {
-            String[] ops = input.split("RSHIFT");
+        } else if (input.contains(RSHIFT_OPERATION)) {
+            String[] ops = input.split(RSHIFT_OPERATION);
             input1 = ops[0].trim();
-            operation = "RSHIFT";
+            operation = RSHIFT_OPERATION;
             input2 = ops[1].trim();
         } else {
             input1 = input;
