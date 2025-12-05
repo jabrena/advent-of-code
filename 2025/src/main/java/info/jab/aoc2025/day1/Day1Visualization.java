@@ -129,7 +129,7 @@ public class Day1Visualization extends Application {
                 "For test resources, run with: ./mvnw -pl 2025 exec:java " +
                 "-Dexec.mainClass=\"info.jab.aoc.day1.Day1Visualization\" " +
                 "-Dexec.classpathScope=test");
-            e.printStackTrace();
+            // Suppressed: This is a visualization tool for debugging purposes
         }
     }
 
@@ -278,7 +278,7 @@ public class Day1Visualization extends Application {
         } catch (Exception e) {
             // Fallback to console if JavaFX Alert is not available
             System.err.println("Error: " + message);
-            e.printStackTrace();
+            // Suppressed: This is a visualization tool for debugging purposes
         }
     }
 

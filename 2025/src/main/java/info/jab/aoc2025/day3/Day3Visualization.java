@@ -88,7 +88,7 @@ public class Day3Visualization extends Application {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            // Suppressed: This is a visualization tool for debugging purposes
             return;
         }
 

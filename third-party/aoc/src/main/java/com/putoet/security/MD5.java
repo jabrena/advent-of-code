@@ -15,6 +15,8 @@ public class MD5 {
      */
     public static String hash(String text)  {
         try {
+            // Suppressed: MD5 is intentionally provided for Advent of Code challenges
+            @SuppressWarnings("java:S4790")
             final var md = MessageDigest.getInstance("MD5");
             md.update(text.getBytes());
             final var digest = md.digest();

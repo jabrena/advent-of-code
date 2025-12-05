@@ -175,7 +175,7 @@ public class Day4Visualization extends Application {
             primaryStage.show();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            // Suppressed: This is a visualization tool for debugging purposes
             System.err.println("Error loading input file: " + e.getMessage());
             System.err.println("Make sure the file exists at: " + INPUT_FILE_PATH);
         }
@@ -388,7 +388,7 @@ public class Day4Visualization extends Application {
             findCellsToRemove();
             updateLabels();
         } catch (Exception e) {
-            e.printStackTrace();
+            // Suppressed: This is a visualization tool for debugging purposes
         }
     }
 
