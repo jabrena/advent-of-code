@@ -1,11 +1,7 @@
 package info.jab.aoc2022.day5;
 
-import static info.jab.aoc.Utils.GROUP_SEPARATOR_PATTERN;
-import static info.jab.aoc.Utils.LINE_SEPARATOR_PATTERN;
-import static info.jab.aoc.Utils.SPACE_SEPARATOR_PATTERN;
-
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +19,10 @@ import java.util.stream.IntStream;
  *
  */
 public class Day5 implements Day<String> {
+
+    private static final Pattern GROUP_SEPARATOR_PATTERN = Pattern.compile("\n\n");
+    private static final Pattern LINE_SEPARATOR_PATTERN = Pattern.compile("\n");
+    private static final Pattern SPACE_SEPARATOR_PATTERN = Pattern.compile(" ");
 
     // @formatter:off
     private record Command(Integer quantity, Integer from, Integer to) {
@@ -97,7 +97,8 @@ public class Day5 implements Day<String> {
     private record Tuple(List<Deque<String>> stacks, List<Command> commands) {}
 
     private Function<String, Tuple> recreateStateFromFile = fileName -> {
-        var fileLoaded = Utils.readFileToString(fileName);
+        var fileLoaded = ResourceLines.stream("/" + fileName)
+                .collect(java.util.stream.Collectors.joining("\n"));
         var parts = GROUP_SEPARATOR_PATTERN.split(fileLoaded);
 
         var stacks = recreateStacks.apply(parts[0]);

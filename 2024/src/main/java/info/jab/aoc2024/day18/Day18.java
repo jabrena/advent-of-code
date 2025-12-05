@@ -1,11 +1,11 @@
 package info.jab.aoc2024.day18;
 
-import info.jab.aoc.DayWith4Params;
+import info.jab.aoc.Day4;
 
 /**
  * https://adventofcode.com/2024/day/18
  **/
-public class Day18 implements DayWith4Params<String, String, Integer, Integer, Boolean> {
+public class Day18 implements Day4<String, String, Integer, Integer, Boolean> {
 
     @Override
     public String getPart1Result(String fileName, Integer gridDimension, Integer limit, Boolean debug) {

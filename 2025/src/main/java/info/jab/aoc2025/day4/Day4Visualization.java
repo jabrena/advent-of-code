@@ -2,7 +2,7 @@ package info.jab.aoc2025.day4;
 
 import com.putoet.grid.GridUtils;
 import com.putoet.grid.Point;
-import info.jab.aoc.Utils;
+import com.putoet.resources.ResourceLines;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -71,7 +71,7 @@ public class Day4Visualization extends Application {
     public void start(Stage primaryStage) {
         try {
             // Load grid from file
-            final List<String> lines = Utils.readFileToList(INPUT_FILE_PATH).stream()
+            final List<String> lines = ResourceLines.list("/" + INPUT_FILE_PATH).stream()
                     .filter(line -> !line.isEmpty())
                     .collect(Collectors.toList());
             grid = GridUtils.of(lines);
@@ -381,7 +381,7 @@ public class Day4Visualization extends Application {
 
         // Reload grid
         try {
-            final List<String> lines = Utils.readFileToList(INPUT_FILE_PATH).stream()
+            final List<String> lines = ResourceLines.list("/" + INPUT_FILE_PATH).stream()
                     .filter(line -> !line.isEmpty())
                     .collect(Collectors.toList());
             grid = GridUtils.of(lines);

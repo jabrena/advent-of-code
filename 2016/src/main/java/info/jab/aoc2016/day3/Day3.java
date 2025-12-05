@@ -1,7 +1,7 @@
 package info.jab.aoc2016.day3;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,7 @@ public class Day3 implements Day<Integer> {
 
     @Override
     public Integer getPart1Result(String fileName) {
-        List<String> lines = Utils.readFileToList(fileName);
+        List<String> lines = ResourceLines.list("/" + fileName);
         
         int validTriangles = 0;
         
@@ -34,7 +34,7 @@ public class Day3 implements Day<Integer> {
 
     @Override
     public Integer getPart2Result(String fileName) {
-        List<String> lines = Utils.readFileToList(fileName);
+        List<String> lines = ResourceLines.list("/" + fileName);
         
         int validTriangles = 0;
         

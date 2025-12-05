@@ -1,9 +1,8 @@
 package info.jab.aoc2022.day2;
 
-import static info.jab.aoc.Utils.SPACE_SEPARATOR_PATTERN;
-
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
+import java.util.regex.Pattern;
 
 /**
  * Solution for AOC 2022, Day 2
@@ -12,10 +11,12 @@ import info.jab.aoc.Utils;
  */
 public class Day2 implements Day<Integer> {
 
+    private static final Pattern SPACE_SEPARATOR_PATTERN = Pattern.compile(" ");
+
     @Override
     public Integer getPart1Result(String fileName) {
-        return Utils
-            .readFileToList(fileName)
+        return ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(SPACE_SEPARATOR_PATTERN::split)
             .map(arr -> new Game1(Column1.fromValue(arr[0]), Column2.fromValue(arr[1])))
@@ -25,8 +26,8 @@ public class Day2 implements Day<Integer> {
 
     @Override
     public Integer getPart2Result(String fileName) {
-        return Utils
-            .readFileToList(fileName)
+        return ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(SPACE_SEPARATOR_PATTERN::split)
             .map(arr -> new Game2(Column1.fromValue(arr[0]), Column2.fromValue(arr[1])))

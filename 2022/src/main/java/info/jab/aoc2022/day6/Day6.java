@@ -1,9 +1,13 @@
 package info.jab.aoc2022.day6;
 
-import static info.jab.aoc.Utils.getUniqueCharactersAsHashSet;
-
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
@@ -14,6 +18,13 @@ import java.util.function.Predicate;
  *
  */
 public class Day6 implements Day<List<Integer>> {
+
+    private static final Pattern STRING_SPLIT_PATTERN = Pattern.compile("(?!^)");
+
+    private static Set<String> getUniqueCharactersAsHashSet(String string) {
+        return Arrays.stream(STRING_SPLIT_PATTERN.split(string))
+                .collect(Collectors.toUnmodifiableSet());
+    }
 
     // @formatter:off
     private Predicate<String> areUniqueCharacters = param ->
@@ -38,14 +49,14 @@ public class Day6 implements Day<List<Integer>> {
     // @formatter:off
     @Override
     public List<Integer> getPart1Result(String fileName) {
-        return Utils.readFileToList(fileName).stream()
+        return ResourceLines.list("/" + fileName).stream()
                 .map(line -> detectMarker.apply(line, 4))
                 .toList();
     }
 
     @Override
     public List<Integer> getPart2Result(String fileName) {
-        return Utils.readFileToList(fileName).stream()
+        return ResourceLines.list("/" + fileName).stream()
                 .map(str -> detectMarker.apply(str, 14))
                 .toList();
     }

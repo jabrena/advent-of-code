@@ -1,7 +1,7 @@
 package info.jab.aoc2022.day13;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +88,7 @@ public class Day13 implements Day<Integer> {
 
     @Override
     public Integer getPart1Result(String fileName) {
-        List<String> input = Utils.readFileToList(fileName);
+        List<String> input = ResourceLines.list("/" + fileName);
         Queue<List<Object>> queue = new ArrayDeque<>();
         int total = 0;
         int i = 1;
@@ -111,7 +111,7 @@ public class Day13 implements Day<Integer> {
 
     @Override
     public Integer getPart2Result(String fileName) {
-        List<String> input = Utils.readFileToList(fileName);
+        List<String> input = ResourceLines.list("/" + fileName);
         List<List<Object>> list = new ArrayList<>();
         for (String line : input) {
             if (line.isEmpty()) {

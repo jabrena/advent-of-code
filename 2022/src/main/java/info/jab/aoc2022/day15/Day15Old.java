@@ -1,14 +1,14 @@
 package info.jab.aoc2022.day15;
 
-import info.jab.aoc.Utils;
+import com.putoet.resources.ResourceLines;
 
 public class Day15Old {
 
     private String[][] createMatrix(String fileName) {
         System.out.println("1. Calculate matrix dimensions");
 
-        var minSensorX = Utils
-            .readFileToList(fileName)
+        var minSensorX = ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[0])
@@ -20,8 +20,8 @@ public class Day15Old {
             .min()
             .orElseThrow();
 
-        var maxSensorX = Utils
-            .readFileToList(fileName)
+        var maxSensorX = ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[0])
@@ -33,8 +33,8 @@ public class Day15Old {
             .max()
             .orElseThrow();
 
-        var minSensorY = Utils
-            .readFileToList(fileName)
+        var minSensorY = ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[0])
@@ -48,8 +48,8 @@ public class Day15Old {
             .min()
             .orElseThrow();
 
-        var maxSensorY = Utils
-            .readFileToList(fileName)
+        var maxSensorY = ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[0])
@@ -68,8 +68,8 @@ public class Day15Old {
         System.out.println(maxSensorX + "," + maxSensorX);
         System.out.println();
 
-        var minBeaconX = Utils
-            .readFileToList(fileName)
+        var minBeaconX = ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[1])
@@ -81,8 +81,8 @@ public class Day15Old {
             .min()
             .orElseThrow();
 
-        var maxBeaconX = Utils
-            .readFileToList(fileName)
+        var maxBeaconX = ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[1])
@@ -94,8 +94,8 @@ public class Day15Old {
             .max()
             .orElseThrow();
 
-        var minBeaconY = Utils
-            .readFileToList(fileName)
+        var minBeaconY = ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[1])
@@ -108,8 +108,8 @@ public class Day15Old {
             .min()
             .orElseThrow();
 
-        var maxBeaconY = Utils
-            .readFileToList(fileName)
+        var maxBeaconY = ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[1])
@@ -144,8 +144,8 @@ public class Day15Old {
         String[][] matrix = new String[dimY + 1][dimX + 1];
 
         System.out.println("Load Sensors in the matrix");
-        Utils
-            .readFileToList(fileName)
+        ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[0])
@@ -159,8 +159,8 @@ public class Day15Old {
             });
 
         System.out.println("Load Beacons in the matrix");
-        Utils
-            .readFileToList(fileName)
+        ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(str -> str.split(":"))
             .map(arr -> arr[1])

@@ -1,7 +1,8 @@
 package info.jab.aoc2015.day25;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
+import java.util.stream.Collectors;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +14,8 @@ public class Day25 implements Day<Long> {
 
     @Override
     public Long getPart1Result(String fileName) {
-        String input = Utils.readFileToString(fileName);
+        String input = ResourceLines.stream("/" + fileName)
+                .collect(Collectors.joining("\n"));
         
         // Parse the target row and column from input
         Pattern pattern = Pattern.compile("row (\\d+), column (\\d+)");

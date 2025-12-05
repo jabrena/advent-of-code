@@ -1,6 +1,6 @@
 package info.jab.aoc2024.day14;
 
-import info.jab.aoc.DayWith3Params;
+import info.jab.aoc.Day3;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import com.putoet.resources.ResourceLines;
  * Inspiration to solve Part 2:
  * https://github.com/marcinbator/AoC2024-Java-solver/blob/main/src/solutions/day14/output.txt#L88C28-L88C59
  **/
-public class Day14 implements DayWith3Params<Integer, String, Integer, Integer> {
+public class Day14 implements Day3<Integer, String, Integer, Integer> {
 
     @Override
     public Integer getPart1Result(String fileName, Integer width, Integer height) {

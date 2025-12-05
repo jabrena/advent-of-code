@@ -9,10 +9,10 @@ package info.jab.aoc;
  * @param <Y> Parameter 1
  * @param <Z> Parameter 2
  * @param <V> Parameter 3
- * @param <W> Parameter 4
  */
-public interface DayWith4Params<X, Y, Z, V, W> {
-    X getPart1Result(Y parameter1, Z parameter2, V parameter3, W parameter4);
+public interface Day3<X, Y, Z, V> {
+    X getPart1Result(Y parameter1, Z parameter2, V parameter3);
 
-    X getPart2Result(Y parameter1, Z parameter2, V parameter3, W parameter4);
+    X getPart2Result(Y parameter1, Z parameter2, V parameter3);
 }
+

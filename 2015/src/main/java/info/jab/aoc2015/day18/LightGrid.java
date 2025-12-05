@@ -1,7 +1,7 @@
 package info.jab.aoc2015.day18;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
-import info.jab.aoc.Utils;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class LightGrid implements Solver<Integer> {
     }
     
     public Integer solvePartOneWithSteps(String fileName, int steps) {
-        List<String> lines = Utils.readFileToList(fileName);
+        List<String> lines = ResourceLines.list("/" + fileName);
         
         // Parse the initial grid
         boolean[][] grid = parseGrid(lines);
@@ -33,7 +33,7 @@ public class LightGrid implements Solver<Integer> {
     }
     
     public Integer solvePartTwoWithSteps(String fileName, int steps) {
-        List<String> lines = Utils.readFileToList(fileName);
+        List<String> lines = ResourceLines.list("/" + fileName);
         
         // Parse the initial grid
         boolean[][] grid = parseGrid(lines);

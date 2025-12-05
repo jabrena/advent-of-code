@@ -1,13 +1,14 @@
 package info.jab.aoc2022.day10;
 
-import static info.jab.aoc.Utils.SPACE_SEPARATOR_PATTERN;
-
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
+import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Day10 implements Day<String> {
+
+    private static final Pattern SPACE_SEPARATOR_PATTERN = Pattern.compile(" ");
 
     record Tuple(Integer cycle, Integer value) {}
 
@@ -40,7 +41,7 @@ public class Day10 implements Day<String> {
 
     public String getPart1Result(String fileName) {
         //Source
-        var source = Utils.readFileToList(fileName);
+        var source = ResourceLines.list("/" + fileName);
 
         //Processor
         var values = transform(source);
@@ -64,7 +65,7 @@ public class Day10 implements Day<String> {
 
     public String getPart2Result(String fileName) {
         //Source
-        var list = Utils.readFileToList(fileName);
+        var list = ResourceLines.list("/" + fileName);
 
         //Transform
         var values = transform(list);

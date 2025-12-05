@@ -1,14 +1,15 @@
 package info.jab.aoc2022.day3;
 
-import static info.jab.aoc.Utils.getUniqueCharactersAsHashSet;
-
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -17,6 +18,13 @@ import java.util.stream.Collectors;
  *
  */
 public class Day3 implements Day<Long> {
+
+    private static final Pattern STRING_SPLIT_PATTERN = Pattern.compile("(?!^)");
+
+    private static Set<String> getUniqueCharactersAsHashSet(String string) {
+        return Arrays.stream(STRING_SPLIT_PATTERN.split(string))
+                .collect(Collectors.toUnmodifiableSet());
+    }
 
     private Function<String, Integer> getPriority = param -> {
         final String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -39,8 +47,8 @@ public class Day3 implements Day<Long> {
             return set.stream().findFirst().get();
         };
 
-        return Utils
-            .readFileToList(fileName)
+        return ResourceLines
+            .list("/" + fileName)
             .stream()
             .map(splitInTheMiddle::apply)
             .map(find::apply)
@@ -53,8 +61,8 @@ public class Day3 implements Day<Long> {
         Function<String, Collection<List<String>>> groupBy3 = param -> {
             final int chunkSize = 3;
             final AtomicInteger counter = new AtomicInteger();
-            return Utils
-                .readFileToList(param)
+            return ResourceLines
+                .list("/" + param)
                 .stream()
                 .collect(Collectors.groupingBy(it -> counter.getAndIncrement() / chunkSize))
                 .values();

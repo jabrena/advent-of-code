@@ -1,7 +1,7 @@
 package info.jab.aoc2022.day15;
 
 import com.google.common.collect.Range;
-import info.jab.aoc.Utils;
+import com.putoet.resources.ResourceLines;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -56,7 +56,7 @@ public class Day15 {
 
     public Long getPart1Result(String fileName, Integer y) {
         //Source
-        var fileLines = Utils.readFileToList(fileName);
+        var fileLines = ResourceLines.list("/" + fileName);
 
         //Transform
         var processed = processLines(fileLines);
@@ -76,7 +76,7 @@ public class Day15 {
 
     public Long getPart2Result(String fileName) {
         //Source
-        var fileLines = Utils.readFileToList(fileName);
+        var fileLines = ResourceLines.list("/" + fileName);
 
         //Transform
         var processed = processLines(fileLines);

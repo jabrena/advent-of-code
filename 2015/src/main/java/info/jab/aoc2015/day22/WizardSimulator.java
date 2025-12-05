@@ -1,7 +1,7 @@
 package info.jab.aoc2015.day22;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
-import info.jab.aoc.Utils;
 
 import java.util.*;
 
@@ -12,7 +12,7 @@ public class WizardSimulator implements Solver<Integer> {
 
     @Override
     public Integer solvePartOne(String fileName) {
-        var input = Utils.readFileToList(fileName);
+        var input = ResourceLines.list("/" + fileName);
         var boss = parseBoss(input);
         
         return findMinManaToWin(boss, false);
@@ -20,7 +20,7 @@ public class WizardSimulator implements Solver<Integer> {
 
     @Override
     public Integer solvePartTwo(String fileName) {
-        var input = Utils.readFileToList(fileName);
+        var input = ResourceLines.list("/" + fileName);
         var boss = parseBoss(input);
         
         return findMinManaToWin(boss, true);
