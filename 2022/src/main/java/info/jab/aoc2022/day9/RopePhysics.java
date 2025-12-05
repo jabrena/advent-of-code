@@ -34,19 +34,15 @@ class RopePhysics {
     public void print() {
         for (int y = 0; y < cellsH.length; y++) {
             for (int x = 0; x < cellsH[0].length; x++) {
+                char symbol = '.';
                 if (cellsH[y][x]) {
-                    System.out.print("H");
-                    continue;
+                    symbol = 'H';
+                } else if (cellsT[y][x]) {
+                    symbol = 'T';
+                } else if (cellsS[y][x]) {
+                    symbol = 's';
                 }
-                if (cellsT[y][x]) {
-                    System.out.print("T");
-                    continue;
-                }
-                if (cellsS[y][x]) {
-                    System.out.print("s");
-                    continue;
-                }
-                System.out.print(".");
+                System.out.print(symbol);
             }
             System.out.println();
         }
@@ -55,11 +51,7 @@ class RopePhysics {
     public void printVisited() {
         for (int y = 0; y < cellsVisited.length; y++) {
             for (int x = 0; x < cellsVisited[0].length; x++) {
-                if (cellsVisited[y][x]) {
-                    System.out.print("#");
-                    continue;
-                }
-                System.out.print(".");
+                System.out.print(cellsVisited[y][x] ? "#" : ".");
             }
             System.out.println();
         }
@@ -99,12 +91,9 @@ class RopePhysics {
      */
     private boolean checkDistanceTwithH() {
         // @formatter:off
-        if (Math.abs(this.currentHX - this.currentTX) > 1
-            || Math.abs(this.currentHY - this.currentTY) > 1) {
-            return true;
-        }
+        return Math.abs(this.currentHX - this.currentTX) > 1
+            || Math.abs(this.currentHY - this.currentTY) > 1;
         // @formatter:on
-        return false;
     }
 
     private void moveH(Direction direction) {

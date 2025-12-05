@@ -35,13 +35,9 @@ public class Day4 implements Day<Long> {
     @Override
     public Long getPart1Result(String fileName) {
         // @formatter:off
-        Function<Tuple, Boolean> detectSubsets = tuple -> {
-            if (tuple.part1().containsAll(tuple.part2())
-                || tuple.part2().containsAll(tuple.part1())) {
-                return true;
-            }
-            return false;
-        };
+        Function<Tuple, Boolean> detectSubsets = tuple ->
+            tuple.part1().containsAll(tuple.part2())
+                || tuple.part2().containsAll(tuple.part1());
 
         return ResourceLines.list("/" + fileName)
                 .stream()
@@ -62,10 +58,7 @@ public class Day4 implements Day<Long> {
             set2.addAll(tuple.part1());
             set2.retainAll(tuple.part2());
 
-            if (!set2.isEmpty()) {
-                return true;
-            }
-            return false;
+            return !set2.isEmpty();
         };
 
         // @formatter:off
