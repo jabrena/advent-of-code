@@ -4,7 +4,6 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 import java.util.concurrent.TimeUnit;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -24,7 +23,6 @@ class Day23Test {
         then(result).isEqualTo(10953);
     }
 
-    @Disabled
     @Test
     @Timeout(value = 120, unit = TimeUnit.SECONDS)
     void should_solve_day23_part2() {
@@ -35,12 +33,8 @@ class Day23Test {
         var day = new Day23();
         var result = day.getPart2Result(fileName);
 
-        // Print result for verification
-        System.out.println("Part 2 Result: " + result);
-
         //Then
-        // Result will be verified after running the solution
-        then(result).isNotNull();
+        then(result).isEqualTo(479007513);
     }
 
 }
