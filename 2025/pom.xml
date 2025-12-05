@@ -19,6 +19,10 @@
             <groupId>info.jab.aoc</groupId>
             <artifactId>commons</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.putoet</groupId>
+            <artifactId>aoc</artifactId>
+        </dependency>
         <!-- JavaFX dependencies -->
         <dependency>
             <groupId>org.openjfx</groupId>

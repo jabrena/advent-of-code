@@ -19,5 +19,9 @@
             <groupId>info.jab.aoc</groupId>
             <artifactId>commons</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.putoet</groupId>
+            <artifactId>aoc</artifactId>
+        </dependency>
     </dependencies>
 </project>
