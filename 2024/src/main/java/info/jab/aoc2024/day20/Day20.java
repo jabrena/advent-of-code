@@ -1,11 +1,11 @@
 package info.jab.aoc2024.day20;
 
-import info.jab.aoc.DayWith2Params;
+import info.jab.aoc.Day2;
 
 /**
  * https://adventofcode.com/2024/day/20
  **/
-public class Day20 implements DayWith2Params<Integer, String, Integer> {
+public class Day20 implements Day2<Integer, String, Integer> {
 
     @Override
     public Integer getPart1Result(String fileName, Integer picoseconds) {
