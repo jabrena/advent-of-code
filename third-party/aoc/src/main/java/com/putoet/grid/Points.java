@@ -3,6 +3,7 @@ package com.putoet.grid;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.ToIntFunction;
 
 /**
  * A utility class for working with points.
@@ -47,10 +48,10 @@ public final class Points {
      * @param extract The function to extract the value from a point.
      * @return The minimum x and y values of the given points.
      */
-    static int min(Collection<Point> points, Function<Point,Integer> extract) {
+    static int min(Collection<Point> points, ToIntFunction<Point> extract) {
         assert !points.isEmpty();
 
-        return points.stream().mapToInt(extract::apply).min().getAsInt();
+        return points.stream().mapToInt(extract).min().getAsInt();
     }
 
     /**
@@ -60,10 +61,10 @@ public final class Points {
      * @param extract The function to extract the value from a point.
      * @return The maximum x and y values of the given points.
      */
-    static int max(Collection<Point> points, Function<Point,Integer> extract) {
+    static int max(Collection<Point> points, ToIntFunction<Point> extract) {
         assert !points.isEmpty();
 
-        return points.stream().mapToInt(extract::apply).max().getAsInt();
+        return points.stream().mapToInt(extract).max().getAsInt();
     }
 
     /**

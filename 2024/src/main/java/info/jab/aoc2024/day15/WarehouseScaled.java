@@ -51,7 +51,7 @@ public class WarehouseScaled {
             .toList();
 
         String commands = inputLines.stream()
-            .skip(grid.size() + 1)
+            .skip((long) grid.size() + 1)
             .collect(Collectors.joining());
 
         return new InputData(grid, commands.toCharArray());

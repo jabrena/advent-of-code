@@ -120,49 +120,43 @@ public class GridComputing implements Solver<Integer> {
                 int newEmptyX = current.emptyX + dx[i];
                 int newEmptyY = current.emptyY + dy[i];
                 
-                // Check bounds
-                if (newEmptyX < 0 || newEmptyX > maxX || newEmptyY < 0 || newEmptyY > maxY) {
-                    continue;
-                }
-                
-                Node sourceNode = originalNodeMap.get(newEmptyX + "," + newEmptyY);
-                if (sourceNode == null) {
-                    continue;
-                }
-                
-                // Calculate current used amount at source
-                // If source is the goal position, it has the goal data (original used)
-                // Otherwise it has its original data
-                int sourceUsed;
-                if (newEmptyX == current.goalX && newEmptyY == current.goalY) {
-                    // This is the goal node, it has the goal data
-                    Node goalNodeOriginal = originalNodeMap.get(current.goalX + "," + current.goalY);
-                    sourceUsed = goalNodeOriginal != null ? goalNodeOriginal.used() : sourceNode.used();
-                } else {
-                    // Regular node with its original data
-                    sourceUsed = sourceNode.used();
-                }
-                
-                // Check if we can move data from source to empty
-                if (sourceUsed == 0 || emptyAvail < sourceUsed) {
-                    continue;
-                }
-                
-                // Determine new goal position
-                int newGoalX = current.goalX;
-                int newGoalY = current.goalY;
-                
-                // If we're moving the goal node itself
-                if (newEmptyX == current.goalX && newEmptyY == current.goalY) {
-                    newGoalX = current.emptyX;
-                    newGoalY = current.emptyY;
-                }
-                
-                State newState = new State(newGoalX, newGoalY, newEmptyX, newEmptyY);
-                
-                if (!steps.containsKey(newState)) {
-                    steps.put(newState, currentSteps + 1);
-                    queue.offer(newState);
+                // Check bounds and node existence
+                if (newEmptyX >= 0 && newEmptyX <= maxX && newEmptyY >= 0 && newEmptyY <= maxY) {
+                    Node sourceNode = originalNodeMap.get(newEmptyX + "," + newEmptyY);
+                    if (sourceNode != null) {
+                        // Calculate current used amount at source
+                        // If source is the goal position, it has the goal data (original used)
+                        // Otherwise it has its original data
+                        int sourceUsed;
+                        if (newEmptyX == current.goalX && newEmptyY == current.goalY) {
+                            // This is the goal node, it has the goal data
+                            Node goalNodeOriginal = originalNodeMap.get(current.goalX + "," + current.goalY);
+                            sourceUsed = goalNodeOriginal != null ? goalNodeOriginal.used() : sourceNode.used();
+                        } else {
+                            // Regular node with its original data
+                            sourceUsed = sourceNode.used();
+                        }
+                        
+                        // Check if we can move data from source to empty
+                        if (sourceUsed > 0 && emptyAvail >= sourceUsed) {
+                            // Determine new goal position
+                            int newGoalX = current.goalX;
+                            int newGoalY = current.goalY;
+                            
+                            // If we're moving the goal node itself
+                            if (newEmptyX == current.goalX && newEmptyY == current.goalY) {
+                                newGoalX = current.emptyX;
+                                newGoalY = current.emptyY;
+                            }
+                            
+                            State newState = new State(newGoalX, newGoalY, newEmptyX, newEmptyY);
+                            
+                            if (!steps.containsKey(newState)) {
+                                steps.put(newState, currentSteps + 1);
+                                queue.offer(newState);
+                            }
+                        }
+                    }
                 }
             }
         }

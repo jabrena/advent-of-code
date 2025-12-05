@@ -16,7 +16,7 @@ class CrossedWires2 {
         int splitIndex = input.indexOf("");
 
         // Skip the first part and filter out any empty lines
-        List<String> secondPart = input.stream().skip(splitIndex + 1).filter(line -> !line.isEmpty()).toList();
+        List<String> secondPart = input.stream().skip((long) splitIndex + 1).filter(line -> !line.isEmpty()).toList();
 
         // Process the second part and collect all wrong elements
         Set<String> wrong = secondPart.stream()

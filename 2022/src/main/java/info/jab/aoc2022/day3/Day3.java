@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.function.ToIntFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ public class Day3 implements Day<Long> {
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    private Function<String, Integer> getPriority = param -> {
+    private ToIntFunction<String> getPriority = param -> {
         final String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return alphabet.indexOf(param) + 1;
     };
@@ -52,7 +53,7 @@ public class Day3 implements Day<Long> {
             .stream()
             .map(splitInTheMiddle::apply)
             .map(find::apply)
-            .mapToLong(getPriority::apply)
+            .mapToLong(getPriority::applyAsInt)
             .reduce(0, Long::sum);
     }
 
@@ -82,7 +83,7 @@ public class Day3 implements Day<Long> {
         // @formatter:off
         return groupBy3.apply(fileName).stream()
                 .map(find::apply)
-                .mapToLong(getPriority::apply)
+                .mapToLong(getPriority::applyAsInt)
                 .reduce(0, Long::sum);
         // @formatter:on
     }

@@ -42,7 +42,7 @@ class PrintQueue2 implements Solver<Integer> {
                             .toList();
 
                     var isValid = pageNumbers.stream()
-                            .limit(pageNumbers.size() - 1)
+                            .limit((long) pageNumbers.size() - 1)
                             .allMatch(page -> {
                                 var acceptedFollowers = rules.get(page);
                                 var nextPage = pageNumbers.get(pageNumbers.indexOf(page) + 1);

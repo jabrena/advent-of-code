@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * A (comparable) point in a 2D grid. Points are by default ordered by Y and then by X.
@@ -62,7 +63,7 @@ public record Point(int x, int y) implements Comparable<Point> {
      * @param transformer The transformer to apply to the x and y values, must be not null.
      * @return A new point that is the result of applying the transformer to the x and y values of this point.
      */
-    public Point transform(Function<Integer,Integer> transformer) {
+    public Point transform(UnaryOperator<Integer> transformer) {
         Objects.requireNonNull(transformer);
 
         return new Point(transformer.apply(x), transformer.apply(y));
@@ -122,7 +123,7 @@ public record Point(int x, int y) implements Comparable<Point> {
     public double euclideanDistance(Point other) {
         Objects.requireNonNull(other);
 
-        return Math.sqrt(Math.pow(x - other.x, 2) + Math.pow(y - other.y, 2));
+        return Math.sqrt(Math.pow((double) x - other.x, 2) + Math.pow((double) y - other.y, 2));
     }
 
     @Override
