@@ -9,8 +9,8 @@ import info.jab.aoc.Solver;
 
 public class RTGFacility implements Solver<Integer> {
 
-    private static final Pattern GENERATOR_PATTERN = Pattern.compile("(\\w+) generator");
-    private static final Pattern MICROCHIP_PATTERN = Pattern.compile("(\\w+)-compatible microchip");
+    private static final Pattern GENERATOR_PATTERN = Pattern.compile("(\\w++) generator");
+    private static final Pattern MICROCHIP_PATTERN = Pattern.compile("(\\w++)-compatible microchip");
 
     @Override
     public Integer solvePartOne(String fileName) {
