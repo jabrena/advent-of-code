@@ -23,7 +23,7 @@ public class AuntSueDetector implements Solver<Integer> {
     );
 
     private static final Pattern SUE_PATTERN = Pattern.compile("Sue (\\d+): (.*)");
-    private static final Pattern COMPOUND_PATTERN = Pattern.compile("(\\w++): (\\d++)");
+    private static final Pattern COMPOUND_PATTERN = Pattern.compile("((?>\\w+)): ((?>\\d+))");
 
     @Override
     public Integer solvePartOne(String fileName) {
