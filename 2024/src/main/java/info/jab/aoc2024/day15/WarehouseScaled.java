@@ -93,7 +93,10 @@ public class WarehouseScaled {
         for (char m : movements) {
             int dir = getDirIndex(m);
             walkState = mutateMap(new Grid(map), currentPoint, dir);
-            walkState.currentPoint().ifPresent(point -> currentPoint = point);
+            Optional<Point> nextPoint = walkState.currentPoint();
+            if (nextPoint.isPresent()) {
+                currentPoint = nextPoint.get();
+            }
         }
         return walkState.currentMap();
     }

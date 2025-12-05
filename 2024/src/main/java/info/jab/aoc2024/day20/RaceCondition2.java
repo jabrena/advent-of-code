@@ -83,8 +83,8 @@ public final class RaceCondition2 {
     private static Map<Point, Integer> bfs(Point from, Point to, Set<Point> walls) {
         Queue<Point> queue = new ArrayDeque<>();
         Map<Point, Integer> visited = new LinkedHashMap<>();
-        queue.add(start);
-        visited.put(start, 0);
+        queue.add(from);
+        visited.put(from, 0);
 
         while (!queue.isEmpty()) {
             Point current = queue.remove();
