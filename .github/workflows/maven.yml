@@ -45,4 +45,4 @@ jobs:
       - name: Upload SonarQube analysis results
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./mvnw --batch-mode --no-transfer-progress package -DskipTests sonar:sonar -Psonar
+        run: ./mvnw --batch-mode --no-transfer-progress package -DskipTests properties:read-project-properties sonar:sonar -Psonar
