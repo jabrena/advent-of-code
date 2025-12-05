@@ -51,7 +51,7 @@ class Day15Test {
         long score = calculateScoreForAmounts(ingredients, new int[]{50, 50});
         
         // Then negative totals should become 0, making the total score 0
-        assertThat(score).isEqualTo(0L);
+        assertThat(score).isZero();
     }
 
     @Test

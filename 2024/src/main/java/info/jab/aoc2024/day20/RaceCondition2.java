@@ -25,7 +25,8 @@ public final class RaceCondition2 {
     public static void solve(String fileName) {
         List<String> lines = ResourceLines.list(fileName);
 
-        Point start = null, end = null;
+        Point start = null;
+        Point end = null;
         Set<Point> walls = new HashSet<>();
         for (int i = 0; i < lines.size(); i++) {
             for (int j = 0; j < lines.get(i).length(); j++) {

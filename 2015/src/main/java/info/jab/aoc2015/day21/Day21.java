@@ -167,7 +167,9 @@ public class Day21 implements Day<Integer> {
     }
 
     private Character parseBoss(List<String> lines) {
-        int hitPoints = 0, damage = 0, armor = 0;
+        int hitPoints = 0;
+        int damage = 0;
+        int armor = 0;
         
         for (String line : lines) {
             if (line.startsWith("Hit Points:")) {

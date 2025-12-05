@@ -27,7 +27,8 @@ public class WizardSimulator implements Solver<Integer> {
     }
 
     private Boss parseBoss(List<String> input) {
-        int hp = 0, damage = 0;
+        int hp = 0;
+        int damage = 0;
         for (String line : input) {
             if (line.startsWith("Hit Points: ")) {
                 hp = Integer.parseInt(line.substring("Hit Points: ".length()));
@@ -119,11 +120,7 @@ public class WizardSimulator implements Solver<Integer> {
         
         // Can't cast effect spells that are already active
         Effect effect = spell.effect;
-        if (effect != null && state.effects.containsKey(effect)) {
-            return false;
-        }
-        
-        return true;
+        return effect == null || !state.effects.containsKey(effect);
     }
 
     private GameState castSpell(GameState state, Spell spell) {

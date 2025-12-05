@@ -2,8 +2,6 @@ package info.jab.aoc2024.day22;
 
 import info.jab.aoc.Day;
 
-import java.math.BigInteger;
-
 /**
  * https://adventofcode.com/2024/day/22
  **/

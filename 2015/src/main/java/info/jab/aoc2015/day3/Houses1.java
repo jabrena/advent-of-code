@@ -15,7 +15,8 @@ class Houses1 implements Solver<Integer> {
         var line = ResourceLines.line(fileName);
 
         Set<Point> visitedHouses = new HashSet<>();        
-        int x = 0, y = 0;
+        int x = 0;
+        int y = 0;
         visitedHouses.add(new Point(x, y));
         
         for (char move : line.toCharArray()) {
@@ -40,8 +41,10 @@ class Houses1 implements Solver<Integer> {
         
         Set<Point> visitedHouses = new HashSet<>();
         // Posiciones para Santa y Robo-Santa
-        int santaX = 0, santaY = 0;
-        int roboX = 0, roboY = 0;
+        int santaX = 0;
+        int santaY = 0;
+        int roboX = 0;
+        int roboY = 0;
         
         // Ambos comienzan en la misma casa
         visitedHouses.add(new Point(0, 0));

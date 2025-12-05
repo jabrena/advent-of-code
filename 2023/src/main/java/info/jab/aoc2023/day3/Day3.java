@@ -34,7 +34,7 @@ class Day3  implements Day<Long> {
         return symbols;
     };
 
-    record MatrixDimension(int x, int y) {};
+    record MatrixDimension(int x, int y) {}
 
     Function<List<String>, MatrixDimension> getMatrixDimension = param -> {
         var x = param.get(0).length();
@@ -134,7 +134,7 @@ class Day3  implements Day<Long> {
         }
 
         return list;
-    };
+    }
 
     @Override
     public Long getPart1Result(String fileName) {

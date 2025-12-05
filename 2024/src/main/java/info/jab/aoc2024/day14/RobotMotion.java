@@ -1,8 +1,6 @@
 package info.jab.aoc2024.day14;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.putoet.resources.ResourceLines;
@@ -50,15 +48,13 @@ public class RobotMotion {
             }
         }
 
-        int safetyFactor = quadrants[0] * quadrants[1] * quadrants[2] * quadrants[3];
-        return safetyFactor;
+        return quadrants[0] * quadrants[1] * quadrants[2] * quadrants[3];
     }
 
     public Integer part1(String fileName, Integer width, Integer height) {
         List<Robot> robots = parseRobots(fileName);
         var grid = simulateRobotMotion(robots, width, height, 100);
-        int safetyFactor = calculateSafetyFactor(grid, width, height);
-        return safetyFactor;
+        return calculateSafetyFactor(grid, width, height);
     }
 
     private static final int TIME_LIMIT = 10000;

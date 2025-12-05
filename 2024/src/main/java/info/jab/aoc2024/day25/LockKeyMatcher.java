@@ -1,6 +1,5 @@
 package info.jab.aoc2024.day25;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;

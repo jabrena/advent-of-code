@@ -1,8 +1,6 @@
 package info.jab.aoc2024.day10;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Set;
 
 import com.putoet.grid.Grid;

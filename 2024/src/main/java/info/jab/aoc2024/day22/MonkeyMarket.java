@@ -1,7 +1,6 @@
 package info.jab.aoc2024.day22;
 
 import com.putoet.resources.ResourceLines;
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.HashMap;
 
