@@ -83,9 +83,7 @@ public class WizardSimulator implements Solver<Integer> {
             for (Spell spell : Spell.values()) {
                 if (canCastSpell(state, spell)) {
                     GameState newState = castSpell(state, spell);
-                    if (newState != null) {
-                        queue.offer(newState);
-                    }
+                    queue.offer(newState);
                 }
             }
         } else {
