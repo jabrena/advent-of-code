@@ -13,10 +13,10 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
 @Disabled
-public class AlternativesBenchmarkTest {
+class AlternativesBenchmarkTest {
 
     @Test
-    public void should_show_best_alternatives() throws RunnerException {
+    void should_show_best_alternatives() throws RunnerException {
 
         Options options = new OptionsBuilder()
                 .include(AlternativeTest.class.getSimpleName())

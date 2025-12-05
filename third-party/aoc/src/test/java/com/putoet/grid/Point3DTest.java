@@ -21,7 +21,7 @@ class Point3DTest {
     }
 
     @Test
-    public void euclideanDistance() {
+    void euclideanDistance() {
         assertEquals(5.0, Point3D.of(3, 4, 0).euclideanDistance());
     }
 

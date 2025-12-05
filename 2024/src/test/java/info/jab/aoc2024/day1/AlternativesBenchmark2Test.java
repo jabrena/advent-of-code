@@ -61,7 +61,7 @@ public class AlternativesBenchmark2Test {
     }
 
     @Test
-    public void benchmark() {
+    void benchmark() {
         String[] argv = {};
         assertDoesNotThrow(() -> org.openjdk.jmh.Main.main(argv));
     }

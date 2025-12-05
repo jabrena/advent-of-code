@@ -25,7 +25,7 @@ class PointTest {
     }
 
     @Test
-    public void distance() {
+    void distance() {
         assertEquals(5.0, Point.of(3, 4).euclideanDistance());
     }
 
