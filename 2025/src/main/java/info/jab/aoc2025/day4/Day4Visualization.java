@@ -81,7 +81,7 @@ public class Day4Visualization extends Application {
             final double canvasWidth = (double) WINDOW_WIDTH - 40;
             final double canvasHeight = (double) WINDOW_HEIGHT - 200;
             cellSize = (int) Math.min(canvasWidth / cols, canvasHeight / rows);
-            cellSize = (int) Math.clamp(cellSize, 10, 50); // Clamp between 10 and 50
+            cellSize = Math.clamp(cellSize, 10, 50); // Clamp between 10 and 50
             gridOffsetX = (canvasWidth - ((double) cols * cellSize)) / 2 + 20;
             gridOffsetY = (canvasHeight - ((double) rows * cellSize)) / 2 + 20;
 

@@ -188,7 +188,7 @@ public class Day1Visualization extends Application {
         gc.fillOval((double) CENTER_X - DIAL_RADIUS, (double) CENTER_Y - DIAL_RADIUS,
                     (double) DIAL_RADIUS * 2, (double) DIAL_RADIUS * 2);
         gc.setFill(Color.WHITE);
-        gc.fillOval((double) CENTER_X - (double) DIAL_RADIUS / 2, (double) CENTER_Y - (double) DIAL_RADIUS / 2,
+        gc.fillOval(CENTER_X - (double) DIAL_RADIUS / 2, CENTER_Y - (double) DIAL_RADIUS / 2,
                     DIAL_RADIUS, DIAL_RADIUS);
     }
 

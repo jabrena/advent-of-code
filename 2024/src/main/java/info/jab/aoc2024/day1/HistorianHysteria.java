@@ -28,15 +28,13 @@ class HistorianHysteria implements Solver<Integer> {
     };
 
     //@juan-medina idea
-    Function<List<String>, ListSplitted> splitInto2Lists2 = param -> {
-        return param.stream()
-            .map(line -> SEPARATOR_PATTERN.split(line))
+    Function<List<String>, ListSplitted> splitInto2Lists2 = param -> param.stream()
+            .map(SEPARATOR_PATTERN::split)
             .collect(Collectors.teeing(
                 Collectors.mapping(parts -> Integer.parseInt(parts[0]), Collectors.toList()),
                 Collectors.mapping(parts -> Integer.parseInt(parts[1]), Collectors.toList()),
                 (l1, l2) -> new ListSplitted(l1.stream().sorted().toList(), l2.stream().sorted().toList())
             ));
-    };
 
     Function<List<String>, ListSplitted> splitInto2Lists3 = lines -> {
         var result = lines.stream()

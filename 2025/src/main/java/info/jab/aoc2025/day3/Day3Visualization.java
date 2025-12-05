@@ -43,10 +43,8 @@ public class Day3Visualization extends Application {
     // Animation State
     private boolean isRunning = false;
     private long lastUpdate = 0;
-    private long updateInterval = 500_000_000; // 500ms initial delay
 
     // Algorithm State for current line
-    private String currentLineStr;
     private List<Integer> digits;
     private List<Integer> selectedIndices; // Indices of digits selected so far
     private int currentTargetIndex = 0; // How many digits we have selected (0 to TARGET_LENGTH)
@@ -88,7 +86,7 @@ public class Day3Visualization extends Application {
                     inputLines.add("4732321333332463233337712234322122322247222252423773321362313613333336333732233372323328332333322777"); // Sample
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception _) {
             // Suppressed: This is a visualization tool for debugging purposes
             return;
         }
@@ -171,7 +169,7 @@ public class Day3Visualization extends Application {
             return;
         }
 
-        currentLineStr = inputLines.get(currentLineIndex);
+        String currentLineStr = inputLines.get(currentLineIndex);
         digits = currentLineStr.chars().mapToObj(c -> c - '0').toList();
         selectedIndices = new ArrayList<>();
         currentTargetIndex = 0;
@@ -192,7 +190,7 @@ public class Day3Visualization extends Application {
 
         // Speed control
         double speed = speedSlider.getValue();
-        updateInterval = (long) ((101 - speed) * 10_000_000); // map 1-100 to some nanoseconds delay
+        long updateInterval = (long) ((101 - speed) * 10_000_000); // map 1-100 to some nanoseconds delay
 
         if (now - lastUpdate < updateInterval) return;
         lastUpdate = now;

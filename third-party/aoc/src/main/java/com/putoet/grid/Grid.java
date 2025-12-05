@@ -227,6 +227,15 @@ public class Grid implements GridType {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Grid grid = (Grid) obj;
+        return minX == grid.minX && maxX == grid.maxX && minY == grid.minY && maxY == grid.maxY
+                && Arrays.deepEquals(data, grid.data);
+    }
+
+    @Override
     public int hashCode() {
         var result = Objects.hash(minX, maxX, minY, maxY);
         result = 31 * result + Arrays.deepHashCode(data);

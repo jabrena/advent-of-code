@@ -4,10 +4,6 @@ import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
 import org.paukov.combinatorics3.Generator;
 
-import java.util.function.Function;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * https://adventofcode.com/2020/day/1
  **/

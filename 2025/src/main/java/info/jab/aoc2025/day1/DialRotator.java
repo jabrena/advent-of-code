@@ -84,20 +84,18 @@ public final class DialRotator implements Solver<Integer> {
      */
     int countZeroCrossings(final int currentPosition, final Direction direction, final int distance) {
         return switch (direction) {
-            case RIGHT -> {
-                // For RIGHT rotation: we visit 0 when (currentPosition + i) % DIAL_MAX == 0
-                // for i in [1, distance]. This happens when currentPosition + i is a multiple of DIAL_MAX.
-                // So i = 100k - currentPosition for some k where 1 <= i <= distance.
-                // This means: 1 <= 100k - currentPosition <= distance
-                // Rearranging: ceil((currentPosition + 1) / 100) <= k <= floor((currentPosition + distance) / 100)
-                // Since currentPosition < 100: ceil((currentPosition + 1) / 100) = 1 (if currentPosition > 0) or 0 (if currentPosition == 0)
-                // So count = floor((currentPosition + distance) / 100) - (currentPosition > 0 ? 0 : 1)
-                // Simplified: if currentPosition == 0, count = floor(distance / 100)
-                //            else, count = floor((currentPosition + distance) / 100)
-                yield currentPosition == 0 
+            // For RIGHT rotation: we visit 0 when (currentPosition + i) % DIAL_MAX == 0
+            // for i in [1, distance]. This happens when currentPosition + i is a multiple of DIAL_MAX.
+            // So i = 100k - currentPosition for some k where 1 <= i <= distance.
+            // This means: 1 <= 100k - currentPosition <= distance
+            // Rearranging: ceil((currentPosition + 1) / 100) <= k <= floor((currentPosition + distance) / 100)
+            // Since currentPosition < 100: ceil((currentPosition + 1) / 100) = 1 (if currentPosition > 0) or 0 (if currentPosition == 0)
+            // So count = floor((currentPosition + distance) / 100) - (currentPosition > 0 ? 0 : 1)
+            // Simplified: if currentPosition == 0, count = floor(distance / 100)
+            //            else, count = floor((currentPosition + distance) / 100)
+            case RIGHT -> currentPosition == 0 
                     ? distance / DIAL_MAX 
                     : (currentPosition + distance) / DIAL_MAX;
-            }
             case LEFT -> {
                 // For LEFT rotation: we visit 0 when (currentPosition - i) % DIAL_MAX == 0
                 // for i in [1, distance]. This happens when currentPosition - i is <= 0 (mod DIAL_MAX).

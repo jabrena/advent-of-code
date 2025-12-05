@@ -2,6 +2,7 @@ package info.jab.aoc2024.day16;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.PriorityQueue;
 
 import com.putoet.grid.Grid;
@@ -113,6 +114,21 @@ public class ReindeerMaze {
         @Override
         public int compareTo(State other) {
             return Integer.compare(this.score, other.score);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            State state = (State) obj;
+            return score == state.score
+                    && Objects.equals(position, state.position)
+                    && direction == state.direction;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(position, direction, score);
         }
     }
 }

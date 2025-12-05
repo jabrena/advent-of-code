@@ -3,14 +3,12 @@ package info.jab.aoc2022.day6;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Predicate;
 
 /**
  * Solution for AOC 2022, Day 6
