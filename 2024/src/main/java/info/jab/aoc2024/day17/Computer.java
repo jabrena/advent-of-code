@@ -50,6 +50,9 @@ class Computer {
                     long den = (long) Math.pow(2, combOp);
                     C = A / den;
                 }
+                default -> {
+                    // Unknown opcode, skip instruction
+                }
             }
 
             if (!skipIncrease) {

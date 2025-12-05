@@ -46,6 +46,8 @@ public final class RangeVisualization extends Application {
     private static final double RANGE_SPACING = 40.0;
     private static final double ID_MARKER_SIZE = 8.0;
     private static final double TIMELINE_OFFSET = 100.0;
+    private static final String BACKGROUND_COLOR_STYLE = "-fx-background-color: #16213e;";
+    private static final String RESULT_LABEL_PREFIX = "Result: ";
 
     private Input inputPart1;
     private Input inputPart2;
@@ -240,7 +242,7 @@ public final class RangeVisualization extends Application {
     private VBox createStatsPanel(final Input input) {
         final VBox panel = new VBox(10);
         panel.setPadding(new Insets(20));
-        panel.setStyle("-fx-background-color: #16213e;");
+        panel.setStyle(BACKGROUND_COLOR_STYLE);
         panel.setPrefWidth(200);
 
         final Label question = new Label("How many of the available ingredient IDs are fresh?");
@@ -263,7 +265,7 @@ public final class RangeVisualization extends Application {
         part1ContainedLabel.setTextFill(Color.LIGHTGREEN);
         part1ContainedLabel.setFont(Font.font(14));
 
-        part1ResultLabel = new Label("Result: 0");
+        part1ResultLabel = new Label(RESULT_LABEL_PREFIX + "0");
         part1ResultLabel.setTextFill(Color.GOLD);
         part1ResultLabel.setFont(Font.font(16));
 
@@ -286,7 +288,7 @@ public final class RangeVisualization extends Application {
                 count = 0;
             }
             part1ContainedLabel.setText("Contained IDs: " + count);
-            part1ResultLabel.setText("Result: " + count);
+            part1ResultLabel.setText(RESULT_LABEL_PREFIX + count);
         }
     }
 
@@ -297,7 +299,7 @@ public final class RangeVisualization extends Application {
     private VBox createPart2StatsPanel(final Input input) {
         final VBox panel = new VBox(10);
         panel.setPadding(new Insets(20));
-        panel.setStyle("-fx-background-color: #16213e;");
+        panel.setStyle(BACKGROUND_COLOR_STYLE);
         panel.setPrefWidth(200);
 
         final List<Range> sorted = input.ranges().stream()
@@ -324,7 +326,7 @@ public final class RangeVisualization extends Application {
         part2CoverageLabel.setTextFill(Color.LIGHTGREEN);
         part2CoverageLabel.setFont(Font.font(14));
 
-        part2ResultLabel = new Label("Result: 0");
+        part2ResultLabel = new Label(RESULT_LABEL_PREFIX + "0");
         part2ResultLabel.setTextFill(Color.GOLD);
         part2ResultLabel.setFont(Font.font(16));
 
@@ -338,7 +340,7 @@ public final class RangeVisualization extends Application {
                 // Reset state - show initial values
                 part2MergedCountLabel.setText("Merged Ranges: 0");
                 part2CoverageLabel.setText("Total Coverage: 0");
-                part2ResultLabel.setText("Result: 0");
+                part2ResultLabel.setText(RESULT_LABEL_PREFIX + "0");
             } else {
                 final List<Range> currentMerged;
                 if (step < mergeSteps.size()) {
@@ -357,7 +359,7 @@ public final class RangeVisualization extends Application {
 
                 part2MergedCountLabel.setText("Merged Ranges: " + currentMerged.size());
                 part2CoverageLabel.setText("Total Coverage: " + currentCoverage);
-                part2ResultLabel.setText("Result: " + currentCoverage);
+                part2ResultLabel.setText(RESULT_LABEL_PREFIX + currentCoverage);
             }
         }
     }
@@ -365,7 +367,7 @@ public final class RangeVisualization extends Application {
     private VBox createPart1ControlPanel(final Pane canvas, final Input input) {
         final VBox panel = new VBox(10);
         panel.setPadding(new Insets(20));
-        panel.setStyle("-fx-background-color: #16213e;");
+        panel.setStyle(BACKGROUND_COLOR_STYLE);
         panel.setPrefWidth(200);
 
         final Label title = new Label("Controls");
@@ -413,7 +415,7 @@ public final class RangeVisualization extends Application {
     private VBox createControlPanel(final Pane canvas, final Input input) {
         final VBox panel = new VBox(10);
         panel.setPadding(new Insets(20));
-        panel.setStyle("-fx-background-color: #16213e;");
+        panel.setStyle(BACKGROUND_COLOR_STYLE);
         panel.setPrefWidth(200);
 
         final Label title = new Label("Controls");

@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum Instructions {
-    addx("addx"),
-    noop("noop");
+    ADDX("addx"),
+    NOOP("noop");
 
     private static final Map<String, Instructions> MAP = Stream
         .of(Instructions.values())

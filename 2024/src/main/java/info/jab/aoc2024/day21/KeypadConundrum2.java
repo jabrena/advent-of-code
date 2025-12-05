@@ -14,7 +14,7 @@ import com.putoet.grid.Point;
  */
 class KeypadConundrum2 {
 
-    private static final char keyPadA = 'A';
+    private static final char KEY_PAD_A = 'A';
 
     private record CacheKey(String directions, int dirKeypads) {}
     private final Map<CacheKey, Long> minCodeLengthCache = new ConcurrentHashMap<>();
@@ -35,13 +35,13 @@ class KeypadConundrum2 {
         // Base case: No intermediate keypads left, return the length of the directions.
         if (dirKeypads == 0) {
             return directions.length();
-        } else if (directions.indexOf(keyPadA) < directions.length() - 1) {
+        } else if (directions.indexOf(KEY_PAD_A) < directions.length() - 1) {
             // Split directions by 'A' and sum the results recursively for all parts.
             long sum = 0;
             int start = 0;
 
             for (int i = 0; i < directions.length(); i++) {
-                if (directions.charAt(i) == keyPadA) {
+                if (directions.charAt(i) == KEY_PAD_A) {
                     int end = i + 1;
                     sum += getMinCodeLength1(directions.substring(start, end), dirKeypads);
                     start = end;
@@ -81,7 +81,7 @@ class KeypadConundrum2 {
     private List<String> getDirectionCodes(String code, Map<Character, Point> keypad) {
         List<String> directionCodes = new ArrayList<>();
         directionCodes.add("");
-        char start = keyPadA;
+        char start = KEY_PAD_A;
 
         for (char end : code.toCharArray()) {
 
@@ -90,7 +90,7 @@ class KeypadConundrum2 {
             var shortestPaths = shortestPaths(keypad.get(start), keypad.get(end), keypad.values());
             for (String path : shortestPaths) {
                 for (String directionCode : directionCodes) {
-                    newDirectionCodes.add(directionCode + path + keyPadA);
+                    newDirectionCodes.add(directionCode + path + KEY_PAD_A);
                 }
             }
 

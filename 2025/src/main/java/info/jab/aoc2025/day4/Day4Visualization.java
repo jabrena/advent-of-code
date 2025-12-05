@@ -40,6 +40,7 @@ public class Day4Visualization extends Application {
     private static final int MIN_NEIGHBORS = 4;
     private static final int[] NEIGHBOR_DX = {-1, 0, 1, -1, 1, -1, 0, 1};
     private static final int[] NEIGHBOR_DY = {-1, -1, -1, 0, 0, 1, 1, 1};
+    private static final String MONOSPACED_FONT = "Monospaced";
 
     // Grid state
     private char[][] grid;
@@ -99,19 +100,19 @@ public class Day4Visualization extends Application {
 
             statusLabel = new Label("Ready");
             statusLabel.setTextFill(Color.WHITE);
-            statusLabel.setFont(Font.font("Monospaced", FontWeight.BOLD, 18));
+            statusLabel.setFont(Font.font(MONOSPACED_FONT, FontWeight.BOLD, 18));
 
             iterationLabel = new Label("Iteration: 0");
             iterationLabel.setTextFill(Color.CYAN);
-            iterationLabel.setFont(Font.font("Monospaced", FontWeight.BOLD, 14));
+            iterationLabel.setFont(Font.font(MONOSPACED_FONT, FontWeight.BOLD, 14));
 
             removedThisIterationLabel = new Label("Removed this iteration: 0");
             removedThisIterationLabel.setTextFill(Color.YELLOW);
-            removedThisIterationLabel.setFont(Font.font("Monospaced", 14));
+            removedThisIterationLabel.setFont(Font.font(MONOSPACED_FONT, 14));
 
             totalRemovedLabel = new Label("Total removed: 0");
             totalRemovedLabel.setTextFill(Color.LIME);
-            totalRemovedLabel.setFont(Font.font("Monospaced", FontWeight.BOLD, 16));
+            totalRemovedLabel.setFont(Font.font(MONOSPACED_FONT, FontWeight.BOLD, 16));
 
             infoPanel.getChildren().addAll(statusLabel, iterationLabel, removedThisIterationLabel, totalRemovedLabel);
             root.setTop(infoPanel);
@@ -317,7 +318,7 @@ public class Day4Visualization extends Application {
                 if (cell == TARGET_CELL && cellSize >= 20) {
                     final int neighborCount = countNeighbors(x, y);
                     gc.setFill(Color.WHITE);
-                    gc.setFont(Font.font("Monospaced", FontWeight.BOLD, Math.max(8, cellSize / 3)));
+                    gc.setFont(Font.font(MONOSPACED_FONT, FontWeight.BOLD, Math.max(8, cellSize / 3)));
                     final String countStr = String.valueOf(neighborCount);
                     final double textWidth = gc.getFont().getSize() * countStr.length() * 0.6;
                     final double textHeight = gc.getFont().getSize();
@@ -338,7 +339,7 @@ public class Day4Visualization extends Application {
         final double legendItemHeight = 20;
         final double legendBoxSize = 15;
 
-        gc.setFont(Font.font("Monospaced", 12));
+        gc.setFont(Font.font(MONOSPACED_FONT, 12));
         gc.setFill(Color.WHITE);
 
         int itemIndex = 0;

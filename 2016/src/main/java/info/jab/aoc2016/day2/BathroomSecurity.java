@@ -44,6 +44,9 @@ public class BathroomSecurity implements Solver<String>{
                 case 'D' -> newPos = new Position(row + 1, col);
                 case 'L' -> newPos = new Position(row, col - 1);
                 case 'R' -> newPos = new Position(row, col + 1);
+                default -> {
+                    // Ignore unknown directions
+                }
             }
             return newPos;
         }
@@ -73,6 +76,10 @@ public class BathroomSecurity implements Solver<String>{
                     case 'D': newRow++; break;
                     case 'L': newCol--; break;
                     case 'R': newCol++; break;
+                    default: {
+                        // Ignore unknown moves
+                        break;
+                    }
                 }
                 
                 // Only move if valid position

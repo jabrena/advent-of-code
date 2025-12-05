@@ -1,6 +1,7 @@
 package info.jab.aoc2025.day1;
 
 import com.putoet.resources.ResourceLines;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -121,7 +122,7 @@ public class Day1Visualization extends Application {
                     stopAnimation();
                 }
             }));
-            animationTimeline.setCycleCount(Timeline.INDEFINITE);
+            animationTimeline.setCycleCount(Animation.INDEFINITE);
 
         } catch (Exception e) {
             showError("Error loading input file: " + e.getMessage() + "\n\n" +

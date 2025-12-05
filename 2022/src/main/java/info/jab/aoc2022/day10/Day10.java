@@ -20,14 +20,14 @@ public class Day10 implements Day<String> {
             String[] split = SPACE_SEPARATOR_PATTERN.split(line);
 
             //Case: noop
-            if (Instructions.fromValue(split[0]) == Instructions.noop) {
+            if (Instructions.fromValue(split[0]) == Instructions.NOOP) {
                 list.add(new Tuple(cycle, value));
                 cycle++;
                 continue;
             }
 
             //Case: addx
-            if (Instructions.fromValue(split[0]) == Instructions.addx) {
+            if (Instructions.fromValue(split[0]) == Instructions.ADDX) {
                 list.add(new Tuple(cycle, value));
                 cycle++;
                 list.add(new Tuple(cycle, value));
