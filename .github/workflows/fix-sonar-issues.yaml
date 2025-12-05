@@ -2,6 +2,21 @@ name: Fix Sonar Issues Agent
 
 on:
   workflow_dispatch:
+    inputs:
+      issue_type:
+        description: 'Type of issues to fix'
+        required: true
+        type: choice
+        options:
+          - issues
+          - hotspots
+      severity:
+        description: 'Severity level (only for issues type)'
+        required: true
+        type: choice
+        options:
+          - blocker
+          - critical
 
 jobs:
   fix-sonar-issues-agent:
@@ -26,10 +41,26 @@ jobs:
           curl --proto '=https' -Ls https://sh.jbang.dev | bash -s - app setup
           echo "$HOME/.jbang/bin" >> $GITHUB_PATH
 
-      - name: Execute Cursor Cloud Agent about fix Sonar issues
+      - name: Execute Cursor Cloud Agent about fix Sonar Hotspots issues
+        if: inputs.issue_type == 'hotspots'
         env:
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
         run: |
           jbang trust add https://github.com/jabrena/
-          jbang churrera@jabrena run --workflow churrera-recipes/fix-sonar-issues/workflow.xml --show-logs --delete-on-success-completion
+          jbang churrera@jabrena run --workflow churrera-recipes/fix-sonar-hotspot-issues/workflow.xml --show-logs --delete-on-success-completion
 
+      - name: Execute Cursor Cloud Agent about fix Sonar Blocker issues
+        if: inputs.issue_type == 'issues' && inputs.severity == 'blocker'
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+        run: |
+          jbang trust add https://github.com/jabrena/
+          jbang churrera@jabrena run --workflow churrera-recipes/fix-sonar-blocker-issues/workflow.xml --show-logs --delete-on-success-completion
+
+      - name: Execute Cursor Cloud Agent about fix Sonar Critical issues
+        if: inputs.issue_type == 'issues' && inputs.severity == 'critical'
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+        run: |
+          jbang trust add https://github.com/jabrena/
+          jbang churrera@jabrena run --workflow churrera-recipes/fix-sonar-critical-issues/workflow.xml --show-logs --delete-on-success-completion
