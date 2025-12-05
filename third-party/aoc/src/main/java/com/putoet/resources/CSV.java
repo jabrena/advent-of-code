@@ -11,6 +11,10 @@ import java.util.stream.Stream;
  * a List of Strings. The resource name should start with a '/' and is relative to the classpath.
  */
 public class CSV {
+    private CSV() {
+        // Utility class - prevent instantiation
+    }
+
     /**
      * The default regex to split the CSV is ","
      */
@@ -35,7 +39,7 @@ public class CSV {
      */
     public static List<List<String>> list(String resourceName, String regex) {
         return stream(resourceName, regex)
-                .map(stream -> stream.collect(Collectors.toList()))
+                .map(stream -> stream.toList())
                 .toList();
     }
 
@@ -83,7 +87,7 @@ public class CSV {
      */
     public static <T> List<List<T>> list(String resourceName, String regex, Function<String,T> mapper) {
         return stream(resourceName, regex)
-                .map(stream -> stream.map(mapper).collect(Collectors.toList()))
+                .map(stream -> stream.map(mapper).toList())
                 .toList();
     }
 

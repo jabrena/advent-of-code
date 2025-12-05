@@ -61,14 +61,16 @@ public final class RaceCondition2 {
     private static int getValidCheats(Map<Point, Integer> fromStart, Map<Point, Integer> fromEnd,
                                         int fullTime, int maxCheatLength, int leastTimeSaved) {
         int count = 0;
-        for (Point p1 : fromStart.keySet()) {
+        for (Map.Entry<Point, Integer> entry : fromStart.entrySet()) {
+            Point p1 = entry.getKey();
+            int startTime = entry.getValue();
             // Go around p1 with distance upto `maxCheatLength`
             for (int i = -maxCheatLength; i <= maxCheatLength; i++) {
                 for (int j = -maxCheatLength; j <= maxCheatLength; j++) {
                     Point p2 = new Point(p1.i + i, p1.j + j);
                     if (!fromEnd.containsKey(p2) || p2.equals(p1) || p2.distance(p1) > maxCheatLength) continue;
                     // [start -> p1] + [p1 -> p2] + [p2 -> end]
-                    int totalTime = fromStart.get(p1) + p2.distance(p1) + fromEnd.get(p2);
+                    int totalTime = startTime + p2.distance(p1) + fromEnd.get(p2);
                     if (fullTime - totalTime >= leastTimeSaved) {
                         count++;
                     }
@@ -78,16 +80,16 @@ public final class RaceCondition2 {
         return count;
     }
 
-    private static Map<Point, Integer> bfs(Point start, Point end, Set<Point> walls) {
+    private static Map<Point, Integer> bfs(Point from, Point to, Set<Point> walls) {
         Queue<Point> queue = new ArrayDeque<>();
         Map<Point, Integer> visited = new LinkedHashMap<>();
-        queue.add(start);
-        visited.put(start, 0);
+        queue.add(from);
+        visited.put(from, 0);
 
         while (!queue.isEmpty()) {
             Point current = queue.remove();
             int curlen = visited.get(current);
-            if (current.equals(end)) {
+            if (current.equals(to)) {
                 break;
             }
             for (int[] d : DIFFS) {

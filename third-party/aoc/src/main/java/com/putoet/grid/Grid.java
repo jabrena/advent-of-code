@@ -44,8 +44,11 @@ public class Grid implements GridType {
         if (grid.length != maxY - minY)
             throw new IllegalArgumentException("Grid length is not correct");
 
-        for (var row : grid)
-            assert row.length == maxX - minX;
+        for (var row : grid) {
+            if (row.length != maxX - minX) {
+                throw new IllegalArgumentException("Row length does not match expected width");
+            }
+        }
 
         this.minX = minX;
         this.maxX = maxX;
@@ -63,32 +66,48 @@ public class Grid implements GridType {
 
     @Override
     public void set(int x, int y, char c) {
-        assert x >= minX && x < maxX;
-        assert y >= minY && y < maxY;
+        if (x < minX || x >= maxX) {
+            throw new IllegalArgumentException("x coordinate out of bounds: " + x);
+        }
+        if (y < minY || y >= maxY) {
+            throw new IllegalArgumentException("y coordinate out of bounds: " + y);
+        }
 
         grid[y - minY][x - minX] = c;
     }
 
     @Override
     public void set(Point p, char c) {
-        assert p.x() >= minX && p.x() < maxX;
-        assert p.y() >= minY && p.y() < maxY;
+        if (p.x() < minX || p.x() >= maxX) {
+            throw new IllegalArgumentException("x coordinate out of bounds: " + p.x());
+        }
+        if (p.y() < minY || p.y() >= maxY) {
+            throw new IllegalArgumentException("y coordinate out of bounds: " + p.y());
+        }
 
         grid[p.y() - minY][p.x() - minX] = c;
     }
 
     @Override
     public char get(int x, int y) {
-        assert x >= minX && x < maxX;
-        assert y >= minY && y < maxY;
+        if (x < minX || x >= maxX) {
+            throw new IllegalArgumentException("x coordinate out of bounds: " + x);
+        }
+        if (y < minY || y >= maxY) {
+            throw new IllegalArgumentException("y coordinate out of bounds: " + y);
+        }
 
         return grid[y - minY][x - minX];
     }
 
     @Override
     public char get(Point p) {
-        assert p.x() >= minX && p.x() < maxX;
-        assert p.y() >= minY && p.y() < maxY;
+        if (p.x() < minX || p.x() >= maxX) {
+            throw new IllegalArgumentException("x coordinate out of bounds: " + p.x());
+        }
+        if (p.y() < minY || p.y() >= maxY) {
+            throw new IllegalArgumentException("y coordinate out of bounds: " + p.y());
+        }
 
         return grid[p.y() - minY][p.x() - minX];
     }

@@ -46,7 +46,7 @@ class Day12Test {
         then(result).isEqualTo(1473276);
     }
 
-    @Disabled
+    @Disabled("Part 2 test disabled - implementation may be incomplete or slow")
     @Test
     void should_solve_day12_part2_with_sample() {
         //Given

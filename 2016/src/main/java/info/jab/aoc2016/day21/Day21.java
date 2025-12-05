@@ -108,13 +108,13 @@ public class Day21 implements Day<String> {
         }
     }
     
-    private void move(char[] chars, int x, int y) {
+    private void move(char[] chars, int fromPosition, int toPosition) {
         List<Character> list = new ArrayList<>();
         for (char c : chars) {
             list.add(c);
         }
-        char removed = list.remove(x);
-        list.add(y, removed);
+        char removed = list.remove(fromPosition);
+        list.add(toPosition, removed);
         for (int i = 0; i < chars.length; i++) {
             chars[i] = list.get(i);
         }

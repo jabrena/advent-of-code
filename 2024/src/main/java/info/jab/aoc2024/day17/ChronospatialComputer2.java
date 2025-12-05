@@ -30,7 +30,7 @@ public class ChronospatialComputer2 {
     public String part1(String fileName) {
         var loadData = loadData(fileName);
         Computer computer = new Computer(loadData.a(), loadData.b(), loadData.c(), loadData.opcodes());
-        var result = computer.execute(List.of());
+        var result = computer.execute();
         return computer.print(result);
     }
 
@@ -48,7 +48,7 @@ public class ChronospatialComputer2 {
             do {
                 ++A;
                 computer = new Computer(A, loadData.b(), loadData.c(), loadData.opcodes());
-                result2 = computer.execute(program);
+                result2 = computer.execute();
             } while (!computer.print(result2).equals(pString));
             if (!remainingProgram.isEmpty()) {
                 A = A << 3;
@@ -94,7 +94,7 @@ public class ChronospatialComputer2 {
         do {
             accumulator++;
             computer = new Computer(accumulator, loadData.b(), loadData.c(), loadData.opcodes());
-            result = computer.execute(program);
+            result = computer.execute();
         } while (!computer.print(result).equals(programString));
 
         return accumulator;

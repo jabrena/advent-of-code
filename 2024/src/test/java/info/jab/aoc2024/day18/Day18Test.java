@@ -20,10 +20,6 @@ class Day18Test {
         var day = new Day18();
         var result = day.getPart1Result(fileName, 7, 12, false);
 
-        //System.out.println(VM.current().details());
-        //System.out.println(ClassLayout.parseInstance(day).toPrintable());
-        //System.out.println(GraphLayout.parseInstance(day).toFootprint());
-
         //Then
         then(result).isEqualTo("22");
     }
@@ -36,10 +32,6 @@ class Day18Test {
         //When
         var day = new Day18();
         var result = day.getPart1Result(fileName, 71, 1024, false);
-
-        //System.out.println(VM.current().details());
-        //System.out.println(ClassLayout.parseInstance(day).toPrintable());
-        //System.out.println(GraphLayout.parseInstance(day).toFootprint());
 
         //Then
         then(result).isEqualTo("506");
@@ -54,10 +46,6 @@ class Day18Test {
         var day = new Day18();
         var result = day.getPart2Result(fileName, 7, 12, false);
 
-        //System.out.println(VM.current().details());
-        //System.out.println(ClassLayout.parseInstance(day).toPrintable());
-        //System.out.println(GraphLayout.parseInstance(day).toFootprint());
-
         //Then
         then(result).isEqualTo("6,1");
     }
@@ -70,10 +58,6 @@ class Day18Test {
         //When
         var day = new Day18();
         var result = day.getPart2Result(fileName, 71, 1024, false);
-
-        //System.out.println(VM.current().details());
-        //System.out.println(ClassLayout.parseInstance(day).toPrintable());
-        //System.out.println(GraphLayout.parseInstance(day).toFootprint());
 
         //Then
         then(result).isEqualTo("62,6");

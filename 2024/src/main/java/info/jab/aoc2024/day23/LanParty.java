@@ -41,8 +41,9 @@ public class LanParty {
     //Using Guava & Imperative style
     private Set<Set<String>> findTriangles4(Map<String, Set<String>> graph) {
         Set<Set<String>> triangles = new HashSet<>();
-        for (String node : graph.keySet()) {
-            Set<String> neighbors = graph.get(node);
+        for (Map.Entry<String, Set<String>> entry : graph.entrySet()) {
+            String node = entry.getKey();
+            Set<String> neighbors = entry.getValue();
             for (List<String> pair : Sets.cartesianProduct(neighbors, neighbors)) {
                 String neighbor1 = pair.get(0);
                 String neighbor2 = pair.get(1);
@@ -196,7 +197,6 @@ public class LanParty {
         // Find all maximal cliques using Bron-Kerbosch algorithm
         Set<String> largestClique = new HashSet<>();
         findCliquesIterative(new HashSet<>(), new HashSet<>(graph.keySet()), new HashSet<>(), graph, largestClique);
-        //findCliquesRecursive(new HashSet<>(), new HashSet<>(graph.keySet()), new HashSet<>(), graph, largestClique);
 
         // Sort the largest clique and create the password
         return largestClique.stream()

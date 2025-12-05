@@ -11,14 +11,12 @@ public class Day9 implements Day<Long> {
         RopePhysics ropePhysics = new RopePhysics();
         ropePhysics.create(25, 25);
         ropePhysics.setInitialState();
-        //ropePhysics.print();
 
         // @formatter:off
         ResourceLines.list("/" + fileName).stream()
                 .map(Movement::fromString)
                 .forEach(ropePhysics::execute);
 
-        //ropePhysics.printVisited();
         return Arrays.stream(ropePhysics.getCellsVisited())
                 .flatMap(Arrays::stream)
                 .filter(v -> v)

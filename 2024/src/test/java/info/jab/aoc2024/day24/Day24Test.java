@@ -32,7 +32,7 @@ class Day24Test {
         then(result).isEqualTo("2024");
     }
 
-    @Disabled
+    @Disabled("Part 1 test disabled - implementation may be incomplete or slow")
     @Test
     void should_solve_day24_part1() {
         //Given

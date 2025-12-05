@@ -6,6 +6,10 @@ package com.putoet.math;
  * According to Josephus' account of the siege of Yodfat, he and his 40 soldiers were trapped in a cave by Roman soldiers
  */
 public class Josephus {
+    private Josephus() {
+        // Utility class - prevent instantiation
+    }
+
     /**
      * Determine the winner of the Josephus problem for a given team size.
      * @param teamSize The size of the team

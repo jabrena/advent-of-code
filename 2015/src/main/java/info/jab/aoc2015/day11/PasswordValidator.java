@@ -54,11 +54,14 @@ public class PasswordValidator {
         int pairCount = 0;
         char lastPairChar = '\0';
         
-        for (int i = 0; i < password.length() - 1; i++) {
+        int i = 0;
+        while (i < password.length() - 1) {
             if (password.charAt(i) == password.charAt(i + 1) && password.charAt(i) != lastPairChar) {
                 pairCount++;
                 lastPairChar = password.charAt(i);
-                i++; // Skip next character as it's part of the pair
+                i += 2; // Skip both characters as they're part of the pair
+            } else {
+                i++;
             }
         }
         return pairCount >= 2;

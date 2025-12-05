@@ -104,10 +104,8 @@ public final class GridNeighborSolver implements Solver<Integer> {
             final int nx = x + dx[i];
             final int ny = y + dy[i];
 
-            if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
-                if (grid[ny][nx] == TARGET_CELL) {
-                    neighbors++;
-                }
+            if (nx >= 0 && nx < cols && ny >= 0 && ny < rows && grid[ny][nx] == TARGET_CELL) {
+                neighbors++;
             }
         }
         return neighbors;

@@ -145,13 +145,11 @@ public class ProgramAlarm {
 
         List<Integer> modified = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
-            if (i == 1) {
-                modified.add(12);
-            } else if (i == 2) {
-                modified.add(2);
-            } else {
-                modified.add(data.get(i));
-            }
+            modified.add(switch (i) {
+                case 1 -> 12;
+                case 2 -> 2;
+                default -> data.get(i);
+            });
         }
 
         List<Integer> result = compute(new ArrayList<>(modified), 0);

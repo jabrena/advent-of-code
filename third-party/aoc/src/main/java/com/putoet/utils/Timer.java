@@ -10,6 +10,10 @@ import static com.diogonunes.jcolor.Ansi.colorize;
  * A simple timer to measure the execution time of a given supplier or runnable.
  */
 public class Timer {
+    private Timer() {
+        // Utility class - prevent instantiation
+    }
+
     /**
      * Run the given supplier and measure the execution time. The runtime is measured in nanoseconds and printed in
      * milliseconds.

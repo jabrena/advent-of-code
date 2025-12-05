@@ -212,7 +212,7 @@ public class Day15Old {
         return null;
     }
 
-    public Long getPart2Result(String fileName) {
+    public Long getPart2Result() {
         return null;
     }
 }

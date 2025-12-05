@@ -7,6 +7,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 class MatrixHelper {
+    private MatrixHelper() {
+        // Utility class - prevent instantiation
+    }
 
     private static final Pattern STRING_SPLIT_PATTERN = Pattern.compile("(?!^)");
 

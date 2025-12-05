@@ -22,21 +22,18 @@ public class Day8 implements Day<Integer> {
         int distance = 0;
 
         //Adjustment
-        int ti = 0;
-        int tj = 0;
-        if (edge == Edge.LEFT) {
-            ti = 0;
-            tj = -1;
-        } else if (edge == Edge.RIGHT) {
-            ti = 0;
-            tj = 1;
-        } else if (edge == Edge.TOP) {
-            ti = -1;
-            tj = 0;
-        } else {
-            ti = 1;
-            tj = 0;
-        }
+        int ti = switch (edge) {
+            case LEFT -> 0;
+            case RIGHT -> 0;
+            case TOP -> -1;
+            case BOTTON -> 1;
+        };
+        int tj = switch (edge) {
+            case LEFT -> -1;
+            case RIGHT -> 1;
+            case TOP -> 0;
+            case BOTTON -> 0;
+        };
         i = i + ti;
         j = j + tj;
 

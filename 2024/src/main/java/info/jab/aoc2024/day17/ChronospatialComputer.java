@@ -55,7 +55,7 @@ public class ChronospatialComputer {
                 case 1 -> bxl(operand);
                 case 2 -> bst(operand);
                 case 3 -> jnz(operand);
-                case 4 -> bxc(operand);
+                case 4 -> bxc();
                 case 5 -> out(operand);
                 case 6 -> bdv(operand);
                 case 7 -> cdv(operand);
@@ -97,8 +97,8 @@ public class ChronospatialComputer {
         }
     }
 
-    private void bxc(int operand) {
-        B = B ^ C; // Operand is ignored
+    private void bxc() {
+        B = B ^ C;
     }
 
     private void out(int operand) {

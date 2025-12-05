@@ -92,9 +92,10 @@ public class Day15 {
                 }
             }
 
-            for (int x = 0; x <= max;) {
-                int xx = x;
-                var range = ranges.stream().filter(r -> r.contains(xx)).findFirst();
+            int x = 0;
+            while (x <= max) {
+                int currentX = x;
+                var range = ranges.stream().filter(r -> r.contains(currentX)).findFirst();
                 if (range.isPresent()) {
                     x = range.get().upperEndpoint() + 1;
                 } else {

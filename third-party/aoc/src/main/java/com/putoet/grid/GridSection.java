@@ -13,8 +13,12 @@ import java.util.function.Predicate;
  */
 public record GridSection(GridType grid, Point upperLeft, Point lowerRight) implements GridType {
     public GridSection {
-        assert grid.contains(upperLeft.x(), upperLeft.y());
-        assert grid.contains(lowerRight.x() - 1, lowerRight.y() - 1);
+        if (!grid.contains(upperLeft.x(), upperLeft.y())) {
+            throw new IllegalArgumentException("upperLeft point is not within the grid");
+        }
+        if (!grid.contains(lowerRight.x() - 1, lowerRight.y() - 1)) {
+            throw new IllegalArgumentException("lowerRight point is not within the grid");
+        }
     }
 
     @Override
@@ -54,14 +58,18 @@ public record GridSection(GridType grid, Point upperLeft, Point lowerRight) impl
 
     @Override
     public void set(int x, int y, char c) {
-        assert contains(x, y);
+        if (!contains(x, y)) {
+            throw new IllegalArgumentException("Coordinates out of bounds: (" + x + ", " + y + ")");
+        }
 
         grid.set(x, y, c);
     }
 
     @Override
     public char get(int x, int y) {
-        assert contains(x, y);
+        if (!contains(x, y)) {
+            throw new IllegalArgumentException("Coordinates out of bounds: (" + x + ", " + y + ")");
+        }
 
         return grid.get(x, y);
     }

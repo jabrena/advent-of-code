@@ -83,7 +83,7 @@ public class WarehouseScaled {
     private Grid walk(Grid grid, char[] movements) {
         // Mutable map
         var map = grid.grid();
-        var currentPoint = grid.findFirst(c -> c == '@').get();
+        var currentPoint = grid.findFirst(c -> c == '@').orElseThrow();
 
         //TODO Unify char[][] model using Grid
         currentPoint = new Point(currentPoint.y(), currentPoint.x());
@@ -93,8 +93,9 @@ public class WarehouseScaled {
         for (char m : movements) {
             int dir = getDirIndex(m);
             walkState = mutateMap(new Grid(map), currentPoint, dir);
-            if (walkState.currentPoint().isPresent()) {
-                currentPoint = walkState.currentPoint().get();
+            Optional<Point> nextPoint = walkState.currentPoint();
+            if (nextPoint.isPresent()) {
+                currentPoint = nextPoint.get();
             }
         }
         return walkState.currentMap();

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Disabled;
 
 public class Day9Test {
 
-    @Disabled
+    @Disabled("Test disabled - implementation may be incomplete or test is redundant")
     @Test
     void should_solve_day9_part1_with_sample() {
         //Given
