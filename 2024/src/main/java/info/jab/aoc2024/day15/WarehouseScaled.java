@@ -1,9 +1,11 @@
 package info.jab.aoc2024.day15;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,7 +19,31 @@ import com.putoet.resources.ResourceLines;
 //WIP, it solves the problem, but it is possible to improve the code. Tomorrow, it will be a new day.
 public class WarehouseScaled {
 
-    public record InputData(List<String> grid, char[] commands) {}
+    public record InputData(List<String> grid, char[] commands) {
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            InputData inputData = (InputData) obj;
+            return Objects.equals(grid, inputData.grid) &&
+                   Arrays.equals(commands, inputData.commands);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Objects.hash(grid);
+            result = 31 * result + Arrays.hashCode(commands);
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "InputData{" +
+                   "grid=" + grid +
+                   ", commands=" + Arrays.toString(commands) +
+                   '}';
+        }
+    }
 
     public static InputData prepareInputData(List<String> inputLines) {
         List<String> grid = inputLines.stream()

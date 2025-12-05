@@ -90,20 +90,19 @@ public class Day13 implements Day<Integer> {
         List<String> input = ResourceLines.list("/" + fileName);
         Queue<List<Object>> queue = new ArrayDeque<>();
         int total = 0;
-        int i = 1;
+        int pairIndex = 1;
         for (String line : input) {
             if (line.isEmpty()) {
                 if (comparePackets(queue)) {
-                    total += i++;
-                } else {
-                    i++;
+                    total += pairIndex;
                 }
+                pairIndex++;
                 continue;
             }
             queue.add(buildList(line));
         }
         if (comparePackets(queue)) {
-            total += i;
+            total += pairIndex;
         }
         return total;
     }

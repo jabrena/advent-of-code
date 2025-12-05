@@ -32,7 +32,8 @@ class PointTest {
     @Test
     void add() {
         assertEquals(Point.of(3, 7), Point.of(1, 9).add(Point.of(2, -2)));
-        assertThrows(NullPointerException.class, () -> Point.of(1, 1).add(null));
+        Point point = Point.of(1, 1);
+        assertThrows(NullPointerException.class, () -> point.add(null));
     }
 
     @Test

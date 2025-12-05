@@ -5,18 +5,20 @@ import java.util.regex.Pattern;
 
 public record Instruction(String input1, String operation, String input2, String output) {
     
-    private static final String INSTRUCTION_PATTERN = "^(?:(?:([a-z0-9]+)\\s+)?([A-Z]+)\\s+([a-z0-9]+)|([a-z0-9]+))\\s+->\\s+([a-z]+)$";
-    private static final Pattern INSTRUCTION_PATTERN_COMPILED = Pattern.compile(INSTRUCTION_PATTERN);
     private static final String LSHIFT_OPERATION = "LSHIFT";
     private static final String RSHIFT_OPERATION = "RSHIFT";
+    private static final String ARROW_SEPARATOR = "->";
 
     public static Instruction parse(String raw) {
-        Matcher matcher = INSTRUCTION_PATTERN_COMPILED.matcher(raw);
-        if (!matcher.find()) {
+        if (raw == null || !raw.contains(ARROW_SEPARATOR)) {
             throw new IllegalArgumentException("Invalid instruction: " + raw);
         }
-
-        String[] splitArrow = raw.split("->");
+        
+        String[] splitArrow = raw.split(ARROW_SEPARATOR);
+        if (splitArrow.length != 2) {
+            throw new IllegalArgumentException("Invalid instruction: " + raw);
+        }
+        
         String output = splitArrow[1].trim();
         String input = splitArrow[0].trim();
         

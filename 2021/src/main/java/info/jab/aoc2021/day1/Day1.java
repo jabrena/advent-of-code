@@ -16,16 +16,12 @@ public class Day1 implements Day<Integer> {
     Function<List<Integer>, Integer> getIncrementCount = param -> {
         AtomicInteger previous = new AtomicInteger(0);
         return param.stream().mapToInt(element -> {
-            if(previous.get() == 0) {
-                previous.set(element);
-                return 0;
-            } else if (element > previous.get()) {
-                previous.set(element);
-                return 1;
-            } else {
-                previous.set(element);
+            int prev = previous.get();
+            previous.set(element);
+            if (prev == 0) {
                 return 0;
             }
+            return element > prev ? 1 : 0;
         })
         .sum();
     };

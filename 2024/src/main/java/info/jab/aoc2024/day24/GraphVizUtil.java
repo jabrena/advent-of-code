@@ -15,7 +15,31 @@ import com.putoet.resources.ResourceLines;
 // Idea to generate GraphViz graph to see the bad elements manually for Part 2
 class GraphVizUtil {
 
-    private record InputData(String[] initialValues, String[] gates) {}
+    private record InputData(String[] initialValues, String[] gates) {
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            InputData inputData = (InputData) obj;
+            return Arrays.equals(initialValues, inputData.initialValues) &&
+                   Arrays.equals(gates, inputData.gates);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Arrays.hashCode(initialValues);
+            result = 31 * result + Arrays.hashCode(gates);
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "InputData{" +
+                   "initialValues=" + Arrays.toString(initialValues) +
+                   ", gates=" + Arrays.toString(gates) +
+                   '}';
+        }
+    }
 
     private static InputData getInputData(String fileName) {
         var list = ResourceLines.list(fileName);

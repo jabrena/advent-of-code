@@ -14,7 +14,7 @@ public class Grid implements GridType {
     private final int maxX;
     private final int minY;
     private final int maxY;
-    private final char[][] grid;
+    private final char[][] data;
 
     /**
      * Create a new Grid with the given grid
@@ -54,14 +54,14 @@ public class Grid implements GridType {
         this.maxX = maxX;
         this.minY = minY;
         this.maxY = maxY;
-        this.grid = grid;
+        this.data = grid;
     }
 
     /**
      * Create a copy of this Grid
      */
     public Grid copy() {
-        return new Grid(minX, maxX, minY, maxY, GridUtils.copy(grid));
+        return new Grid(minX, maxX, minY, maxY, GridUtils.copy(data));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Grid implements GridType {
             throw new IllegalArgumentException("y coordinate out of bounds: " + y);
         }
 
-        grid[y - minY][x - minX] = c;
+        data[y - minY][x - minX] = c;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class Grid implements GridType {
             throw new IllegalArgumentException("y coordinate out of bounds: " + p.y());
         }
 
-        grid[p.y() - minY][p.x() - minX] = c;
+        data[p.y() - minY][p.x() - minX] = c;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class Grid implements GridType {
             throw new IllegalArgumentException("y coordinate out of bounds: " + y);
         }
 
-        return grid[y - minY][x - minX];
+        return data[y - minY][x - minX];
     }
 
     @Override
@@ -109,7 +109,7 @@ public class Grid implements GridType {
             throw new IllegalArgumentException("y coordinate out of bounds: " + p.y());
         }
 
-        return grid[p.y() - minY][p.x() - minX];
+        return data[p.y() - minY][p.x() - minX];
     }
 
     @Override
@@ -157,7 +157,7 @@ public class Grid implements GridType {
      * @return the grid as a 2d array of characters
      */
     public char[][] grid() {
-        return grid;
+        return data;
     }
 
     /**
@@ -165,7 +165,7 @@ public class Grid implements GridType {
      * @return a copy of this Grid which is flipped horizontally
      */
     public Grid flipHorizontally() {
-        return new Grid(minX, maxX, minY, maxY, GridUtils.flipHorizontally(grid));
+        return new Grid(minX, maxX, minY, maxY, GridUtils.flipHorizontally(data));
     }
 
     /**
@@ -173,7 +173,7 @@ public class Grid implements GridType {
      * @return a copy of this Grid which is flipped vertically
      */
     public Grid flipVertically() {
-        return new Grid(minX, maxX, minY, maxY, GridUtils.flipVertically(grid));
+        return new Grid(minX, maxX, minY, maxY, GridUtils.flipVertically(data));
     }
 
     /**
@@ -182,7 +182,7 @@ public class Grid implements GridType {
      */
     public Grid rotate() {
         //noinspection SuspiciousNameCombination
-        return new Grid(minY, maxY, minX, maxX, GridUtils.rotate(grid));
+        return new Grid(minY, maxY, minX, maxX, GridUtils.rotate(data));
     }
 
     /**
@@ -190,7 +190,7 @@ public class Grid implements GridType {
      * @return the number of times the given character is present in the grid
      */
     public long count(char toCount) {
-        return GridUtils.count(grid, toCount);
+        return GridUtils.count(data, toCount);
     }
 
     /**
@@ -201,14 +201,14 @@ public class Grid implements GridType {
     public long count(Predicate<Integer> filter) {
         Objects.requireNonNull(filter);
 
-        return GridUtils.count(grid, filter);
+        return GridUtils.count(data, filter);
     }
 
     @Override
     public Optional<Point> findFirst(Predicate<Character> predicate) {
         for (var y = minY; y < maxY; y++)
             for (var x = minX; x < maxX; x++)
-                if (predicate.test(grid[y][x]))
+                if (predicate.test(data[y][x]))
                     return Optional.of(Point.of(x, y));
 
         return Optional.empty();
@@ -220,7 +220,7 @@ public class Grid implements GridType {
 
         for (var y = minY; y < maxY; y++)
             for (var x = minX; x < maxX; x++)
-                if (predicate.test(grid[y][x]))
+                if (predicate.test(data[y][x]))
                     found.add(Point.of(x, y));
 
         return found;
@@ -229,28 +229,28 @@ public class Grid implements GridType {
     @Override
     public int hashCode() {
         var result = Objects.hash(minX, maxX, minY, maxY);
-        result = 31 * result + Arrays.deepHashCode(grid);
+        result = 31 * result + Arrays.deepHashCode(data);
         return result;
     }
 
     @Override
     public String toString() {
         final var sb = new StringBuilder();
-        sb.append(String.format("(%d,%d)..(%d,%d)\n", minX, minY, maxX, maxY));
+        sb.append(String.format("(%d,%d)..(%d,%d)%n", minX, minY, maxX, maxY));
         sb.append(" ".repeat(3));
         for (var i = minX; i < maxX / 10 + 1; i++) {
             sb.append(i);
             sb.append(" ".repeat(9));
         }
 
-        sb.append("\n").append(" ".repeat(3));
+        sb.append(System.lineSeparator()).append(" ".repeat(3));
         for (var i = minX; i < maxX; i++)
             sb.append(i % 10);
-        sb.append("\n");
+        sb.append(System.lineSeparator());
 
-        final var list = GridUtils.toList(grid);
+        final var list = GridUtils.toList(data);
         for (var i = 0; i < list.size(); i++)
-            sb.append(String.format("%02d ", i % 100)).append(list.get(i)).append("\n");
+            sb.append(String.format("%02d ", i % 100)).append(list.get(i)).append(System.lineSeparator());
 
         return sb.toString();
     }

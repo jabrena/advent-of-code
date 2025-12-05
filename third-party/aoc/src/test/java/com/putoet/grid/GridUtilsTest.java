@@ -71,7 +71,8 @@ class GridUtilsTest {
 
     @Test
     void rotateNotRectangular() {
-        assertThrows(IllegalArgumentException.class, () -> GridUtils.rotate(GridUtils.of(List.of("1234", "56", "7", ""))));
+        char[][] nonRectangular = GridUtils.of(List.of("1234", "56", "7", ""));
+        assertThrows(IllegalArgumentException.class, () -> GridUtils.rotate(nonRectangular));
     }
 
     @Test

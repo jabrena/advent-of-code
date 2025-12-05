@@ -7,43 +7,20 @@ import org.junit.jupiter.api.Disabled;
 
 class Day15Test {
 
-    @Test
-    void should_solve_day15_part1_sample() {
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.CsvSource({
+        "/day15/day15-input-sample.txt, 2028",
+        "/day15/day15-input-sample2.txt, 10092",
+        "/day15/day15-input.txt, 1465523"
+    })
+    void should_solve_day15_part1(String fileName, int expectedResult) {
         //Given
-        String fileName = "/day15/day15-input-sample.txt";
-
         //When
         var day1 = new Day15();
         var result = day1.getPart1Result(fileName, false);
 
         //Then
-        then(result).isEqualTo(2028);
-    }
-
-    @Test
-    void should_solve_day15_part1_sample2() {
-        //Given
-        String fileName = "/day15/day15-input-sample2.txt";
-
-        //When
-        var day1 = new Day15();
-        var result = day1.getPart1Result(fileName, false);
-
-        //Then
-        then(result).isEqualTo(10092);
-    }
-
-    @Test
-    void should_solve_day15_part1() {
-        //Given
-        String fileName = "/day15/day15-input.txt";
-
-        //When
-        var day1 = new Day15();
-        var result = day1.getPart1Result(fileName, false);
-
-        //Then
-        then(result).isEqualTo(1465523);
+        then(result).isEqualTo(expectedResult);
     }
 
     @Test
