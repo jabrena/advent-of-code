@@ -20,7 +20,7 @@
                 <![CDATA[
                 ```bash
                 jbang sonar-search.0.2.0-SNAPSHOT@jabrena \
-                --project jabrena_churrera-cli --query issues \
+                --project jabrena_advent-of-code --query issues \
                 --types all  --severity blocker --status open --size 400 --quiet
                 ```
                 ]]>
