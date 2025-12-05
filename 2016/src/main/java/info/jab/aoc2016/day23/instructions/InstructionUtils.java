@@ -60,7 +60,7 @@ final class InstructionUtils {
      */
     static String toggleInstruction(String instruction) {
         String[] parts = instruction.split(" ");
-        Optional<Instruction> inst = Instruction.fromString(parts[0]);
+        Optional<Instruction> inst = Instruction.from(parts[0]);
 
         return switch (parts.length) {
             case 2 -> inst.map(i -> switch (i) {

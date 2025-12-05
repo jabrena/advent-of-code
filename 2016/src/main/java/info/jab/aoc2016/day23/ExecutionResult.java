@@ -6,8 +6,7 @@ package info.jab.aoc2016.day23;
  */
 public record ExecutionResult(
         ProgramState nextState,
-        boolean shouldContinue
-) {
+        boolean shouldContinue) {
     /**
      * Create an execution result that continues execution
      */

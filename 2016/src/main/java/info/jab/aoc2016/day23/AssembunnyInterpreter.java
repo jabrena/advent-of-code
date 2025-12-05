@@ -136,7 +136,7 @@ public class AssembunnyInterpreter implements Solver<Integer> {
         String[] parts = instructionLine.split(" ");
         String instruction = parts[0];
 
-        return Instruction.fromString(instruction)
+        return Instruction.from(instruction)
                 .map(inst -> inst.execute(parts, state))
                 .orElse(ExecutionResult.continueWith(state.withProgramCounter(pc + 1)));
     }

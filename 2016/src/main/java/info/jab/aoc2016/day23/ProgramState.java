@@ -10,8 +10,7 @@ import java.util.Map;
 public record ProgramState(
         List<String> instructions,
         Map<String, Integer> registers,
-        int programCounter
-) {
+        int programCounter) {
     /**
      * Create new state with updated registers
      */

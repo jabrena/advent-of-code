@@ -22,7 +22,10 @@ public sealed interface Instruction
     /**
      * Factory method to create an Instruction from a string representation
      */
-    static Optional<Instruction> fromString(String instruction) {
+    static Optional<Instruction> from(String instruction) {
+        if (instruction == null || instruction.isBlank()) {
+            return Optional.empty();
+        }
         return switch (instruction.toLowerCase()) {
             case "cpy" -> Optional.of(new Copy());
             case "inc" -> Optional.of(new Increment());
