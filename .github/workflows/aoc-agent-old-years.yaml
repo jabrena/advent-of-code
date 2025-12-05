@@ -23,7 +23,7 @@ jobs:
 
       - name: Setup jbang
         run: |
-          curl -Ls https://sh.jbang.dev | bash -s - app setup
+          curl --proto '=https' -Ls https://sh.jbang.dev | bash -s - app setup
           echo "$HOME/.jbang/bin" >> $GITHUB_PATH
 
       - name: Execute AOC Agent
