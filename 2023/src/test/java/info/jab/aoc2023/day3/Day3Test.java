@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 class Day3Test {
 
     @Test
-    public void should_solve_day2_part1_with_sample() {
+    void should_solve_day2_part1_with_sample() {
         //Given
         String fileName = "day3/input-sample.txt";
 
@@ -19,7 +19,7 @@ class Day3Test {
     }
 
     @Test
-    public void should_solve_day2_part1() {
+    void should_solve_day2_part1() {
         //Given
         String fileName = "day3/input.txt";
 
@@ -32,7 +32,7 @@ class Day3Test {
     }
 
     @Test
-    public void should_solve_day2_part2_with_sample() {
+    void should_solve_day2_part2_with_sample() {
         //Given
         String fileName = "day3/input-sample.txt";
 
@@ -45,7 +45,7 @@ class Day3Test {
     }
 
     @Test
-    public void should_solve_day2_part2() {
+    void should_solve_day2_part2() {
         //Given
         String fileName = "day3/input.txt";
 

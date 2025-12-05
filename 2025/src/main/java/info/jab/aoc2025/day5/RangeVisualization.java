@@ -492,117 +492,117 @@ public final class RangeVisualization extends Application {
     private void drawPart1Visualization(final Pane canvas, final Input input, final int step) {
         canvas.getChildren().clear();
 
-        // Calculate bounds for this input
         calculateBounds(input);
-
-        // Draw timeline
         drawTimeline(canvas);
+        drawRangesWithHighlight(canvas, step);
+        drawIdsWithAnimation(canvas, input, step);
+    }
 
-        // Draw ranges
+    private void drawRangesWithHighlight(final Pane canvas, final int step) {
+        Range highlightedRange = getHighlightedRange(step);
         int rangeIndex = 0;
-        Range highlightedRange = null;
-        if (step > 0 && step <= idCheckSteps.size()) {
-            final IdCheckStep currentStep = idCheckSteps.get(step - 1);
-            if (currentStep.isContained() && currentStep.containingRange() != null) {
-                highlightedRange = currentStep.containingRange();
-            }
-        }
-
         for (final Range range : sortedRanges) {
-            final boolean isHighlighted = highlightedRange != null &&
-                    range.start() == highlightedRange.start() &&
-                    range.end() == highlightedRange.end();
+            final boolean isHighlighted = isRangeHighlighted(range, highlightedRange);
             final Color rangeColor = isHighlighted
                     ? Color.rgb(255, 200, 100, 0.9)
                     : Color.rgb(100, 150, 255, 0.7);
             drawRange(canvas, range, rangeIndex, rangeColor, isHighlighted);
             rangeIndex++;
         }
+    }
 
-        // Draw IDs with animation state - position above timeline
+    private Range getHighlightedRange(final int step) {
+        if (step > 0 && step <= idCheckSteps.size()) {
+            final IdCheckStep currentStep = idCheckSteps.get(step - 1);
+            if (currentStep.isContained() && currentStep.containingRange() != null) {
+                return currentStep.containingRange();
+            }
+        }
+        return null;
+    }
+
+    private boolean isRangeHighlighted(final Range range, final Range highlightedRange) {
+        return highlightedRange != null &&
+                range.start() == highlightedRange.start() &&
+                range.end() == highlightedRange.end();
+    }
+
+    private void drawIdsWithAnimation(final Pane canvas, final Input input, final int step) {
         final double timelineY = CANVAS_HEIGHT - 50;
         final double idY = Math.min(sortedRanges.size() * RANGE_SPACING + 100, timelineY - 80);
+        
         for (int i = 0; i < input.ids().size(); i++) {
             final Long id = input.ids().get(i);
             final double x = TIMELINE_OFFSET + (id - minValue) * scaleX;
-
-            Color color;
-            double markerSize = ID_MARKER_SIZE;
-            double strokeWidth = 1;
-
-            if (step == 0) {
-                // Nothing checked yet
-                color = Color.rgb(100, 100, 100, 0.5);
-            } else if (i < step - 1) {
-                // Already checked
-                final IdCheckStep checkStep = idCheckSteps.get(i);
-                color = checkStep.isContained() ? Color.LIGHTGREEN : Color.LIGHTGRAY;
-            } else if (i == step - 1 && step <= idCheckSteps.size()) {
-                // Currently being checked - highlight
-                color = Color.YELLOW;
-                markerSize = ID_MARKER_SIZE * 1.5;
-                strokeWidth = 2;
-            } else if (i >= step) {
-                // Not yet checked
-                color = Color.rgb(100, 100, 100, 0.5);
-            } else {
-                // All checked (step > idCheckSteps.size())
-                final IdCheckStep checkStep = idCheckSteps.get(i);
-                color = checkStep.isContained() ? Color.LIGHTGREEN : Color.LIGHTGRAY;
-            }
-
-            final Circle marker = new Circle(x, idY, markerSize, color);
-            marker.setStroke(Color.WHITE);
-            marker.setStrokeWidth(strokeWidth);
-            canvas.getChildren().add(marker);
-
-            // Add ID label for current step
-            if (i == step - 1 && step > 0 && step <= idCheckSteps.size()) {
-                final IdCheckStep currentStep = idCheckSteps.get(step - 1);
-                final Text idText = new Text(x - 10, idY - 20, String.valueOf(id));
-                idText.setFill(Color.WHITE);
-                idText.setFont(Font.font(14));
-                idText.setStroke(Color.BLACK);
-                idText.setStrokeWidth(0.5);
-                canvas.getChildren().add(idText);
-
-                if (currentStep.isContained()) {
-                    final Text statusText = new Text(x - 15, idY + 25, "✓ Fresh");
-                    statusText.setFill(Color.WHITE);
-                    statusText.setFont(Font.font(12));
-                    statusText.setStroke(Color.BLACK);
-                    statusText.setStrokeWidth(0.5);
-                    canvas.getChildren().add(statusText);
-                } else {
-                    final Text statusText = new Text(x - 20, idY + 25, "✗ Spoiled");
-                    statusText.setFill(Color.WHITE);
-                    statusText.setFont(Font.font(12));
-                    statusText.setStroke(Color.BLACK);
-                    statusText.setStrokeWidth(0.5);
-                    canvas.getChildren().add(statusText);
-                }
-            }
+            drawIdMarker(canvas, id, x, idY, i, step);
         }
+        
+        drawIdLabel(canvas, idY);
+        drawIdCount(canvas, idY, timelineY, step);
+    }
 
-        // Label for IDs
+    private void drawIdMarker(final Pane canvas, final Long id, final double x, final double idY,
+                              final int index, final int step) {
+        final MarkerStyle style = calculateMarkerStyle(index, step);
+        final Circle marker = new Circle(x, idY, style.markerSize(), style.color());
+        marker.setStroke(Color.WHITE);
+        marker.setStrokeWidth(style.strokeWidth());
+        canvas.getChildren().add(marker);
+
+        if (index == step - 1 && step > 0 && step <= idCheckSteps.size()) {
+            drawIdLabelAndStatus(canvas, id, x, idY, step);
+        }
+    }
+
+    private MarkerStyle calculateMarkerStyle(final int index, final int step) {
+        if (step == 0) {
+            return new MarkerStyle(Color.rgb(100, 100, 100, 0.5), ID_MARKER_SIZE, 1);
+        } else if (index < step - 1) {
+            final IdCheckStep checkStep = idCheckSteps.get(index);
+            Color color = checkStep.isContained() ? Color.LIGHTGREEN : Color.LIGHTGRAY;
+            return new MarkerStyle(color, ID_MARKER_SIZE, 1);
+        } else if (index == step - 1 && step <= idCheckSteps.size()) {
+            return new MarkerStyle(Color.YELLOW, ID_MARKER_SIZE * 1.5, 2);
+        } else if (index >= step) {
+            return new MarkerStyle(Color.rgb(100, 100, 100, 0.5), ID_MARKER_SIZE, 1);
+        } else {
+            final IdCheckStep checkStep = idCheckSteps.get(index);
+            Color color = checkStep.isContained() ? Color.LIGHTGREEN : Color.LIGHTGRAY;
+            return new MarkerStyle(color, ID_MARKER_SIZE, 1);
+        }
+    }
+
+    private record MarkerStyle(Color color, double markerSize, double strokeWidth) {}
+
+    private void drawIdLabelAndStatus(final Pane canvas, final Long id, final double x, final double idY, final int step) {
+        final IdCheckStep currentStep = idCheckSteps.get(step - 1);
+        final Text idText = new Text(x - 10, idY - 20, String.valueOf(id));
+        idText.setFill(Color.WHITE);
+        idText.setFont(Font.font(14));
+        idText.setStroke(Color.BLACK);
+        idText.setStrokeWidth(0.5);
+        canvas.getChildren().add(idText);
+
+        final String statusText = currentStep.isContained() ? "✓ Fresh" : "✗ Spoiled";
+        final double statusX = currentStep.isContained() ? x - 15 : x - 20;
+        final Text status = new Text(statusX, idY + 25, statusText);
+        status.setFill(Color.WHITE);
+        status.setFont(Font.font(12));
+        status.setStroke(Color.BLACK);
+        status.setStrokeWidth(0.5);
+        canvas.getChildren().add(status);
+    }
+
+    private void drawIdLabel(final Pane canvas, final double idY) {
         final Text idLabel = new Text(TIMELINE_OFFSET - 80, idY, "IDs:");
         idLabel.setFill(Color.WHITE);
         idLabel.setFont(Font.font(12));
         canvas.getChildren().add(idLabel);
+    }
 
-        // Show count of checked IDs
+    private void drawIdCount(final Pane canvas, final double idY, final double timelineY, final int step) {
         if (step > 0) {
-            final int count;
-            if (step <= idCheckSteps.size()) {
-                final IdCheckStep lastStep = idCheckSteps.get(step - 1);
-                count = lastStep.checkedCount();
-            } else {
-                // All IDs checked
-                count = idCheckSteps.stream()
-                        .mapToInt(IdCheckStep::checkedCount)
-                        .max()
-                        .orElse(0);
-            }
+            final int count = calculateCheckedCount(step);
             final Text countText = new Text(
                     TIMELINE_OFFSET,
                     Math.min(idY + 50, timelineY - 20),
@@ -611,6 +611,18 @@ public final class RangeVisualization extends Application {
             countText.setFill(Color.LIGHTGREEN);
             countText.setFont(Font.font(14));
             canvas.getChildren().add(countText);
+        }
+    }
+
+    private int calculateCheckedCount(final int step) {
+        if (step <= idCheckSteps.size()) {
+            final IdCheckStep lastStep = idCheckSteps.get(step - 1);
+            return lastStep.checkedCount();
+        } else {
+            return idCheckSteps.stream()
+                    .mapToInt(IdCheckStep::checkedCount)
+                    .max()
+                    .orElse(0);
         }
     }
 

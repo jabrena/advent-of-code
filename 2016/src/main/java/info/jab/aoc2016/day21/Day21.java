@@ -132,92 +132,120 @@ public class Day21 implements Day<String> {
         // Process operations in reverse order
         for (int i = operations.size() - 1; i >= 0; i--) {
             String operation = operations.get(i);
-            
-            if (operation.startsWith("swap position")) {
-                // swap position X with position Y - symmetric, same operation
-                String[] parts = operation.split(" ");
-                int x = Integer.parseInt(parts[2]);
-                int y = Integer.parseInt(parts[5]);
-                char temp = chars[x];
-                chars[x] = chars[y];
-                chars[y] = temp;
-            } else if (operation.startsWith("swap letter")) {
-                // swap letter X with letter Y - symmetric, same operation
-                String[] parts = operation.split(" ");
-                char x = parts[2].charAt(0);
-                char y = parts[5].charAt(0);
-                for (int j = 0; j < chars.length; j++) {
-                    if (chars[j] == x) {
-                        chars[j] = y;
-                    } else if (chars[j] == y) {
-                        chars[j] = x;
-                    }
-                }
-            } else if (operation.startsWith("rotate left")) {
-                // rotate left X steps - reverse is rotate right X steps
-                String[] parts = operation.split(" ");
-                int steps = Integer.parseInt(parts[2]);
-                rotateRight(chars, steps);
-            } else if (operation.startsWith("rotate right")) {
-                // rotate right X steps - reverse is rotate left X steps
-                String[] parts = operation.split(" ");
-                int steps = Integer.parseInt(parts[2]);
-                rotateLeft(chars, steps);
-            } else if (operation.startsWith("rotate based on position")) {
-                // rotate based on position of letter X - need to reverse this
-                String[] parts = operation.split(" ");
-                char letter = parts[6].charAt(0);
-                
-                // Find current index of letter
-                int currentIndex = -1;
-                for (int j = 0; j < chars.length; j++) {
-                    if (chars[j] == letter) {
-                        currentIndex = j;
-                        break;
-                    }
-                }
-                
-                // Reverse the rotation: find what position would have resulted in currentIndex
-                // Forward: newPos = (oldPos + 1 + oldPos + (oldPos >= 4 ? 1 : 0)) % len
-                //         = (oldPos * 2 + 1 + (oldPos >= 4 ? 1 : 0)) % len
-                // We need to find oldPos such that forward(oldPos) = currentIndex
-                int originalIndex = -1;
-                for (int oldPos = 0; oldPos < chars.length; oldPos++) {
-                    int rotations = 1 + oldPos;
-                    if (oldPos >= 4) {
-                        rotations++;
-                    }
-                    int newPos = (oldPos + rotations) % chars.length;
-                    if (newPos == currentIndex) {
-                        originalIndex = oldPos;
-                        break;
-                    }
-                }
-                
-                // Rotate left to get back to original position
-                if (originalIndex != -1) {
-                    int rotations = 1 + originalIndex;
-                    if (originalIndex >= 4) {
-                        rotations++;
-                    }
-                    rotateLeft(chars, rotations);
-                }
-            } else if (operation.startsWith("reverse positions")) {
-                // reverse positions X through Y - symmetric, same operation
-                String[] parts = operation.split(" ");
-                int x = Integer.parseInt(parts[2]);
-                int y = Integer.parseInt(parts[4]);
-                reverse(chars, x, y);
-            } else if (operation.startsWith("move position")) {
-                // move position X to position Y - reverse is move position Y to position X
-                String[] parts = operation.split(" ");
-                int x = Integer.parseInt(parts[2]);
-                int y = Integer.parseInt(parts[5]);
-                move(chars, y, x);
-            }
+            applyUnscrambleOperation(chars, operation);
         }
         
         return new String(chars);
+    }
+
+    private void applyUnscrambleOperation(char[] chars, String operation) {
+        if (operation.startsWith("swap position")) {
+            handleUnscrambleSwapPosition(chars, operation);
+        } else if (operation.startsWith("swap letter")) {
+            handleUnscrambleSwapLetter(chars, operation);
+        } else if (operation.startsWith("rotate left")) {
+            handleUnscrambleRotateLeft(chars, operation);
+        } else if (operation.startsWith("rotate right")) {
+            handleUnscrambleRotateRight(chars, operation);
+        } else if (operation.startsWith("rotate based on position")) {
+            handleUnscrambleRotateBasedOnPosition(chars, operation);
+        } else if (operation.startsWith("reverse positions")) {
+            handleUnscrambleReversePositions(chars, operation);
+        } else if (operation.startsWith("move position")) {
+            handleUnscrambleMovePosition(chars, operation);
+        }
+    }
+
+    private void handleUnscrambleSwapPosition(char[] chars, String operation) {
+        String[] parts = operation.split(" ");
+        int x = Integer.parseInt(parts[2]);
+        int y = Integer.parseInt(parts[5]);
+        char temp = chars[x];
+        chars[x] = chars[y];
+        chars[y] = temp;
+    }
+
+    private void handleUnscrambleSwapLetter(char[] chars, String operation) {
+        String[] parts = operation.split(" ");
+        char x = parts[2].charAt(0);
+        char y = parts[5].charAt(0);
+        for (int j = 0; j < chars.length; j++) {
+            if (chars[j] == x) {
+                chars[j] = y;
+            } else if (chars[j] == y) {
+                chars[j] = x;
+            }
+        }
+    }
+
+    private void handleUnscrambleRotateLeft(char[] chars, String operation) {
+        String[] parts = operation.split(" ");
+        int steps = Integer.parseInt(parts[2]);
+        rotateRight(chars, steps);
+    }
+
+    private void handleUnscrambleRotateRight(char[] chars, String operation) {
+        String[] parts = operation.split(" ");
+        int steps = Integer.parseInt(parts[2]);
+        rotateLeft(chars, steps);
+    }
+
+    private void handleUnscrambleRotateBasedOnPosition(char[] chars, String operation) {
+        String[] parts = operation.split(" ");
+        char letter = parts[6].charAt(0);
+        
+        int currentIndex = findLetterIndex(chars, letter);
+        if (currentIndex == -1) {
+            return;
+        }
+        
+        int originalIndex = findOriginalIndexForRotation(chars.length, currentIndex);
+        if (originalIndex != -1) {
+            int rotations = calculateRotations(originalIndex);
+            rotateLeft(chars, rotations);
+        }
+    }
+
+    private int findLetterIndex(char[] chars, char letter) {
+        for (int j = 0; j < chars.length; j++) {
+            if (chars[j] == letter) {
+                return j;
+            }
+        }
+        return -1;
+    }
+
+    private int findOriginalIndexForRotation(int length, int currentIndex) {
+        for (int oldPos = 0; oldPos < length; oldPos++) {
+            int rotations = calculateRotations(oldPos);
+            int newPos = (oldPos + rotations) % length;
+            if (newPos == currentIndex) {
+                return oldPos;
+            }
+        }
+        return -1;
+    }
+
+    private int calculateRotations(int position) {
+        int rotations = 1 + position;
+        if (position >= 4) {
+            rotations++;
+        }
+        return rotations;
+    }
+
+    private void handleUnscrambleReversePositions(char[] chars, String operation) {
+        String[] parts = operation.split(" ");
+        int x = Integer.parseInt(parts[2]);
+        int y = Integer.parseInt(parts[4]);
+        reverse(chars, x, y);
+    }
+
+    private void handleUnscrambleMovePosition(char[] chars, String operation) {
+        String[] parts = operation.split(" ");
+        int x = Integer.parseInt(parts[2]);
+        int y = Integer.parseInt(parts[5]);
+        move(chars, y, x);
     }
 
     @Override

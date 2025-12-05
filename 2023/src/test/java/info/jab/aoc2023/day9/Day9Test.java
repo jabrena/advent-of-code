@@ -5,7 +5,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
 
-public class Day9Test {
+class Day9Test {
 
     @Disabled("Test disabled - implementation may be incomplete or test is redundant")
     @Test

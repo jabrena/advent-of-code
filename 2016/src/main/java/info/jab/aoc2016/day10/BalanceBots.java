@@ -28,9 +28,24 @@ public class BalanceBots implements Solver<Integer> {
     private Integer simulateFactory(List<String> lines, boolean findComparingBot) {
         Map<Integer, Bot> bots = new HashMap<>();
         Map<Integer, Integer> outputs = new HashMap<>();
-        List<String> instructions = new ArrayList<>();
+        List<String> instructions = parseInitialValues(lines, bots);
+        Map<Integer, BotInstruction> botInstructions = parseBotInstructions(instructions);
         
-        // Parse initial values and bot instructions
+        Integer result = processBots(bots, outputs, botInstructions, findComparingBot);
+        if (result != null) {
+            return result;
+        }
+        
+        // For part 2, multiply values in outputs 0, 1, and 2
+        if (!findComparingBot) {
+            return outputs.getOrDefault(0, 1) * outputs.getOrDefault(1, 1) * outputs.getOrDefault(2, 1);
+        }
+        
+        return -1; // Not found
+    }
+
+    private List<String> parseInitialValues(List<String> lines, Map<Integer, Bot> bots) {
+        List<String> instructions = new ArrayList<>();
         for (String line : lines) {
             Matcher valueMatcher = VALUE_PATTERN.matcher(line);
             if (valueMatcher.matches()) {
@@ -41,8 +56,10 @@ public class BalanceBots implements Solver<Integer> {
                 instructions.add(line);
             }
         }
-        
-        // Parse bot instructions
+        return instructions;
+    }
+
+    private Map<Integer, BotInstruction> parseBotInstructions(List<String> instructions) {
         Map<Integer, BotInstruction> botInstructions = new HashMap<>();
         for (String instruction : instructions) {
             Matcher botMatcher = BOT_PATTERN.matcher(instruction);
@@ -59,57 +76,58 @@ public class BalanceBots implements Solver<Integer> {
                 ));
             }
         }
-        
-        // Simulate the factory
+        return botInstructions;
+    }
+
+    private Integer processBots(Map<Integer, Bot> bots, Map<Integer, Integer> outputs,
+                                 Map<Integer, BotInstruction> botInstructions, boolean findComparingBot) {
         boolean changed = true;
         while (changed) {
             changed = false;
-            
-            // Collect bots that have two chips
-            List<Bot> readyBots = new ArrayList<>();
-            for (Bot bot : bots.values()) {
-                if (bot.hasTwo()) {
-                    readyBots.add(bot);
-                }
-            }
+            List<Bot> readyBots = getReadyBots(bots);
             
             for (Bot bot : readyBots) {
-                // Check if this bot is comparing 61 and 17
                 if (findComparingBot && bot.isComparing(61, 17)) {
                     return bot.getId();
                 }
                 
                 BotInstruction instruction = botInstructions.get(bot.getId());
                 if (instruction != null) {
-                    int low = bot.getLowChip();
-                    int high = bot.getHighChip();
-                    
-                    // Give low chip
-                    if (instruction.lowIsBot) {
-                        bots.computeIfAbsent(instruction.lowTarget, Bot::new).addChip(low);
-                    } else {
-                        outputs.put(instruction.lowTarget, low);
-                    }
-                    
-                    // Give high chip
-                    if (instruction.highIsBot) {
-                        bots.computeIfAbsent(instruction.highTarget, Bot::new).addChip(high);
-                    } else {
-                        outputs.put(instruction.highTarget, high);
-                    }
-                    
+                    processBotInstruction(bot, instruction, bots, outputs);
                     bot.clearChips();
                     changed = true;
                 }
             }
         }
+        return null;
+    }
+
+    private List<Bot> getReadyBots(Map<Integer, Bot> bots) {
+        List<Bot> readyBots = new ArrayList<>();
+        for (Bot bot : bots.values()) {
+            if (bot.hasTwo()) {
+                readyBots.add(bot);
+            }
+        }
+        return readyBots;
+    }
+
+    private void processBotInstruction(Bot bot, BotInstruction instruction,
+                                       Map<Integer, Bot> bots, Map<Integer, Integer> outputs) {
+        int low = bot.getLowChip();
+        int high = bot.getHighChip();
         
-        // For part 2, multiply values in outputs 0, 1, and 2
-        if (!findComparingBot) {
-            return outputs.getOrDefault(0, 1) * outputs.getOrDefault(1, 1) * outputs.getOrDefault(2, 1);
+        if (instruction.lowIsBot) {
+            bots.computeIfAbsent(instruction.lowTarget, Bot::new).addChip(low);
+        } else {
+            outputs.put(instruction.lowTarget, low);
         }
         
-        return -1; // Not found
+        if (instruction.highIsBot) {
+            bots.computeIfAbsent(instruction.highTarget, Bot::new).addChip(high);
+        } else {
+            outputs.put(instruction.highTarget, high);
+        }
     }
 
     private static class Bot {
