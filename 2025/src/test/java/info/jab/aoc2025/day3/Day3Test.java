@@ -11,7 +11,7 @@ class Day3Test {
     @Timeout(30)
     void should_solve_day3_part1_sample() {
         //Given
-        String fileName = "day3/day3-input-sample.txt";
+        String fileName = "/day3/day3-input-sample.txt";
 
         //When
         var day3 = new Day3();
@@ -20,7 +20,7 @@ class Day3Test {
         //Then
         then(result).isEqualTo(357L);
     }
-    
+
     @Test
     @Timeout(30)
     void should_solve_day3_part1() {
