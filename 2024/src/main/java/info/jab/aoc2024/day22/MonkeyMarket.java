@@ -7,22 +7,6 @@ import java.util.HashMap;
 
 public class MonkeyMarket {
 
-    // Function to generate the next secret number
-    private BigInteger getNextSecret(BigInteger secret) {
-        // Step 1: Multiply by 64, mix, and prune
-        secret = secret.xor(secret.multiply(BigInteger.valueOf(64)));
-        secret = secret.mod(BigInteger.valueOf(16777216));
-
-        // Step 2: Divide by 32 (round down), mix, and prune
-        secret = secret.xor(secret.divide(BigInteger.valueOf(32)));
-        secret = secret.mod(BigInteger.valueOf(16777216));
-
-        // Step 3: Multiply by 2048, mix, and prune
-        secret = secret.xor(secret.multiply(BigInteger.valueOf(2048)));
-        secret = secret.mod(BigInteger.valueOf(16777216));
-
-        return secret;
-    }
 
     // Function to generate the next secret number
     private long getNextSecret(long secret) {

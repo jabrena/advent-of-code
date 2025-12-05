@@ -23,7 +23,7 @@ class Day4 implements Day<Long> {
 
         List<String> winningNumbers = Arrays.stream(numbers[0].split(" "))
             .filter(c -> !c.isBlank() && !c.equals(" "))
-            .collect(Collectors.toList());
+            .toList();
 
         int matches = Arrays.stream(numbers[1].split(" "))
             .filter(winningNumbers::contains)

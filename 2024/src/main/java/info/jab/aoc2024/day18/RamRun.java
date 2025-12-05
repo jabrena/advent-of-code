@@ -124,7 +124,7 @@ public class RamRun {
         boolean[][] grid = new boolean[gridSize][gridSize];
         initializeCorruptedGrid(grid, corruptedCoordinates, limit); //I don´t like to mutate input parameter
 
-        grid = initializePoints(grid, gridSize);
+        initializePoints(grid, gridSize);
 
         // Find the shortest path using BFS
         List<int[]> path = new ArrayList<>();
@@ -150,19 +150,16 @@ public class RamRun {
         // Input: list of corrupted coordinates
         int[][] corruptedCoordinates = getInputData(fileName);
 
-        // Define the grid size
-        boolean[][] grid = new boolean[gridSize][gridSize];
-
         //Big loop
-        String solution = "";
         int until = corruptedCoordinates.length - limit;
+        String solution = "";
         for(int x = 0; x < until; x++) {
 
             //Reset grid in any iteration
-            grid = new boolean[gridSize][gridSize];
+            boolean[][] grid = new boolean[gridSize][gridSize];
             solution = initializeCorruptedGrid(grid, corruptedCoordinates, limit + x);
 
-            grid = initializePoints(grid, gridSize);
+            initializePoints(grid, gridSize);
 
             // Find the shortest path using BFS
             List<int[]> path = new ArrayList<>();

@@ -54,26 +54,6 @@ class StringLiteralCalculator implements Solver<Integer> {
 
     // Part 2
 
-    //Imperative version
-    private String encodeString(String input) {
-        StringBuilder encoded = new StringBuilder();
-        encoded.append("\""); // Add opening quote
-        
-        for (char c : input.toCharArray()) {
-            switch (c) {
-                case '\"':
-                    encoded.append("\\\"");
-                    break;
-                case '\\':
-                    encoded.append("\\\\");
-                    break;
-                default:
-                    encoded.append(c);
-            }
-        }
-        encoded.append("\""); // Add closing quote
-        return encoded.toString();
-    }
 
     private String encodeString2(String input) {
         final Map<Character, String> ENCODING_RULES = Map.of(

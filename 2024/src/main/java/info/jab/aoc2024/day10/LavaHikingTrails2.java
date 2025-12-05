@@ -61,12 +61,9 @@ public class LavaHikingTrails2 implements Solver<Integer> {
                 int newRow = row + direction[0];
                 int newCol = col + direction[1];
 
-                if (isValidPosition(map, newRow, newCol) && !visited.contains(newRow + "," + newCol)) {
-                    // Ensure the next height is exactly 1 more than the current height
-                    if (map[newRow][newCol] - '0' == height + 1) {
-                        queue.add(new int[]{newRow, newCol, height + 1});
-                        visited.add(newRow + "," + newCol);
-                    }
+                if (isValidPosition(map, newRow, newCol) && !visited.contains(newRow + "," + newCol) && map[newRow][newCol] - '0' == height + 1) {
+                    queue.add(new int[]{newRow, newCol, height + 1});
+                    visited.add(newRow + "," + newCol);
                 }
             }
         }

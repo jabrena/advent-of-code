@@ -85,7 +85,7 @@ public record Point(int x, int y) implements Comparable<Point> {
     public List<Point> adjacent(List<Point> directions) {
         Objects.requireNonNull(directions);
 
-        return directions.stream().map(p -> p.add(this)).collect(Collectors.toList());
+        return directions.stream().map(p -> p.add(this)).toList();
     }
 
     /**

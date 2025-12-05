@@ -141,7 +141,7 @@ public class ProgramAlarm {
         List<Integer> data = new ArrayList<>(
                 java.util.Arrays.stream(readInputFile.split(","))
                         .map(Integer::parseInt)
-                        .collect(Collectors.toList()));
+                        .toList());
 
         List<Integer> modified = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {

@@ -70,21 +70,6 @@ public class AntennaMap {
             .filter(isInsideOfGrid).count();
     }
 
-    private Long countAntinodesImperative() {
-        Map<Character, Set<Point>> antennas = getAntennasByType();
-        Set<Point> antinodes = new HashSet<>();
-        for (Character types : antennas.keySet()) {
-            for (Point a : antennas.get(types)) {
-                for (Point b : antennas.get(types)) {
-                    if (a != b) {
-                        antinodes.add(getAntinode(a, b));
-                        antinodes.add(getAntinode(b, a));
-                    }
-                }
-            }
-        }
-        return antinodes.stream().filter(isInsideOfGrid).count();
-    }
 
     private Set<Point> getHarmonics(Point a, Point b) {
         var deltas = getDeltas.apply(a, b);

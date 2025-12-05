@@ -51,7 +51,6 @@ public class RobotMotion {
         }
 
         int safetyFactor = quadrants[0] * quadrants[1] * quadrants[2] * quadrants[3];
-        //System.out.println("Quadrants: Q1=" + quadrants[0] + " Q2=" + quadrants[1] + " Q3=" + quadrants[2] + " Q4=" + quadrants[3]);
         return safetyFactor;
     }
 
@@ -64,15 +63,6 @@ public class RobotMotion {
 
     private static final int TIME_LIMIT = 10000;
 
-    // Print the grid for visualization
-    private void printGrid(int[][] grid, int width, int height) {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                System.out.print(grid[x][y] > 0 ? "#" : ".");
-            }
-            System.out.println();
-        }
-    }
 
     private static final String PATTERN = "###############################";
     private static final Pattern COMPILED_PATTERN = Pattern.compile(Pattern.quote(PATTERN));

@@ -70,7 +70,7 @@ public class WizardSimulator implements Solver<Integer> {
                 // Player turn - try all possible spells
                 for (Spell spell : Spell.values()) {
                     if (canCastSpell(state, spell)) {
-                        GameState newState = castSpell(state, spell, boss.damage);
+                        GameState newState = castSpell(state, spell);
                         if (newState != null) {
                             queue.offer(newState);
                         }
@@ -126,7 +126,7 @@ public class WizardSimulator implements Solver<Integer> {
         return true;
     }
 
-    private GameState castSpell(GameState state, Spell spell, int bossDamage) {
+    private GameState castSpell(GameState state, Spell spell) {
         int playerHp = state.playerHp;
         int playerMana = state.playerMana - spell.cost;
         int bossHp = state.bossHp;

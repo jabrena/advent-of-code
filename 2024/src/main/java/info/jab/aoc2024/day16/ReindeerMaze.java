@@ -16,8 +16,8 @@ public class ReindeerMaze {
         Grid grid = new Grid(GridUtils.of(list));
 
         // Find Start and End
-        Point start = grid.findFirst(c -> c == 'S').get();
-        Point end = grid.findFirst(c -> c == 'E').get();
+        Point start = grid.findFirst(c -> c == 'S').orElseThrow(() -> new IllegalStateException("Start point not found"));
+        Point end = grid.findFirst(c -> c == 'E').orElseThrow(() -> new IllegalStateException("End point not found"));
 
         // Execute the A* search
         return executeAStarSearch(grid, start, end);

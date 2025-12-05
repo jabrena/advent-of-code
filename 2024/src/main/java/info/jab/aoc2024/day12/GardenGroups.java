@@ -1,8 +1,9 @@
 package info.jab.aoc2024.day12;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
 import java.util.stream.IntStream;
 
 import com.putoet.grid.Grid;
@@ -31,18 +32,6 @@ public class GardenGroups implements Solver<Integer> {
                 .sum();
     }
 
-    private int calculateTotalPricePart2(char[][] garden) {
-        int rows = garden.length;
-        int cols = garden[0].length;
-        Set<Point> visited = new HashSet<>();
-
-        return IntStream.range(0, rows)
-                .flatMap(row -> IntStream.range(0, cols)
-                        .filter(col -> !visited.contains(new Point(row, col)))
-                        .mapToObj(col -> exploreRegionPart2(garden, visited, row, col))
-                        .mapToInt(region -> region.area() * region.sides()))
-                .sum();
-    }
 
     private RegionPart1 exploreRegionPart1(char[][] garden, Set<Point> visited, int startRow, int startCol) {
         int rows = garden.length;
@@ -55,7 +44,7 @@ public class GardenGroups implements Solver<Integer> {
         int[] dRow = {-1, 1, 0, 0};
         int[] dCol = {0, 0, -1, 1};
 
-        Stack<Point> stack = new Stack<>();
+        Deque<Point> stack = new ArrayDeque<>();
         stack.push(new Point(startRow, startCol));
 
         while (!stack.isEmpty()) {
@@ -97,7 +86,7 @@ public class GardenGroups implements Solver<Integer> {
         int[] dRow = {-1, 1, 0, 0};
         int[] dCol = {0, 0, -1, 1};
 
-        Stack<Point> stack = new Stack<>();
+        Deque<Point> stack = new ArrayDeque<>();
         stack.push(new Point(startRow, startCol));
 
         while (!stack.isEmpty()) {

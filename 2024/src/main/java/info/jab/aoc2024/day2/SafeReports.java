@@ -14,13 +14,6 @@ import info.jab.aoc.Solver;
 
 public class SafeReports implements Solver<Integer> {
 
-    private boolean isMonotonic(List<Integer> numbers, BiPredicate<Integer, Integer> comparator) {
-        return IntStream.range(0, numbers.size() - 1)
-            .allMatch(i -> {
-                int difference = Math.abs(numbers.get(i) - numbers.get(i + 1));
-                return difference != 0 && difference <= 3 && comparator.test(numbers.get(i), numbers.get(i + 1));
-            });
-    }
 
     private boolean isMonotonic2(List<Integer> numbers, BiPredicate<Integer, Integer> comparator) {
         for (int i = 0; i < numbers.size() - 1; i++) {

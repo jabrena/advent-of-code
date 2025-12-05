@@ -33,10 +33,8 @@ public final class GridNeighborSolver implements Solver<Integer> {
 
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
-                if (grid[y][x] == TARGET_CELL) {
-                    if (countNeighbors(grid, x, y, rows, cols) < MIN_NEIGHBORS) {
-                        count++;
-                    }
+                if (grid[y][x] == TARGET_CELL && countNeighbors(grid, x, y, rows, cols) < MIN_NEIGHBORS) {
+                    count++;
                 }
             }
         }
@@ -128,10 +126,8 @@ public final class GridNeighborSolver implements Solver<Integer> {
         final List<Point> toRemove = new ArrayList<>();
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
-                if (grid[y][x] == TARGET_CELL) {
-                    if (countNeighbors(grid, x, y, rows, cols) < MIN_NEIGHBORS) {
-                        toRemove.add(Point.of(x, y));
-                    }
+                if (grid[y][x] == TARGET_CELL && countNeighbors(grid, x, y, rows, cols) < MIN_NEIGHBORS) {
+                    toRemove.add(Point.of(x, y));
                 }
             }
         }

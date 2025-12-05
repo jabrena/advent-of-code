@@ -22,7 +22,7 @@ public class WarehouseScaled {
     public static InputData prepareInputData(List<String> inputLines) {
         List<String> grid = inputLines.stream()
             .takeWhile(line -> !line.isEmpty())
-            .collect(Collectors.toList());
+            .toList();
 
         String commands = inputLines.stream()
             .skip(grid.size() + 1)
@@ -93,7 +93,7 @@ public class WarehouseScaled {
         for (char m : movements) {
             int dir = getDirIndex(m);
             walkState = mutateMap(new Grid(map), currentPoint, dir);
-            if (walkState.currentPoint.isPresent()) {
+            if (walkState.currentPoint().isPresent()) {
                 currentPoint = walkState.currentPoint().get();
             }
         }
@@ -191,8 +191,7 @@ public class WarehouseScaled {
                     return false;
                 } else {
                     freeRow = false;
-                    if (!movablePositions.containsKey(x))
-                        movablePositions.put(x, new HashSet<>());
+                    movablePositions.computeIfAbsent(x, k -> new HashSet<>());
                     if (map[x][i] == '[') {
                         movablePositions.get(x).add(i + 1);
                     } else if (map[x][i] == ']') {
