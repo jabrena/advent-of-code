@@ -100,3 +100,4 @@
 - Day 1: [`DialRotator`](../../2025/src/main/java/info/jab/aoc2025/day1/DialRotator.java)
 - Day 2: [`InvalidIdValidator2`](../../2025/src/main/java/info/jab/aoc2025/day2/InvalidIdValidator2.java)
 - Day 3: [`MaxJoltageSolver`](../../2025/src/main/java/info/jab/aoc2025/day3/MaxJoltageSolver.java)
+- Day 5: [`RangeSolverV2`](../../2025/src/main/java/info/jab/aoc2025/day5/RangeSolverV2.java)
