@@ -42,41 +42,35 @@
                 ```
                 ]]>
 
-                The output is a JSON format with the list of issues and it has the following
+                The output is a JSON format with the list of hotspots and it has the following
                 structure:
 
                 ```json
                 {
-                "total" : 0,
-                "p" : 1,
-                "ps" : 5,
                 "paging" : {
                 "pageIndex" : 1,
-                "pageSize" : 5,
-                "total" : 0
+                "pageSize" : 100,
+                "total" : 13
                 },
-                "effortTotal" : 0,
-                "debtTotal" : 0,
-                "issues" : [ ],
-                "components" : [ ],
-                "organizations" : [ ],
-                "facets" : [ ]
+                "hotspots" : [ ],
+                ...
                 }
                 ```
 
-                and understand the issues node exist an array of issues.
-                you need to put focus per issue object in the following object attributes.
+                and understand the hotspots node exist an array of hotspots.
+                you need to put focus per hotspot object in the following object attributes.
 
                 Take a look the following example:
 
                 <![CDATA[
                 ```json
-                component : jabrena_churrera-cli:churrera-cli/src/main/java/info/jab/churrera/cli/command/run/JobDisplayService.java
-                project : jabrena_churrera-cli
-                rule : java:S1192
-                line : 76
-                flows : [ ]
-                message : Define a constant instead of duplicating this literal \"Unknown\" 3 times.
+                "component" : "jabrena_advent-of-code:2015/src/main/java/info/jab/aoc2015/day16/AuntSueDetector.java",
+                "project" : "jabrena_advent-of-code",
+                "securityCategory" : "dos",
+                "vulnerabilityProbability" : "MEDIUM",
+                "status" : "TO_REVIEW",
+                "line" : 26,
+                "message" : "Make sure the regex used here, which is vulnerable to polynomial runtime due to backtracking, cannot lead to denial of service.",
                 ```
                 ]]>
 
@@ -94,7 +88,7 @@
                 Verify the changes with:
 
                 ```bash
-                ./mvnw clean test verify site -Pjacoco
+                ./mvnw clean test
                 ```
 
                 Once the changes are verified,
@@ -113,7 +107,7 @@
 
     <output-format>
         <output-format-list>
-            <output-format-item>Print the list of sonar issues with the following format per issue:
+            <output-format-item>Print the list of sonar hotspots with the following format per hotspot:
                 component:
                 rule:
                 message:
