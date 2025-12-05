@@ -20,7 +20,7 @@ class Computer {
     }
 
     //TODO Improve the refactoring using ADTs
-    List<Integer> execute(List<Integer> expected) {
+    List<Integer> execute() {
         List<Integer> out = new ArrayList<>();
         while (ip < opcodes.size()) {
             int litOp = opcodes.get(ip + 1);

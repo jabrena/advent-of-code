@@ -11,6 +11,10 @@ import java.util.stream.Collectors;
  * Utility class for working with grids.
  */
 public class GridUtils {
+    private GridUtils() {
+        // Utility class - prevent instantiation
+    }
+
     /**
      * Create a grid from a list of strings. Each string is converted to a char array. The lines can be of different
      * lengths. An empty list will return an empty grid.

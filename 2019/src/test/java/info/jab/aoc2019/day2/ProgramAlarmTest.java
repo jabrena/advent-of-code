@@ -43,7 +43,7 @@ class ProgramAlarmTest {
         then(result).isEqualTo(3058646);
     }
 
-    @Disabled
+    @Disabled("Test not implemented yet - getPair() method returns 0")
     @Test
     @Timeout(30)
     void should_get_pair() {

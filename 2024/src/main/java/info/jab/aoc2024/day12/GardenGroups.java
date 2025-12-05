@@ -75,52 +75,6 @@ public class GardenGroups implements Solver<Integer> {
         return new RegionPart1(area, perimeter);
     }
 
-    private RegionPart2 exploreRegionPart2(char[][] garden, Set<Point> visited, int startRow, int startCol) {
-        int rows = garden.length;
-        int cols = garden[0].length;
-        char plantType = garden[startRow][startCol];
-        int area = 0;
-        int sides = 0;
-
-        // Directions for movement (up, down, left, right)
-        int[] dRow = {-1, 1, 0, 0};
-        int[] dCol = {0, 0, -1, 1};
-
-        Deque<Point> stack = new ArrayDeque<>();
-        stack.push(new Point(startRow, startCol));
-
-        while (!stack.isEmpty()) {
-            Point cell = stack.pop();
-            int row = cell.x();
-            int col = cell.y();
-
-            if (visited.contains(cell)) continue;
-
-            visited.add(cell);
-            area++;
-
-            // Check all four directions for direct neighbors
-            for (int d = 0; d < 4; d++) {
-                int newRow = row + dRow[d];
-                int newCol = col + dCol[d];
-                Point neighbor = new Point(newRow, newCol);
-
-                if (newRow < 0 || newRow >= rows || newCol < 0 || newCol >= cols) {
-                    // Out of bounds contributes a side
-                    sides++;
-                } else if (garden[newRow][newCol] != plantType) {
-                    // Different plant type contributes a side
-                    sides++;
-                } else if (!visited.contains(neighbor)) {
-                    // Same type and not visited yet
-                    stack.push(neighbor);
-                }
-            }
-        }
-
-        return new RegionPart2(area, sides);
-    }
-
     @Override
     public Integer solvePartOne(String fileName) {
         var list = ResourceLines.list(fileName);

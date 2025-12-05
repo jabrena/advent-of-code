@@ -15,6 +15,10 @@ import java.util.stream.Stream;
  * lines. The resource name should start with a '/' and is relative to the classpath.
  */
 public class ResourceLines {
+    private ResourceLines() {
+        // Utility class - prevent instantiation
+    }
+
     /**
      * Return an InputStream for the given resource name.
      * @param resourceName The name of the resource

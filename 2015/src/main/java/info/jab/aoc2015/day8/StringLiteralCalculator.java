@@ -19,22 +19,28 @@ class StringLiteralCalculator implements Solver<Integer> {
         String content = input.substring(1, input.length() - 1);
         
         int length = 0;
-        for (int i = 0; i < content.length(); i++) {
+        int i = 0;
+        while (i < content.length()) {
             if (content.charAt(i) == '\\') {
                 if (i + 1 < content.length()) {
                     char nextChar = content.charAt(i + 1);
                     if (nextChar == '\\' || nextChar == '"') {
                         // For \\ or \"
                         length++;
-                        i++;
+                        i += 2;
                     } else if (nextChar == 'x' && i + 3 < content.length()) {
                         // For \x followed by two hexadecimal characters
                         length++;
-                        i += 3;
+                        i += 4;
+                    } else {
+                        i++;
                     }
+                } else {
+                    i++;
                 }
             } else {
                 length++;
+                i++;
             }
         }
         return length;

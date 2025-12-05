@@ -4,15 +4,15 @@ import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Queue;
-import java.util.Stack;
 
 public class Day13 implements Day<Integer> {
 
     private static List<Object> buildList(String line) {
         List<Object> list = new ArrayList<>();
-        Stack<List<Object>> stack = new Stack<>();
+        Deque<List<Object>> stack = new ArrayDeque<>();
         char[] charArray = line.toCharArray();
         for (int i = 1; i < charArray.length - 1; i++) {
             char c = charArray[i];
@@ -20,27 +20,26 @@ public class Day13 implements Day<Integer> {
                 continue;
             }
             if (c == '[') {
-                stack.push(new ArrayList<>());
+                stack.addLast(new ArrayList<>());
                 continue;
             }
             if (c == ']') {
-                List<Object> stackTop = stack.pop();
+                List<Object> stackTop = stack.removeLast();
                 if (!stack.isEmpty()) {
-                    stack.peek().add(stackTop);
+                    stack.getLast().add(stackTop);
                 } else {
                     list.add(stackTop);
                 }
                 continue;
             }
-            String next = String.valueOf(charArray[i + 1]);
-            if (!Character.isDigit(next.charAt(0))) {
-                next = "";
-            } else {
+            String next = "";
+            if (i + 1 < charArray.length - 1 && Character.isDigit(charArray[i + 1])) {
+                next = String.valueOf(charArray[i + 1]);
                 i++;
             }
             Integer num = Integer.parseInt(c + next);
             if (!stack.isEmpty()) {
-                stack.peek().add(num);
+                stack.getLast().add(num);
             } else {
                 list.add(num);
             }

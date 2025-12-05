@@ -21,8 +21,12 @@ public class SpiralIterator implements GritIterator {
     public SpiralIterator(Size size) {
         Objects.requireNonNull(size);
 
-        assert size.dx() > 1;
-        assert size.dy() > 1;
+        if (size.dx() <= 1) {
+            throw new IllegalArgumentException("Size dx must be greater than 1");
+        }
+        if (size.dy() <= 1) {
+            throw new IllegalArgumentException("Size dy must be greater than 1");
+        }
 
         this.size = size;
         this.start = Point.of(0, 0);

@@ -84,17 +84,11 @@ class RopePhysics {
     }
 
     public void execute(Movement movement) {
-        //System.out.println();
-        //System.out.println("== " + movement.direction() + " " + movement.number() + " ==");
-        //System.out.println();
-
         for (int i = 0; i < movement.number(); i++) {
             this.moveH(movement.direction());
             if (this.checkDistanceTwithH()) {
-                //System.out.println("Move");
                 this.moveT(movement.direction());
             }
-            //this.print();
         }
     }
 
@@ -129,8 +123,6 @@ class RopePhysics {
         } else if (direction == Direction.D) {
             this.currentHY += 1;
         }
-        //Updates
-        //System.out.println("H: " + this.currentHX + " " + this.currentHY);
         this.cellsH[this.currentHY][this.currentHX] = true;
         //End Transaction
     }
@@ -166,8 +158,6 @@ class RopePhysics {
             if (this.currentHX < this.currentTX) {
                 this.currentTX -= 1;
             }
-            //System.out.println(this.currentHX + this.currentHY);
-            //System.out.println(this.currentTX + this.currentTY);
         } else if (direction == Direction.D) {
             this.currentTY += 1;
             if (this.currentHX > this.currentTX) {
@@ -177,7 +167,6 @@ class RopePhysics {
                 this.currentTX += 1;
             }
         }
-        //System.out.println("T: " + this.currentTX + " " + this.currentTY);
         this.cellsT[this.currentTY][this.currentTX] = true;
         this.cellsVisited[this.currentTY][this.currentTX] = true;
         //End Transaction

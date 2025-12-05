@@ -7,6 +7,10 @@ import java.security.NoSuchAlgorithmException;
  * MD5 hash utility class
  */
 public class MD5 {
+    private MD5() {
+        // Utility class - prevent instantiation
+    }
+
     /**
      * Hash the given text using the MD5 algorithm
      * @param text The text to hash

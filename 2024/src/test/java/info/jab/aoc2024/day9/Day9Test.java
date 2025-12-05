@@ -24,7 +24,7 @@ class Day9Test {
         then(result).isEqualTo(60);
     }
 
-    @Disabled
+    @Disabled("Test disabled - sample3 input file may not exist or test is redundant")
     @Test
     void should_solve_day9_part1_with_sample3() {
         //Given

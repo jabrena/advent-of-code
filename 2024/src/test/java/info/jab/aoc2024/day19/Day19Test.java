@@ -61,9 +61,5 @@ class Day19Test {
 
         //Then
         then(result).isEqualTo(730121486795169L);
-
-        //System.out.println(VM.current().details());
-        //System.out.println(ClassLayout.parseInstance(day).toPrintable());
-        //System.out.println(GraphLayout.parseInstance(day).toFootprint());
     }
 }

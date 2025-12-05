@@ -20,7 +20,7 @@ class Day9Test {
         then(result).isEqualTo(13);
     }
 
-    @Disabled
+    @Disabled("Test disabled - appears to be duplicate of sample test with different input file")
     @Test
     void given_data_when_execute_day9_getPart1Solution_then_expected_result() {
         //Given

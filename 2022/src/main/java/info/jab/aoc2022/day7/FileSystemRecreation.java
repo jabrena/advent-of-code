@@ -16,6 +16,9 @@ import java.util.function.Function;
  *
  */
 class FileSystemRecreation {
+    private FileSystemRecreation() {
+        // Utility class - prevent instantiation
+    }
 
     private static final Pattern SPACE_SEPARATOR_PATTERN = Pattern.compile(" ");
 

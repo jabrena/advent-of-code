@@ -8,6 +8,10 @@ import java.util.List;
  * A simple utility class to calculate the factors of a given number.
  */
 public class Factors {
+    private Factors() {
+        // Utility class - prevent instantiation
+    }
+
     /**
      * Calculate the factors of the given number.
      * @param num The number to calculate the factors for

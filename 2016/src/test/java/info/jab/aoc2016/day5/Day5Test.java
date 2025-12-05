@@ -21,7 +21,7 @@ class Day5Test {
         then(result).isEqualTo("2414bc77");
     }
 
-    @Disabled
+    @Disabled("Part 2 test disabled - implementation may be incomplete or slow")
     @Test
     void should_solve_day5_part2() {
         //Given

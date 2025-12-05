@@ -37,7 +37,7 @@ public class LavaHikingTrails2 implements Solver<Integer> {
         Set<String> visited = new HashSet<>();
 
         // Start BFS from the trailhead
-        queue.add(new int[]{startRow, startCol, 0});  // {row, col, current height}
+        queue.add(new int[]{startRow, startCol, 0});
         visited.add(startRow + "," + startCol);
         while (!queue.isEmpty()) {
             int[] current = queue.poll();
