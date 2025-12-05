@@ -60,4 +60,3 @@ discussions on design thinking and code refactoring, with a focus on functional 
 I'm also deeply grateful to my friend [Juan Antonio Medina](https://www.github.com/juan-medina)
 for the continuous and inspiring conversations throughout the day,
 and to [Rene van Putten](https://github.com/z669016/) for their invaluable inspiration.
-
