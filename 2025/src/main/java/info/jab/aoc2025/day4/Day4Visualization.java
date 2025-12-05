@@ -80,12 +80,12 @@ public class Day4Visualization extends Application {
             cols = grid[0].length;
 
             // Calculate cell size to fit grid in canvas
-            final double canvasWidth = WINDOW_WIDTH - 40;
-            final double canvasHeight = WINDOW_HEIGHT - 200;
+            final double canvasWidth = (double) WINDOW_WIDTH - 40;
+            final double canvasHeight = (double) WINDOW_HEIGHT - 200;
             cellSize = (int) Math.min(canvasWidth / cols, canvasHeight / rows);
             cellSize = Math.max(10, Math.min(cellSize, 50)); // Clamp between 10 and 50
-            gridOffsetX = (canvasWidth - (cols * cellSize)) / 2 + 20;
-            gridOffsetY = (canvasHeight - (rows * cellSize)) / 2 + 20;
+            gridOffsetX = (canvasWidth - ((double) cols * cellSize)) / 2 + 20;
+            gridOffsetY = (canvasHeight - ((double) rows * cellSize)) / 2 + 20;
 
             primaryStage.setTitle("Advent of Code 2025 - Day 4 Part 2 Visualization");
 

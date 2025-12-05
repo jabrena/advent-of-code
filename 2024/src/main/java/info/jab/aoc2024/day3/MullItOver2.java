@@ -1,11 +1,8 @@
 package info.jab.aoc2024.day3;
 
 import java.util.stream.Gatherers;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import java.util.List;
-import java.util.ArrayList;
 
 import com.putoet.resources.ResourceLines;
 

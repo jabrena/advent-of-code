@@ -5,9 +5,6 @@ import info.jab.aoc.Day;
 import com.putoet.math.Josephus;
 import com.putoet.resources.ResourceLines;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * https://adventofcode.com/2016/day/19
  */

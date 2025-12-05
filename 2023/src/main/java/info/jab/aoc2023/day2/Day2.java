@@ -56,9 +56,7 @@ public class Day2 implements Day<Long> {
         return true;
     };
 
-    Function<String, Long> extractGameId = param -> {
-        return Long.valueOf(param.split(":")[0].split(" ")[1]);
-    };
+    Function<String, Long> extractGameId = param -> Long.valueOf(param.split(":")[0].split(" ")[1]);
 
     // @formatter:off
 

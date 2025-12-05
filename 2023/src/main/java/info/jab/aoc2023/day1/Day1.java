@@ -17,19 +17,15 @@ public class Day1 implements Day<Long> {
 
     // @formatter:off
 
-    Function<String, List<Character>> toCharList = param -> {
-        return param.chars()
+    Function<String, List<Character>> toCharList = param -> param.chars()
             .mapToObj(c -> (char) c)
             .toList();
-    };
 
-    Function<List<Character>, List<Long>> toListOfDigits = param -> {
-        return param.stream()
-            .filter(c -> Character.isDigit(c))
+    Function<List<Character>, List<Long>> toListOfDigits = param -> param.stream()
+            .filter(Character::isDigit)
             .map(String::valueOf)
             .map(Long::valueOf)
             .toList();
-    };
 
     Function<List<Long>, Long> applyRules = param -> {
         String result = switch (param.size()) {

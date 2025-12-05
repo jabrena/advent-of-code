@@ -41,7 +41,7 @@ public record Input(List<Range> ranges, List<Long> ids) {
                 .toList();
 
         final List<Long> ids = lines.stream()
-                .skip(separatorIndex + 1)
+                .skip((long) separatorIndex + 1)
                 .filter(line -> !line.isBlank())
                 .map(String::trim)
                 .map(Long::parseLong)

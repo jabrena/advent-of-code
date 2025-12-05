@@ -25,7 +25,7 @@ public sealed interface Trampoline<T> permits Trampoline.Done, Trampoline.More {
     static <T> T run(Trampoline<T> trampoline) {
         return Stream.iterate(
                 trampoline,
-                t -> t instanceof More<T> more ? more.compute().get() : t
+                t -> t instanceof More<T>(var compute) ? compute.get() : t
         )
         .dropWhile(t -> t instanceof More<T>)
         .findFirst()

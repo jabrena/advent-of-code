@@ -288,7 +288,7 @@ public class Day3Visualization extends Application {
 
         for (int i = 0; i < digits.size(); i++) {
             double x = startX + (i % digitsPerRow) * (boxSize + gap);
-            double y = startY + (i / digitsPerRow) * (boxSize + gap);
+            double y = startY + ((double) i / digitsPerRow) * (boxSize + gap);
 
             // Background for digit
             if (selectedIndices.contains(i)) {
