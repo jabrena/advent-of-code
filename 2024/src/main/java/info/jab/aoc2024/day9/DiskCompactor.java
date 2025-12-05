@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 
 import com.putoet.resources.ResourceLines;
@@ -14,7 +15,7 @@ import info.jab.aoc.Solver;
 public class DiskCompactor implements Solver<Long> {
 
     // Function to populate the disk with file IDs and free spaces (-1)
-    Function<int[], int[]> populateDisk = parts ->
+    UnaryOperator<int[]> populateDisk = parts ->
         IntStream.range(0, parts.length)
             .flatMap(i -> {
                 int value = (i % 2 == 1) ? -1 : i / 2; // -1 for gaps, file ID for files
@@ -80,7 +81,7 @@ public class DiskCompactor implements Solver<Long> {
 
             // Reassign files to gaps
             IntStream.iterate(parts.length / 2, fileId -> fileId - 1)
-                    .limit(parts.length / 2 + 1)
+                    .limit((long) parts.length / 2 + 1)
                     .filter(starting::containsKey)
                     .forEach(fileId -> {
                         int fileSize = starting.get(fileId)[1];

@@ -5,6 +5,7 @@ import com.putoet.resources.ResourceLines;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.function.ToIntFunction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  **/
 public class Day1 implements Day<Integer> {
 
-    Function<List<Integer>, Integer> getIncrementCount = param -> {
+    ToIntFunction<List<Integer>> getIncrementCount = param -> {
         AtomicInteger previous = new AtomicInteger(0);
         return param.stream().mapToInt(element -> {
             int prev = previous.get();
@@ -47,13 +48,13 @@ public class Day1 implements Day<Integer> {
     @Override
     public Integer getPart1Result(String fileName) {
         var sonarMeasures = ResourceLines.list(fileName, Integer::parseInt);
-        return getIncrementCount.apply(sonarMeasures);
+        return getIncrementCount.applyAsInt(sonarMeasures);
     }
 
     @Override
     public Integer getPart2Result(String fileName) {
         var sonarMeasures = ResourceLines.list(fileName, Integer::parseInt);
         var sonarMeasures2 = calculateThreeMeasurementSlicingWindow(sonarMeasures);
-        return getIncrementCount.apply(sonarMeasures2);
+        return getIncrementCount.applyAsInt(sonarMeasures2);
     }
 }
