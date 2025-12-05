@@ -13,6 +13,23 @@
 
     <steps>
         <step number="1">
+            <step-title>Install Jbang and test the AOC CLI</step-title>
+            <step-content>
+                First, verify aoc CLI is working with Jbang:
+                ```bash
+                jbang --version
+                jbang trust add https://github.com/jabrena/
+                jbang aoc@jabrena test
+                ```
+            </step-content>
+            <step-constraints>
+                <step-constraint-list>
+                    <step-constraint>Do not invest time in planning</step-constraint>
+                    <step-constraint>Only install the component with the given command</step-constraint>
+                </step-constraint-list>
+            </step-constraints>
+        </step>
+        <step number="2">
             <step-title>Identify what problem to solve</step-title>
             <step-content>
                 Execute the command:
@@ -52,7 +69,7 @@
                 Know you have that you are going to resolve a problem for YEAR, DAY and PART.
             </step-content>
         </step>
-        <step number="2">
+        <step number="3">
             <step-title>Understand the whole project</step-title>
             <step-content>
                 Review the whole repository to understand the different maven modules and
@@ -62,7 +79,7 @@
                 name to understand problems solved in the past years.
             </step-content>
         </step>
-        <step number="3">
+        <step number="4">
             <step-title>Create input data</step-title>
             <step-content>
                 In the maven module YEAR identified in the previous step,
@@ -78,7 +95,7 @@
                 ```
             </step-content>
         </step>
-        <step number="4">
+        <step number="5">
             <step-title>Create a Unit Test (Red phase of TDD for part 1 or part 2)</step-title>
             <step-content>
                 In the maven module YEAR, review if exist in path `src/test/java/info/jab/aocYEAR` a
@@ -164,7 +181,7 @@ public class DayX implements Day<Integer> {
                 Commit and push the initial test and the java class empty to the repository.
             </step-content>
         </step>
-        <step number="5">
+        <step number="6">
             <step-title>Create a Java class with the solution (Green phase of TDD for part 1 or part 2)</step-title>
             <step-content>
                 In the maven module YEAR, in the package `info.jab.aocYEAR`,
@@ -238,13 +255,12 @@ public class DayX implements Day<Integer> {
                 </step-constraint-list>
             </step-constraints>
         </step>
-        <step number="6">
+        <step number="7">
             <step-title>Solve the problem for part 2</step-title>
             <step-content>
-                Repeat the steps 4 and 5 for part 2.
+                Repeat the steps 5 and 6 to solve the problem for part 2.
             </step-content>
         </step>
-
     </steps>
 
     <safeguards>
