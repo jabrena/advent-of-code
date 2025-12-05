@@ -1,12 +1,11 @@
 package info.jab.aoc2022.day1;
 
-import static info.jab.aoc.Utils.GROUP_SEPARATOR_PATTERN;
-import static info.jab.aoc.Utils.LINE_SEPARATOR_PATTERN;
-
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 /**
@@ -16,9 +15,12 @@ import java.util.stream.LongStream;
  */
 public class Day1 implements Day<Long> {
 
-    private Long processData(String fileName, Integer limit) {
+    private static final Pattern GROUP_SEPARATOR_PATTERN = Pattern.compile("\n\n");
+    private static final Pattern LINE_SEPARATOR_PATTERN = Pattern.compile("\n");
+
+    private Long processData(String fileContent, Integer limit) {
         return Arrays
-            .stream(GROUP_SEPARATOR_PATTERN.split(fileName))
+            .stream(GROUP_SEPARATOR_PATTERN.split(fileContent))
             .map(group -> Arrays.stream(LINE_SEPARATOR_PATTERN.split(group)))
             .flatMapToLong(item -> LongStream.of(item.mapToLong(Long::parseLong).sum()))
             .boxed()
@@ -29,13 +31,15 @@ public class Day1 implements Day<Long> {
 
     @Override
     public Long getPart1Result(String fileName) {
-        var fileLoaded = Utils.readFileToString(fileName);
+        var fileLoaded = ResourceLines.stream("/" + fileName)
+                .collect(Collectors.joining("\n"));
         return this.processData(fileLoaded, 1);
     }
 
     @Override
     public Long getPart2Result(String fileName) {
-        var fileLoaded = Utils.readFileToString(fileName);
+        var fileLoaded = ResourceLines.stream("/" + fileName)
+                .collect(Collectors.joining("\n"));
         return this.processData(fileLoaded, 3);
     }
 }

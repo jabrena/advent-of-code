@@ -1,6 +1,6 @@
 package info.jab.aoc2022.day7;
 
-import static info.jab.aoc.Utils.SPACE_SEPARATOR_PATTERN;
+import java.util.regex.Pattern;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +16,8 @@ import java.util.function.Function;
  *
  */
 class FileSystemRecreation {
+
+    private static final Pattern SPACE_SEPARATOR_PATTERN = Pattern.compile(" ");
 
     public static Function<List<String>, Map<String, Long>> from = data -> {
         Map<String, Long> fsAsMap = new HashMap<>();

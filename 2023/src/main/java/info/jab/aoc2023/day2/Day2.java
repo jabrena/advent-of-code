@@ -1,7 +1,7 @@
 package info.jab.aoc2023.day2;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -64,7 +64,7 @@ public class Day2 implements Day<Long> {
 
     @Override
     public Long getPart1Result(String fileName) {
-        return Utils.readFileToList(fileName).stream()
+        return ResourceLines.list("/" + fileName).stream()
             .filter(isValidGame)
             .map(extractGameId)
             .reduce(0L, Long::sum);
@@ -97,7 +97,7 @@ public class Day2 implements Day<Long> {
 
     @Override
     public Long getPart2Result(String fileName) {
-        return Utils.readFileToList(fileName).stream()
+        return ResourceLines.list("/" + fileName).stream()
             .map(calculatePower)
             .reduce(0L, Long::sum);
     }

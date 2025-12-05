@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
+import com.putoet.resources.ResourceLines;
 
 /**
  * Solution for AOC 2023, Day 3
@@ -139,7 +139,7 @@ class Day3  implements Day<Long> {
     @Override
     public Long getPart1Result(String fileName) {
 
-        var lines = Utils.readFileToList(fileName);
+        var lines = ResourceLines.list("/" + fileName);
         String[][] matrix = createMatrix.apply(lines);
 
         Set<String> symbols = findDifferentSymbols.apply(lines);
@@ -159,7 +159,7 @@ class Day3  implements Day<Long> {
     @Override
     public Long getPart2Result(String fileName) {
 
-        var lines = Utils.readFileToList(fileName);
+        var lines = ResourceLines.list("/" + fileName);
         Set<String> symbols = findDifferentSymbols.apply(lines);
         System.out.println("Combined Set: " + symbols);
 

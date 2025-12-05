@@ -1,7 +1,7 @@
 package info.jab.aoc2023.day4;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +35,7 @@ class Day4 implements Day<Long> {
 
     @Override
     public Long getPart1Result(String fileName) {
-        var result = Utils.readFileToList(fileName).stream()
+        var result = ResourceLines.list("/" + fileName).stream()
             .map(getMatches)
             .map(c -> ((1 << c) / 2))
             .reduce(0, (a, b) -> a + b);
@@ -59,7 +59,7 @@ class Day4 implements Day<Long> {
 
     @Override
     public Long getPart2Result(String fileName) {
-        var lines = Utils.readFileToList(fileName);
+        var lines = ResourceLines.list("/" + fileName);
         return iterate(new HashMap<>(), lines, 0, lines.size());
     }
 }

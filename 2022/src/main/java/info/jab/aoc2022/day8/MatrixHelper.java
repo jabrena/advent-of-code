@@ -1,15 +1,23 @@
 package info.jab.aoc2022.day8;
 
-import info.jab.aoc.Utils;
+import com.putoet.resources.ResourceLines;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 class MatrixHelper {
+
+    private static final Pattern STRING_SPLIT_PATTERN = Pattern.compile("(?!^)");
+
+    private static List<String> getCharactersAsList(String string) {
+        return Arrays.stream(STRING_SPLIT_PATTERN.split(string)).toList();
+    }
 
     public static Integer[][] getMatrix(String fileName) {
         // @formatter:off
         //Initialize Matrix
-        var list = Utils.readFileToList(fileName);
+        var list = ResourceLines.list("/" + fileName);
         Integer noOfRows = list.size();
         Integer noOfColumns = list.stream()
                 .limit(1)
@@ -21,8 +29,8 @@ class MatrixHelper {
         //Populate Matrix
         AtomicInteger x = new AtomicInteger(0);
         AtomicInteger y = new AtomicInteger(0);
-        Utils.readFileToList(fileName).stream()
-            .map(Utils::getCharactersAsList)
+        ResourceLines.list("/" + fileName).stream()
+            .map(MatrixHelper::getCharactersAsList)
             .forEach(row -> {
                 row.stream()
                    .forEach(column -> {

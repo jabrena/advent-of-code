@@ -1,7 +1,7 @@
 package info.jab.aoc2022.day9;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
 import java.util.Arrays;
 
 public class Day9 implements Day<Long> {
@@ -14,7 +14,7 @@ public class Day9 implements Day<Long> {
         //ropePhysics.print();
 
         // @formatter:off
-        Utils.readFileToList(fileName).stream()
+        ResourceLines.list("/" + fileName).stream()
                 .map(Movement::fromString)
                 .forEach(ropePhysics::execute);
 

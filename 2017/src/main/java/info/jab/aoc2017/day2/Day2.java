@@ -1,7 +1,7 @@
 package info.jab.aoc2017.day2;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
-import info.jab.aoc.Utils;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,7 +9,7 @@ public class Day2 implements Solver<Integer> {
 
     @Override
     public Integer solvePartOne(String fileName) {
-        List<String> lines = Utils.readFileToList(fileName);
+        List<String> lines = ResourceLines.list("/" + fileName);
         return lines.stream()
             .mapToInt(line -> {
                 int[] numbers = Arrays.stream(line.split("\\s+"))
@@ -24,7 +24,7 @@ public class Day2 implements Solver<Integer> {
 
     @Override
     public Integer solvePartTwo(String fileName) {
-        List<String> lines = Utils.readFileToList(fileName);
+        List<String> lines = ResourceLines.list("/" + fileName);
         return lines.stream()
             .mapToInt(line -> {
                 int[] numbers = Arrays.stream(line.split("\\s+"))

@@ -1,7 +1,7 @@
 package info.jab.aoc2022.day4;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Function;
@@ -43,7 +43,7 @@ public class Day4 implements Day<Long> {
             return false;
         };
 
-        return Utils.readFileToList(fileName)
+        return ResourceLines.list("/" + fileName)
                 .stream()
                 .map(toTuple)
                 .map(detectSubsets)
@@ -69,8 +69,8 @@ public class Day4 implements Day<Long> {
         };
 
         // @formatter:off
-        return Utils
-                .readFileToList(fileName)
+        return ResourceLines
+                .list("/" + fileName)
                 .stream()
                 .map(toTuple)
                 .map(detectOverlap)

@@ -1,14 +1,17 @@
 package info.jab.aoc2022.day7;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import info.jab.aoc.Utils;
+import java.util.function.Function;
 
 public class Day7 implements Day<Long> {
 
     @Override
     public Long getPart1Result(String fileName) {
         // @formatter:off
-        var fileSystem = Utils.readFileToListF
+        Function<String, java.util.List<String>> readFileToListF = 
+                f -> ResourceLines.list("/" + f);
+        var fileSystem = readFileToListF
                 .andThen(FileSystemRecreation.from)
                 .apply(fileName);
 
@@ -22,7 +25,9 @@ public class Day7 implements Day<Long> {
     @Override
     public Long getPart2Result(String fileName) {
         // @formatter:off
-        var fileSystemRecreation = Utils.readFileToListF
+        Function<String, java.util.List<String>> readFileToListF = 
+                f -> ResourceLines.list("/" + f);
+        var fileSystemRecreation = readFileToListF
                 .andThen(FileSystemRecreation.from)
                 .apply(fileName);
 
