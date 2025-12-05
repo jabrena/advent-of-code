@@ -4,8 +4,8 @@ import com.putoet.grid.Grid;
 import com.putoet.grid.GridUtils;
 import com.putoet.grid.Point;
 import com.putoet.grid.Points;
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
-import info.jab.aoc.Utils;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -52,7 +52,8 @@ public final class GridNeighborSolverV2 implements Solver<Integer> {
      * @return A Grid object representing the grid
      */
     private Grid createGrid(final String fileName) {
-        final List<String> lines = Utils.readFileToList(fileName).stream()
+        final String resourceName = fileName.startsWith("/") ? fileName : "/" + fileName;
+        final List<String> lines = ResourceLines.list(resourceName).stream()
                 .filter(line -> !line.isEmpty())
                 .toList();
         return new Grid(GridUtils.of(lines));

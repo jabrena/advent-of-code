@@ -1,7 +1,7 @@
 package info.jab.aoc2025.day3;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
-import info.jab.aoc.Utils;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -46,7 +46,8 @@ public final class MaxJoltageSolver implements Solver<Long> {
      * @return The sum of maximum joltages for all valid lines
      */
     private Long solve(final String fileName, final int length) {
-        return Utils.readFileToList(fileName).stream()
+        final String resourceName = fileName.startsWith("/") ? fileName : "/" + fileName;
+        return ResourceLines.list(resourceName).stream()
                 .filter(line -> line.length() >= length)
                 .mapToLong(line -> getMaxJoltage(line, length))
                 .sum();
