@@ -3,8 +3,6 @@ package info.jab.aoc2024.day7;
 import info.jab.aoc.Day;
 import info.jab.aoc.Solver;
 
-import com.putoet.resources.ResourceLines;
-
 /**
  * https://adventofcode.com/2024/day/7
  *

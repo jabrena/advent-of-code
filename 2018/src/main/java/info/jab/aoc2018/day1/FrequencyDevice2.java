@@ -55,7 +55,7 @@ class FrequencyDevice2 implements Solver<Integer> {
         frequencies.add(currentFrequency);
         while (true) { 
             for (Tuple tuple : tuples) {
-                currentFrequency += calculateChange(tuple);;
+                currentFrequency += calculateChange(tuple);
                 if (!frequencies.add(currentFrequency)) {
                     return currentFrequency;
                 }

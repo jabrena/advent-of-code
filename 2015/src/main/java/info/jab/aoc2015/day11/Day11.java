@@ -10,8 +10,7 @@ public class Day11 implements Day<String> {
     @Override
     public String getPart1Result(String input) {
         PasswordValidator validator = new PasswordValidator();
-        String nextPassword = validator.findNextValidPassword(input);
-        return nextPassword;
+        return validator.findNextValidPassword(input);
     }
 
     @Override

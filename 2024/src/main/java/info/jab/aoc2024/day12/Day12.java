@@ -1,9 +1,5 @@
 package info.jab.aoc2024.day12;
 
-import com.putoet.grid.Grid;
-import com.putoet.grid.GridUtils;
-import com.putoet.resources.ResourceLines;
-
 import info.jab.aoc.Day;
 import info.jab.aoc.Solver;
 

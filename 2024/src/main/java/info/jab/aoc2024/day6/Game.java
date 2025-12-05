@@ -2,12 +2,6 @@ package info.jab.aoc2024.day6;
 
 import com.putoet.resources.ResourceLines;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.putoet.grid.Grid;
 import com.putoet.grid.GridUtils;
 

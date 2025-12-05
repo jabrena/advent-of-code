@@ -33,7 +33,7 @@ public final class RaceCondition {
         int[] endPosition = new int[]{point2.y(), point2.x()};
 
         List<String> path = findPath(grid, startPosition, endPosition);
-        if (path.size() == 0) {
+        if (path.isEmpty()) {
             return 0;
         }
         int pathSize = path.size();
@@ -130,7 +130,7 @@ public final class RaceCondition {
             }
         }
 
-        return paths.get(asKey(endPosition)).size() > 0 ? paths.get(asKey(endPosition)) : List.of();
+        return !paths.get(asKey(endPosition)).isEmpty() ? paths.get(asKey(endPosition)) : List.of();
     }
 
     /**

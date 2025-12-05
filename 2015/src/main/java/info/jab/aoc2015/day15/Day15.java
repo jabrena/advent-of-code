@@ -105,7 +105,10 @@ public class Day15 {
     }
     
     private long calculateScore(List<Ingredient> ingredients, int[] amounts) {
-        long capacity = 0, durability = 0, flavor = 0, texture = 0;
+        long capacity = 0;
+        long durability = 0;
+        long flavor = 0;
+        long texture = 0;
         
         for (int i = 0; i < ingredients.size(); i++) {
             Ingredient ingredient = ingredients.get(i);

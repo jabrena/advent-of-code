@@ -24,12 +24,10 @@ class Day4 implements Day<Long> {
             .filter(c -> !c.isBlank() && !c.equals(" "))
             .toList();
 
-        int matches = Arrays.stream(numbers[1].split(" "))
+        return Arrays.stream(numbers[1].split(" "))
             .filter(winningNumbers::contains)
             .mapToInt(s -> 1)
             .sum();
-
-        return matches;
     };
 
     @Override

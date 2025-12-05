@@ -2,12 +2,7 @@ package info.jab.aoc2024.day8;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-import java.util.Arrays;
-
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Disabled;
-
-import com.putoet.resources.ResourceLines;
 
 class Day8Test {
 

@@ -30,7 +30,8 @@ public class WarehouseWoes {
         int cols = warehouse[0].length;
 
         // Find robot's initial position
-        int robotRow = -1, robotCol = -1;
+        int robotRow = -1;
+        int robotCol = -1;
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 if (warehouse[r][c] == '@') {

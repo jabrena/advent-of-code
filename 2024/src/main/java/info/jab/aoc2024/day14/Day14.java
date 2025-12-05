@@ -2,11 +2,6 @@ package info.jab.aoc2024.day14;
 
 import info.jab.aoc.Day3;
 
-import java.util.List;
-import java.util.ArrayList;
-
-import com.putoet.resources.ResourceLines;
-
 /**
  * https://adventofcode.com/2024/day/14
  *

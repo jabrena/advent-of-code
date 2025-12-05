@@ -27,12 +27,12 @@ import org.openjdk.jmh.annotations.Warmup;
 public class AlternativesBenchmark2Test {
 
     @Setup(Level.Invocation)
-    public void setupInvokation() throws Exception {
+    public void setupInvokation() {
         // executed before each invocation of the benchmark
     }
 
     @Setup(Level.Iteration)
-    public void setupIteration() throws Exception {
+    public void setupIteration() {
         // executed before each invocation of the iteration
     }
 
@@ -42,7 +42,7 @@ public class AlternativesBenchmark2Test {
     @Warmup(batchSize = -1, iterations = 3, time = 10, timeUnit = TimeUnit.MILLISECONDS)
     @Measurement(batchSize = -1, iterations = 10, time = 10, timeUnit = TimeUnit.MILLISECONDS)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
-    public void test() throws Exception {
+    public void test() {
         HistorianHysteria historianHysteria = new HistorianHysteria();
         String fileName = "/day1/day1-input.txt";
         historianHysteria.loadFle.andThen(historianHysteria.splitInto2Lists).apply(fileName);
@@ -54,14 +54,14 @@ public class AlternativesBenchmark2Test {
     @Warmup(batchSize = -1, iterations = 3, time = 10, timeUnit = TimeUnit.MILLISECONDS)
     @Measurement(batchSize = -1, iterations = 10, time = 10, timeUnit = TimeUnit.MILLISECONDS)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
-    public void test2() throws Exception {
+    public void test2() {
         HistorianHysteria historianHysteria = new HistorianHysteria();
         String fileName = "/day1/day1-input.txt";
         historianHysteria.loadFle.andThen(historianHysteria.splitInto2Lists2).apply(fileName);
     }
 
     @Test
-    public void benchmark() throws Exception {
+    public void benchmark() {
         String[] argv = {};
         assertDoesNotThrow(() -> org.openjdk.jmh.Main.main(argv));
     }
