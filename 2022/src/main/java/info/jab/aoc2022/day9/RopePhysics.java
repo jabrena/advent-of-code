@@ -6,21 +6,21 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 class RopePhysics {
 
-    private Boolean[][] cellsH;
-    private Boolean[][] cellsT;
-    private Boolean[][] cellsS;
+    private boolean[][] cellsH;
+    private boolean[][] cellsT;
+    private boolean[][] cellsS;
 
-    private Boolean[][] cellsVisited;
+    private boolean[][] cellsVisited;
     private Integer currentHX = 0;
     private Integer currentHY = 0;
     private Integer currentTX = 0;
     private Integer currentTY = 0;
 
     public void create(Integer noOfColumns, Integer noOfRows) {
-        cellsH = new Boolean[noOfRows][noOfColumns];
-        cellsT = new Boolean[noOfRows][noOfColumns];
-        cellsS = new Boolean[noOfRows][noOfColumns];
-        cellsVisited = new Boolean[noOfRows][noOfColumns];
+        cellsH = new boolean[noOfRows][noOfColumns];
+        cellsT = new boolean[noOfRows][noOfColumns];
+        cellsS = new boolean[noOfRows][noOfColumns];
+        cellsVisited = new boolean[noOfRows][noOfColumns];
         for (int y = 0; y < cellsH.length; y++) {
             for (int x = 0; x < cellsH[0].length; x++) {
                 cellsH[y][x] = false;
@@ -97,7 +97,7 @@ class RopePhysics {
      * THT
      * TTT
      */
-    private Boolean checkDistanceTwithH() {
+    private boolean checkDistanceTwithH() {
         // @formatter:off
         if (Math.abs(this.currentHX - this.currentTX) > 1
             || Math.abs(this.currentHY - this.currentTY) > 1) {
@@ -110,7 +110,6 @@ class RopePhysics {
     private void moveH(Direction direction) {
         //Begin Transaction
         //Update every field in current
-        boolean previousVisited = false;
         this.cellsH[this.currentHY][this.currentHX] = false;
 
         //Update HEAD to the new cell
@@ -172,7 +171,7 @@ class RopePhysics {
         //End Transaction
     }
 
-    public Boolean[][] getCellsVisited() {
+    public boolean[][] getCellsVisited() {
         return cellsVisited;
     }
 }

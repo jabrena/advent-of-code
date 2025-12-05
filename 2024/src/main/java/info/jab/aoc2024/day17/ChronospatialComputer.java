@@ -9,7 +9,9 @@ import java.util.List;
  */
 public class ChronospatialComputer {
     // Registers
-    private int A, B, C;
+    private int a;
+    private int b;
+    private int c;
     private final List<Integer> opcodes;
     private int instructionPointer;
     private final List<Integer> output;
@@ -21,9 +23,9 @@ public class ChronospatialComputer {
                                    .toList();
 
         // Parse registers
-        int A = Integer.parseInt(lines.get(0).split(": ")[1]);
-        int B = Integer.parseInt(lines.get(1).split(": ")[1]);
-        int C = Integer.parseInt(lines.get(2).split(": ")[1]);
+        int a = Integer.parseInt(lines.get(0).split(": ")[1]);
+        int b = Integer.parseInt(lines.get(1).split(": ")[1]);
+        int c = Integer.parseInt(lines.get(2).split(": ")[1]);
 
         // Parse program
         String programLine = lines.get(3).split(": ")[1];
@@ -31,13 +33,13 @@ public class ChronospatialComputer {
                                       .map(Integer::parseInt)
                                       .toList();
 
-        return new ChronospatialComputer(A, B, C, opcodes);
+        return new ChronospatialComputer(a, b, c, opcodes);
     }
 
-    public ChronospatialComputer(int A, int B, int C, List<Integer> opcodes) {
-        this.A = A;
-        this.B = B;
-        this.C = C;
+    public ChronospatialComputer(int a, int b, int c, List<Integer> opcodes) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
         this.opcodes = opcodes;
 
         this.instructionPointer = 0;
@@ -62,7 +64,7 @@ public class ChronospatialComputer {
                 default -> throw new IllegalArgumentException("Invalid opcode: " + opcode);
             }
 
-            if (opcode != 3 || A == 0) {
+            if (opcode != 3 || a == 0) {
                 instructionPointer += 2;
             }
         }
@@ -71,34 +73,34 @@ public class ChronospatialComputer {
     private int getComboOperandValue(int operand) {
         return switch (operand) {
             case 0, 1, 2, 3 -> operand;
-            case 4 -> A;
-            case 5 -> B;
-            case 6 -> C;
+            case 4 -> a;
+            case 5 -> b;
+            case 6 -> c;
             default -> throw new IllegalArgumentException("Invalid combo operand: " + operand);
         };
     }
 
     private void adv(int operand) {
         int denominator = (int) Math.pow(2, getComboOperandValue(operand));
-        A = A / denominator;
+        a = a / denominator;
     }
 
     private void bxl(int operand) {
-        B = B ^ operand;
+        b = b ^ operand;
     }
 
     private void bst(int operand) {
-        B = getComboOperandValue(operand) % 8;
+        b = getComboOperandValue(operand) % 8;
     }
 
     private void jnz(int operand) {
-        if (A != 0) {
+        if (a != 0) {
             instructionPointer = operand;
         }
     }
 
     private void bxc() {
-        B = B ^ C;
+        b = b ^ c;
     }
 
     private void out(int operand) {
@@ -107,12 +109,12 @@ public class ChronospatialComputer {
 
     private void bdv(int operand) {
         int denominator = (int) Math.pow(2, getComboOperandValue(operand));
-        B = A / denominator;
+        b = a / denominator;
     }
 
     private void cdv(int operand) {
         int denominator = (int) Math.pow(2, getComboOperandValue(operand));
-        C = A / denominator;
+        c = a / denominator;
     }
 
     public String getOutput() {

@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 public class AdventCoinMiner {
 
-    public int findLowestNumber(String secretKey, Boolean isPart1) {
+    public int findLowestNumber(String secretKey, boolean isPart1) {
         try {
             // Suppressed: MD5 is required for Advent of Code challenge
             @SuppressWarnings("java:S4790")

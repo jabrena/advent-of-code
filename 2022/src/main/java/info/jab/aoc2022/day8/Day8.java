@@ -14,7 +14,7 @@ public class Day8 implements Day<Integer> {
         BOTTON,
     }
 
-    record Tuple(Boolean isVisible, Integer distance) {}
+    record Tuple(boolean isVisible, Integer distance) {}
 
     private Tuple getDistanceAndVisibility(Integer[][] grid, int i, int j, Edge edge) {
         int treeHeight = grid[i][j];
@@ -53,7 +53,7 @@ public class Day8 implements Day<Integer> {
     }
 
     // @formatter:off
-    private Boolean isVisibleFromOutside(Integer[][] grid, Integer i, Integer j) {
+    private boolean isVisibleFromOutside(Integer[][] grid, Integer i, Integer j) {
         return (getDistanceAndVisibility(grid, i, j, Edge.LEFT).isVisible()
             || getDistanceAndVisibility(grid, i, j, Edge.RIGHT).isVisible()
             || getDistanceAndVisibility(grid, i, j, Edge.TOP).isVisible()

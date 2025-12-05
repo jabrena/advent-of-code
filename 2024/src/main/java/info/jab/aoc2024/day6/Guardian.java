@@ -80,7 +80,7 @@ public class Guardian {
 
             iterations ++;
 
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException _) {
             exitState = true;
         }
     }

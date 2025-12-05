@@ -127,14 +127,13 @@ class KeypadConundrum2 {
             // Check if the endpoint has been reached.
             if (state.pos().equals(end)) {
                 paths.add(state.path());
-                continue;
-            }
-
-            // Explore neighboring positions.
-            for (Direction direction : Direction.values()) {
-                Point n = direction.move(state.pos());
-                if (validPositions.contains(n)) {
-                    queue.add(new State(n, state.path() + direction.toChar()));
+            } else {
+                // Explore neighboring positions.
+                for (Direction direction : Direction.values()) {
+                    Point n = direction.move(state.pos());
+                    if (validPositions.contains(n)) {
+                        queue.add(new State(n, state.path() + direction.toChar()));
+                    }
                 }
             }
         }

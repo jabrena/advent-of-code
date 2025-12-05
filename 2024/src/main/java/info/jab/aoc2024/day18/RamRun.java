@@ -116,7 +116,7 @@ public class RamRun {
         return grid;
     }
 
-    public String solve1(String fileName, Integer gridSize, Integer limit, Boolean debug) {
+    public String solve1(String fileName, Integer gridSize, Integer limit, boolean debug) {
         // Input: list of corrupted coordinates
         int[][] corruptedCoordinates = getInputData(fileName);
 
@@ -146,7 +146,7 @@ public class RamRun {
     }
 
     //TODO Use the method solve1 inside of solve2 directly
-    public String solve2(String fileName, Integer gridSize, Integer limit, Boolean debug) {
+    public String solve2(String fileName, Integer gridSize, Integer limit, boolean debug) {
         // Input: list of corrupted coordinates
         int[][] corruptedCoordinates = getInputData(fileName);
 

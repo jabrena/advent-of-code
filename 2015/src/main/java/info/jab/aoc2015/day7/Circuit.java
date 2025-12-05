@@ -44,7 +44,7 @@ public class Circuit implements Solver<Integer> {
                 setWireValue(instruction.output(), result);
                 return true;
             }
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException _) {
             return false;
         }
     }
@@ -52,7 +52,7 @@ public class Circuit implements Solver<Integer> {
     private int getValue(String input) {
         try {
             return Integer.parseInt(input);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException _) {
             Wire wire = wires.get(input);
             if (wire != null && wire.hasSignal()) {
                 return wire.getSignal();

@@ -83,7 +83,7 @@ public class AssembunnyInterpreter implements Solver<Integer> {
     private int getValue(String source, Map<String, Integer> registers) {
         try {
             return Integer.parseInt(source);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException _) {
             return registers.get(source);
         }
     }

@@ -107,30 +107,23 @@ public final class InvalidIdValidator implements Solver<Long> {
 
         // Try all possible part lengths from 1 to length/2
         for (int partLength = 1; partLength <= length / 2; partLength++) {
-            // Check if length is divisible by partLength
-            if (length % partLength != 0) {
-                continue;
-            }
-
+            // Check if length is divisible by partLength and we have at least 2 parts
             final int numParts = length / partLength;
-            // Need at least 2 parts
-            if (numParts < 2) {
-                continue;
-            }
+            if (length % partLength == 0 && numParts >= 2) {
+                final String firstPart = idStr.substring(0, partLength);
+                boolean allPartsEqual = true;
 
-            final String firstPart = idStr.substring(0, partLength);
-            boolean allPartsEqual = true;
-
-            for (int i = 1; i < numParts; i++) {
-                final String part = idStr.substring(i * partLength, (i + 1) * partLength);
-                if (!part.equals(firstPart)) {
-                    allPartsEqual = false;
-                    break;
+                for (int i = 1; i < numParts; i++) {
+                    final String part = idStr.substring(i * partLength, (i + 1) * partLength);
+                    if (!part.equals(firstPart)) {
+                        allPartsEqual = false;
+                        break;
+                    }
                 }
-            }
 
-            if (allPartsEqual) {
-                return true;
+                if (allPartsEqual) {
+                    return true;
+                }
             }
         }
 

@@ -190,15 +190,10 @@ public class Day15Old {
             for (var x = 0; x < matrix[0].length; x++) {
                 if (matrix[y][x] == null) {
                     System.out.print(".");
-                    continue;
-                }
-                if (matrix[y][x].equals("B")) {
+                } else if (matrix[y][x].equals("B")) {
                     System.out.print("B");
-                    continue;
-                }
-                if (matrix[y][x].equals("S")) {
+                } else if (matrix[y][x].equals("S")) {
                     System.out.print("S");
-                    continue;
                 }
             }
             System.out.println();

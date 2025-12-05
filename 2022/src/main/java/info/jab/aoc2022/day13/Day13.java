@@ -19,14 +19,10 @@ public class Day13 implements Day<Integer> {
             char c = charArray[i];
             if (c == ',') {
                 i++;
-                continue;
-            }
-            if (c == '[') {
+            } else if (c == '[') {
                 stack.addLast(new ArrayList<>());
                 i++;
-                continue;
-            }
-            if (c == ']') {
+            } else if (c == ']') {
                 List<Object> stackTop = stack.removeLast();
                 if (!stack.isEmpty()) {
                     stack.getLast().add(stackTop);
@@ -34,18 +30,18 @@ public class Day13 implements Day<Integer> {
                     list.add(stackTop);
                 }
                 i++;
-                continue;
-            }
-            StringBuilder numStr = new StringBuilder();
-            while (i < charArray.length - 1 && Character.isDigit(charArray[i])) {
-                numStr.append(charArray[i]);
-                i++;
-            }
-            Integer num = Integer.parseInt(numStr.toString());
-            if (!stack.isEmpty()) {
-                stack.getLast().add(num);
             } else {
-                list.add(num);
+                StringBuilder numStr = new StringBuilder();
+                while (i < charArray.length - 1 && Character.isDigit(charArray[i])) {
+                    numStr.append(charArray[i]);
+                    i++;
+                }
+                Integer num = Integer.parseInt(numStr.toString());
+                if (!stack.isEmpty()) {
+                    stack.getLast().add(num);
+                } else {
+                    list.add(num);
+                }
             }
         }
         return list;
@@ -61,8 +57,8 @@ public class Day13 implements Day<Integer> {
     }
 
     private int compare(Object left, Object right) {
-        if (left instanceof Integer && right instanceof Integer) {
-            return Integer.compare((Integer) left, (Integer) right) * -1;
+        if (left instanceof Integer leftInt && right instanceof Integer rightInt) {
+            return Integer.compare(leftInt, rightInt) * -1;
         }
         if (left instanceof Integer) {
             return compare(List.of(left), right);
