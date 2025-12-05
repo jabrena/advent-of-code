@@ -26,7 +26,7 @@ class Day4 implements Day<Long> {
             .collect(Collectors.toList());
 
         int matches = Arrays.stream(numbers[1].split(" "))
-            .filter(base -> winningNumbers.contains(base))
+            .filter(winningNumbers::contains)
             .mapToInt(s -> 1)
             .sum();
 

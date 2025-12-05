@@ -39,7 +39,7 @@ final class InstructionUtils {
     static Optional<Integer> parseInteger(String str) {
         try {
             return Optional.of(Integer.parseInt(str));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException _) {
             return Optional.empty();
         }
     }

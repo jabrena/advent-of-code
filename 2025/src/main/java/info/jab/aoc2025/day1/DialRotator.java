@@ -1,8 +1,6 @@
 package info.jab.aoc2025.day1;
 
 import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import info.jab.aoc.Solver;
 import com.putoet.resources.ResourceLines;

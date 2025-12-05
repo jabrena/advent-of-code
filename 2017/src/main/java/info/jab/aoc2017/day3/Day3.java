@@ -43,7 +43,8 @@ public class Day3 implements Day<Integer> {
         // Left side: (-ring, ring-1-offset) to (-ring, -ring+1)
         // Bottom side: (-ring+1+offset, -ring) to (ring-1, -ring)
         
-        int x, y;
+        int x;
+        int y;
         switch (side) {
             case 0: // Right side
                 x = ring;
@@ -84,7 +85,6 @@ public class Day3 implements Day<Integer> {
         
         // Generate spiral pattern and calculate values
         int ring = 1;
-        int currentSquare = 2;
         
         while (true) {
             int sideLength = 2 * ring;
@@ -92,7 +92,8 @@ public class Day3 implements Day<Integer> {
             // Generate all squares in this ring
             for (int side = 0; side < 4; side++) {
                 for (int offset = 0; offset < sideLength; offset++) {
-                    int x, y;
+                    int x;
+                    int y;
                     switch (side) {
                         case 0: // Right side
                             x = ring;
@@ -132,8 +133,6 @@ public class Day3 implements Day<Integer> {
                     if (sum > target) {
                         return sum;
                     }
-                    
-                    currentSquare++;
                 }
             }
             

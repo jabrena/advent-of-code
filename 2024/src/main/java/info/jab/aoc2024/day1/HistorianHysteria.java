@@ -17,7 +17,7 @@ class HistorianHysteria implements Solver<Integer> {
     private static final String SEPARATOR = "\\s+";
     private static final Pattern SEPARATOR_PATTERN = Pattern.compile(SEPARATOR);
 
-    Function<String, List<String>> loadFle = fileName -> ResourceLines.list(fileName);
+    Function<String, List<String>> loadFle = ResourceLines::list;
 
     private record ListSplitted(List<Integer> listLeft, List<Integer> listRight) {}
 
@@ -42,7 +42,7 @@ class HistorianHysteria implements Solver<Integer> {
         var result = lines.stream()
             .collect(
                 // Supplier: Initialize a ListSplitted with two empty lists
-                () -> new ListSplitted(new ArrayList<Integer>(), new ArrayList<Integer>()),
+                () -> new ListSplitted(new ArrayList<>(), new ArrayList<>()),
                 // Accumulator: Split lines and add to respective lists
                 (ListSplitted accumulator, String line) -> {
                     String[] parts = SEPARATOR_PATTERN.split(line);
@@ -62,29 +62,23 @@ class HistorianHysteria implements Solver<Integer> {
         );
     };
 
-    Function<ListSplitted, Integer> calculateDistance = parameter -> {
-        return IntStream.range(0, parameter.listLeft().size())
+    Function<ListSplitted, Integer> calculateDistance = parameter -> IntStream.range(0, parameter.listLeft().size())
             .map(i -> {
                 int param1 = parameter.listLeft().get(i);
                 int param2 = parameter.listRight().get(i);
                 return Math.abs(param1 - param2);
             })
             .sum();
-    };
 
-    BiFunction<Integer, List<Integer>, Integer> countOccurrences = (param1, param2) -> {
-        return (int) param2.stream().filter(number -> number.equals(param1)).count();
-    };
+    BiFunction<Integer, List<Integer>, Integer> countOccurrences = (param1, param2) -> (int) param2.stream().filter(number -> number.equals(param1)).count();
 
-    Function<ListSplitted, Integer> calculateOcurrences = parameter -> {
-        return IntStream.range(0, parameter.listLeft().size())
+    Function<ListSplitted, Integer> calculateOcurrences = parameter -> IntStream.range(0, parameter.listLeft().size())
             .map(i -> {
                 int param1 = parameter.listLeft().get(i);
                 int param2 = countOccurrences.apply(param1, parameter.listRight());
                 return param1 * param2;
             })
             .sum();
-    };
 
     @Override
     public Integer solvePartOne(String fileName) {

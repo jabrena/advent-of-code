@@ -3,7 +3,6 @@ package info.jab.aoc2015.day21;
 import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Day21 implements Day<Integer> {

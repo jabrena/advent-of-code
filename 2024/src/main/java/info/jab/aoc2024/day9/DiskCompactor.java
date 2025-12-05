@@ -55,7 +55,7 @@ public class DiskCompactor implements Solver<Long> {
             .sum();
 
     public long computeChecksum(String input, boolean isPart2) {
-        int[] parts = input.chars().map(c -> Character.getNumericValue(c)).toArray();
+        int[] parts = input.chars().map(Character::getNumericValue).toArray();
         int totalBlocks = IntStream.of(parts).sum();
 
         if (!isPart2) {
@@ -81,7 +81,7 @@ public class DiskCompactor implements Solver<Long> {
             // Reassign files to gaps
             IntStream.iterate(parts.length / 2, fileId -> fileId - 1)
                     .limit(parts.length / 2 + 1)
-                    .filter(fileId -> starting.containsKey(fileId))
+                    .filter(starting::containsKey)
                     .forEach(fileId -> {
                         int fileSize = starting.get(fileId)[1];
 

@@ -51,10 +51,8 @@ public class AntennaMap {
     }
 
     //Predicate to know if a Point is inside of Grid
-    Predicate<Point> isInsideOfGrid = point -> {
-        return  point.x() >= 0 && point.x() < grid.maxX() &&
+    Predicate<Point> isInsideOfGrid = point -> point.x() >= 0 && point.x() < grid.maxX() &&
                 point.y() >= 0 && point.y() < grid.maxY();
-    };
 
     //https://javadoc.io/doc/com.google.guava/guava/latest/com/google/common/collect/Sets.html
     public Long countAntinodes() {

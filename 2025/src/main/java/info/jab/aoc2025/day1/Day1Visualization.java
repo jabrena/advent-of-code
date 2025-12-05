@@ -142,7 +142,7 @@ public class Day1Visualization extends Application {
         // Draw circle
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(2);
-        gc.strokeOval(CENTER_X - RADIUS, CENTER_Y - RADIUS, RADIUS * 2, RADIUS * 2);
+        gc.strokeOval((double) CENTER_X - RADIUS, (double) CENTER_Y - RADIUS, (double) RADIUS * 2, (double) RADIUS * 2);
 
         // Draw numbers and markers
         gc.setFill(Color.BLACK);
@@ -185,11 +185,11 @@ public class Day1Visualization extends Application {
 
         // Draw dial center circle
         gc.setFill(Color.BLUE);
-        gc.fillOval(CENTER_X - DIAL_RADIUS, CENTER_Y - DIAL_RADIUS,
-                    DIAL_RADIUS * 2, DIAL_RADIUS * 2);
+        gc.fillOval((double) CENTER_X - DIAL_RADIUS, (double) CENTER_Y - DIAL_RADIUS,
+                    (double) DIAL_RADIUS * 2, (double) DIAL_RADIUS * 2);
         gc.setFill(Color.WHITE);
-        gc.fillOval(CENTER_X - DIAL_RADIUS / 2, CENTER_Y - DIAL_RADIUS / 2,
-                    DIAL_RADIUS, DIAL_RADIUS);
+        gc.fillOval((double) CENTER_X - DIAL_RADIUS / 2, (double) CENTER_Y - DIAL_RADIUS / 2,
+                    (double) DIAL_RADIUS, (double) DIAL_RADIUS);
     }
 
     private double getTextWidth(GraphicsContext gc, String text) {
