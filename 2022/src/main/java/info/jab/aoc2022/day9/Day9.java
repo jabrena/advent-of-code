@@ -2,7 +2,6 @@ package info.jab.aoc2022.day9;
 
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
-import java.util.Arrays;
 
 public class Day9 implements Day<Long> {
 

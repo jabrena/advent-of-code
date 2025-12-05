@@ -2,7 +2,6 @@ package com.putoet.grid;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
 /**
