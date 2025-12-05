@@ -20,6 +20,10 @@
             <artifactId>commons</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.putoet</groupId>
+            <artifactId>aoc</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
             <scope>test</scope>
