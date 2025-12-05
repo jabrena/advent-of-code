@@ -106,7 +106,7 @@ public final class RangeVisualization extends Application {
             maxValue = maxRange;
         }
 
-        scaleX = (CANVAS_WIDTH - TIMELINE_OFFSET * 2) / (double) (maxValue - minValue);
+        scaleX = (CANVAS_WIDTH - TIMELINE_OFFSET * 2) / (maxValue - minValue);
     }
 
     private void initializePart2Data(final Input input) {
@@ -750,11 +750,7 @@ public final class RangeVisualization extends Application {
                 .reduce(
                         initialState,
                         (state, i) -> state.next(sortedRanges),
-                        (s1, s2) -> {
-                            // Combiner only used for parallel streams (not applicable here)
-                            // Return the state with higher index (more progress)
-                            return s2.index() > s1.index() ? s2 : s1;
-                        }
+                        (s1, s2) -> s2.index() > s1.index() ? s2 : s1
                 );
         return finalState.complete();
     }

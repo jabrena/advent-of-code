@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import java.util.ArrayList;
 
 class Day15Test {
 
@@ -90,8 +89,8 @@ class Day15Test {
         // Then all properties should be correctly parsed
         assertThat(ingredient.name()).isEqualTo("Sugar");
         assertThat(ingredient.capacity()).isEqualTo(3);
-        assertThat(ingredient.durability()).isEqualTo(0);
-        assertThat(ingredient.flavor()).isEqualTo(0);
+        assertThat(ingredient.durability()).isZero();
+        assertThat(ingredient.flavor()).isZero();
         assertThat(ingredient.texture()).isEqualTo(-3);
         assertThat(ingredient.calories()).isEqualTo(2);
     }

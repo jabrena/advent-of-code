@@ -188,8 +188,8 @@ public class Day1Visualization extends Application {
         gc.fillOval((double) CENTER_X - DIAL_RADIUS, (double) CENTER_Y - DIAL_RADIUS,
                     (double) DIAL_RADIUS * 2, (double) DIAL_RADIUS * 2);
         gc.setFill(Color.WHITE);
-        gc.fillOval((double) CENTER_X - DIAL_RADIUS / 2, (double) CENTER_Y - DIAL_RADIUS / 2,
-                    (double) DIAL_RADIUS, (double) DIAL_RADIUS);
+        gc.fillOval((double) CENTER_X - (double) DIAL_RADIUS / 2, (double) CENTER_Y - (double) DIAL_RADIUS / 2,
+                    DIAL_RADIUS, DIAL_RADIUS);
     }
 
     private double getTextWidth(GraphicsContext gc, String text) {
@@ -223,7 +223,7 @@ public class Day1Visualization extends Application {
             currentRotationIndex++;
             updateLabels();
             drawDial(dialCanvas.getGraphicsContext2D());
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException _) {
             // Skip invalid rotations
             currentRotationIndex++;
         }
@@ -276,7 +276,7 @@ public class Day1Visualization extends Application {
             alert.setHeaderText(null);
             alert.setContentText(message);
             alert.showAndWait();
-        } catch (Exception e) {
+        } catch (Exception _) {
             // Fallback to console if JavaFX Alert is not available
             System.err.println("Error: " + message);
             // Suppressed: This is a visualization tool for debugging purposes

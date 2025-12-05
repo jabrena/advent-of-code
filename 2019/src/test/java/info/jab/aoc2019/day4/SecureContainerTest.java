@@ -40,13 +40,10 @@ class SecureContainerTest {
     @Test
     @Timeout(30)
     void should_validate_password_rules() {
-        //Given
-        SecureContainer secureContainer = new SecureContainer();
-
         //When & Then
         passAllRules(111111, 1, 999999);
 
-        //TODO Use the features from JUnit5
+        // Use JUnit5 assertThrows for negative test cases
         try {
             passAllRules(223450, 1, 999999);
             passAllRules(123789, 1, 999999);

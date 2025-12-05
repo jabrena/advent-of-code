@@ -2,7 +2,6 @@ package info.jab.aoc2016.day1;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Disabled;
 
 class Day1Test {
 
@@ -21,7 +20,6 @@ class Day1Test {
         var day = new Day1();
         
         // Test with part 2 example: R8, R4, R4, R8 should give 4
-        var lines = java.util.List.of("R8, R4, R4, R8");
         var result = day.calculateFirstRevisitedDistance("R8, R4, R4, R8");
         then(result).isEqualTo(4);
     }
