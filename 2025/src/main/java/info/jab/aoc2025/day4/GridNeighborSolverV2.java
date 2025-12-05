@@ -109,15 +109,13 @@ public final class GridNeighborSolverV2 implements Solver<Integer> {
                         }
                 )
                 .reduce((first, second) -> second)
-                .map(state -> {
-                    // Stream.iterate stops when the predicate becomes false, which means
-                    // the last state in the stream has cellsToRemove that were removed
-                    // in the 'next' function when generating the following state (with empty cellsToRemove).
-                    // That following state's totalRemoved includes the count, but it's not in the stream.
-                    // Therefore, we need to add state.cellsToRemove().size() to account for
-                    // the cells removed in the final iteration.
-                    return state.totalRemoved() + state.cellsToRemove().size();
-                })
+                // Stream.iterate stops when the predicate becomes false, which means
+                // the last state in the stream has cellsToRemove that were removed
+                // in the 'next' function when generating the following state (with empty cellsToRemove).
+                // That following state's totalRemoved includes the count, but it's not in the stream.
+                // Therefore, we need to add state.cellsToRemove().size() to account for
+                // the cells removed in the final iteration.
+                .map(state -> state.totalRemoved() + state.cellsToRemove().size())
                 .orElse(0);
     }
 

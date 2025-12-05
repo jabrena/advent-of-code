@@ -3,7 +3,6 @@ package com.putoet.resources;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -39,7 +38,7 @@ public class CSV {
      */
     public static List<List<String>> list(String resourceName, String regex) {
         return stream(resourceName, regex)
-                .map(stream -> stream.toList())
+                .map(Stream::toList)
                 .toList();
     }
 

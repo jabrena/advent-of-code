@@ -40,9 +40,7 @@ public class SafeReports implements Solver<Integer> {
         return isMonotonic2(numbers, (a, b) -> a < b);
     }
 
-    Predicate<List<Integer>> isSafePart1 = param -> {
-        return isDecreasing(param) || isIncreasing(param);
-    };
+    Predicate<List<Integer>> isSafePart1 = param -> isDecreasing(param) || isIncreasing(param);
 
     Function<String, List<Integer>> toList = param ->
         Arrays.asList(param.split(" ")).stream().map(Integer::parseInt).toList();

@@ -31,9 +31,9 @@ public class MullItOver2 implements Solver<Integer> {
     public Integer solvePartOne1(String fileName) {
         var input = ResourceLines.list(fileName);
         return input.stream()
-                .flatMap(line -> parseLine(line))
-                .filter(instruction -> instruction instanceof Mul)
-                .map(instruction -> (Mul) instruction)
+                .flatMap(this::parseLine)
+                .filter(Mul.class::isInstance)
+                .map(Mul.class::cast)
                 .mapToInt(mul -> mul.m() * mul.n())
                 .sum();
     }
@@ -70,7 +70,7 @@ public class MullItOver2 implements Solver<Integer> {
     public Integer solvePartTwo(String fileName) {
         var input = ResourceLines.list(fileName);
         return (int) input.stream()
-                .flatMap(line -> parseLine(line))
+                .flatMap(this::parseLine)
                 .gather(Gatherers.fold(
                         () -> new Acc(true, 0),
                         (acc, instruction) ->

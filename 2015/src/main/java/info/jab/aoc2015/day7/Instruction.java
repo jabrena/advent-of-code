@@ -1,8 +1,5 @@
 package info.jab.aoc2015.day7;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public record Instruction(String input1, String operation, String input2, String output) {
     
     private static final String LSHIFT_OPERATION = "LSHIFT";

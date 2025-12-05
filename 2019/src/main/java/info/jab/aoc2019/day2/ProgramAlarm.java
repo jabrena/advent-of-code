@@ -3,7 +3,6 @@ package info.jab.aoc2019.day2;
 import com.putoet.resources.ResourceLines;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * https://adventofcode.com/2019/day/2

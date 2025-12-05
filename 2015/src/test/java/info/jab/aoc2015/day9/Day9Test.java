@@ -2,8 +2,6 @@ package info.jab.aoc2015.day9;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-import java.util.Arrays;
-
 import org.junit.jupiter.api.Test;
 
 class Day9Test {
