@@ -7,7 +7,7 @@ import org.openjdk.jmh.annotations.State;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class AlternativeTest {
+public class AlternativeTest { //NOSONAR java:S5786 - JMH @State annotation requires public class
 
     @State(Scope.Thread)
     public static class St {

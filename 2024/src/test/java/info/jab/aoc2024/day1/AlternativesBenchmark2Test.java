@@ -24,7 +24,7 @@ import org.openjdk.jmh.annotations.Warmup;
 @Disabled
 @State(Scope.Thread)
 @Threads(1)
-public class AlternativesBenchmark2Test {
+public class AlternativesBenchmark2Test { //NOSONAR java:S5786 - JMH @State annotation requires public class
 
     @Setup(Level.Invocation)
     public void setupInvokation() {
