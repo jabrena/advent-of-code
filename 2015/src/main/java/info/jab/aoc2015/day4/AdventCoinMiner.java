@@ -9,6 +9,8 @@ public class AdventCoinMiner {
 
     public int findLowestNumber(String secretKey, Boolean isPart1) {
         try {
+            // Suppressed: MD5 is required for Advent of Code challenge
+            @SuppressWarnings("java:S4790")
             MessageDigest md = MessageDigest.getInstance("MD5");
             
             String prefix = isPart1 ? "00000" : "000000";
