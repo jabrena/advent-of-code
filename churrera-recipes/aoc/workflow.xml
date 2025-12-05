@@ -6,8 +6,6 @@
         model="gemini-3-pro" repository="https://github.com/jabrena/advent-of-code"
         timeout="30m" fallback-src="999-fallback.xml">
 
-        <prompt src="1-pml-java25-installation.xml" />
-        <prompt src="2-pml-jbang-aoc-cli-installation.xml" />
-        <prompt src="3-pml-aoc-tdd-solver-v2.xml" /> <!-- TDD Part 1 y 2-->
+        <prompt src="1-pml-aoc-tdd-solver-v3.xml" /> <!-- TDD Part 1 y 2-->
     </sequence>
 </pml-workflow>
