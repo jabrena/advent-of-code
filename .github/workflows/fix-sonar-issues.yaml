@@ -17,6 +17,8 @@ on:
         options:
           - blocker
           - critical
+          - major
+          - minor
 
 jobs:
   fix-sonar-issues-agent:
@@ -64,3 +66,19 @@ jobs:
         run: |
           jbang trust add https://github.com/jabrena/
           jbang churrera@jabrena run --workflow churrera-recipes/fix-sonar-critical-issues/workflow.xml --show-logs --delete-on-success-completion
+
+      - name: Execute Cursor Cloud Agent about fix Sonar Major issues
+        if: inputs.issue_type == 'issues' && inputs.severity == 'major'
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+        run: |
+          jbang trust add https://github.com/jabrena/
+          jbang churrera@jabrena run --workflow churrera-recipes/fix-sonar-major-issues/workflow.xml --show-logs --delete-on-success-completion
+
+      - name: Execute Cursor Cloud Agent about fix Sonar Minor issues
+        if: inputs.issue_type == 'issues' && inputs.severity == 'minor'
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+        run: |
+          jbang trust add https://github.com/jabrena/
+          jbang churrera@jabrena run --workflow churrera-recipes/fix-sonar-minor-issues/workflow.xml --show-logs --delete-on-success-completion
