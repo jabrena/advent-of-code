@@ -23,17 +23,13 @@ public class Day10 implements Day<String> {
             if (Instructions.fromValue(split[0]) == Instructions.NOOP) {
                 list.add(new Tuple(cycle, value));
                 cycle++;
-                continue;
-            }
-
-            //Case: addx
-            if (Instructions.fromValue(split[0]) == Instructions.ADDX) {
+            } else if (Instructions.fromValue(split[0]) == Instructions.ADDX) {
+                //Case: addx
                 list.add(new Tuple(cycle, value));
                 cycle++;
                 list.add(new Tuple(cycle, value));
                 cycle++;
                 value += Integer.parseInt(split[1]);
-                continue;
             }
         }
         return list;

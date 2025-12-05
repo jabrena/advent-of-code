@@ -38,23 +38,23 @@ public class ChronospatialComputer2 {
         var loadData = loadData(fileName);
         List<Integer> remainingProgram = new ArrayList<>(loadData.opcodes());
         List<Integer> program = new ArrayList<>();
-        long A = 0L;
+        long accumulator = 0L;
         while (!remainingProgram.isEmpty()) {
-            --A;
+            --accumulator;
             program.addFirst(remainingProgram.removeLast());
             String pString = program.stream().map(Long::toString).collect(Collectors.joining(","));
             Computer computer;
             List<Integer> result2;
             do {
-                ++A;
-                computer = new Computer(A, loadData.b(), loadData.c(), loadData.opcodes());
+                ++accumulator;
+                computer = new Computer(accumulator, loadData.b(), loadData.c(), loadData.opcodes());
                 result2 = computer.execute();
             } while (!computer.print(result2).equals(pString));
             if (!remainingProgram.isEmpty()) {
-                A = A << 3;
+                accumulator = accumulator << 3;
             }
         }
-        return Long.toString(A);
+        return Long.toString(accumulator);
     }
 
     //Second version, more easier to read

@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Computer {
-    private long A;
-    private long B;
-    private long C;
+    private long a;
+    private long b;
+    private long c;
     private final List<Integer> opcodes;
 
     private int ip;
 
     Computer(long registerA, int registerB, int registerC, List<Integer> opcodes) {
-        this.A = registerA;
-        this.B = registerB;
-        this.C = registerC;
+        this.a = registerA;
+        this.b = registerB;
+        this.c = registerC;
         this.opcodes = opcodes;
         this.ip = 0;
     }
@@ -30,27 +30,27 @@ class Computer {
             switch (opcodes.get(ip)) {
                 case 0 -> {
                     long den = (long) Math.pow(2, combOp);
-                    A = A / den;
+                    a = a / den;
                 }
-                case 1 -> B = B ^ ((long) litOp);
-                case 2 -> B = combOp % 8;
+                case 1 -> b = b ^ litOp;
+                case 2 -> b = combOp % 8;
                 case 3 -> {
-                    if (A != 0) {
+                    if (a != 0) {
                         ip = litOp;
                         skipIncrease = true;
                     } else {
                         skipIncrease = false;
                     }
                 }
-                case 4 -> B = B ^ C;
+                case 4 -> b = b ^ c;
                 case 5 -> out.add((int) (combOp % 8L));
                 case 6 -> {
                     long den = (long) Math.pow(2, combOp);
-                    B = A / den;
+                    b = a / den;
                 }
                 case 7 -> {
                     long den = (long) Math.pow(2, combOp);
-                    C = A / den;
+                    c = a / den;
                 }
                 default -> {
                     // Unknown opcode, skip instruction
@@ -67,9 +67,9 @@ class Computer {
     long getComboOperandValue(int value) {
         return switch (value % 8) {
             case 0, 1, 2, 3 -> value;
-            case 4 -> A;
-            case 5 -> B;
-            case 6 -> C;
+            case 4 -> a;
+            case 5 -> b;
+            case 6 -> c;
             default -> throw new IllegalArgumentException("Invalid combo operand: " + value);
         };
     }

@@ -62,7 +62,7 @@ class StringLiteralCalculator implements Solver<Integer> {
 
 
     private String encodeString2(String input) {
-        final Map<Character, String> ENCODING_RULES = Map.of(
+        final Map<Character, String> encodingRules = Map.of(
             '\"', "\\\"",
             '\\', "\\\\"
         );
@@ -70,7 +70,7 @@ class StringLiteralCalculator implements Solver<Integer> {
         return "\"" + 
                input.chars()
                    .mapToObj(c -> (char) c)
-                   .map(c -> ENCODING_RULES.getOrDefault(c, String.valueOf(c)))
+                   .map(c -> encodingRules.getOrDefault(c, String.valueOf(c)))
                    .collect(Collectors.joining()) +
                "\"";
     }

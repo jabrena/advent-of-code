@@ -107,7 +107,7 @@ public final class RaceCondition2 {
     private static char get(List<String> lines, Point p) {
         try {
             return lines.get(p.i).charAt(p.j);
-        } catch (Exception e) {
+        } catch (Exception _) {
             return '\0';
         }
     }

@@ -17,10 +17,16 @@ public class Day9 implements Day<Long> {
                 .map(Movement::fromString)
                 .forEach(ropePhysics::execute);
 
-        return Arrays.stream(ropePhysics.getCellsVisited())
-                .flatMap(Arrays::stream)
-                .filter(v -> v)
-                .count();
+        boolean[][] cellsVisited = ropePhysics.getCellsVisited();
+        long count = 0;
+        for (boolean[] row : cellsVisited) {
+            for (boolean cell : row) {
+                if (cell) {
+                    count++;
+                }
+            }
+        }
+        return count;
         // @formatter:on
     }
 

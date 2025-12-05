@@ -88,9 +88,7 @@ public class LightCounter implements Solver<Long>{
             for (int j = start.y(); j <= end.y(); j++) {
                 switch (command) {
                     case TURN_ON -> grid[i][j]++;
-                    case TURN_OFF -> {
-                        grid[i][j] = grid[i][j] > 0 ? grid[i][j] - 1 : grid[i][j];
-                    }
+                    case TURN_OFF -> grid[i][j] = grid[i][j] > 0 ? grid[i][j] - 1 : grid[i][j];
                     case TOGGLE -> grid[i][j] += 2;
                 }
             }

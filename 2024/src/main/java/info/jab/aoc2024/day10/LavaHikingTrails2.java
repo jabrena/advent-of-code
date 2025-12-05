@@ -46,26 +46,24 @@ public class LavaHikingTrails2 implements Solver<Integer> {
             int height = current[2];
 
             // If we are at a position where the height is not matching, skip it
-            if (map[row][col] - '0' != height) {
-                continue;
-            }
+            if (map[row][col] - '0' == height) {
+                // If height is 9, add this position to the reachable set
+                if (height == 9) {
+                    reachableNines.add(row + "," + col);
+                } else {
+                    // Explore neighboring positions in all four directions
+                    for (int[] direction : getDirections()) {
+                        int newRow = row + direction[0];
+                        int newCol = col + direction[1];
 
-            // If height is 9, add this position to the reachable set
-            if (height == 9) {
-                reachableNines.add(row + "," + col);
-                continue;
-            }
-
-            // Explore neighboring positions in all four directions
-            for (int[] direction : getDirections()) {
-                int newRow = row + direction[0];
-                int newCol = col + direction[1];
-
-                if (isValidPosition(map, newRow, newCol) && !visited.contains(newRow + "," + newCol) && map[newRow][newCol] - '0' == height + 1) {
-                    queue.add(new int[]{newRow, newCol, height + 1});
-                    visited.add(newRow + "," + newCol);
+                        if (isValidPosition(map, newRow, newCol) && !visited.contains(newRow + "," + newCol) && map[newRow][newCol] - '0' == height + 1) {
+                            queue.add(new int[]{newRow, newCol, height + 1});
+                            visited.add(newRow + "," + newCol);
+                        }
+                    }
                 }
             }
+
         }
         return reachableNines.size();
     }
@@ -81,19 +79,18 @@ public class LavaHikingTrails2 implements Solver<Integer> {
             int col = current[1];
             int height = current[2];
 
-            if (map[row][col] - '0' != height) {
-                continue;
-            }
-            if (height == 9) {
-                distinctTrailCount++;
-                continue;
-            }
-            for (int[] direction : getDirections()) {
-                int newRow = row + direction[0];
-                int newCol = col + direction[1];
+            if (map[row][col] - '0' == height) {
+                if (height == 9) {
+                    distinctTrailCount++;
+                } else {
+                    for (int[] direction : getDirections()) {
+                        int newRow = row + direction[0];
+                        int newCol = col + direction[1];
 
-                if (isValidPosition(map, newRow, newCol)) {
-                    queue.add(new int[]{newRow, newCol, height + 1});
+                        if (isValidPosition(map, newRow, newCol)) {
+                            queue.add(new int[]{newRow, newCol, height + 1});
+                        }
+                    }
                 }
             }
         }

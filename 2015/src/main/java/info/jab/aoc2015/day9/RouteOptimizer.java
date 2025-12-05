@@ -33,7 +33,7 @@ public class RouteOptimizer implements Solver<Integer> {
             
             try {
                 distance = Integer.parseInt(parts[2].trim());
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException _) {
                 throw new IllegalArgumentException("Invalid distance in line: " + line);
             }
 

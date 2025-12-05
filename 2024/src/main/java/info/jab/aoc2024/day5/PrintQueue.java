@@ -49,7 +49,7 @@ class PrintQueue implements Solver<Integer> {
         return ordering.getOrDefault(first, Collections.emptySet()).contains(second) ? -1 : 1;
     }
 
-    private Integer sum(List<List<Integer>> pages, Map<Integer, Set<Integer>> ordering, Boolean part1) {
+    private Integer sum(List<List<Integer>> pages, Map<Integer, Set<Integer>> ordering, boolean part1) {
         Integer sum1 = 0;
         Integer sum2 = 0;
 

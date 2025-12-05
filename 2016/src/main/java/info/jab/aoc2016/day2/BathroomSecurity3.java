@@ -8,13 +8,13 @@ import info.jab.aoc.Solver;
 
 public class BathroomSecurity3 implements Solver<String>{
 
-    private final char[][] KEYPAD_PART1 = {
+    private final char[][] keypadPart1 = {
         {'1', '2', '3'},
         {'4', '5', '6'},
         {'7', '8', '9'}
     };
 
-    private final char[][] KEYPAD_PART2 = {
+    private final char[][] keypadPart2 = {
         {' ', ' ', '1', ' ', ' '},
         {' ', '2', '3', '4', ' '},
         {'5', '6', '7', '8', '9'},
@@ -73,7 +73,7 @@ public class BathroomSecurity3 implements Solver<String>{
 
     @Override
     public String solvePartOne(String fileName) {
-        Grid grid = new Grid(KEYPAD_PART1);
+        Grid grid = new Grid(keypadPart1);
         Direction initial = initializeStartPosition(grid);
         
         var list = ResourceLines.list(fileName);
@@ -87,7 +87,7 @@ public class BathroomSecurity3 implements Solver<String>{
 
     @Override
     public String solvePartTwo(String fileName) {
-        Grid grid = new Grid(KEYPAD_PART2);
+        Grid grid = new Grid(keypadPart2);
         Direction initial = initializeStartPosition(grid);
         
         var list = ResourceLines.list(fileName);
