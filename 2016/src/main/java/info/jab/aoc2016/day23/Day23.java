@@ -8,7 +8,7 @@ import info.jab.aoc.Solver;
  */
 public class Day23 implements Day<Integer> {
 
-    private Solver<Integer> solver = new AssembunnyInterpreterV2();
+    private Solver<Integer> solver = new AssembunnyInterpreter();
 
     @Override
     public Integer getPart1Result(String fileName) {

@@ -1,13 +1,16 @@
-package info.jab.aoc2016.day23;
+package info.jab.aoc2016.day23.instructions;
+
+import info.jab.aoc2016.day23.ExecutionResult;
+import info.jab.aoc2016.day23.ProgramState;
 
 import java.util.Map;
 
 /**
- * Decrement instruction: dec x
- * Decrements the value in register x by 1
+ * Increment instruction: inc x
+ * Increments the value in register x by 1
  * Pure transformation: creates new register map
  */
-final class Decrement implements Instruction {
+final class Increment implements Instruction {
 
     @Override
     public ExecutionResult execute(String[] parts, ProgramState state) {
@@ -21,7 +24,7 @@ final class Decrement implements Instruction {
         }
 
         int currentValue = state.registers().getOrDefault(register, 0);
-        Map<String, Integer> newRegisters = InstructionUtils.updateRegister(state.registers(), register, currentValue - 1);
+        Map<String, Integer> newRegisters = InstructionUtils.updateRegister(state.registers(), register, currentValue + 1);
         return ExecutionResult.continueWith(
                 state.withRegisters(newRegisters)
                      .withProgramCounter(state.programCounter() + 1)

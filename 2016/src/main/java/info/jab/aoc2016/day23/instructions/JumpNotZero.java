@@ -1,4 +1,7 @@
-package info.jab.aoc2016.day23;
+package info.jab.aoc2016.day23.instructions;
+
+import info.jab.aoc2016.day23.ExecutionResult;
+import info.jab.aoc2016.day23.ProgramState;
 
 /**
  * Jump not zero instruction: jnz x y

@@ -1,4 +1,4 @@
-package info.jab.aoc2016.day23;
+package info.jab.aoc;
 
 import java.util.function.Supplier;
 import java.util.stream.Stream;

@@ -1,4 +1,4 @@
-package info.jab.aoc2016.day23;
+package info.jab.aoc2016.day23.instructions;
 
 import java.util.HashMap;
 import java.util.Map;
