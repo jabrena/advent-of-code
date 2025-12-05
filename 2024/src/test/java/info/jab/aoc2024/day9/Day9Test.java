@@ -11,21 +11,23 @@ import com.putoet.resources.ResourceLines;
 
 class Day9Test {
 
-    @Test
-    void should_solve_day9_part1_with_sample2() {
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.CsvSource({
+        "/day9/day9-input-sample2.txt, 60",
+        "/day9/day9-input-sample.txt, 1928"
+    })
+    void should_solve_day9_part1(String fileName, long expectedResult) {
         //Given
-        String fileName = "/day9/day9-input-sample2.txt";
-
         //When
         var day = new Day9();
         var result = day.getPart1Result(fileName);
 
         //Then
-        then(result).isEqualTo(60);
+        then(result).isEqualTo(expectedResult);
     }
 
     @Disabled("Test disabled - sample3 input file may not exist or test is redundant")
-    @Test
+    @org.junit.jupiter.api.Test
     void should_solve_day9_part1_with_sample3() {
         //Given
         String fileName = "/day9/day9-input-sample3.txt";
@@ -36,19 +38,6 @@ class Day9Test {
 
         //Then
         then(result).isEqualTo(60);
-    }
-
-    @Test
-    void should_solve_day9_part1_with_sample() {
-        //Given
-        String fileName = "/day9/day9-input-sample.txt";
-
-        //When
-        var day = new Day9();
-        var result = day.getPart1Result(fileName);
-
-        //Then
-        then(result).isEqualTo(1928);
     }
 
     @Test

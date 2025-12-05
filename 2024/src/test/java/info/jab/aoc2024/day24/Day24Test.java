@@ -3,47 +3,26 @@ package info.jab.aoc2024.day24;
 import static org.assertj.core.api.BDDAssertions.then;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class Day24Test {
 
-    @Test
-    void should_solve_day24_part1_sample() {
-        //Given
-        String fileName = "/day24/day24-input-sample.txt";
-
-        //When
-        var day = new Day24();
-        var result = day.getPart1Result(fileName);
-
-        //Then
-        then(result).isEqualTo("4");
-    }
-
-    @Test
-    void should_solve_day24_part1_sample2() {
-        //Given
-        String fileName = "/day24/day24-input-sample2.txt";
-
-        //When
-        var day = new Day24();
-        var result = day.getPart1Result(fileName);
-
-        //Then
-        then(result).isEqualTo("2024");
-    }
-
+    @ParameterizedTest
+    @CsvSource({
+        "/day24/day24-input-sample.txt, 4",
+        "/day24/day24-input-sample2.txt, 2024",
+        "/day24/day24-input.txt, 42410633905894"
+    })
     @Disabled("Part 1 test disabled - implementation may be incomplete or slow")
-    @Test
-    void should_solve_day24_part1() {
+    void should_solve_day24_part1(String fileName, String expectedResult) {
         //Given
-        String fileName = "/day24/day24-input.txt";
-
         //When
         var day = new Day24();
         var result = day.getPart1Result(fileName);
 
         //Then
-        then(result).isEqualTo("42410633905894");
+        then(result).isEqualTo(expectedResult);
     }
 
     @Test

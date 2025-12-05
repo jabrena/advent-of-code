@@ -10,7 +10,10 @@ import java.util.stream.Stream;
  *
  * The trampoline pattern converts recursive calls into iterative loops,
  * making it safe for deep recursion in languages without tail-call optimization.
+ *
+ * @param <T> the result type of the computation
  */
+@SuppressWarnings("java:S2326") // T is used in sealed permits and implementing records
 public sealed interface Trampoline<T> permits Trampoline.Done, Trampoline.More {
 
     /**

@@ -38,6 +38,8 @@ class Computer {
                     if (A != 0) {
                         ip = litOp;
                         skipIncrease = true;
+                    } else {
+                        skipIncrease = false;
                     }
                 }
                 case 4 -> B = B ^ C;

@@ -75,13 +75,21 @@ public class PlutonianPebbles implements Solver2<Long, String, Integer> {
     }
 
     private long count(long stone, int iter, Map<String,Long> cache) {
-        String key = stone+" "+iter, stoneStr = ""+stone;
+        String key = stone+" "+iter;
+        String stoneStr = ""+stone;
         if (cache.containsKey(key)) return cache.get(key);
         if (iter == 0) return 1;
-        long count = (stone == 0L) ? count(1L, iter-1, cache) : stoneStr.length() % 2 == 0
-                ? count(Long.parseLong(stoneStr.substring(0, stoneStr.length() / 2)), iter-1, cache) +
-                count(Long.parseLong((stoneStr).substring(stoneStr.length() / 2)), iter-1, cache)
-                : count(stone * 2024, iter-1, cache);
+        
+        long count;
+        if (stone == 0L) {
+            count = count(1L, iter-1, cache);
+        } else if (stoneStr.length() % 2 == 0) {
+            long leftHalf = Long.parseLong(stoneStr.substring(0, stoneStr.length() / 2));
+            long rightHalf = Long.parseLong(stoneStr.substring(stoneStr.length() / 2));
+            count = count(leftHalf, iter-1, cache) + count(rightHalf, iter-1, cache);
+        } else {
+            count = count(stone * 2024, iter-1, cache);
+        }
         cache.put(key, count);
         return count;
     }

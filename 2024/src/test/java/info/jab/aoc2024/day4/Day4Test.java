@@ -4,46 +4,25 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class Day4Test {
 
-    @Test
-    void should_solve_day4_part1_with_sample2() {
+    @ParameterizedTest
+    @CsvSource({
+        "/day4/day4-input-sample2.txt, 18",
+        "/day4/day4-input-sample3.txt, 18",
+        "/day4/day4-input.txt, 2464"
+    })
+    void should_solve_day4_part1(String fileName, int expectedResult) {
         //Given
-        String fileName = "/day4/day4-input-sample2.txt";
-
         //When
         var day = new Day4();
         var result = day.getPart1Result(fileName);
 
         //Then
-        then(result).isEqualTo(18);
-    }
-
-    @Test
-    void should_solve_day4_part1_with_sample3() {
-        //Given
-        String fileName = "/day4/day4-input-sample3.txt";
-
-        //When
-        var day = new Day4();
-        var result = day.getPart1Result(fileName);
-
-        //Then
-        then(result).isEqualTo(18);
-    }
-
-    @Test
-    void should_solve_day4_part1() {
-        //Given
-        String fileName = "/day4/day4-input.txt";
-
-        //When
-        var day = new Day4();
-        var result = day.getPart1Result(fileName);
-
-        //Then
-        then(result).isEqualTo(2464);
+        then(result).isEqualTo(expectedResult);
     }
 
     @Test

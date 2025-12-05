@@ -51,10 +51,9 @@ class FrequencyDevice3 implements Solver<Integer> {
     private record State(Set<Integer> frequencies, int currentFrequency) {
         public State next(int change) {
             int newFrequency = currentFrequency + change;
-            return new State(
-                new HashSet<>(frequencies) {{ add(newFrequency); }},
-                newFrequency
-            );
+            Set<Integer> newFrequencies = new HashSet<>(frequencies);
+            newFrequencies.add(newFrequency);
+            return new State(newFrequencies, newFrequency);
         }
         
         public boolean isDuplicate(int newFrequency) {

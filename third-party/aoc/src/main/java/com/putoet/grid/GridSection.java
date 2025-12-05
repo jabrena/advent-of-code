@@ -104,13 +104,13 @@ public record GridSection(GridType grid, Point upperLeft, Point lowerRight) impl
     @Override
     public String toString() {
         final var sb = new StringBuilder();
-        sb.append(String.format("(%d,%d)..(%d,%d)\n", minX(), minY(), maxX(), maxY()));
+        sb.append(String.format("(%d,%d)..(%d,%d)%n", minX(), minY(), maxX(), maxY()));
         sb.append(" ".repeat(3));
         for (var i = 0; i < width() / 10 + 1; i++) {
             sb.append(i);
             sb.append(" ".repeat(9));
         }
-        sb.append("\n").append(" ".repeat(3));
+        sb.append(System.lineSeparator()).append(" ".repeat(3));
         for (var i = 0; i < width() - 1; i++)
             sb.append(i % 10);
         sb.append("\n");
@@ -120,7 +120,7 @@ public record GridSection(GridType grid, Point upperLeft, Point lowerRight) impl
             for (var x = minX(); x < maxX(); x++) {
                 sb.append(grid.get(x, y));
             }
-            sb.append("\n");
+            sb.append(System.lineSeparator());
         }
 
         return sb.toString();
