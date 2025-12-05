@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * JavaFX visualization for Day 4 Part 2 solution.
@@ -57,7 +56,6 @@ public class Day4Visualization extends Application {
     private List<Point> recentlyRemoved = new ArrayList<>();
     private boolean isRunning = false;
     private long lastUpdate = 0;
-    private long updateInterval = 800_000_000; // 800ms initial delay
     private boolean isComplete = false;
 
     // UI Components
@@ -74,7 +72,7 @@ public class Day4Visualization extends Application {
             // Load grid from file
             final List<String> lines = ResourceLines.list("/" + INPUT_FILE_PATH).stream()
                     .filter(line -> !line.isEmpty())
-                    .collect(Collectors.toList());
+                    .toList();
             grid = GridUtils.of(lines);
             rows = grid.length;
             cols = grid[0].length;
@@ -83,7 +81,7 @@ public class Day4Visualization extends Application {
             final double canvasWidth = (double) WINDOW_WIDTH - 40;
             final double canvasHeight = (double) WINDOW_HEIGHT - 200;
             cellSize = (int) Math.min(canvasWidth / cols, canvasHeight / rows);
-            cellSize = Math.max(10, Math.min(cellSize, 50)); // Clamp between 10 and 50
+            cellSize = (int) Math.clamp(cellSize, 10, 50); // Clamp between 10 and 50
             gridOffsetX = (canvasWidth - ((double) cols * cellSize)) / 2 + 20;
             gridOffsetY = (canvasHeight - ((double) rows * cellSize)) / 2 + 20;
 
@@ -118,7 +116,7 @@ public class Day4Visualization extends Application {
             root.setTop(infoPanel);
 
             // Center canvas
-            canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT - 200);
+            canvas = new Canvas(WINDOW_WIDTH, (double) WINDOW_HEIGHT - 200);
             root.setCenter(canvas);
 
             // Bottom controls
@@ -175,9 +173,9 @@ public class Day4Visualization extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
 
-        } catch (Exception e) {
+        } catch (Exception ex) {
             // Suppressed: This is a visualization tool for debugging purposes
-            System.err.println("Error loading input file: " + e.getMessage());
+            System.err.println("Error loading input file: " + ex.getMessage());
             System.err.println("Make sure the file exists at: " + INPUT_FILE_PATH);
         }
     }
@@ -189,7 +187,7 @@ public class Day4Visualization extends Application {
 
         // Speed control
         double speed = speedSlider.getValue();
-        updateInterval = (long) ((101 - speed) * 8_000_000); // Map 1-100 to delay
+        long updateInterval = (long) ((101 - speed) * 8_000_000); // Map 1-100 to delay
 
         if (now - lastUpdate < updateInterval) {
             return;
@@ -228,10 +226,8 @@ public class Day4Visualization extends Application {
         cellsToRemove = new ArrayList<>();
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
-                if (grid[y][x] == TARGET_CELL) {
-                    if (countNeighbors(x, y) < MIN_NEIGHBORS) {
-                        cellsToRemove.add(Point.of(x, y));
-                    }
+                if (grid[y][x] == TARGET_CELL && countNeighbors(x, y) < MIN_NEIGHBORS) {
+                    cellsToRemove.add(Point.of(x, y));
                 }
             }
         }
@@ -263,7 +259,7 @@ public class Day4Visualization extends Application {
 
     private void draw() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT - 200);
+        gc.clearRect(0, 0, WINDOW_WIDTH, (double) WINDOW_HEIGHT - 200);
 
         // Draw grid
         for (int y = 0; y < rows; y++) {
@@ -277,35 +273,24 @@ public class Day4Visualization extends Application {
                 final char cell = grid[y][x];
 
                 // Determine cell color
-                Color fillColor;
-                Color strokeColor = Color.GRAY;
-
-                if (cell == EMPTY_CELL) {
-                    if (wasRecentlyRemoved) {
-                        // Fade effect for recently removed cells
-                        fillColor = Color.rgb(100, 50, 50);
-                        strokeColor = Color.rgb(150, 100, 100);
-                    } else {
-                        fillColor = Color.BLACK;
-                    }
-                } else if (cell == TARGET_CELL) {
-                    if (isMarkedForRemoval) {
-                        // Highlight cells marked for removal
-                        fillColor = Color.rgb(255, 100, 100); // Red-orange
-                        strokeColor = Color.RED;
-                    } else {
-                        final int neighborCount = countNeighbors(x, y);
-                        if (neighborCount >= MIN_NEIGHBORS) {
-                            // Stable cell with enough neighbors
-                            fillColor = Color.rgb(100, 200, 100); // Green
+                final Color[] colors = switch (cell) {
+                    case EMPTY_CELL -> wasRecentlyRemoved
+                        ? new Color[] { Color.rgb(100, 50, 50), Color.rgb(150, 100, 100) }
+                        : new Color[] { Color.BLACK, Color.GRAY };
+                    case TARGET_CELL -> {
+                        if (isMarkedForRemoval) {
+                            yield new Color[] { Color.rgb(255, 100, 100), Color.RED };
                         } else {
-                            // Cell that will be removed next iteration
-                            fillColor = Color.rgb(255, 200, 100); // Orange-yellow
+                            final int neighborCount = countNeighbors(x, y);
+                            yield neighborCount >= MIN_NEIGHBORS
+                                ? new Color[] { Color.rgb(100, 200, 100), Color.GRAY }
+                                : new Color[] { Color.rgb(255, 200, 100), Color.GRAY };
                         }
                     }
-                } else {
-                    fillColor = Color.BLACK;
-                }
+                    default -> new Color[] { Color.BLACK, Color.GRAY };
+                };
+                final Color fillColor = colors[0];
+                final Color strokeColor = colors[1];
 
                 // Draw cell
                 gc.setFill(fillColor);
@@ -335,7 +320,7 @@ public class Day4Visualization extends Application {
 
     private void drawLegend(final GraphicsContext gc) {
         final double legendX = 20;
-        final double legendY = WINDOW_HEIGHT - 250;
+        final double legendY = (double) WINDOW_HEIGHT - 250;
         final double legendItemHeight = 20;
         final double legendBoxSize = 15;
 
@@ -384,11 +369,11 @@ public class Day4Visualization extends Application {
         try {
             final List<String> lines = ResourceLines.list("/" + INPUT_FILE_PATH).stream()
                     .filter(line -> !line.isEmpty())
-                    .collect(Collectors.toList());
+                    .toList();
             grid = GridUtils.of(lines);
             findCellsToRemove();
             updateLabels();
-        } catch (Exception e) {
+        } catch (Exception _) {
             // Suppressed: This is a visualization tool for debugging purposes
         }
     }

@@ -3,7 +3,6 @@ package info.jab.aoc2015.day24;
 import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * https://adventofcode.com/2015/day/24
@@ -15,7 +14,7 @@ public class Day24 implements Day<Long> {
         List<Integer> packages = ResourceLines.list(fileName)
                 .stream()
                 .map(Integer::parseInt)
-                .collect(Collectors.toList());
+                .toList();
         
         int totalWeight = packages.stream().mapToInt(Integer::intValue).sum();
         int targetWeight = totalWeight / 3;
@@ -32,7 +31,7 @@ public class Day24 implements Day<Long> {
         // Filter combinations with minimum package count
         List<List<Integer>> minCombinations = validCombinations.stream()
                 .filter(combo -> combo.size() == minPackageCount)
-                .collect(Collectors.toList());
+                .toList();
         
         // Find minimum quantum entanglement
         return minCombinations.stream()
@@ -46,7 +45,7 @@ public class Day24 implements Day<Long> {
         List<Integer> packages = ResourceLines.list(fileName)
                 .stream()
                 .map(Integer::parseInt)
-                .collect(Collectors.toList());
+                .toList();
         
         int totalWeight = packages.stream().mapToInt(Integer::intValue).sum();
         int targetWeight = totalWeight / 4; // Divide into 4 groups instead of 3
@@ -63,7 +62,7 @@ public class Day24 implements Day<Long> {
         // Filter combinations with minimum package count
         List<List<Integer>> minCombinations = validCombinations.stream()
                 .filter(combo -> combo.size() == minPackageCount)
-                .collect(Collectors.toList());
+                .toList();
         
         // Find minimum quantum entanglement
         return minCombinations.stream()
