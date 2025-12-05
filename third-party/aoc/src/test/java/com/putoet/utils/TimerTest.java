@@ -3,12 +3,13 @@ package com.putoet.utils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class TimerTest {
 
     @Test
     void timerRunnable() {
-        Timer.run(() -> System.out.println("Hello world!"));
+        assertDoesNotThrow(() -> Timer.run(() -> System.out.println("Hello world!")));
     }
 
     @Test

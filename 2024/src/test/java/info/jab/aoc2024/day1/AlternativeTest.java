@@ -1,8 +1,11 @@
 package info.jab.aoc2024.day1;
 
+import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class AlternativeTest {
 
@@ -25,6 +28,13 @@ public class AlternativeTest {
     @Benchmark
     public void alternative3(St st) {
         st.historianHysteria.loadFle.andThen(st.historianHysteria.splitInto2Lists3).apply(st.fileName);
+    }
+
+    @Test
+    void testBenchmarkState() {
+        St state = new St();
+        assertNotNull(state.historianHysteria);
+        assertNotNull(state.fileName);
     }
 
 }
