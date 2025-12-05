@@ -19,7 +19,7 @@ public class Game {
     public Game(String fileName) {
         var list = ResourceLines.list(fileName);
         grid = new Grid(GridUtils.of(list));
-        var point = grid.findFirst(c -> c == '^').get();
+        var point = grid.findFirst(c -> c == '^').orElseThrow(() -> new IllegalStateException("Starting point not found"));
 
         //TODO Autodetect initial point
         guardian = new Guardian(Direction.NORTH, point, grid);

@@ -110,22 +110,9 @@ public class Day8 implements Day<String> {
             processInstruction(screen, instruction, width, height);
         }
         
-        // Debug: print the screen (commented out for production)
-        // printScreen(screen);
-        
         return screenToString(screen);
     }
     
-    private void printScreen(boolean[][] screen) {
-        System.out.println("Screen output:");
-        for (int row = 0; row < screen.length; row++) {
-            for (int col = 0; col < screen[row].length; col++) {
-                System.out.print(screen[row][col] ? '#' : '.');
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
     
     private String screenToString(boolean[][] screen) {
         StringBuilder result = new StringBuilder();
@@ -165,9 +152,6 @@ public class Day8 implements Day<String> {
         }
         
         String p = patternStr.toString();
-        
-        // Debug: print the pattern (commented out for production)
-        // System.out.println("Letter pattern: " + p);
         
         // Define letter patterns (5x6 each) based on actual debug output
         if (p.equals(".##..#..#.#..#.####.#..#.#..#.")) return 'A';  // A

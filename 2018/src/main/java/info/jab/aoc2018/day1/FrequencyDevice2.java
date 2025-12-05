@@ -11,10 +11,8 @@ import info.jab.aoc.Solver;
 class FrequencyDevice2 implements Solver<Integer> {
     
     private enum Operation {
-        PLUS('+'),
-        MINUS('-');
-        
-        Operation(char symbol) {}
+        PLUS,
+        MINUS;
         
         private static Operation from(char symbol) {
             return switch (symbol) {

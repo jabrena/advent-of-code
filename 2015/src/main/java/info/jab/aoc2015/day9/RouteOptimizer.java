@@ -53,11 +53,6 @@ public class RouteOptimizer implements Solver<Integer> {
 
     private record RouteResult(String route, int distance) {}
 
-    private RouteResult findRouteFromCity(Map<String, Map<String, Integer>> distances, String startCity) {
-        Set<String> visited = new HashSet<>();
-        visited.add(startCity);
-        return findRouteRecursive(distances, startCity, visited, 0, startCity);
-    }
 
     private List<List<String>> generateAllPermutations(List<String> cities) {
         List<List<String>> result = new ArrayList<>();

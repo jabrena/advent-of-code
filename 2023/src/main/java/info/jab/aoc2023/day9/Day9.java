@@ -50,7 +50,7 @@ public class Day9 implements Day<Integer> {
     public List<Integer> parseNums(String line) {
         return Arrays.stream(line.split("\\s+"))
                 .map(Integer::parseInt)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

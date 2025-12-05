@@ -51,7 +51,7 @@ public class Day17 implements Day<String> {
 
             // Get open doors based on MD5 hash
             String hash = MD5.hash(passcode + current.path).toLowerCase();
-            boolean[] doors = getOpenDoors(hash, current.x, current.y);
+            boolean[] doors = getOpenDoors(hash);
 
             // Try moving in each direction
             if (doors[0] && current.y > 0) { // Up
@@ -86,7 +86,7 @@ public class Day17 implements Day<String> {
 
         // Get open doors based on MD5 hash
         String hash = MD5.hash(passcode + path).toLowerCase();
-        boolean[] doors = getOpenDoors(hash, x, y);
+        boolean[] doors = getOpenDoors(hash);
 
         int maxLength = -1;
 
@@ -124,7 +124,7 @@ public class Day17 implements Day<String> {
      * Returns an array of 4 booleans: [up, down, left, right]
      * A door is open if the corresponding character is b, c, d, e, or f
      */
-    private boolean[] getOpenDoors(String hash, int x, int y) {
+    private boolean[] getOpenDoors(String hash) {
         boolean[] doors = new boolean[4];
         
         if (hash.length() >= 4) {

@@ -41,36 +41,6 @@ public class LockKeyMatcher {
         return schematics;
     }
 
-    private Map<Type, List<List<String>>> loadData2(String fileName) {
-        List<String> lines = new ArrayList<>(ResourceLines.list(fileName));
-        lines.add(""); // Add trailing empty line to process the last schematic
-
-        //The ChatGPT power when you refactor...
-        //Learning new stuff from Java Streams API
-        return lines.stream()
-            .collect(() -> {
-                // Initialize the result map and a mutable current schematic container
-                Map<Type, List<List<String>>> schematics = new EnumMap<>(Type.class);
-                schematics.put(Type.LOCK, new ArrayList<>());
-                schematics.put(Type.KEY, new ArrayList<>());
-                return new AbstractMap.SimpleEntry<>(schematics, new ArrayList<String>());
-            }, (accumulator, line) -> {
-                Map<Type, List<List<String>>> schematics = accumulator.getKey();
-                List<String> currentSchematic = accumulator.getValue();
-
-                if (line.isEmpty()) {
-                    if (!currentSchematic.isEmpty()) {
-                        Type type = currentSchematic.get(0).startsWith("#") ? Type.LOCK : Type.KEY;
-                        schematics.get(type).add(new ArrayList<>(currentSchematic));
-                        currentSchematic.clear();
-                    }
-                } else {
-                    currentSchematic.add(line);
-                }
-            }, (acc1, acc2) -> {
-                throw new UnsupportedOperationException("Parallel processing is not supported for this operation.");
-            }).getKey();
-    }
 
     private Integer calculateValidKeys(Map<Type, List<List<String>>> schematics) {
         Set<String> validPairs = new HashSet<>();

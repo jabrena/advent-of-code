@@ -96,15 +96,6 @@ public class LavaHikingTrails implements Solver<Integer> {
         return totalPaths;
     }
 
-    //TODO Refactor with Points
-    private static int[][] getDirections() {
-        return new int[][]{
-                {1, 0},  // Down
-                {-1, 0}, // Up
-                {0, 1},  // Right
-                {0, -1}  // Left
-        };
-    }
 
     @Override
     public Integer solvePartOne(String fileName) {

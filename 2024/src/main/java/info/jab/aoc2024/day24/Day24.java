@@ -16,9 +16,6 @@ public class Day24 implements Day<String> {
 
     @Override
     public String getPart2Result(String fileName) {
-
-        //GraphVizUtil.generate(fileName);
-
         CrossedWires2 crossedWires = new CrossedWires2();
         return crossedWires.solvePartTwo(fileName);
     }

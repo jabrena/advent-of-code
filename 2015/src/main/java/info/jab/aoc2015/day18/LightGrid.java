@@ -103,10 +103,8 @@ public class LightGrid implements Solver<Integer> {
                 int newCol = col + dj;
                 
                 // Check bounds and count if light is on
-                if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
-                    if (grid[newRow][newCol]) {
-                        count++;
-                    }
+                if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && grid[newRow][newCol]) {
+                    count++;
                 }
             }
         }
@@ -124,15 +122,6 @@ public class LightGrid implements Solver<Integer> {
         return count;
     }
     
-    private void printGrid(boolean[][] grid) {
-        for (boolean[] row : grid) {
-            for (boolean light : row) {
-                System.out.print(light ? '#' : '.');
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
     
     private void turnOnCorners(boolean[][] grid) {
         int rows = grid.length;

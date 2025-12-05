@@ -80,6 +80,6 @@ public class MullItOver2 implements Solver<Integer> {
                                     case Mul(int m, int n) -> acc.enabled() ? new Acc(true, acc.sum() + m * n) : acc;
                                 }
                 ))
-                .findAny().get().sum();
+                .findAny().orElseThrow(() -> new IllegalStateException("No result found")).sum();
     }
 }

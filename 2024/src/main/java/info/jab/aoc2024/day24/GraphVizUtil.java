@@ -71,13 +71,5 @@ class GraphVizUtil {
             throw new RuntimeException(e);
         }
 
-        //Once you see the bad nodes, you can execute the following block:
-        var swapped = List.of("A", "B", "C","D");
-        var joined = swapped.stream()
-            .sorted()
-            .collect(Collectors.joining(","));
-
-        //Submit the solution in AOC
-        //System.out.println(joined);
     }
 }

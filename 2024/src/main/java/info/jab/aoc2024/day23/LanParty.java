@@ -7,7 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -17,24 +18,6 @@ import com.google.common.collect.Sets;
 
 public class LanParty {
 
-    private Map<String, Set<String>> getInputData(String fileName) {
-        var list = ResourceLines.list(fileName);
-
-        // Parse the connections into a graph
-        Map<String, Set<String>> graph = new HashMap<>();
-        for (String connection : list) {
-            String[] parts = connection.split("-");
-            String a = parts[0];
-            String b = parts[1];
-
-            graph.putIfAbsent(a, new HashSet<>());
-            graph.putIfAbsent(b, new HashSet<>());
-
-            graph.get(a).add(b);
-            graph.get(b).add(a);
-        }
-        return graph;
-    }
 
     private Map<String, Set<String>> getInputData2(String fileName) {
         return ResourceLines.list(fileName).stream()
@@ -52,51 +35,8 @@ public class LanParty {
                 );
     }
 
-    //Imperative
-    private Set<Set<String>> findTriangles(Map<String, Set<String>> graph) {
-        Set<Set<String>> triangles = new HashSet<>();
-        for (String node : graph.keySet()) {
-            for (String neighbor : graph.get(node)) {
-                for (String mutualNeighbor : graph.get(neighbor)) {
-                    if (graph.get(node).contains(mutualNeighbor) && !node.equals(mutualNeighbor)) {
-                        // Add the triangle as a sorted set to avoid duplicates
-                        Set<String> triangle = new TreeSet<>(Arrays.asList(node, neighbor, mutualNeighbor));
-                        triangles.add(triangle);
-                    }
-                }
-            }
-        }
-        return triangles;
-    }
 
-    // Using Java Streams API, Awful, not easy to follow
-    // Method to find all triangles in the graph
-    private Set<Set<String>> findTriangles2(Map<String, Set<String>> graph) {
-        return graph.entrySet().stream()
-                .flatMap(entry -> {
-                    String node = entry.getKey();
-                    return entry.getValue().stream()
-                            .flatMap(neighbor -> graph.get(neighbor).stream()
-                                    .filter(mutualNeighbor -> graph.get(node).contains(mutualNeighbor) && !node.equals(mutualNeighbor))
-                                    .map(mutualNeighbor -> new TreeSet<>(Arrays.asList(node, neighbor, mutualNeighbor))));
-                })
-                .collect(Collectors.toSet());
-    }
 
-    //Using Guava & functional style
-    private Set<Set<String>> findTriangles3(Map<String, Set<String>> graph) {
-        return graph.entrySet().stream()
-                .flatMap(entry -> {
-                    String node = entry.getKey();
-                    Set<String> neighbors = entry.getValue();
-
-                    return Sets.cartesianProduct(neighbors, neighbors).stream()
-                            .filter(pair -> !pair.get(0).equals(pair.get(1))) // Exclude self-loops
-                            .filter(pair -> graph.get(pair.get(0)).contains(pair.get(1))) // Ensure mutual connection
-                            .map(pair -> new TreeSet<>(Arrays.asList(node, pair.get(0), pair.get(1)))); // Form a triangle
-                })
-                .collect(Collectors.toSet());
-    }
 
     //Using Guava & Imperative style
     private Set<Set<String>> findTriangles4(Map<String, Set<String>> graph) {
@@ -164,7 +104,7 @@ public class LanParty {
         Map<String, Set<String>> graph,
         Set<String> largestClique) {
 
-        Stack<State> stack = new Stack<>();
+        Deque<State> stack = new ArrayDeque<>();
         stack.push(new State(new HashSet<>(r), new HashSet<>(p), new HashSet<>(x)));
 
         while (!stack.isEmpty()) {

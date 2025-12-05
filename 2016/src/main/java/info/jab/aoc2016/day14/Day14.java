@@ -40,13 +40,10 @@ public class Day14 implements Day<Integer> {
             String hash = useStretching ? getStretchedHash(salt, index) : getHash(salt, index);
             Character triplet = findTriplet(hash);
 
-            if (triplet != null) {
-                // Check if any of the next 1000 hashes contain five of this character
-                if (hasQuintupletInNext1000(salt, index, triplet, useStretching)) {
-                    keyCount++;
-                    if (keyCount == n) {
-                        return index;
-                    }
+            if (triplet != null && hasQuintupletInNext1000(salt, index, triplet, useStretching)) {
+                keyCount++;
+                if (keyCount == n) {
+                    return index;
                 }
             }
             index++;
