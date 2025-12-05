@@ -4,8 +4,6 @@ target
 2019/tests.log
 .vscode/*
 
-2024/day24.txt
-.cursor
+.cursor/rules
 CURSOR-RULES-JAVA.md
-allure-results/
-.allure/
+.env
