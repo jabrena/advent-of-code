@@ -76,10 +76,10 @@ class GridSectionTest {
 
     @Test
     void set() {
-        assertThrows(AssertionError.class, () -> sections[0].set(0, 3, '$'));
-        assertThrows(AssertionError.class, () -> sections[1].set(0, 2, '$'));
-        assertThrows(AssertionError.class, () -> sections[2].set(3, 3, '$'));
-        assertThrows(AssertionError.class, () -> sections[3].set(5, 3, '$'));
+        assertThrows(IllegalArgumentException.class, () -> sections[0].set(0, 3, '$'));
+        assertThrows(IllegalArgumentException.class, () -> sections[1].set(0, 2, '$'));
+        assertThrows(IllegalArgumentException.class, () -> sections[2].set(3, 3, '$'));
+        assertThrows(IllegalArgumentException.class, () -> sections[3].set(5, 3, '$'));
 
         sections[0].set(0, 0, '$');
         assertEquals('$', grid.get(0, 0));
