@@ -161,10 +161,10 @@ public class GridComputing implements Solver<Integer> {
         if (sourceUsed > 0 && emptyAvail >= sourceUsed) {
             State newState = calculateNewState(current, newEmptyX, newEmptyY);
             
-            if (!steps.containsKey(newState)) {
-                steps.put(newState, currentSteps + 1);
+            steps.computeIfAbsent(newState, k -> {
                 queue.offer(newState);
-            }
+                return currentSteps + 1;
+            });
         }
     }
 
