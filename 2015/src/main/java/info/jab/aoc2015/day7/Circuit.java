@@ -45,10 +45,8 @@ public class Circuit implements Solver<Integer> {
 
     private boolean isReady(Instruction instruction) {
         try {
-            if (instruction.operation() == null || instruction.operation().equals("->")) {
-                getValue(instruction.input1());
-                return true;
-            } else if (instruction.operation().equals("NOT")) {
+            if (instruction.operation() == null || instruction.operation().equals("->") 
+                    || instruction.operation().equals("NOT")) {
                 getValue(instruction.input1());
                 return true;
             } else {
@@ -176,7 +174,7 @@ public class Circuit implements Solver<Integer> {
         var lines = ResourceLines.list(fileName);
         List<Instruction> instructions = lines.stream()
             .map(Instruction::parse)
-            .collect(Collectors.toList());
+            .toList();
 
         // Use topological sort for O(G) complexity
         processInstructionsTopologically(instructions);
@@ -195,7 +193,7 @@ public class Circuit implements Solver<Integer> {
         var lines = ResourceLines.list(fileName);
         List<Instruction> instructions = lines.stream()
             .map(Instruction::parse)
-            .collect(Collectors.toList());
+            .toList();
             
         // Set 'b' wire to previous 'a' result
         setWireValue("b", signalA);

@@ -169,8 +169,8 @@ public final class CookieRecipe implements Solver<Long> {
         return new Trampoline.More<>(() -> {
             final List<Trampoline<Long>> evaluated = trampolines.stream()
                     .map(t -> {
-                        if (t instanceof Trampoline.More<Long> more) {
-                            return more.compute().get();
+                        if (t instanceof Trampoline.More<Long>(var compute)) {
+                            return compute.get();
                         }
                         return t; // Already Done, keep as is
                     })

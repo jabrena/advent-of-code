@@ -3,6 +3,10 @@ package info.jab.aoc2015.day23.instructions;
 import java.util.List;
 
 public class InstructionParser {
+    
+    private InstructionParser() {
+        // Utility class - prevent instantiation
+    }
     public static List<Instruction> parse(List<String> lines) {
         return lines.stream()
             .map(InstructionParser::parseInstruction)

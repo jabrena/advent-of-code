@@ -102,20 +102,20 @@ public final class ContainerCombination implements Solver<Integer> {
             final Map<String, Integer> memo) {
         
         // If both are Done, combine immediately
-        if (trampoline1 instanceof Trampoline.Done<Integer> done1 
-                && trampoline2 instanceof Trampoline.Done<Integer> done2) {
-            final int result = done1.result() + done2.result();
+        if (trampoline1 instanceof Trampoline.Done<Integer>(var result1) 
+                && trampoline2 instanceof Trampoline.Done<Integer>(var result2)) {
+            final int result = result1 + result2;
             memo.put(key, result);
             return new Trampoline.Done<>(result);
         }
         
         // Otherwise, continue evaluation
         return new Trampoline.More<>(() -> {
-            final Trampoline<Integer> evaluated1 = trampoline1 instanceof Trampoline.More<Integer> more1 
-                    ? more1.compute().get() 
+            final Trampoline<Integer> evaluated1 = trampoline1 instanceof Trampoline.More<Integer>(var compute1) 
+                    ? compute1.get() 
                     : trampoline1;
-            final Trampoline<Integer> evaluated2 = trampoline2 instanceof Trampoline.More<Integer> more2 
-                    ? more2.compute().get() 
+            final Trampoline<Integer> evaluated2 = trampoline2 instanceof Trampoline.More<Integer>(var compute2) 
+                    ? compute2.get() 
                     : trampoline2;
             return combineCountTrampolines(key, evaluated1, evaluated2, memo);
         });
@@ -171,23 +171,23 @@ public final class ContainerCombination implements Solver<Integer> {
             final Trampoline<List<List<Integer>>> trampoline2) {
         
         // If both are Done, combine immediately
-        if (trampoline1 instanceof Trampoline.Done<List<List<Integer>>> done1 
-                && trampoline2 instanceof Trampoline.Done<List<List<Integer>>> done2) {
+        if (trampoline1 instanceof Trampoline.Done<List<List<Integer>>>(var result1) 
+                && trampoline2 instanceof Trampoline.Done<List<List<Integer>>>(var result2)) {
             return new Trampoline.Done<>(
                     Stream.concat(
-                            done1.result().stream(),
-                            done2.result().stream()
+                            result1.stream(),
+                            result2.stream()
                     ).toList()
             );
         }
         
         // Otherwise, continue evaluation
         return new Trampoline.More<>(() -> {
-            final Trampoline<List<List<Integer>>> evaluated1 = trampoline1 instanceof Trampoline.More<List<List<Integer>>> more1 
-                    ? more1.compute().get() 
+            final Trampoline<List<List<Integer>>> evaluated1 = trampoline1 instanceof Trampoline.More<List<List<Integer>>>(var compute1) 
+                    ? compute1.get() 
                     : trampoline1;
-            final Trampoline<List<List<Integer>>> evaluated2 = trampoline2 instanceof Trampoline.More<List<List<Integer>>> more2 
-                    ? more2.compute().get() 
+            final Trampoline<List<List<Integer>>> evaluated2 = trampoline2 instanceof Trampoline.More<List<List<Integer>>>(var compute2) 
+                    ? compute2.get() 
                     : trampoline2;
             return combineListTrampolines(evaluated1, evaluated2);
         });
