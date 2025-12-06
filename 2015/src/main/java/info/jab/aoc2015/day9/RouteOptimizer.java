@@ -101,10 +101,7 @@ public class RouteOptimizer implements Solver<Integer> {
             
             int distance = findOptimalRoute(distances, startCity, visited, 0, findMin);
             
-            if (findMin && distance < optimalDistance) {
-                optimalDistance = distance;
-                optimalRoute = startCity;
-            } else if (!findMin && distance > optimalDistance) {
+            if ((findMin && distance < optimalDistance) || (!findMin && distance > optimalDistance)) {
                 optimalDistance = distance;
                 optimalRoute = startCity;
             }

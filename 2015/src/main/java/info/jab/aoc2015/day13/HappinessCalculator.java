@@ -57,8 +57,12 @@ public class HappinessCalculator implements Solver<Integer> {
         
         for (int i = 0; i < remaining.size(); i++) {
             String nextPerson = remaining.get(i);
-            List<String> newRemaining = new ArrayList<>(remaining);
-            newRemaining.remove(i);
+            // Create new list without the current element using IntStream
+            final int indexToSkip = i;
+            List<String> newRemaining = java.util.stream.IntStream.range(0, remaining.size())
+                .filter(idx -> idx != indexToSkip)
+                .mapToObj(remaining::get)
+                .toList();
             
             List<String> newArrangement = new ArrayList<>(currentArrangement);
             newArrangement.add(nextPerson);
