@@ -11,6 +11,12 @@ import java.util.Map;
 
 public class TuringComputer implements Solver<Integer> {
 
+    /**
+     * Maximum number of instructions to execute to prevent DoS attacks.
+     * This limit prevents infinite loops in program execution.
+     */
+    private static final int MAX_INSTRUCTIONS = 1_000_000;
+
     @Override
     public Integer solvePartOne(String fileName) {
         List<String> instructionLines = ResourceLines.list(fileName);
@@ -30,10 +36,17 @@ public class TuringComputer implements Solver<Integer> {
         registers.put("b", initialB);
 
         int pc = 0;
+        int instructionCount = 0;
 
         while (pc >= 0 && pc < instructions.size()) {
+            if (instructionCount >= MAX_INSTRUCTIONS) {
+                throw new IllegalStateException(
+                        "Program execution exceeded maximum instruction limit of " + MAX_INSTRUCTIONS);
+            }
+            
             Instruction instruction = instructions.get(pc);
             pc = instruction.execute(registers, pc);
+            instructionCount++;
         }
 
         return registers.get("b");

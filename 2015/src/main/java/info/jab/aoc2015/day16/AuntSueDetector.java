@@ -8,6 +8,18 @@ import java.util.regex.Pattern;
 
 public class AuntSueDetector implements Solver<Integer> {
     
+    /**
+     * Maximum input length to prevent ReDoS attacks.
+     * This limit prevents polynomial runtime due to regex backtracking.
+     */
+    private static final int MAX_INPUT_LENGTH = 10_000;
+    
+    /**
+     * Maximum number of regex matches to prevent DoS attacks.
+     * This limit prevents excessive iterations in regex find() loops.
+     */
+    private static final int MAX_MATCHES = 100;
+    
     // The MFCSAM analysis results
     private static final Map<String, Integer> MFCSAM_ANALYSIS = Map.of(
         "children", 3,
@@ -22,7 +34,9 @@ public class AuntSueDetector implements Solver<Integer> {
         "perfumes", 1
     );
 
-    private static final Pattern SUE_PATTERN = Pattern.compile("Sue (\\d+): (.*)");
+    // Use possessive quantifier to prevent backtracking: (.*+) instead of (.*)
+    // This prevents ReDoS by making the quantifier non-backtracking
+    private static final Pattern SUE_PATTERN = Pattern.compile("Sue (\\d+): (.*+)");
     private static final Pattern COMPOUND_PATTERN = Pattern.compile("((?>\\w+)): ((?>\\d+))");
 
     @Override
@@ -30,6 +44,10 @@ public class AuntSueDetector implements Solver<Integer> {
         var lines = ResourceLines.list(fileName);
         
         for (String line : lines) {
+            if (line.length() > MAX_INPUT_LENGTH) {
+                throw new IllegalArgumentException("Input line exceeds maximum length of " + MAX_INPUT_LENGTH);
+            }
+            
             var sueMatcher = SUE_PATTERN.matcher(line);
             if (sueMatcher.matches()) {
                 int sueNumber = Integer.parseInt(sueMatcher.group(1));
@@ -49,6 +67,10 @@ public class AuntSueDetector implements Solver<Integer> {
         var lines = ResourceLines.list(fileName);
         
         for (String line : lines) {
+            if (line.length() > MAX_INPUT_LENGTH) {
+                throw new IllegalArgumentException("Input line exceeds maximum length of " + MAX_INPUT_LENGTH);
+            }
+            
             var sueMatcher = SUE_PATTERN.matcher(line);
             if (sueMatcher.matches()) {
                 int sueNumber = Integer.parseInt(sueMatcher.group(1));
@@ -64,9 +86,19 @@ public class AuntSueDetector implements Solver<Integer> {
     }
     
     private boolean matchesAnalysis(String compounds, boolean isPart2) {
+        if (compounds.length() > MAX_INPUT_LENGTH) {
+            throw new IllegalArgumentException("Compounds string exceeds maximum length of " + MAX_INPUT_LENGTH);
+        }
+        
         var compoundMatcher = COMPOUND_PATTERN.matcher(compounds);
+        int matchCount = 0;
         
         while (compoundMatcher.find()) {
+            if (matchCount >= MAX_MATCHES) {
+                throw new IllegalStateException("Exceeded maximum number of matches: " + MAX_MATCHES);
+            }
+            matchCount++;
+            
             String compound = compoundMatcher.group(1);
             int value = Integer.parseInt(compoundMatcher.group(2));
             
