@@ -2,6 +2,7 @@ package info.jab.aoc2015.day15;
 
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
+import info.jab.aoc.Trampoline;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -61,23 +62,24 @@ public final class CookieRecipe implements Solver<Long> {
     }
     
     /**
-     * Pure function: finds maximum score using functional recursion.
+     * Pure function: finds maximum score using trampoline pattern for safe recursion.
      */
     private long findMaxScore(final List<Ingredient> ingredients, final int totalTeaspoons) {
-        return findMaxScoreRecursive(ingredients, totalTeaspoons, 0, List.of());
+        return Trampoline.run(findMaxScoreTrampoline(ingredients, totalTeaspoons, 0, List.of()));
     }
     
     /**
-     * Pure function: finds maximum score with calorie constraint.
+     * Pure function: finds maximum score with calorie constraint using trampoline pattern.
      */
     private long findMaxScoreWithCalories(final List<Ingredient> ingredients, final int totalTeaspoons, final int targetCalories) {
-        return findMaxScoreWithCaloriesRecursive(ingredients, totalTeaspoons, targetCalories, 0, List.of());
+        return Trampoline.run(findMaxScoreWithCaloriesTrampoline(ingredients, totalTeaspoons, targetCalories, 0, List.of()));
     }
     
     /**
-     * Pure recursive function: explores all combinations functionally.
+     * Creates a trampoline computation for finding maximum score.
+     * Uses tail-recursive pattern converted to trampoline for stack safety.
      */
-    private long findMaxScoreRecursive(
+    private Trampoline<Long> findMaxScoreTrampoline(
             final List<Ingredient> ingredients,
             final int remaining,
             final int currentIndex,
@@ -86,23 +88,27 @@ public final class CookieRecipe implements Solver<Long> {
         if (currentIndex == ingredients.size() - 1) {
             // Last ingredient gets all remaining teaspoons
             final List<Integer> finalAmounts = append(amounts, remaining);
-            return calculateScore(ingredients, finalAmounts).totalScore();
+            return new Trampoline.Done<>(calculateScore(ingredients, finalAmounts).totalScore());
         }
         
         // Try all possible amounts for current ingredient using stream
-        return IntStream.rangeClosed(0, remaining)
-                .mapToLong(amount -> {
+        // Each branch returns a trampoline, then we find the max
+        final List<Trampoline<Long>> branchTrampolines = IntStream.rangeClosed(0, remaining)
+                .mapToObj(amount -> {
                     final List<Integer> newAmounts = append(amounts, amount);
-                    return findMaxScoreRecursive(ingredients, remaining - amount, currentIndex + 1, newAmounts);
+                    return findMaxScoreTrampoline(ingredients, remaining - amount, currentIndex + 1, newAmounts);
                 })
-                .max()
-                .orElse(0L);
+                .toList();
+        
+        // Combine all branch trampolines and find max
+        return combineTrampolinesAndFindMax(branchTrampolines);
     }
     
     /**
-     * Pure recursive function: explores combinations with calorie constraint.
+     * Creates a trampoline computation for finding maximum score with calorie constraint.
+     * Uses tail-recursive pattern converted to trampoline for stack safety.
      */
-    private long findMaxScoreWithCaloriesRecursive(
+    private Trampoline<Long> findMaxScoreWithCaloriesTrampoline(
             final List<Ingredient> ingredients,
             final int remaining,
             final int targetCalories,
@@ -114,16 +120,16 @@ public final class CookieRecipe implements Solver<Long> {
             final List<Integer> finalAmounts = append(amounts, remaining);
             final int totalCalories = calculateCalories(ingredients, finalAmounts);
             if (totalCalories == targetCalories) {
-                return calculateScore(ingredients, finalAmounts).totalScore();
+                return new Trampoline.Done<>(calculateScore(ingredients, finalAmounts).totalScore());
             }
-            return 0L;
+            return new Trampoline.Done<>(0L);
         }
         
         // Try all possible amounts for current ingredient using stream
-        return IntStream.rangeClosed(0, remaining)
-                .mapToLong(amount -> {
+        final List<Trampoline<Long>> branchTrampolines = IntStream.rangeClosed(0, remaining)
+                .mapToObj(amount -> {
                     final List<Integer> newAmounts = append(amounts, amount);
-                    return findMaxScoreWithCaloriesRecursive(
+                    return findMaxScoreWithCaloriesTrampoline(
                             ingredients,
                             remaining - amount,
                             targetCalories,
@@ -131,8 +137,46 @@ public final class CookieRecipe implements Solver<Long> {
                             newAmounts
                     );
                 })
-                .max()
-                .orElse(0L);
+                .toList();
+        
+        // Combine all branch trampolines and find max
+        return combineTrampolinesAndFindMax(branchTrampolines);
+    }
+    
+    /**
+     * Combines multiple trampolines and finds the maximum value.
+     * Evaluates all branch trampolines fully, then finds the maximum result.
+     * This maintains trampoline safety while exploring all branches.
+     */
+    private Trampoline<Long> combineTrampolinesAndFindMax(final List<Trampoline<Long>> trampolines) {
+        if (trampolines.isEmpty()) {
+            return new Trampoline.Done<>(0L);
+        }
+        
+        // Check if all trampolines are Done (fully evaluated)
+        final boolean allDone = trampolines.stream().allMatch(t -> t instanceof Trampoline.Done<Long>);
+        
+        if (allDone) {
+            // All branches are evaluated, find the maximum
+            final long max = trampolines.stream()
+                    .map(t -> ((Trampoline.Done<Long>) t).result())
+                    .max(Long::compareTo)
+                    .orElse(0L);
+            return new Trampoline.Done<>(max);
+        }
+        
+        // Some branches still need evaluation, continue with one step
+        return new Trampoline.More<>(() -> {
+            final List<Trampoline<Long>> evaluated = trampolines.stream()
+                    .map(t -> {
+                        if (t instanceof Trampoline.More<Long> more) {
+                            return more.compute().get();
+                        }
+                        return t; // Already Done, keep as is
+                    })
+                    .toList();
+            return combineTrampolinesAndFindMax(evaluated);
+        });
     }
     
     /**
