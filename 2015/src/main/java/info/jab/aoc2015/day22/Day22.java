@@ -8,15 +8,15 @@ import info.jab.aoc.Solver;
  */
 public class Day22 implements Day<Integer> {
 
-    private final Solver<Integer> wizardSimulator = new WizardSimulator();
+    private final Solver<Integer> solver = new WizardSimulator();
 
     @Override
     public Integer getPart1Result(final String fileName) {
-        return wizardSimulator.solvePartOne(fileName);
+        return solver.solvePartOne(fileName);
     }
 
     @Override
     public Integer getPart2Result(final String fileName) {
-        return wizardSimulator.solvePartTwo(fileName);
+        return solver.solvePartTwo(fileName);
     }
 }

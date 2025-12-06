@@ -8,15 +8,15 @@ import info.jab.aoc.Solver;
  */
 public class Day11 implements Day<String> {
 
-    private final Solver<String> passwordValidator = new PasswordValidator();
+    private final Solver<String> solver = new PasswordValidator();
 
     @Override
     public String getPart1Result(final String fileName) {
-        return passwordValidator.solvePartOne(fileName);
+        return solver.solvePartOne(fileName);
     }
 
     @Override
     public String getPart2Result(final String fileName) {
-        return passwordValidator.solvePartTwo(fileName);
+        return solver.solvePartTwo(fileName);
     }
 }

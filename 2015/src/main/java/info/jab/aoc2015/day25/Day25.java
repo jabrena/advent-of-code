@@ -8,15 +8,15 @@ import info.jab.aoc.Solver;
  */
 public class Day25 implements Day<Long> {
 
-    private final Solver<Long> codeGenerator = new CodeGenerator();
+    private final Solver<Long> solver = new CodeGenerator();
 
     @Override
     public Long getPart1Result(final String fileName) {
-        return codeGenerator.solvePartOne(fileName);
+        return solver.solvePartOne(fileName);
     }
 
     @Override
     public Long getPart2Result(final String fileName) {
-        return codeGenerator.solvePartTwo(fileName);
+        return solver.solvePartTwo(fileName);
     }
 }

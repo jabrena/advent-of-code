@@ -23,18 +23,18 @@ public final class CodeGenerator implements Solver<Long> {
 
     @Override
     public Long solvePartOne(final String fileName) {
-        final String input = ResourceLines.stream("/" + fileName)
+        final String input = ResourceLines.stream(fileName)
                 .collect(Collectors.joining("\n"));
-        
+
         final Position position = parsePosition(input);
         final long sequencePosition = calculateSequencePosition(position.row(), position.column());
-        
+
         // Generate the code at that position using modular exponentiation
         // Formula: code = (20151125 * 252533^(position-1)) mod 33554393
         // This reduces complexity from O(p) to O(log p)
         final long exponent = sequencePosition - 1;
         final long power = modPow(MULTIPLIER, exponent, MODULUS);
-        
+
         return (INITIAL_CODE * power) % MODULUS;
     }
 
@@ -43,23 +43,23 @@ public final class CodeGenerator implements Solver<Long> {
         // Day 25 typically only has part 1 in Advent of Code
         return null;
     }
-    
+
     /**
      * Pure function: parses row and column from input.
      */
     private Position parsePosition(final String input) {
         final Matcher matcher = ROW_COLUMN_PATTERN.matcher(input);
-        
+
         if (!matcher.find()) {
             throw new IllegalArgumentException("Could not parse row and column from input");
         }
-        
+
         return new Position(
                 Integer.parseInt(matcher.group(1)),
                 Integer.parseInt(matcher.group(2))
         );
     }
-    
+
     /**
      * Pure function: calculates position in diagonal sequence.
      * Formula: position = (r + c - 2) * (r + c - 1) / 2 + c
@@ -68,7 +68,7 @@ public final class CodeGenerator implements Solver<Long> {
         final long sum = row + column;
         return (sum - 2) * (sum - 1) / 2 + column;
     }
-    
+
     /**
      * Pure function: fast modular exponentiation.
      * Calculates (base^exponent) mod modulus in O(log exponent) time.
@@ -78,7 +78,7 @@ public final class CodeGenerator implements Solver<Long> {
         long result = 1L;
         long currentBase = base % modulus;
         long currentExponent = exponent;
-        
+
         while (currentExponent > 0) {
             if (currentExponent % 2 == 1) {
                 result = (result * currentBase) % modulus;
@@ -86,8 +86,8 @@ public final class CodeGenerator implements Solver<Long> {
             currentExponent = currentExponent >> 1;
             currentBase = (currentBase * currentBase) % modulus;
         }
-        
+
         return result;
     }
-    
+
 }

@@ -8,15 +8,15 @@ import info.jab.aoc.Solver;
  */
 public class Day6 implements Day<Long> {
 
-    private final Solver<Long> lightCounter = new LightCounter();
+    private final Solver<Long> solver = new LightCounter();
 
     @Override
     public Long getPart1Result(final String fileName) {
-        return lightCounter.solvePartOne(fileName);
+        return solver.solvePartOne(fileName);
     }
 
     @Override
     public Long getPart2Result(final String fileName) {
-        return lightCounter.solvePartTwo(fileName);
+        return solver.solvePartTwo(fileName);
     }
 }

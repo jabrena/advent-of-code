@@ -8,15 +8,15 @@ import info.jab.aoc.Solver;
  */
 public class Day24 implements Day<Long> {
 
-    private final Solver<Long> packageBalancer = new PackageBalancer();
+    private final Solver<Long> solver = new PackageBalancer();
 
     @Override
     public Long getPart1Result(final String fileName) {
-        return packageBalancer.solvePartOne(fileName);
+        return solver.solvePartOne(fileName);
     }
 
     @Override
     public Long getPart2Result(final String fileName) {
-        return packageBalancer.solvePartTwo(fileName);
+        return solver.solvePartTwo(fileName);
     }
 }

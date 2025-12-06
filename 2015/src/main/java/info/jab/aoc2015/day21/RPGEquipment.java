@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  */
 public final class RPGEquipment implements Solver<Integer> {
 
-
+    @SuppressWarnings("null")
     private static final List<Item> WEAPONS = List.of(
         new Item("Dagger", 8, 4, 0),
         new Item("Shortsword", 10, 5, 0),
@@ -25,6 +25,7 @@ public final class RPGEquipment implements Solver<Integer> {
         new Item("Greataxe", 74, 8, 0)
     );
 
+    @SuppressWarnings("null")
     private static final List<Item> ARMOR = List.of(
         new Item("None", 0, 0, 0), // No armor option
         new Item("Leather", 13, 0, 1),
@@ -34,6 +35,7 @@ public final class RPGEquipment implements Solver<Integer> {
         new Item("Platemail", 102, 0, 5)
     );
 
+    @SuppressWarnings("null")
     private static final List<Item> RINGS = List.of(
         new Item("None1", 0, 0, 0), // No ring option 1
         new Item("None2", 0, 0, 0), // No ring option 2
@@ -49,7 +51,7 @@ public final class RPGEquipment implements Solver<Integer> {
     public Integer solvePartOne(final String fileName) {
         final List<String> lines = ResourceLines.list(fileName);
         final Character boss = parseBoss(lines);
-        
+
         return generateAllEquipmentCombinations()
                 .filter(equipment -> playerWins(equipment.toCharacter(), boss))
                 .mapToInt(Equipment::totalCost)
@@ -61,17 +63,18 @@ public final class RPGEquipment implements Solver<Integer> {
     public Integer solvePartTwo(final String fileName) {
         final List<String> lines = ResourceLines.list(fileName);
         final Character boss = parseBoss(lines);
-        
+
         return generateAllEquipmentCombinations()
                 .filter(equipment -> !playerWins(equipment.toCharacter(), boss))
                 .mapToInt(Equipment::totalCost)
                 .max()
                 .orElse(Integer.MIN_VALUE);
     }
-    
+
     /**
      * Pure function: generates all valid equipment combinations using stream API.
      */
+    @SuppressWarnings("null")
     private Stream<Equipment> generateAllEquipmentCombinations() {
         return WEAPONS.stream()
                 .flatMap(weapon -> ARMOR.stream()
@@ -91,12 +94,12 @@ public final class RPGEquipment implements Solver<Integer> {
                                             })
                                             .filter(eq -> eq != null)
                                     );
-                            
+
                             // One ring
                             final Stream<Equipment> oneRing = RINGS.stream()
                                     .filter(ring -> !ring.name().startsWith("None"))
                                     .map(ring -> new Equipment(weapon, armor, ring, new Item("None", 0, 0, 0)));
-                            
+
                             // No rings
                             final Equipment noRings = new Equipment(
                                     weapon,
@@ -104,7 +107,7 @@ public final class RPGEquipment implements Solver<Integer> {
                                     new Item("None", 0, 0, 0),
                                     new Item("None", 0, 0, 0)
                             );
-                            
+
                             return Stream.concat(Stream.concat(twoRings, oneRing), Stream.of(noRings));
                         })
                 );
@@ -119,19 +122,19 @@ public final class RPGEquipment implements Solver<Integer> {
                 .mapToInt(line -> Integer.parseInt(line.split(": ")[1]))
                 .findFirst()
                 .orElse(0);
-        
+
         final int damage = lines.stream()
                 .filter(line -> line.startsWith("Damage:"))
                 .mapToInt(line -> Integer.parseInt(line.split(": ")[1]))
                 .findFirst()
                 .orElse(0);
-        
+
         final int armor = lines.stream()
                 .filter(line -> line.startsWith("Armor:"))
                 .mapToInt(line -> Integer.parseInt(line.split(": ")[1]))
                 .findFirst()
                 .orElse(0);
-        
+
         return new Character(hitPoints, damage, armor);
     }
 
@@ -141,7 +144,7 @@ public final class RPGEquipment implements Solver<Integer> {
     private boolean playerWins(final Character player, final Character boss) {
         return simulateBattle(player, boss);
     }
-    
+
     /**
      * Pure recursive function: simulates battle without mutating state.
      */
@@ -152,19 +155,19 @@ public final class RPGEquipment implements Solver<Integer> {
         if (player.hitPoints() <= 0) {
             return false;
         }
-        
+
         // Player attacks first
         final int playerDamage = Math.max(1, player.damage() - boss.armor());
         final Character newBoss = new Character(boss.hitPoints() - playerDamage, boss.damage(), boss.armor());
-        
+
         if (newBoss.hitPoints() <= 0) {
             return true;
         }
-        
+
         // Boss attacks
         final int bossDamage = Math.max(1, boss.damage() - player.armor());
         final Character newPlayer = new Character(player.hitPoints() - bossDamage, player.damage(), player.armor());
-        
+
         return simulateBattle(newPlayer, newBoss);
     }
 }

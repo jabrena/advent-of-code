@@ -5,15 +5,15 @@ import info.jab.aoc.Solver;
 
 public class Day7 implements Day<Integer> {
 
-    private final Solver<Integer> circuit = new Circuit();
+    private final Solver<Integer> solver = new Circuit();
 
     @Override
     public Integer getPart1Result(final String fileName) {
-        return circuit.solvePartOne(fileName);
+        return solver.solvePartOne(fileName);
     }
 
     @Override
     public Integer getPart2Result(final String fileName) {
-        return circuit.solvePartTwo(fileName);
+        return solver.solvePartTwo(fileName);
     }
 }

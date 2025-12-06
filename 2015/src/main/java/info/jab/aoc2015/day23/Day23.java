@@ -8,15 +8,15 @@ import info.jab.aoc.Solver;
  */
 public class Day23 implements Day<Integer> {
 
-    private final Solver<Integer> turingComputer = new TuringComputer();
+    private final Solver<Integer> solver = new TuringComputer();
 
     @Override
     public Integer getPart1Result(final String fileName) {
-        return turingComputer.solvePartOne(fileName);
+        return solver.solvePartOne(fileName);
     }
 
     @Override
     public Integer getPart2Result(final String fileName) {
-        return turingComputer.solvePartTwo(fileName);
+        return solver.solvePartTwo(fileName);
     }
 }

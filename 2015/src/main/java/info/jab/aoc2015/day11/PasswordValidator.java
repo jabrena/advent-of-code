@@ -31,7 +31,7 @@ public class PasswordValidator implements Solver<String> {
     private String incrementPassword(String password) {
         char[] chars = password.toCharArray();
         int i = chars.length - 1;
-        
+
         while (i >= 0) {
             chars[i] = (char) (chars[i] + 1);
             if (chars[i] > 'z') {
@@ -51,6 +51,7 @@ public class PasswordValidator implements Solver<String> {
         return new String(chars);
     }
 
+    @SuppressWarnings("null")
     private boolean containsProhibitedLetters(String password) {
         return password.chars()
                 .mapToObj(c -> (char) c)
@@ -69,7 +70,7 @@ public class PasswordValidator implements Solver<String> {
     private boolean containsTwoDifferentPairs(String password) {
         int pairCount = 0;
         char lastPairChar = '\0';
-        
+
         int i = 0;
         while (i < password.length() - 1) {
             if (password.charAt(i) == password.charAt(i + 1) && password.charAt(i) != lastPairChar) {

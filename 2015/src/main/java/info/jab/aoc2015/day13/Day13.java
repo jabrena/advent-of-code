@@ -8,15 +8,15 @@ import info.jab.aoc.Solver;
  */
 public class Day13 implements Day<Integer> {
 
-    private final Solver<Integer> happinessCalculator = new HappinessCalculator();
+    private final Solver<Integer> solver = new HappinessCalculator();
 
     @Override
     public Integer getPart1Result(final String fileName) {
-        return happinessCalculator.solvePartOne(fileName);
+        return solver.solvePartOne(fileName);
     }
 
     @Override
     public Integer getPart2Result(final String fileName) {
-        return happinessCalculator.solvePartTwo(fileName);
+        return solver.solvePartTwo(fileName);
     }
 }
