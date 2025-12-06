@@ -7,41 +7,35 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * Solver for code generation problems.
+ * Uses functional programming principles:
+ * - Pure functions for calculations
+ * - Immutable data structures
+ * - Stream API for input processing
+ */
 public final class CodeGeneratorSolver implements Solver<Long> {
+
+    private static final Pattern ROW_COLUMN_PATTERN = Pattern.compile("row (\\d+), column (\\d+)");
+    private static final long INITIAL_CODE = 20151125L;
+    private static final long MULTIPLIER = 252533L;
+    private static final long MODULUS = 33554393L;
 
     @Override
     public Long solvePartOne(final String fileName) {
-        String input = ResourceLines.stream("/" + fileName)
+        final String input = ResourceLines.stream("/" + fileName)
                 .collect(Collectors.joining("\n"));
         
-        // Parse the target row and column from input
-        Pattern pattern = Pattern.compile("row (\\d+), column (\\d+)");
-        Matcher matcher = pattern.matcher(input);
-        
-        if (!matcher.find()) {
-            throw new RuntimeException("Could not parse row and column from input");
-        }
-        
-        int targetRow = Integer.parseInt(matcher.group(1));
-        int targetColumn = Integer.parseInt(matcher.group(2));
-        
-        // Calculate the position in the diagonal sequence
-        // The formula to get the position (1-indexed) for row r, column c is:
-        // position = (r + c - 2) * (r + c - 1) / 2 + c
-        long position = (long)(targetRow + targetColumn - 2) * (targetRow + targetColumn - 1) / 2 + targetColumn;
+        final Position position = parsePosition(input);
+        final long sequencePosition = calculateSequencePosition(position.row(), position.column());
         
         // Generate the code at that position using modular exponentiation
         // Formula: code = (20151125 * 252533^(position-1)) mod 33554393
         // This reduces complexity from O(p) to O(log p)
-        long base = 252533L;
-        long modulus = 33554393L;
-        long exponent = position - 1;
+        final long exponent = sequencePosition - 1;
+        final long power = modPow(MULTIPLIER, exponent, MODULUS);
         
-        // Fast modular exponentiation: base^exponent mod modulus
-        long power = modPow(base, exponent, modulus);
-        long code = (20151125L * power) % modulus;
-        
-        return code;
+        return (INITIAL_CODE * power) % MODULUS;
     }
 
     @Override
@@ -51,20 +45,53 @@ public final class CodeGeneratorSolver implements Solver<Long> {
     }
     
     /**
-     * Fast modular exponentiation: calculates (base^exponent) mod modulus in O(log exponent) time
+     * Pure function: parses row and column from input.
      */
-    private long modPow(long base, long exponent, long modulus) {
-        long result = 1L;
-        base = base % modulus;
+    private Position parsePosition(final String input) {
+        final Matcher matcher = ROW_COLUMN_PATTERN.matcher(input);
         
-        while (exponent > 0) {
-            if (exponent % 2 == 1) {
-                result = (result * base) % modulus;
+        if (!matcher.find()) {
+            throw new IllegalArgumentException("Could not parse row and column from input");
+        }
+        
+        return new Position(
+                Integer.parseInt(matcher.group(1)),
+                Integer.parseInt(matcher.group(2))
+        );
+    }
+    
+    /**
+     * Pure function: calculates position in diagonal sequence.
+     * Formula: position = (r + c - 2) * (r + c - 1) / 2 + c
+     */
+    private long calculateSequencePosition(final int row, final int column) {
+        final long sum = row + column;
+        return (sum - 2) * (sum - 1) / 2 + column;
+    }
+    
+    /**
+     * Pure function: fast modular exponentiation.
+     * Calculates (base^exponent) mod modulus in O(log exponent) time.
+     * Uses iterative approach to avoid stack overflow.
+     */
+    private long modPow(final long base, final long exponent, final long modulus) {
+        long result = 1L;
+        long currentBase = base % modulus;
+        long currentExponent = exponent;
+        
+        while (currentExponent > 0) {
+            if (currentExponent % 2 == 1) {
+                result = (result * currentBase) % modulus;
             }
-            exponent = exponent >> 1;
-            base = (base * base) % modulus;
+            currentExponent = currentExponent >> 1;
+            currentBase = (currentBase * currentBase) % modulus;
         }
         
         return result;
     }
+    
+    /**
+     * Immutable record for position.
+     */
+    private record Position(int row, int column) {}
 }

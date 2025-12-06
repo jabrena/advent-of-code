@@ -3,104 +3,103 @@ package info.jab.aoc2015.day14;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
+/**
+ * Solver for reindeer race problems.
+ * Uses functional programming principles:
+ * - Pure functions for calculations
+ * - Stream API for declarative transformations
+ * - Immutable data structures
+ */
 public final class ReindeerRaceSolver implements Solver<Integer> {
 
     private static final int TOTAL_SECONDS = 2503;
+    private static final Pattern REINDEER_PATTERN = Pattern.compile(
+            "(\\w+) can fly (\\d+) km/s for (\\d+) seconds, but then must rest for (\\d+) seconds\\.");
 
     record Reindeer(String name, int speed, int flyTime, int restTime) {
         
-        public int distanceAfter(int totalSeconds) {
-            int cycleTime = flyTime + restTime;
-            int completeCycles = totalSeconds / cycleTime;
-            int remainingSeconds = totalSeconds % cycleTime;
+        /**
+         * Pure function: calculates distance after given seconds.
+         * No side effects, deterministic output.
+         */
+        public int distanceAfter(final int totalSeconds) {
+            final int cycleTime = flyTime + restTime;
+            final int completeCycles = totalSeconds / cycleTime;
+            final int remainingSeconds = totalSeconds % cycleTime;
             
-            int distance = completeCycles * speed * flyTime;
+            final int baseDistance = completeCycles * speed * flyTime;
             
             // Handle remaining seconds in the current cycle
-            if (remainingSeconds > 0) {
-                int flyingSecondsInLastCycle = Math.min(remainingSeconds, flyTime);
-                distance += flyingSecondsInLastCycle * speed;
-            }
+            final int flyingSecondsInLastCycle = remainingSeconds > 0 
+                    ? Math.min(remainingSeconds, flyTime) 
+                    : 0;
             
-            return distance;
+            return baseDistance + flyingSecondsInLastCycle * speed;
         }
     }
 
     @Override
     public Integer solvePartOne(final String fileName) {
-        List<Reindeer> reindeer = parseReindeer(fileName);
+        final List<Reindeer> reindeer = parseReindeer(fileName);
         
-        int maxDistance = 0;
-        for (Reindeer r : reindeer) {
-            int distance = r.distanceAfter(TOTAL_SECONDS);
-            maxDistance = Math.max(maxDistance, distance);
-        }
-        
-        return maxDistance;
+        return reindeer.stream()
+                .mapToInt(r -> r.distanceAfter(TOTAL_SECONDS))
+                .max()
+                .orElse(0);
     }
 
     @Override
     public Integer solvePartTwo(final String fileName) {
-        List<Reindeer> reindeer = parseReindeer(fileName);
-        int[] points = new int[reindeer.size()];
+        final List<Reindeer> reindeer = parseReindeer(fileName);
         
-        // Optimize: Instead of simulating each second, calculate distances at each second
-        // but use the efficient distanceAfter method which is O(1) per reindeer per second
-        // This reduces from O(R×T²) to O(R×T) by avoiding redundant calculations
+        // Use functional approach: calculate points for each reindeer
+        // For each second, find max distance and award points to leaders
+        final List<Integer> points = IntStream.range(0, reindeer.size())
+                .mapToObj(reindeerIndex -> 
+                    IntStream.rangeClosed(1, TOTAL_SECONDS)
+                            .map(second -> {
+                                final int distance = reindeer.get(reindeerIndex).distanceAfter(second);
+                                final int maxDistance = reindeer.stream()
+                                        .mapToInt(r -> r.distanceAfter(second))
+                                        .max()
+                                        .orElse(0);
+                                return distance == maxDistance ? 1 : 0;
+                            })
+                            .sum()
+                )
+                .toList();
         
-        // Pre-calculate distances for all reindeer at each second
-        // We can optimize further by only checking at state transitions, but for clarity
-        // and correctness, we'll use the optimized distance calculation
-        for (int second = 1; second <= TOTAL_SECONDS; second++) {
-            int maxDistance = 0;
-            
-            // Calculate distance for each reindeer at this second - O(1) per reindeer
-            for (int i = 0; i < reindeer.size(); i++) {
-                int distance = reindeer.get(i).distanceAfter(second);
-                if (distance > maxDistance) {
-                    maxDistance = distance;
-                }
-            }
-            
-            // Award points to reindeer in the lead - O(R)
-            for (int i = 0; i < reindeer.size(); i++) {
-                if (reindeer.get(i).distanceAfter(second) == maxDistance) {
-                    points[i]++;
-                }
-            }
-        }
-        
-        // Find the maximum points - O(R)
-        int maxPoints = 0;
-        for (int point : points) {
-            maxPoints = Math.max(maxPoints, point);
-        }
-        
-        return maxPoints;
+        return points.stream()
+                .mapToInt(Integer::intValue)
+                .max()
+                .orElse(0);
     }
     
-    private List<Reindeer> parseReindeer(String fileName) {
-        List<String> lines = ResourceLines.list(fileName);
-        List<Reindeer> reindeer = new ArrayList<>();
-        Pattern pattern = Pattern.compile("(\\w+) can fly (\\d+) km/s for (\\d+) seconds, but then must rest for (\\d+) seconds\\.");
-        
-        for (String line : lines) {
-            Matcher matcher = pattern.matcher(line.trim());
-            if (matcher.matches()) {
-                String name = matcher.group(1);
-                int speed = Integer.parseInt(matcher.group(2));
-                int flyTime = Integer.parseInt(matcher.group(3));
-                int restTime = Integer.parseInt(matcher.group(4));
-                
-                reindeer.add(new Reindeer(name, speed, flyTime, restTime));
-            }
-        }
-        
-        return reindeer;
+    /**
+     * Pure function: parses reindeer from input file.
+     * Uses stream API for declarative transformation.
+     */
+    private List<Reindeer> parseReindeer(final String fileName) {
+        return ResourceLines.list(fileName).stream()
+                .map(String::trim)
+                .filter(line -> !line.isEmpty())
+                .map(line -> {
+                    final var matcher = REINDEER_PATTERN.matcher(line);
+                    if (matcher.matches()) {
+                        return new Reindeer(
+                                matcher.group(1),
+                                Integer.parseInt(matcher.group(2)),
+                                Integer.parseInt(matcher.group(3)),
+                                Integer.parseInt(matcher.group(4))
+                        );
+                    }
+                    return null;
+                })
+                .filter(reindeer -> reindeer != null)
+                .toList();
     }
 }

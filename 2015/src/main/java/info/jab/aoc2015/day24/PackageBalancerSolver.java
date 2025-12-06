@@ -3,10 +3,17 @@ package info.jab.aoc2015.day24;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.IntStream;
 
+/**
+ * Solver for package balancing problems.
+ * Uses functional programming principles:
+ * - Pure functions for calculations
+ * - Stream API for declarative transformations
+ * - Immutable data structures
+ */
 public final class PackageBalancerSolver implements Solver<Long> {
 
     @Override
@@ -35,55 +42,54 @@ public final class PackageBalancerSolver implements Solver<Long> {
         return findMinimumQuantumEntanglement(packages, targetWeight);
     }
 
-    private long findMinimumQuantumEntanglement(List<Integer> packages, int targetWeight) {
+    /**
+     * Pure function: finds minimum quantum entanglement using functional approach.
+     */
+    private long findMinimumQuantumEntanglement(final List<Integer> packages, final int targetWeight) {
         // Sort packages in descending order to find smaller combinations faster
         // Larger packages first means we'll find minimum-size combinations earlier
-        List<Integer> sortedPackages = new ArrayList<>(packages);
-        sortedPackages.sort(Collections.reverseOrder());
+        final List<Integer> sortedPackages = packages.stream()
+                .sorted(Comparator.reverseOrder())
+                .toList();
 
-        // Progressive search: find the minimum size first
-        int minSize = findMinimumSize(sortedPackages, targetWeight);
+        // Progressive search: find the minimum size first using stream
+        final int minSize = IntStream.rangeClosed(1, packages.size())
+                .filter(maxSize -> findBestCombination(
+                        sortedPackages,
+                        targetWeight,
+                        0,
+                        List.of(),
+                        maxSize,
+                        Long.MAX_VALUE
+                ) < Long.MAX_VALUE)
+                .findFirst()
+                .orElse(Integer.MAX_VALUE);
+
         if (minSize == Integer.MAX_VALUE) {
             return Long.MAX_VALUE;
         }
 
         // Now find the minimum quantum entanglement among all combinations of minimum size
         return findBestCombination(
-            sortedPackages,
-            targetWeight,
-            0,
-            new ArrayList<>(),
-            minSize,
-            Long.MAX_VALUE
+                sortedPackages,
+                targetWeight,
+                0,
+                List.of(),
+                minSize,
+                Long.MAX_VALUE
         );
     }
 
-    private int findMinimumSize(List<Integer> packages, int targetWeight) {
-        // Search for combinations of increasing size until we find at least one valid combination
-        for (int maxSize = 1; maxSize <= packages.size(); maxSize++) {
-            long result = findBestCombination(
-                packages,
-                targetWeight,
-                0,
-                new ArrayList<>(),
-                maxSize,
-                Long.MAX_VALUE
-            );
-
-            if (result < Long.MAX_VALUE) {
-                return maxSize; // Found minimum size
-            }
-        }
-        return Integer.MAX_VALUE;
-    }
-
+    /**
+     * Pure recursive function: finds best combination using immutable lists.
+     */
     private long findBestCombination(
-        List<Integer> packages,
-        int remainingWeight,
-        int startIndex,
-        List<Integer> currentCombination,
-        int maxSize,
-        long currentBest) {
+            final List<Integer> packages,
+            final int remainingWeight,
+            final int startIndex,
+            final List<Integer> currentCombination,
+            final int maxSize,
+            final long currentBest) {
 
         // Early termination: if current combination is already too large
         if (currentCombination.size() > maxSize) {
@@ -91,8 +97,8 @@ public final class PackageBalancerSolver implements Solver<Long> {
         }
 
         // Early termination: if quantum entanglement already exceeds current best
-        if (currentCombination.size() > 0 && currentBest < Long.MAX_VALUE) {
-            long currentQE = calculateQuantumEntanglement(currentCombination);
+        if (!currentCombination.isEmpty() && currentBest < Long.MAX_VALUE) {
+            final long currentQE = calculateQuantumEntanglement(currentCombination);
             if (currentQE >= currentBest) {
                 return Long.MAX_VALUE; // Prune this branch
             }
@@ -115,39 +121,46 @@ public final class PackageBalancerSolver implements Solver<Long> {
             return Long.MAX_VALUE;
         }
 
-        long bestQE = Long.MAX_VALUE;
+        final int packageWeight = packages.get(startIndex);
+        final long newBest = Math.min(currentBest, Long.MAX_VALUE);
 
         // Try including current package
-        int packageWeight = packages.get(startIndex);
-        if (remainingWeight >= packageWeight && currentCombination.size() < maxSize) {
-            currentCombination.add(packageWeight);
-            long qeWith = findBestCombination(
+        final long qeWith = (remainingWeight >= packageWeight && currentCombination.size() < maxSize)
+                ? findBestCombination(
+                        packages,
+                        remainingWeight - packageWeight,
+                        startIndex + 1,
+                        append(currentCombination, packageWeight),
+                        maxSize,
+                        newBest
+                )
+                : Long.MAX_VALUE;
+
+        // Try excluding current package
+        final long qeWithout = findBestCombination(
                 packages,
-                remainingWeight - packageWeight,
+                remainingWeight,
                 startIndex + 1,
                 currentCombination,
                 maxSize,
-                Math.min(currentBest, bestQE)
-            );
-            bestQE = Math.min(bestQE, qeWith);
-            currentCombination.remove(currentCombination.size() - 1);
-        }
-
-        // Try excluding current package
-        long qeWithout = findBestCombination(
-            packages,
-            remainingWeight,
-            startIndex + 1,
-            currentCombination,
-            maxSize,
-            Math.min(currentBest, bestQE)
+                Math.min(newBest, qeWith)
         );
-        bestQE = Math.min(bestQE, qeWithout);
 
-        return bestQE;
+        return Math.min(qeWith, qeWithout);
+    }
+    
+    /**
+     * Pure function: creates new list with appended element (immutable).
+     */
+    private List<Integer> append(final List<Integer> list, final int value) {
+        return java.util.stream.Stream.concat(list.stream(), java.util.stream.Stream.of(value))
+                .toList();
     }
 
-    private long calculateQuantumEntanglement(List<Integer> packages) {
+    /**
+     * Pure function: calculates quantum entanglement using stream reduce.
+     */
+    private long calculateQuantumEntanglement(final List<Integer> packages) {
         return packages.stream()
                 .mapToLong(Integer::longValue)
                 .reduce(1L, (a, b) -> a * b);

@@ -3,28 +3,35 @@ package info.jab.aoc2015.day17;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
+/**
+ * Solver for container combination problems.
+ * Uses functional programming principles:
+ * - Pure functions for calculations
+ * - Immutable data structures
+ * - Functional recursion with memoization
+ */
 public final class ContainerCombinationSolver implements Solver<Integer> {
     
     private static final int TARGET_VOLUME = 150;
     
     @Override
     public Integer solvePartOne(final String fileName) {
-        var containers = ResourceLines.list(fileName, Integer::parseInt);
+        final List<Integer> containers = ResourceLines.list(fileName, Integer::parseInt);
         return countCombinationsMemoized(containers, TARGET_VOLUME, 0, 0, new HashMap<>());
     }
     
     @Override
     public Integer solvePartTwo(final String fileName) {
-        var containers = ResourceLines.list(fileName, Integer::parseInt);
-        var validCombinations = findAllValidCombinations(containers, TARGET_VOLUME);
+        final List<Integer> containers = ResourceLines.list(fileName, Integer::parseInt);
+        final List<List<Integer>> validCombinations = findAllValidCombinations(containers, TARGET_VOLUME);
         
-        // Find minimum number of containers needed
-        int minContainers = validCombinations.stream()
+        // Find minimum number of containers needed using stream
+        final int minContainers = validCombinations.stream()
                 .mapToInt(List::size)
                 .min()
                 .orElse(0);
@@ -35,9 +42,18 @@ public final class ContainerCombinationSolver implements Solver<Integer> {
                 .count();
     }
     
-    private int countCombinationsMemoized(List<Integer> containers, int target, int currentSum, int index, 
-                                         Map<String, Integer> memo) {
-        String key = currentSum + "," + index;
+    /**
+     * Pure function: counts combinations using memoization.
+     * Uses functional recursion with immutable memo map.
+     */
+    private int countCombinationsMemoized(
+            final List<Integer> containers,
+            final int target,
+            final int currentSum,
+            final int index,
+            final Map<String, Integer> memo) {
+        
+        final String key = currentSum + "," + index;
         if (memo.containsKey(key)) {
             return memo.get(key);
         }
@@ -51,40 +67,84 @@ public final class ContainerCombinationSolver implements Solver<Integer> {
         }
         
         // Include current container
-        int withCurrent = countCombinationsMemoized(containers, target, currentSum + containers.get(index), index + 1, memo);
+        final int withCurrent = countCombinationsMemoized(
+                containers,
+                target,
+                currentSum + containers.get(index),
+                index + 1,
+                memo
+        );
         
         // Exclude current container
-        int withoutCurrent = countCombinationsMemoized(containers, target, currentSum, index + 1, memo);
+        final int withoutCurrent = countCombinationsMemoized(
+                containers,
+                target,
+                currentSum,
+                index + 1,
+                memo
+        );
         
-        int result = withCurrent + withoutCurrent;
+        final int result = withCurrent + withoutCurrent;
         memo.put(key, result);
         return result;
     }
     
-    private List<List<Integer>> findAllValidCombinations(List<Integer> containers, int target) {
-        List<List<Integer>> validCombinations = new ArrayList<>();
-        findCombinations(containers, target, 0, 0, new ArrayList<>(), validCombinations);
-        return validCombinations;
+    /**
+     * Pure function: finds all valid combinations functionally.
+     */
+    private List<List<Integer>> findAllValidCombinations(final List<Integer> containers, final int target) {
+        return findCombinations(containers, target, 0, 0, List.of());
     }
     
-    private void findCombinations(List<Integer> containers, int target, int currentSum, int index, 
-                                List<Integer> currentCombination, List<List<Integer>> validCombinations) {
+    /**
+     * Pure recursive function: generates combinations using immutable lists.
+     */
+    private List<List<Integer>> findCombinations(
+            final List<Integer> containers,
+            final int target,
+            final int currentSum,
+            final int index,
+            final List<Integer> currentCombination) {
+        
         if (currentSum == target) {
-            validCombinations.add(new ArrayList<>(currentCombination));
-            return;
+            return List.of(currentCombination);
         }
         
         if (currentSum > target || index >= containers.size()) {
-            return;
+            return List.of();
         }
         
         // Include current container
-        currentCombination.add(containers.get(index));
-        findCombinations(containers, target, currentSum + containers.get(index), index + 1, 
-                        currentCombination, validCombinations);
-        currentCombination.remove(currentCombination.size() - 1);
+        final List<Integer> withCurrent = append(currentCombination, containers.get(index));
+        final List<List<Integer>> withCurrentResults = findCombinations(
+                containers,
+                target,
+                currentSum + containers.get(index),
+                index + 1,
+                withCurrent
+        );
         
         // Exclude current container
-        findCombinations(containers, target, currentSum, index + 1, currentCombination, validCombinations);
+        final List<List<Integer>> withoutCurrentResults = findCombinations(
+                containers,
+                target,
+                currentSum,
+                index + 1,
+                currentCombination
+        );
+        
+        // Combine results functionally
+        return java.util.stream.Stream.concat(
+                withCurrentResults.stream(),
+                withoutCurrentResults.stream()
+        ).toList();
+    }
+    
+    /**
+     * Pure function: creates new list with appended element (immutable).
+     */
+    private List<Integer> append(final List<Integer> list, final int value) {
+        return java.util.stream.Stream.concat(list.stream(), java.util.stream.Stream.of(value))
+                .toList();
     }
 }

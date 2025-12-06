@@ -3,13 +3,11 @@ package info.jab.aoc2015.day19;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public final class MoleculeReplacementSolver implements Solver<Integer> {
 
@@ -34,50 +32,52 @@ public final class MoleculeReplacementSolver implements Solver<Integer> {
         return findMinimumSteps(input.molecule(), input.replacements());
     }
 
-    private ParsedInput parseInput(String fileName) {
-        List<String> lines = ResourceLines.list(fileName);
-        Map<String, List<String>> replacements = new HashMap<>();
-        String molecule = "";
+    /**
+     * Pure function: parses input using stream API.
+     */
+    private ParsedInput parseInput(final String fileName) {
+        final List<String> lines = ResourceLines.list(fileName);
         
-        for (String line : lines) {
-            String trimmedLine = line.trim();
-            if (trimmedLine.isEmpty()) {
-                continue;
-            }
-            
-            if (trimmedLine.contains(REPLACEMENT_SEPARATOR)) {
-                String[] parts = trimmedLine.split(REPLACEMENT_SEPARATOR);
-                String from = parts[0];
-                String to = parts[1];
-                replacements.computeIfAbsent(from, k -> new ArrayList<>()).add(to);
-            } else {
-                molecule = trimmedLine;
-            }
-        }
+        final Map<String, List<String>> replacements = lines.stream()
+                .map(String::trim)
+                .filter(line -> !line.isEmpty() && line.contains(REPLACEMENT_SEPARATOR))
+                .map(line -> {
+                    final String[] parts = line.split(REPLACEMENT_SEPARATOR);
+                    return new Replacement(parts[0], parts[1]);
+                })
+                .collect(java.util.stream.Collectors.groupingBy(
+                        Replacement::from,
+                        java.util.stream.Collectors.mapping(Replacement::to, java.util.stream.Collectors.toList())
+                ));
+        
+        final String molecule = lines.stream()
+                .map(String::trim)
+                .filter(line -> !line.isEmpty() && !line.contains(REPLACEMENT_SEPARATOR))
+                .findFirst()
+                .orElse("");
         
         return new ParsedInput(replacements, molecule);
     }
     
-    private int countDistinctMolecules(String molecule, Map<String, List<String>> replacements) {
-        Set<String> distinctMolecules = new HashSet<>();
-        
-        for (Map.Entry<String, List<String>> entry : replacements.entrySet()) {
-            String from = entry.getKey();
-            List<String> toList = entry.getValue();
-            
-            // Find all positions where 'from' appears in the molecule
-            for (int i = 0; i <= molecule.length() - from.length(); i++) {
-                if (molecule.substring(i, i + from.length()).equals(from)) {
-                    // For each possible replacement
-                    for (String to : toList) {
-                        String newMolecule = molecule.substring(0, i) + to + molecule.substring(i + from.length());
-                        distinctMolecules.add(newMolecule);
-                    }
-                }
-            }
-        }
-        
-        return distinctMolecules.size();
+    /**
+     * Pure function: counts distinct molecules using stream API.
+     */
+    private int countDistinctMolecules(final String molecule, final Map<String, List<String>> replacements) {
+        return replacements.entrySet().stream()
+                .flatMap(entry -> {
+                    final String from = entry.getKey();
+                    final List<String> toList = entry.getValue();
+                    
+                    // Find all positions where 'from' appears in the molecule
+                    return IntStream.rangeClosed(0, molecule.length() - from.length())
+                            .filter(i -> molecule.substring(i, i + from.length()).equals(from))
+                            .boxed()
+                            .flatMap(i -> toList.stream()
+                                    .map(to -> molecule.substring(0, i) + to + molecule.substring(i + from.length()))
+                            );
+                })
+                .collect(java.util.stream.Collectors.toSet())
+                .size();
     }
     
     private int findMinimumSteps(String targetMolecule, Map<String, List<String>> replacements) {
@@ -100,21 +100,22 @@ public final class MoleculeReplacementSolver implements Solver<Integer> {
         throw new IllegalStateException("Failed to find solution after " + MAX_ATTEMPTS + " attempts");
     }
     
-    private List<Replacement> buildReverseReplacements(Map<String, List<String>> replacements) {
-        List<Replacement> reverseReplacements = new ArrayList<>();
-        for (Map.Entry<String, List<String>> entry : replacements.entrySet()) {
-            String from = entry.getKey();
-            for (String to : entry.getValue()) {
-                reverseReplacements.add(new Replacement(to, from));
-            }
-        }
-        // Sort by length (longest first), then alphabetically for deterministic behavior
-        reverseReplacements.sort(
-            Comparator.comparingInt((Replacement r) -> r.from().length())
-                .reversed()
-                .thenComparing(Replacement::from)
-        );
-        return reverseReplacements;
+    /**
+     * Pure function: builds reverse replacements using stream API.
+     */
+    private List<Replacement> buildReverseReplacements(final Map<String, List<String>> replacements) {
+        return replacements.entrySet().stream()
+                .flatMap(entry -> {
+                    final String from = entry.getKey();
+                    return entry.getValue().stream()
+                            .map(to -> new Replacement(to, from));
+                })
+                .sorted(Comparator
+                        .comparingInt((Replacement r) -> r.from().length())
+                        .reversed()
+                        .thenComparing(Replacement::from)
+                )
+                .toList();
     }
     
     private int attemptGreedyReduction(String targetMolecule, List<Replacement> reverseReplacements) {
