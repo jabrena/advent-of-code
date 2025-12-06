@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
@@ -96,28 +95,6 @@ public class HappinessCalculator implements Solver<Integer> {
                    .flatMap(Set::stream)
                    .forEach(people::add);
         return people;
-    }
-
-    enum HappinessType {
-        GAIN("gain"),
-        LOSE("lose");
-    
-        private final String value;
-    
-        HappinessType(String value) {
-            this.value = value;
-        }
-    
-        public String getValue() {
-            return value;
-        }
-    
-        public static HappinessType from(String text) {
-            return Stream.of(HappinessType.values())
-                .filter(type -> type.value.equalsIgnoreCase(text))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No HappinessType with text " + text + " found"));
-        }
     }
 
     private Map<String, Map<String, Integer>> getHappinessMap(List<String> lines) {
