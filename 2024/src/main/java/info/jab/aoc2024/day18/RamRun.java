@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import com.putoet.grid.Grid;
+import com.putoet.grid.GridUtils;
 import com.putoet.resources.ResourceLines;
 
 public class RamRun {
@@ -19,7 +21,7 @@ public class RamRun {
             .toArray(int[][]::new);
     }
 
-    private int findShortestPath(boolean[][] grid, int gridSize, List<int[]> path) {
+    private int findShortestPath(Grid grid, int gridSize, List<int[]> path) {
         // Directions for moving up, down, left, and right
         int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 
@@ -52,8 +54,7 @@ public class RamRun {
                 int newY = y + direction[1];
 
                 // Check bounds and if the cell is safe to enter
-                if (newX >= 0 && newX < gridSize && newY >= 0 && newY < gridSize
-                        && !grid[newY][newX] && !visited[newY][newX]) {
+                if (grid.contains(newX, newY) && grid.get(newX, newY) != '#' && !visited[newY][newX]) {
                     queue.add(new int[]{newX, newY, steps + 1});
                     visited[newY][newX] = true;
                     parentMap.put(newX + "," + newY, new int[]{x, y});
@@ -75,43 +76,36 @@ public class RamRun {
         path.add(0, new int[]{0, 0}); // Add the starting point
     }
 
-    private void visualizeGrid(boolean[][] grid, int gridSize, List<int[]> path) {
-        char[][] visualGrid = new char[gridSize][gridSize];
-
-        // Initialize the grid with '.' for safe cells and '#' for corrupted cells
-        for (int y = 0; y < gridSize; y++) {
-            for (int x = 0; x < gridSize; x++) {
-                visualGrid[y][x] = grid[y][x] ? '#' : '.';
-            }
-        }
+    private void visualizeGrid(Grid grid, int gridSize, List<int[]> path) {
+        Grid visualGrid = grid.copy();
 
         // Mark the path with 'O'
         for (int[] coord : path) {
-            visualGrid[coord[1]][coord[0]] = 'O';
+            visualGrid.set(coord[0], coord[1], 'O');
         }
 
         // Print the grid
-        for (int y = 0; y < gridSize; y++) {
-            for (int x = 0; x < gridSize; x++) {
-                System.out.print(visualGrid[y][x]);
+        for (int y = visualGrid.minY(); y < visualGrid.maxY(); y++) {
+            for (int x = visualGrid.minX(); x < visualGrid.maxX(); x++) {
+                System.out.print(visualGrid.get(x, y));
             }
             System.out.println();
         }
     }
 
-    private String initializeCorruptedGrid(boolean[][] grid, int[][] corruptedCoordinates, int limit) {
+    private String initializeCorruptedGrid(Grid grid, int[][] corruptedCoordinates, int limit) {
         var solution = "";
         for (int i = 0; i < limit; i++) {
             int[] coord = corruptedCoordinates[i];
             solution = "" + coord[0] + "," + coord[1];
-            grid[coord[1]][coord[0]] = true; // Mark corrupted cells
+            grid.set(coord[0], coord[1], '#'); // Mark corrupted cells
         }
         return solution;
     }
 
-    private boolean[][] initializePoints(boolean[][] grid, int gridSize) {
-        grid[0][0] = false; // Start point
-        grid[gridSize - 1][gridSize - 1] = false; // Exit point
+    private Grid initializePoints(Grid grid, int gridSize) {
+        grid.set(0, 0, '.'); // Start point
+        grid.set(gridSize - 1, gridSize - 1, '.'); // Exit point
 
         return grid;
     }
@@ -121,7 +115,7 @@ public class RamRun {
         int[][] corruptedCoordinates = getInputData(fileName);
 
         // Define the grid size
-        boolean[][] grid = new boolean[gridSize][gridSize];
+        Grid grid = new Grid(GridUtils.of(0, gridSize, 0, gridSize, '.'));
         initializeCorruptedGrid(grid, corruptedCoordinates, limit); //I don´t like to mutate input parameter
 
         initializePoints(grid, gridSize);
@@ -156,7 +150,7 @@ public class RamRun {
         for(int x = 0; x < until; x++) {
 
             //Reset grid in any iteration
-            boolean[][] grid = new boolean[gridSize][gridSize];
+            Grid grid = new Grid(GridUtils.of(0, gridSize, 0, gridSize, '.'));
             solution = initializeCorruptedGrid(grid, corruptedCoordinates, limit + x);
 
             initializePoints(grid, gridSize);

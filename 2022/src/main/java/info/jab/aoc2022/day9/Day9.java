@@ -16,16 +16,7 @@ public class Day9 implements Day<Long> {
                 .map(Movement::fromString)
                 .forEach(ropePhysics::execute);
 
-        boolean[][] cellsVisited = ropePhysics.getCellsVisited();
-        long count = 0;
-        for (boolean[] row : cellsVisited) {
-            for (boolean cell : row) {
-                if (cell) {
-                    count++;
-                }
-            }
-        }
-        return count;
+        return ropePhysics.getCellsVisited().count('#');
         // @formatter:on
     }
 
