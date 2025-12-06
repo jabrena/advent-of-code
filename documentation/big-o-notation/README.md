@@ -643,5 +643,21 @@ Remember:
 
 ---
 
-*Last updated: 2024*
-*For specific algorithm analyses, see [2024.md](./2024.md) for Advent of Code 2024 solutions.*
+*Last updated: 2025*
+*For specific algorithm analyses, see the year-specific files (e.g., [2024.md](./2024.md), [2025.md](./2025.md)) for Advent of Code solutions.*
+
+## Grid Utilities
+
+Several grid-based problems use utility classes from the `third-party/aoc` module:
+
+- **`Grid`**: Core grid data structure for char-based 2D grids
+- **`GridDirections`**: Utility class for direction-based operations:
+  - `getNeighbors()`: Get neighbor points (cardinal or diagonal)
+  - `countNeighbors()`: Count neighbors matching a condition
+  - `getNeighborValues()`: Get values of neighbor cells
+  - `scanDirection()`: Scan in a direction until a stop condition is met
+
+These utilities provide standardized, efficient operations for grid-based algorithms and are used in problems like:
+- Day 18 (2015): Conway's Game of Life - uses `GridDirections.countNeighbors()`
+- Day 8 (2022): Tree visibility - uses `GridDirections.scanDirection()`
+- Day 4 (2025): Grid neighbor solver - uses `GridDirections.countNeighbors()`
