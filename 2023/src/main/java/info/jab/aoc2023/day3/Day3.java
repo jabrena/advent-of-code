@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import info.jab.aoc.Day;
 import com.putoet.grid.Grid;
+import com.putoet.grid.GridUtils;
 import com.putoet.resources.ResourceLines;
 
 /**
@@ -44,7 +45,7 @@ class Day3  implements Day<Long> {
     };
 
     Function<List<String>, Grid> createMatrix = param -> {
-        return new Grid(com.putoet.grid.GridUtils.of(param));
+        return new Grid(GridUtils.of(param));
     };
 
     record Symbol(String symbol, int x, int y) {
