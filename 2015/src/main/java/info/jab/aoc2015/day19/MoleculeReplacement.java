@@ -3,6 +3,7 @@ package info.jab.aoc2015.day19;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -98,10 +99,11 @@ public final class MoleculeReplacement implements Solver<Integer> {
     }
     
     /**
-     * Pure function: builds reverse replacements using stream API.
+     * Builds reverse replacements using stream API.
+     * Returns a mutable list to allow rotation for different ordering attempts.
      */
     private List<Replacement> buildReverseReplacements(final Map<String, List<String>> replacements) {
-        return replacements.entrySet().stream()
+        return new ArrayList<>(replacements.entrySet().stream()
                 .flatMap(entry -> {
                     final String from = entry.getKey();
                     return entry.getValue().stream()
@@ -112,7 +114,7 @@ public final class MoleculeReplacement implements Solver<Integer> {
                         .reversed()
                         .thenComparing(Replacement::from)
                 )
-                .toList();
+                .toList());
     }
     
     private int attemptGreedyReduction(String targetMolecule, List<Replacement> reverseReplacements) {

@@ -18,9 +18,9 @@ class Day15Test {
     @Test
     void testPart1WithSampleData() {
         // Given the sample data from the problem description
-        List<Day15.Ingredient> sampleIngredients = List.of(
-            new Day15.Ingredient("Butterscotch", -1, -2, 6, 3, 8),
-            new Day15.Ingredient("Cinnamon", 2, 3, -2, -1, 3)
+        List<Ingredient> sampleIngredients = List.of(
+            new Ingredient("Butterscotch", -1, -2, 6, 3, 8),
+            new Ingredient("Cinnamon", 2, 3, -2, -1, 3)
         );
         
         // When calculating the max score for the sample
@@ -33,7 +33,7 @@ class Day15Test {
     @Test
     void testPart1WithActualData() {
         // When solving part 1 with the actual input data
-        long result = solution.solvePart1();
+        long result = solution.getPart1Result("/day15/day15-input.txt");
         
         // Then it should give the correct answer
         assertThat(result).isEqualTo(222870L);
@@ -42,9 +42,9 @@ class Day15Test {
     @Test
     void testScoreCalculationWithNegativeValues() {
         // Given ingredients that would produce negative property values
-        List<Day15.Ingredient> ingredients = List.of(
-            new Day15.Ingredient("Test1", -10, 1, 1, 1, 1),
-            new Day15.Ingredient("Test2", 1, -10, 1, 1, 1)
+        List<Ingredient> ingredients = List.of(
+            new Ingredient("Test1", -10, 1, 1, 1, 1),
+            new Ingredient("Test2", 1, -10, 1, 1, 1)
         );
         
         // When calculating score with equal amounts
@@ -57,9 +57,9 @@ class Day15Test {
     @Test
     void testPart2WithSampleData() {
         // Given the sample data from the problem description
-        List<Day15.Ingredient> sampleIngredients = List.of(
-            new Day15.Ingredient("Butterscotch", -1, -2, 6, 3, 8),
-            new Day15.Ingredient("Cinnamon", 2, 3, -2, -1, 3)
+        List<Ingredient> sampleIngredients = List.of(
+            new Ingredient("Butterscotch", -1, -2, 6, 3, 8),
+            new Ingredient("Cinnamon", 2, 3, -2, -1, 3)
         );
         
         // When calculating the max score with calorie constraint for the sample
@@ -72,7 +72,7 @@ class Day15Test {
     @Test
     void testPart2WithActualData() {
         // When solving part 2 with the actual input data
-        long result = solution.solvePart2();
+        long result = solution.getPart2Result("/day15/day15-input.txt");
         
         // Then it should give the correct answer
         assertThat(result).isEqualTo(117936L);
@@ -84,7 +84,7 @@ class Day15Test {
         String line = "Sugar: capacity 3, durability 0, flavor 0, texture -3, calories 2";
         
         // When parsing the ingredient
-        Day15.Ingredient ingredient = parseIngredientLine(line);
+        Ingredient ingredient = parseIngredientLine(line);
         
         // Then all properties should be correctly parsed
         assertThat(ingredient.name()).isEqualTo("Sugar");
@@ -97,15 +97,15 @@ class Day15Test {
 
     // Helper methods to access private functionality for testing
     
-    private long findMaxScoreForIngredients(List<Day15.Ingredient> ingredients, int totalTeaspoons) {
+    private long findMaxScoreForIngredients(List<Ingredient> ingredients, int totalTeaspoons) {
         return findMaxScoreRecursive(ingredients, totalTeaspoons, 0, new int[ingredients.size()]);
     }
     
-    private long findMaxScoreWithCaloriesForIngredients(List<Day15.Ingredient> ingredients, int totalTeaspoons, int targetCalories) {
+    private long findMaxScoreWithCaloriesForIngredients(List<Ingredient> ingredients, int totalTeaspoons, int targetCalories) {
         return findMaxScoreWithCaloriesRecursive(ingredients, totalTeaspoons, targetCalories, 0, new int[ingredients.size()]);
     }
     
-    private long findMaxScoreRecursive(List<Day15.Ingredient> ingredients, int remaining, int currentIndex, int[] amounts) {
+    private long findMaxScoreRecursive(List<Ingredient> ingredients, int remaining, int currentIndex, int[] amounts) {
         if (currentIndex == ingredients.size() - 1) {
             amounts[currentIndex] = remaining;
             return calculateScoreForAmounts(ingredients, amounts);
@@ -121,7 +121,7 @@ class Day15Test {
         return maxScore;
     }
     
-    private long findMaxScoreWithCaloriesRecursive(List<Day15.Ingredient> ingredients, int remaining, int targetCalories, int currentIndex, int[] amounts) {
+    private long findMaxScoreWithCaloriesRecursive(List<Ingredient> ingredients, int remaining, int targetCalories, int currentIndex, int[] amounts) {
         if (currentIndex == ingredients.size() - 1) {
             amounts[currentIndex] = remaining;
             if (calculateCaloriesForAmounts(ingredients, amounts) == targetCalories) {
@@ -141,11 +141,11 @@ class Day15Test {
         return maxScore;
     }
     
-    private long calculateScoreForAmounts(List<Day15.Ingredient> ingredients, int[] amounts) {
+    private long calculateScoreForAmounts(List<Ingredient> ingredients, int[] amounts) {
         long capacity = 0, durability = 0, flavor = 0, texture = 0;
         
         for (int i = 0; i < ingredients.size(); i++) {
-            Day15.Ingredient ingredient = ingredients.get(i);
+            Ingredient ingredient = ingredients.get(i);
             int amount = amounts[i];
             
             capacity += (long) ingredient.capacity() * amount;
@@ -163,11 +163,11 @@ class Day15Test {
         return capacity * durability * flavor * texture;
     }
     
-    private int calculateCaloriesForAmounts(List<Day15.Ingredient> ingredients, int[] amounts) {
+    private int calculateCaloriesForAmounts(List<Ingredient> ingredients, int[] amounts) {
         int totalCalories = 0;
         
         for (int i = 0; i < ingredients.size(); i++) {
-            Day15.Ingredient ingredient = ingredients.get(i);
+            Ingredient ingredient = ingredients.get(i);
             int amount = amounts[i];
             totalCalories += ingredient.calories() * amount;
         }
@@ -175,7 +175,7 @@ class Day15Test {
         return totalCalories;
     }
     
-    private Day15.Ingredient parseIngredientLine(String line) {
+    private Ingredient parseIngredientLine(String line) {
         String[] parts = line.split(": ");
         String name = parts[0];
         String[] properties = parts[1].split(", ");
@@ -186,6 +186,6 @@ class Day15Test {
         int texture = Integer.parseInt(properties[3].split(" ")[1]);
         int calories = Integer.parseInt(properties[4].split(" ")[1]);
         
-        return new Day15.Ingredient(name, capacity, durability, flavor, texture, calories);
+        return new Ingredient(name, capacity, durability, flavor, texture, calories);
     }
 }
