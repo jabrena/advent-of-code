@@ -17,36 +17,15 @@ public class LightCounter implements Solver<Long> {
 
     private static final int GRID_SIZE = 1000;
 
-    private enum CommandType {
-        TURN_ON("turn on"),
-        TURN_OFF("turn off"),
-        TOGGLE("toggle");
-
-        private final String text;
-
-        CommandType(String text) {
-            this.text = text;
-        }
-
-        public static CommandType fromString(String text) {
-            return Arrays.stream(CommandType.values())
-                    .filter(cmd -> cmd.text.equals(text))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid command: " + text));
-        }
-    }
-
-    private record LightCommand(CommandType command, Point start, Point end) {}
-
     private LightCommand parseLightCommand(String line) {
         Matcher matcher = PATTERN_COMPILED.matcher(line);
         if (!matcher.find()) {
             throw new IllegalArgumentException("Invalid format: " + line);
         }
-        
+
         String[] startCoords = matcher.group(2).split(",");
         String[] endCoords = matcher.group(3).split(",");
-        
+
         return new LightCommand(
             CommandType.fromString(matcher.group(1)),
             new Point(Integer.parseInt(startCoords[0]), Integer.parseInt(startCoords[1])),
@@ -81,13 +60,13 @@ public class LightCounter implements Solver<Long> {
     public Long solvePartOne(String fileName) {
         var lines = ResourceLines.list(fileName);
         int[][] grid = new int[GRID_SIZE][GRID_SIZE];
-        
+
         lines.stream()
             .map(this::parseLightCommand)
             .forEach(cmd -> applyCommand(
-                grid, 
-                cmd.start(), 
-                cmd.end(), 
+                grid,
+                cmd.start(),
+                cmd.end(),
                 getPart1Operation(cmd.command())));
 
         return Arrays.stream(grid)
@@ -100,13 +79,13 @@ public class LightCounter implements Solver<Long> {
     public Long solvePartTwo(String fileName) {
         var lines = ResourceLines.list(fileName);
         int[][] grid = new int[GRID_SIZE][GRID_SIZE];
- 
+
         lines.stream()
             .map(this::parseLightCommand)
             .forEach(cmd -> applyCommand(
-                grid, 
-                cmd.start(), 
-                cmd.end(), 
+                grid,
+                cmd.start(),
+                cmd.end(),
                 getPart2Operation(cmd.command())));
 
         return Arrays.stream(grid)
@@ -114,4 +93,4 @@ public class LightCounter implements Solver<Long> {
             .mapToLong(Long::valueOf)
             .sum();
     }
-} 
+}

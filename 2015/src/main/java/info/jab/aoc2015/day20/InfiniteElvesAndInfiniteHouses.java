@@ -3,27 +3,103 @@ package info.jab.aoc2015.day20;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
+/**
+ * Optimized implementation using sieve-based approach.
+ * 
+ * Instead of calculating divisors for each house individually (O(√H) per house),
+ * we iterate through elves and add presents to all houses they visit.
+ * 
+ * Complexity: O(H log H) where H is the final house number found.
+ * This is better than the previous O(H × √H) approach.
+ * 
+ * The sieve approach:
+ * - For each elf e, add presents to houses e, 2e, 3e, ...
+ * - Total operations: H/1 + H/2 + H/3 + ... + H/H = O(H log H) (harmonic series)
+ */
 public class InfiniteElvesAndInfiniteHouses implements Solver<Integer> {
 
     @Override
-    public Integer solvePartOne(String fileName) {
-        var input = ResourceLines.line(fileName);
-        int target = Integer.parseInt(input.trim());
+    public Integer solvePartOne(final String fileName) {
+        final var input = ResourceLines.line(fileName);
+        final int target = Integer.parseInt(input.trim());
         
-        return findLowestHouseNumber(target);
+        return findLowestHouseNumberSieve(target);
     }
 
     @Override
-    public Integer solvePartTwo(String fileName) {
-        var input = ResourceLines.line(fileName);
-        int target = Integer.parseInt(input.trim());
+    public Integer solvePartTwo(final String fileName) {
+        final var input = ResourceLines.line(fileName);
+        final int target = Integer.parseInt(input.trim());
         
-        return findLowestHouseNumberPart2(target);
+        return findLowestHouseNumberPart2Sieve(target);
     }
     
-    private int findLowestHouseNumber(int target) {
-        // We need to find the first house number where sum of divisors * 10 >= target
-        // Start checking from house 1
+    /**
+     * Sieve-based approach for Part 1.
+     * For each elf e, add 10*e presents to houses e, 2e, 3e, ...
+     * Complexity: O(H log H) where H is the final house number.
+     */
+    private int findLowestHouseNumberSieve(final int target) {
+        // Estimate upper bound: worst case is when house has many divisors
+        // For house H, max presents ≈ H * 10 * (average number of divisors)
+        // Average number of divisors is O(log H), so we need roughly H ≈ target/10
+        // Use a conservative upper bound with some margin
+        final int estimatedMax = Math.max(target / 10, 100_000);
+        final int[] presents = new int[estimatedMax + 1];
+        
+        // For each elf e, add presents to all houses that are multiples of e
+        for (int elf = 1; elf <= estimatedMax; elf++) {
+            for (int house = elf; house <= estimatedMax; house += elf) {
+                presents[house] += elf * 10;
+            }
+        }
+        
+        // Find the first house that meets the target
+        for (int house = 1; house <= estimatedMax; house++) {
+            if (presents[house] >= target) {
+                return house;
+            }
+        }
+        
+        // If not found, fall back to original method (shouldn't happen with good estimate)
+        // This is a safety fallback
+        return findLowestHouseNumberSequential(target);
+    }
+    
+    /**
+     * Sieve-based approach for Part 2.
+     * For each elf e, add 11*e presents to houses e, 2e, 3e, ..., 50e
+     * Complexity: O(H log H) but with better constant factor due to 50-house limit.
+     */
+    private int findLowestHouseNumberPart2Sieve(final int target) {
+        // Estimate upper bound: similar to Part 1 but with 11x multiplier
+        final int estimatedMax = Math.max(target / 11, 100_000);
+        final int[] presents = new int[estimatedMax + 1];
+        
+        // For each elf e, add presents to houses e, 2e, 3e, ..., 50e
+        for (int elf = 1; elf <= estimatedMax; elf++) {
+            final int maxHouse = Math.min(elf * 50, estimatedMax);
+            for (int house = elf; house <= maxHouse; house += elf) {
+                presents[house] += elf * 11;
+            }
+        }
+        
+        // Find the first house that meets the target
+        for (int house = 1; house <= estimatedMax; house++) {
+            if (presents[house] >= target) {
+                return house;
+            }
+        }
+        
+        // Fallback to sequential method
+        return findLowestHouseNumberPart2Sequential(target);
+    }
+    
+    /**
+     * Fallback sequential method for Part 1 (original approach).
+     * Used if sieve estimate was too low.
+     */
+    private int findLowestHouseNumberSequential(final int target) {
         int houseNumber = 1;
         
         while (true) {
@@ -35,31 +111,11 @@ public class InfiniteElvesAndInfiniteHouses implements Solver<Integer> {
         }
     }
     
-    private int calculatePresents(int houseNumber) {
-        int totalPresents = 0;
-        
-        // Optimized divisor calculation: iterate up to sqrt(houseNumber)
-        // This is already O(√H) which is optimal for single house calculation
-        // For multiple houses, we could use a sieve, but for sequential checking this is optimal
-        int sqrt = (int) Math.sqrt(houseNumber);
-        for (int elf = 1; elf <= sqrt; elf++) {
-            if (houseNumber % elf == 0) {
-                // elf is a divisor, so this elf visits this house
-                totalPresents += elf * 10;
-                
-                // If elf is not the square root, then houseNumber/elf is also a divisor
-                int pairedElf = houseNumber / elf;
-                if (elf != pairedElf) {
-                    totalPresents += pairedElf * 10;
-                }
-            }
-        }
-        
-        return totalPresents;
-    }
-    
-    private int findLowestHouseNumberPart2(int target) {
-        // For Part 2: Each elf stops after 50 houses, delivers 11 * elf number presents
+    /**
+     * Fallback sequential method for Part 2 (original approach).
+     * Used if sieve estimate was too low.
+     */
+    private int findLowestHouseNumberPart2Sequential(final int target) {
         int houseNumber = 1;
         
         while (true) {
@@ -71,25 +127,42 @@ public class InfiniteElvesAndInfiniteHouses implements Solver<Integer> {
         }
     }
     
-    private int calculatePresentsPart2(int houseNumber) {
+    /**
+     * Calculate presents for a single house (Part 1).
+     * Used as fallback if sieve estimate was too low.
+     */
+    private int calculatePresents(final int houseNumber) {
         int totalPresents = 0;
-        
-        // Optimized divisor calculation: iterate up to sqrt(houseNumber)
-        // An elf (divisor) visits this house only if houseNumber <= elf * 50
-        // This means elf >= houseNumber / 50, so we can start from there
-        int minElf = Math.max(1, (houseNumber + 49) / 50); // Ceiling division
-        int sqrt = (int) Math.sqrt(houseNumber);
+        final int sqrt = (int) Math.sqrt(houseNumber);
         
         for (int elf = 1; elf <= sqrt; elf++) {
             if (houseNumber % elf == 0) {
-                // elf is a divisor
-                // Check if this elf still delivers to this house (within 50 houses)
+                totalPresents += elf * 10;
+                final int pairedElf = houseNumber / elf;
+                if (elf != pairedElf) {
+                    totalPresents += pairedElf * 10;
+                }
+            }
+        }
+        
+        return totalPresents;
+    }
+    
+    /**
+     * Calculate presents for a single house (Part 2).
+     * Used as fallback if sieve estimate was too low.
+     */
+    private int calculatePresentsPart2(final int houseNumber) {
+        int totalPresents = 0;
+        final int sqrt = (int) Math.sqrt(houseNumber);
+        
+        for (int elf = 1; elf <= sqrt; elf++) {
+            if (houseNumber % elf == 0) {
                 if (houseNumber <= elf * 50) {
                     totalPresents += elf * 11;
                 }
                 
-                // Check the paired divisor
-                int pairedElf = houseNumber / elf;
+                final int pairedElf = houseNumber / elf;
                 if (elf != pairedElf && houseNumber <= pairedElf * 50) {
                     totalPresents += pairedElf * 11;
                 }

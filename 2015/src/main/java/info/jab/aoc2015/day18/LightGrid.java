@@ -18,7 +18,7 @@ public class LightGrid implements Solver<Integer> {
     }
 
     public Integer solvePartOneWithSteps(String fileName, int steps) {
-        List<String> lines = ResourceLines.list("/" + fileName);
+        List<String> lines = ResourceLines.list(fileName);
         Grid grid = parseGrid(lines);
 
         // Simulate steps
@@ -35,7 +35,7 @@ public class LightGrid implements Solver<Integer> {
     }
 
     public Integer solvePartTwoWithSteps(String fileName, int steps) {
-        List<String> lines = ResourceLines.list("/" + fileName);
+        List<String> lines = ResourceLines.list(fileName);
         Grid grid = parseGrid(lines);
 
         // Turn on corner lights (stuck on) and cache corner positions

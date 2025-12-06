@@ -1,10 +1,26 @@
 package info.jab.aoc2015.day11;
 
+import com.putoet.resources.ResourceLines;
+import info.jab.aoc.Solver;
+
 import java.util.stream.IntStream;
 
-public class PasswordValidator {
+public class PasswordValidator implements Solver<String> {
 
-    public String findNextValidPassword(String currentPassword) {
+    @Override
+    public String solvePartOne(final String fileName) {
+        String currentPassword = ResourceLines.line(fileName);
+        return findNextValidPassword(currentPassword);
+    }
+
+    @Override
+    public String solvePartTwo(final String fileName) {
+        String currentPassword = ResourceLines.line(fileName);
+        String firstPassword = findNextValidPassword(currentPassword);
+        return findNextValidPassword(firstPassword);
+    }
+
+    private String findNextValidPassword(String currentPassword) {
         String nextPassword = currentPassword;
         do {
             nextPassword = incrementPassword(nextPassword);
@@ -15,7 +31,7 @@ public class PasswordValidator {
     private String incrementPassword(String password) {
         char[] chars = password.toCharArray();
         int i = chars.length - 1;
-        
+
         while (i >= 0) {
             chars[i] = (char) (chars[i] + 1);
             if (chars[i] > 'z') {
@@ -35,6 +51,7 @@ public class PasswordValidator {
         return new String(chars);
     }
 
+    @SuppressWarnings("null")
     private boolean containsProhibitedLetters(String password) {
         return password.chars()
                 .mapToObj(c -> (char) c)
@@ -53,7 +70,7 @@ public class PasswordValidator {
     private boolean containsTwoDifferentPairs(String password) {
         int pairCount = 0;
         char lastPairChar = '\0';
-        
+
         int i = 0;
         while (i < password.length() - 1) {
             if (password.charAt(i) == password.charAt(i + 1) && password.charAt(i) != lastPairChar) {

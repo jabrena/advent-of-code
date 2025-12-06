@@ -9,10 +9,10 @@ class Day18Test {
     @Test
     void should_solve_day18_sample() {
         //Given
-        String fileName = "day18/day18-sample.txt";
+        String fileName = "/day18/day18-sample.txt";
 
         //When
-        var lightGrid = new info.jab.aoc2015.day18.LightGrid();
+        var lightGrid = new LightGrid();
         var result = lightGrid.solvePartOneWithSteps(fileName, 4);
 
         //Then
@@ -22,10 +22,10 @@ class Day18Test {
     @Test
     void should_solve_day18_sample_part2() {
         //Given
-        String fileName = "day18/day18-sample.txt";
+        String fileName = "/day18/day18-sample.txt";
 
         //When
-        var lightGrid = new info.jab.aoc2015.day18.LightGrid();
+        var lightGrid = new LightGrid();
         var result = lightGrid.solvePartTwoWithSteps(fileName, 5);
 
         //Then
@@ -35,7 +35,7 @@ class Day18Test {
     @Test
     void should_solve_day18_part1() {
         //Given
-        String fileName = "day18/day18-input.txt";
+        String fileName = "/day18/day18-input.txt";
 
         //When
         var day = new Day18();
@@ -48,7 +48,7 @@ class Day18Test {
     @Test
     void should_solve_day18_part2() {
         //Given
-        String fileName = "day18/day18-input.txt";
+        String fileName = "/day18/day18-input.txt";
 
         //When
         var day = new Day18();

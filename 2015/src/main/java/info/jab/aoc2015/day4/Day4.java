@@ -1,19 +1,22 @@
 package info.jab.aoc2015.day4;
 
 import info.jab.aoc.Day;
+import info.jab.aoc.Solver;
 
 /**
  * https://adventofcode.com/2015/day/4
  */
 public class Day4 implements Day<Integer> {
 
+    private final Solver<Integer> solver = new AdventCoinMiner();
+
     @Override
-    public Integer getPart1Result(String secretKey) {
-        return new AdventCoinMiner().findLowestNumber(secretKey, true);
+    public Integer getPart1Result(final String fileName) {
+        return solver.solvePartOne(fileName);
     }
 
     @Override
-    public Integer getPart2Result(String secretKey) {
-        return new AdventCoinMiner().findLowestNumber(secretKey, false);
+    public Integer getPart2Result(final String fileName) {
+        return solver.solvePartTwo(fileName);
     }
 }
