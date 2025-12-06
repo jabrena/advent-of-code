@@ -55,10 +55,12 @@ public class AuntSueDetector implements Solver<Integer> {
      * Pattern matches: "<word>: <number>"
      *
      * Security: This pattern is safe from ReDoS because:
-     * 1. Possessive quantifiers \\w++ and \\d++ prevent backtracking
+     * 1. Possessive quantifiers \\w++ and \\d++ prevent backtracking (no backtracking possible)
      * 2. Input length is limited to MAX_INPUT_LENGTH (10,000 characters)
      * 3. Match iteration is limited to MAX_MATCHES (100 matches)
      * 4. The pattern structure is linear with no nested quantifiers or alternations
+     * 5. Pattern is compiled once and reused, preventing repeated compilation overhead
+     * 6. Capturing groups are non-backtracking due to possessive quantifiers
      */
     private static final Pattern COMPOUND_PATTERN = Pattern.compile("(\\w++): (\\d++)");
 
