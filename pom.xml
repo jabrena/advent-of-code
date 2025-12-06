@@ -10,6 +10,8 @@
     <version>0.1.0</version>
     <packaging>pom</packaging>
 
+    <url>https://github.com/jabrena/advent-of-code</url>
+
     <developers>
         <developer>
             <id>jabrena</id>
@@ -51,6 +53,10 @@
         <maven-plugin-exec.version>3.6.2</maven-plugin-exec.version>
         <maven-plugin-sonar.version>5.4.0.6343</maven-plugin-sonar.version>
         <maven-plugin-jacoco.version>0.8.14</maven-plugin-jacoco.version>
+        <maven-plugin-project-info-reports.version>3.4.5</maven-plugin-project-info-reports.version>
+        <maven-plugin-resources.version>3.3.1</maven-plugin-resources.version>
+        <maven-plugin-jar.version>3.3.0</maven-plugin-jar.version>
+        <maven-plugin-site.version>3.12.1</maven-plugin-site.version>
 
         <!-- Quality thresholds -->
         <coverage.level>15</coverage.level>
@@ -241,6 +247,25 @@
 
     <!-- Build Configuration -->
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-plugin-resources.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-plugin-jar.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-plugin-site.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -341,6 +366,25 @@
     <!-- Reporting Configuration -->
     <reporting>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven-plugin-project-info-reports.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                            <report>summary</report>
+                            <report>modules</report>
+                            <report>scm</report>
+                            <report>ci-management</report>
+                            <report>issue-management</report>
+                            <report>licenses</report>
+                            <report>team</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
