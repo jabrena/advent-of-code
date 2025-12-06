@@ -16,7 +16,6 @@ class Day18Test {
         var result = lightGrid.solvePartOneWithSteps(fileName, 4);
 
         //Then
-        System.out.println("Day 18 Sample Result (4 steps): " + result);
         then(result).isEqualTo(4);
     }
 
@@ -30,7 +29,6 @@ class Day18Test {
         var result = lightGrid.solvePartTwoWithSteps(fileName, 5);
 
         //Then
-        System.out.println("Day 18 Sample Part 2 Result (5 steps): " + result);
         then(result).isEqualTo(17);
     }
 
@@ -44,7 +42,6 @@ class Day18Test {
         var result = day.getPart1Result(fileName);
 
         //Then
-        System.out.println("Day 18 Part 1 Result: " + result);
         then(result).isEqualTo(814);
     }
 
@@ -58,7 +55,6 @@ class Day18Test {
         var result = day.getPart2Result(fileName);
 
         //Then
-        System.out.println("Day 18 Part 2 Result: " + result);
         then(result).isEqualTo(924);
     }
 

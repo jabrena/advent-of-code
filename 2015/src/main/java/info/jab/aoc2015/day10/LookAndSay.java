@@ -11,19 +11,31 @@ public class LookAndSay {
     }
 
     private String generateNextSequence(String sequence) {
+        if (sequence.isEmpty()) {
+            return sequence;
+        }
+        
         StringBuilder nextSequence = new StringBuilder();
+        char currentChar = sequence.charAt(0);
         int count = 1;
+        
         for (int i = 1; i < sequence.length(); i++) {
-            if (sequence.charAt(i) == sequence.charAt(i - 1)) {
+            char nextChar = sequence.charAt(i);
+            if (nextChar == currentChar) {
                 count++;
             } else {
-                nextSequence.append(count).append(sequence.charAt(i - 1));
+                appendRun(nextSequence, count, currentChar);
+                currentChar = nextChar;
                 count = 1;
             }
         }
         
-        // Append the last run
-        nextSequence.append(count).append(sequence.charAt(sequence.length() - 1));
+        // Append the final run
+        appendRun(nextSequence, count, currentChar);
         return nextSequence.toString();
+    }
+
+    private void appendRun(StringBuilder builder, int count, char character) {
+        builder.append(count).append(character);
     }
 }

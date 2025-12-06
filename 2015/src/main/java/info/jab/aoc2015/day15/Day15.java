@@ -74,30 +74,44 @@ public class Day15 {
         }
         
         long maxScore = 0;
-        for (int i = 0; i <= remaining; i++) {
-            amounts[currentIndex] = i;
-            long score = findMaxScoreRecursive(ingredients, remaining - i, currentIndex + 1, amounts);
+        // Try all possible amounts for current ingredient
+        for (int amount = 0; amount <= remaining; amount++) {
+            amounts[currentIndex] = amount;
+            long score = findMaxScoreRecursive(ingredients, remaining - amount, currentIndex + 1, amounts);
             maxScore = Math.max(maxScore, score);
         }
         
         return maxScore;
     }
     
-    private long findMaxScoreWithCaloriesRecursive(List<Ingredient> ingredients, int remaining, int targetCalories, int currentIndex, int[] amounts) {
+    private long findMaxScoreWithCaloriesRecursive(
+        List<Ingredient> ingredients,
+        int remaining,
+        int targetCalories,
+        int currentIndex,
+        int[] amounts) {
+        
         if (currentIndex == ingredients.size() - 1) {
             // Last ingredient gets all remaining teaspoons
             amounts[currentIndex] = remaining;
-            if (calculateCalories(ingredients, amounts) == targetCalories) {
+            int totalCalories = calculateCalories(ingredients, amounts);
+            if (totalCalories == targetCalories) {
                 return calculateScore(ingredients, amounts);
-            } else {
-                return 0;
             }
+            return 0;
         }
         
         long maxScore = 0;
-        for (int i = 0; i <= remaining; i++) {
-            amounts[currentIndex] = i;
-            long score = findMaxScoreWithCaloriesRecursive(ingredients, remaining - i, targetCalories, currentIndex + 1, amounts);
+        // Try all possible amounts for current ingredient
+        for (int amount = 0; amount <= remaining; amount++) {
+            amounts[currentIndex] = amount;
+            long score = findMaxScoreWithCaloriesRecursive(
+                ingredients,
+                remaining - amount,
+                targetCalories,
+                currentIndex + 1,
+                amounts
+            );
             maxScore = Math.max(maxScore, score);
         }
         

@@ -1,12 +1,11 @@
 package info.jab.aoc2015.day9;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.ArrayList;
-import java.util.Comparator;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -51,135 +50,86 @@ public class RouteOptimizer implements Solver<Integer> {
         addDistance(distances, routeInfo.from(), routeInfo.to(), routeInfo.distance());
     }
 
-    private record RouteResult(String route, int distance) {}
-
-
-    private List<List<String>> generateAllPermutations(List<String> cities) {
-        List<List<String>> result = new ArrayList<>();
-        if (cities.isEmpty()) {
-            return result;
+    private int findOptimalRoute(
+        Map<String, Map<String, Integer>> distances,
+        String startCity,
+        Set<String> visited,
+        int currentDistance,
+        boolean findMin) {
+        
+        if (visited.size() == distances.size()) {
+            return currentDistance;
         }
         
-        // Initialize with the first permutation
-        result.add(new ArrayList<>(List.of(cities.get(0))));
+        int optimalDistance = findMin ? Integer.MAX_VALUE : Integer.MIN_VALUE;
         
-        // For each remaining city
-        for (int i = 1; i < cities.size(); i++) {
-            String currentCity = cities.get(i);
-            List<List<String>> currentPermutations = new ArrayList<>();
-            
-            // For each existing permutation
-            for (List<String> permutation : result) {
-                // Insert the current city in each possible position
-                for (int j = 0; j <= permutation.size(); j++) {
-                    List<String> newPermutation = new ArrayList<>(permutation);
-                    newPermutation.add(j, currentCity);
-                    currentPermutations.add(newPermutation);
+        for (Map.Entry<String, Integer> entry : distances.get(startCity).entrySet()) {
+            String nextCity = entry.getKey();
+            if (!visited.contains(nextCity)) {
+                Set<String> newVisited = new HashSet<>(visited);
+                newVisited.add(nextCity);
+                int newDistance = currentDistance + entry.getValue();
+                
+                int result = findOptimalRoute(distances, nextCity, newVisited, newDistance, findMin);
+                
+                if (findMin) {
+                    optimalDistance = Math.min(optimalDistance, result);
+                } else {
+                    optimalDistance = Math.max(optimalDistance, result);
                 }
             }
-            result = currentPermutations;
         }
-        return result;
+        
+        return optimalDistance;
     }
 
-    private RouteResult calculateRouteDistance(List<String> route, Map<String, Map<String, Integer>> distances) {
-        int totalDistance = 0;
-        StringBuilder routePath = new StringBuilder(route.get(0));
-
-        for (int i = 0; i < route.size() - 1; i++) {
-            String currentCity = route.get(i);
-            String nextCity = route.get(i + 1);
-            totalDistance += distances.get(currentCity).get(nextCity);
-            routePath.append(" -> ").append(nextCity);
+    private Pair<String, Integer> findOptimalRoute(Map<String, Map<String, Integer>> distances, boolean findMin) {
+        // Fix first city to reduce permutations from n! to (n-1)!
+        // Since it's a round trip, we can start from any city
+        List<String> cities = new ArrayList<>(distances.keySet());
+        if (cities.isEmpty()) {
+            throw new IllegalStateException("No cities registered");
         }
-
-        return new RouteResult(routePath.toString(), totalDistance);
-    }
-
-    private RouteResult findShortestRouteFromCity(Map<String, Map<String, Integer>> distances, String startCity) {
-        List<String> cities = new ArrayList<>(distances.keySet());
-        cities.remove(startCity);
-        cities.add(0, startCity);
         
-        return generateAllPermutations(cities).stream()
-            .map(route -> calculateRouteDistance(route, distances))
-            .min(Comparator.comparing(RouteResult::distance))
-            .orElseThrow(() -> new IllegalStateException("No valid route found"));
-    }
-
-    private RouteResult findLongestRouteFromCity(Map<String, Map<String, Integer>> distances, String startCity) {
-        List<String> cities = new ArrayList<>(distances.keySet());
-        cities.remove(startCity);
-        cities.add(0, startCity);
+        int optimalDistance = findMin ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+        String optimalRoute = "";
         
-        return generateAllPermutations(cities).stream()
-            .map(route -> calculateRouteDistance(route, distances))
-            .max(Comparator.comparing(RouteResult::distance))
-            .orElseThrow(() -> new IllegalStateException("No valid route found"));
-    }
-
-    private Pair<String, Integer> findShortestRoute(Map<String, Map<String, Integer>> distances) {
-        return distances.keySet().stream()
-                .map(startCity -> findShortestRouteFromCity(distances, startCity))
-                .min(Comparator.comparing(RouteResult::distance))
-                .map(result -> Pair.of(result.route(), result.distance()))
-                .orElseThrow(() -> new IllegalStateException("No cities registered"));
-    }
-
-    private Pair<String, Integer> findLongestRoute(Map<String, Map<String, Integer>> distances) {
-        return distances.keySet().stream()
-                .map(startCity -> findLongestRouteFromCity(distances, startCity))
-                .max(Comparator.comparing(RouteResult::distance))
-                .map(result -> Pair.of(result.route(), result.distance()))
-                .orElseThrow(() -> new IllegalStateException("No cities registered"));
-    }
-
-    private RouteResult findRouteRecursive(
-        Map<String, Map<String, Integer>> distances, 
-        String currentCity, 
-        Set<String> visited, 
-        int currentDistance, String route) {
+        // Try each city as starting point
+        for (String startCity : cities) {
+            Set<String> visited = new HashSet<>();
+            visited.add(startCity);
             
-        if (visited.size() == distances.size()) {
-            return new RouteResult(route, currentDistance);
+            int distance = findOptimalRoute(distances, startCity, visited, 0, findMin);
+            
+            if (findMin && distance < optimalDistance) {
+                optimalDistance = distance;
+                optimalRoute = startCity;
+            } else if (!findMin && distance > optimalDistance) {
+                optimalDistance = distance;
+                optimalRoute = startCity;
+            }
         }
-
-        return distances.get(currentCity).entrySet().stream()
-                .filter(entry -> !visited.contains(entry.getKey()))
-                .map(entry -> {
-                    Set<String> newVisited = new HashSet<>(visited);
-                    newVisited.add(entry.getKey());
-                    return findRouteRecursive(
-                        distances,
-                        entry.getKey(),
-                        newVisited,
-                        currentDistance + entry.getValue(),
-                        route + " -> " + entry.getKey()
-                    );
-                })
-                .min(Comparator.comparing(RouteResult::distance))
-                .orElse(new RouteResult(route, Integer.MAX_VALUE));
+        
+        return Pair.of(optimalRoute, optimalDistance);
     }
 
     @Override
     public Integer solvePartOne(String fileName) {
-        //TODO Avoid the mutation is more complex to follow that current approach
         var distances = new HashMap<String, Map<String, Integer>>();
         var lines = ResourceLines.list(fileName);
         lines.forEach(line -> parseLine(distances, line));
         
-        Pair<String, Integer> shortestRoute = findShortestRoute(distances);
+        Pair<String, Integer> shortestRoute = findOptimalRoute(distances, true);
         return shortestRoute.getRight();
     }
 
     @Override
     public Integer solvePartTwo(String fileName) {
-        //TODO Avoid the mutation is more complex to follow that current approach
         var distances = new HashMap<String, Map<String, Integer>>();
         var lines = ResourceLines.list(fileName);
         lines.forEach(line -> parseLine(distances, line));
         
-        Pair<String, Integer> longestRoute = findLongestRoute(distances);
+        Pair<String, Integer> longestRoute = findOptimalRoute(distances, false);
         return longestRoute.getRight();
     }
 } 
