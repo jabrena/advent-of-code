@@ -1,6 +1,7 @@
 package info.jab.aoc2015.day6;
 
 import java.util.Arrays;
+import java.util.function.IntUnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,44 +10,12 @@ import com.putoet.resources.ResourceLines;
 
 import info.jab.aoc.Solver;
 
-public class LightCounter implements Solver<Long>{
+public class LightCounter implements Solver<Long> {
 
-    private static final String  PATTERN = "(turn on|turn off|toggle) (\\d+,\\d+) through (\\d+,\\d+)";
-    private static final Pattern PATTTERN_COMPILED = Pattern.compile(PATTERN);
+    private static final String PATTERN = "(turn on|turn off|toggle) (\\d+,\\d+) through (\\d+,\\d+)";
+    private static final Pattern PATTERN_COMPILED = Pattern.compile(PATTERN);
 
     private static final int GRID_SIZE = 1000;
-
-    private void turnOn(int[][] grid, Point start, Point end) {
-        for (int i = start.x(); i <= end.x(); i++) {
-            for (int j = start.y(); j <= end.y(); j++) {
-                grid[i][j] = 1;
-            }
-        }
-    }
-
-    private void turnOff(int[][] grid, Point start, Point end) {
-        for (int i = start.x(); i <= end.x(); i++) {
-            for (int j = start.y(); j <= end.y(); j++) {
-                grid[i][j] = 0;
-            }
-        }
-    }
-
-    private void toggle(int[][] grid, Point start, Point end) {
-        for (int i = start.x(); i <= end.x(); i++) {
-            for (int j = start.y(); j <= end.y(); j++) {
-                grid[i][j] = (grid[i][j] == 1) ? 0 : 1;
-            }
-        }
-    }
-
-    private void executeCommand1(int[][] grid, CommandType command, Point start, Point end) {
-        switch (command) {
-            case TURN_ON -> turnOn(grid, start, end);
-            case TURN_OFF -> turnOff(grid, start, end);
-            case TOGGLE -> toggle(grid, start, end);
-        }
-    }
 
     private enum CommandType {
         TURN_ON("turn on"),
@@ -70,40 +39,56 @@ public class LightCounter implements Solver<Long>{
     private record LightCommand(CommandType command, Point start, Point end) {}
 
     private LightCommand parseLightCommand(String line) {
-        Matcher matcher = PATTTERN_COMPILED.matcher(line);
+        Matcher matcher = PATTERN_COMPILED.matcher(line);
         if (!matcher.find()) {
             throw new IllegalArgumentException("Invalid format: " + line);
         }
         
+        String[] startCoords = matcher.group(2).split(",");
+        String[] endCoords = matcher.group(3).split(",");
+        
         return new LightCommand(
             CommandType.fromString(matcher.group(1)),
-            new Point(Integer.parseInt(matcher.group(2).split(",")[0]),
-                     Integer.parseInt(matcher.group(2).split(",")[1])),
-            new Point(Integer.parseInt(matcher.group(3).split(",")[0]),
-                     Integer.parseInt(matcher.group(3).split(",")[1])));
+            new Point(Integer.parseInt(startCoords[0]), Integer.parseInt(startCoords[1])),
+            new Point(Integer.parseInt(endCoords[0]), Integer.parseInt(endCoords[1])));
     }
 
-    private void executeCommand2(int[][] grid, CommandType command, Point start, Point end) {
+    private void applyCommand(int[][] grid, Point start, Point end, IntUnaryOperator operation) {
         for (int i = start.x(); i <= end.x(); i++) {
             for (int j = start.y(); j <= end.y(); j++) {
-                switch (command) {
-                    case TURN_ON -> grid[i][j]++;
-                    case TURN_OFF -> grid[i][j] = grid[i][j] > 0 ? grid[i][j] - 1 : grid[i][j];
-                    case TOGGLE -> grid[i][j] += 2;
-                }
+                grid[i][j] = operation.applyAsInt(grid[i][j]);
             }
         }
+    }
+
+    private IntUnaryOperator getPart1Operation(CommandType command) {
+        return switch (command) {
+            case TURN_ON -> value -> 1;
+            case TURN_OFF -> value -> 0;
+            case TOGGLE -> value -> (value == 1) ? 0 : 1;
+        };
+    }
+
+    private IntUnaryOperator getPart2Operation(CommandType command) {
+        return switch (command) {
+            case TURN_ON -> value -> value + 1;
+            case TURN_OFF -> value -> Math.max(0, value - 1);
+            case TOGGLE -> value -> value + 2;
+        };
     }
 
     @Override
     public Long solvePartOne(String fileName) {
         var lines = ResourceLines.list(fileName);
-
-        //TODO Avoid mutability
         int[][] grid = new int[GRID_SIZE][GRID_SIZE];
+        
         lines.stream()
             .map(this::parseLightCommand)
-            .forEach(cmd -> executeCommand1(grid, cmd.command(), cmd.start(), cmd.end()));
+            .forEach(cmd -> applyCommand(
+                grid, 
+                cmd.start(), 
+                cmd.end(), 
+                getPart1Operation(cmd.command())));
 
         return Arrays.stream(grid)
             .flatMapToInt(Arrays::stream)
@@ -114,17 +99,19 @@ public class LightCounter implements Solver<Long>{
     @Override
     public Long solvePartTwo(String fileName) {
         var lines = ResourceLines.list(fileName);
-
-        //TODO Avoid mutability
         int[][] grid = new int[GRID_SIZE][GRID_SIZE];
  
         lines.stream()
             .map(this::parseLightCommand)
-            .forEach(cmd -> executeCommand2(grid, cmd.command(), cmd.start(), cmd.end()));
+            .forEach(cmd -> applyCommand(
+                grid, 
+                cmd.start(), 
+                cmd.end(), 
+                getPart2Operation(cmd.command())));
 
         return Arrays.stream(grid)
-                    .flatMapToInt(Arrays::stream)
-                    .mapToLong(Long::valueOf)
-                    .sum();
+            .flatMapToInt(Arrays::stream)
+            .mapToLong(Long::valueOf)
+            .sum();
     }
 } 
