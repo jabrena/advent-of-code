@@ -90,8 +90,4 @@ public final class CodeGenerator implements Solver<Long> {
         return result;
     }
     
-    /**
-     * Immutable record for position.
-     */
-    private record Position(int row, int column) {}
 }

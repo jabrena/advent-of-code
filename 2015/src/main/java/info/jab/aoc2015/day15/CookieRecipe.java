@@ -19,13 +19,6 @@ public final class CookieRecipe implements Solver<Long> {
     private static final int TOTAL_TEASPOONS = 100;
     private static final int TARGET_CALORIES = 500;
 
-    public record Ingredient(String name, int capacity, int durability, int flavor, int texture, int calories) {}
-    
-    record RecipeScore(long capacity, long durability, long flavor, long texture) {
-        long totalScore() {
-            return Math.max(0, capacity) * Math.max(0, durability) * Math.max(0, flavor) * Math.max(0, texture);
-        }
-    }
 
     @Override
     public Long solvePartOne(final String fileName) {

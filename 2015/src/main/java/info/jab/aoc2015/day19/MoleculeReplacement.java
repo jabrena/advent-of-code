@@ -16,9 +16,6 @@ public final class MoleculeReplacement implements Solver<Integer> {
     private static final int MAX_ATTEMPTS = 100;
     private static final String TARGET_MOLECULE = "e";
 
-    private record ParsedInput(Map<String, List<String>> replacements, String molecule) {}
-    
-    private record Replacement(String from, String to) {}
 
     @Override
     public Integer solvePartOne(final String fileName) {

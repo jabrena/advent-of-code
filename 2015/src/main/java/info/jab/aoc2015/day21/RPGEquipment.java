@@ -16,21 +16,6 @@ import java.util.stream.Stream;
  */
 public final class RPGEquipment implements Solver<Integer> {
 
-    record Item(String name, int cost, int damage, int armor) {}
-    record Character(int hitPoints, int damage, int armor) {}
-    record Equipment(Item weapon, Item armor, Item ring1, Item ring2) {
-        int totalCost() {
-            return weapon.cost() + armor.cost() + ring1.cost() + ring2.cost();
-        }
-        
-        Character toCharacter() {
-            return new Character(
-                    100,
-                    weapon.damage() + armor.damage() + ring1.damage() + ring2.damage(),
-                    weapon.armor() + armor.armor() + ring1.armor() + ring2.armor()
-            );
-        }
-    }
 
     private static final List<Item> WEAPONS = List.of(
         new Item("Dagger", 8, 4, 0),

@@ -20,27 +20,6 @@ public final class ReindeerRace implements Solver<Integer> {
     private static final Pattern REINDEER_PATTERN = Pattern.compile(
             "(\\w+) can fly (\\d+) km/s for (\\d+) seconds, but then must rest for (\\d+) seconds\\.");
 
-    record Reindeer(String name, int speed, int flyTime, int restTime) {
-        
-        /**
-         * Pure function: calculates distance after given seconds.
-         * No side effects, deterministic output.
-         */
-        public int distanceAfter(final int totalSeconds) {
-            final int cycleTime = flyTime + restTime;
-            final int completeCycles = totalSeconds / cycleTime;
-            final int remainingSeconds = totalSeconds % cycleTime;
-            
-            final int baseDistance = completeCycles * speed * flyTime;
-            
-            // Handle remaining seconds in the current cycle
-            final int flyingSecondsInLastCycle = remainingSeconds > 0 
-                    ? Math.min(remainingSeconds, flyTime) 
-                    : 0;
-            
-            return baseDistance + flyingSecondsInLastCycle * speed;
-        }
-    }
 
     @Override
     public Integer solvePartOne(final String fileName) {
