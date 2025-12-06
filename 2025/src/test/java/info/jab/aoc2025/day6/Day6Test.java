@@ -12,7 +12,7 @@ public class Day6Test {
     @Timeout(value = 30, unit = TimeUnit.SECONDS)
     public void testPart1Sample() {
         Day<Long> day6 = new Day6();
-        Long result = day6.getPart1Result("day6/day6-input-sample.txt");
+        Long result = day6.getPart1Result("/day6/day6-input-sample.txt");
         assertEquals(4277556L, result);
     }
 
@@ -20,9 +20,7 @@ public class Day6Test {
     @Timeout(value = 30, unit = TimeUnit.SECONDS)
     public void testPart1() {
         Day<Long> day6 = new Day6();
-        Long result = day6.getPart1Result("day6/day6-input.txt");
-        // We don't know the result yet, but we want to execute it.
-        // Failing for now or printing.
-        System.out.println("Part 1 Result: " + result);
+        Long result = day6.getPart1Result("/day6/day6-input.txt");
+        assertEquals(5316572080628L, result);
     }
 }
