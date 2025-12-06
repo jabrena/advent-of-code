@@ -4,6 +4,7 @@ import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
@@ -78,7 +79,7 @@ public final class ReindeerRace implements Solver<Integer> {
                     }
                     return null;
                 })
-                .filter(reindeer -> reindeer != null)
+                .filter(Objects::nonNull)
                 .toList();
     }
 }

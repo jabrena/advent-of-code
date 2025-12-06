@@ -44,9 +44,7 @@ class Day3  implements Day<Long> {
         return new MatrixDimension(x,y);
     };
 
-    Function<List<String>, Grid> createMatrix = param -> {
-        return new Grid(GridUtils.of(param));
-    };
+    Function<List<String>, Grid> createMatrix = param -> new Grid(GridUtils.of(param));
 
     record Symbol(String symbol, int x, int y) {
         int[][] getAdjacents() {
