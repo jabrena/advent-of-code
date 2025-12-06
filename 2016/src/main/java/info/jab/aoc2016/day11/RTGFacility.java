@@ -9,6 +9,18 @@ import info.jab.aoc.Solver;
 
 public class RTGFacility implements Solver<Integer> {
 
+    /**
+     * Maximum input length to prevent ReDoS attacks.
+     * This limit prevents polynomial runtime due to regex backtracking.
+     */
+    private static final int MAX_INPUT_LENGTH = 10_000;
+    
+    /**
+     * Maximum number of regex matches to prevent DoS attacks.
+     * This limit prevents excessive iterations in regex find() loops.
+     */
+    private static final int MAX_MATCHES = 100;
+
     private static final Pattern GENERATOR_PATTERN = Pattern.compile("((?>\\w+)) generator");
     private static final Pattern MICROCHIP_PATTERN = Pattern.compile("((?>\\w+))-compatible microchip");
 
@@ -39,16 +51,32 @@ public class RTGFacility implements Solver<Integer> {
         for (int floor = 0; floor < lines.size(); floor++) {
             String line = lines.get(floor);
             
+            if (line.length() > MAX_INPUT_LENGTH) {
+                throw new IllegalArgumentException("Input line exceeds maximum length of " + MAX_INPUT_LENGTH);
+            }
+            
             // Find generators
             Matcher genMatcher = GENERATOR_PATTERN.matcher(line);
+            int genMatchCount = 0;
             while (genMatcher.find()) {
+                if (genMatchCount >= MAX_MATCHES) {
+                    throw new IllegalStateException("Exceeded maximum number of generator matches: " + MAX_MATCHES);
+                }
+                genMatchCount++;
+                
                 String element = genMatcher.group(1);
                 state.addItem(floor, element, ItemType.GENERATOR);
             }
             
             // Find microchips
             Matcher chipMatcher = MICROCHIP_PATTERN.matcher(line);
+            int chipMatchCount = 0;
             while (chipMatcher.find()) {
+                if (chipMatchCount >= MAX_MATCHES) {
+                    throw new IllegalStateException("Exceeded maximum number of microchip matches: " + MAX_MATCHES);
+                }
+                chipMatchCount++;
+                
                 String element = chipMatcher.group(1);
                 state.addItem(floor, element, ItemType.MICROCHIP);
             }

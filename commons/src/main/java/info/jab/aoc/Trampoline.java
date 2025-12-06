@@ -17,6 +17,12 @@ import java.util.stream.Stream;
 public sealed interface Trampoline<T> permits Trampoline.Done, Trampoline.More {
 
     /**
+     * Maximum number of iterations allowed to prevent DoS attacks.
+     * This limit prevents infinite loops in trampoline computations.
+     */
+    int MAX_ITERATIONS = 1_000_000;
+
+    /**
      * Evaluate the trampoline computation iteratively using Stream API
      * Converts recursive calls into iterative loops, avoiding stack overflow
      * Uses functional approach: no mutation, declarative style
@@ -24,16 +30,19 @@ public sealed interface Trampoline<T> permits Trampoline.Done, Trampoline.More {
      * @param <T> the result type
      * @param trampoline the trampoline computation to evaluate
      * @return the final result after evaluating all continuations
+     * @throws IllegalStateException if the computation exceeds the maximum iteration limit
      */
     static <T> T run(Trampoline<T> trampoline) {
         return Stream.iterate(
                 trampoline,
                 t -> t instanceof More<T>(var compute) ? compute.get() : t
         )
+        .limit(MAX_ITERATIONS)
         .dropWhile(t -> t instanceof More<T>)
         .findFirst()
         .map(t -> ((Done<T>) t).result())
-        .orElseThrow();
+        .orElseThrow(() -> new IllegalStateException(
+                "Trampoline computation exceeded maximum iteration limit of " + MAX_ITERATIONS));
     }
 
     /**

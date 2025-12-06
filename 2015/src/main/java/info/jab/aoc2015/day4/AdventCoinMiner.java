@@ -10,6 +10,12 @@ import java.util.stream.IntStream;
 
 public class AdventCoinMiner implements Solver<Integer> {
 
+    /**
+     * Maximum number of iterations allowed to prevent DoS attacks.
+     * This limit prevents infinite loops when searching for valid hashes.
+     */
+    private static final int MAX_ITERATIONS = 10_000_000;
+
     @Override
     public Integer solvePartOne(final String fileName) {
         String secretKey = ResourceLines.line(fileName);
@@ -28,10 +34,12 @@ public class AdventCoinMiner implements Solver<Integer> {
         // Use parallel processing for better performance on brute force search
         // Each thread creates its own MessageDigest instance for thread-safety
         return IntStream.iterate(1, n -> n + 1)
+            .limit(MAX_ITERATIONS)
             .parallel()
             .filter(number -> hasValidHash(secretKey, number, prefix))
             .findFirst()
-            .orElseThrow(() -> new RuntimeException("Not found solution"));
+            .orElseThrow(() -> new RuntimeException(
+                    "Not found solution within " + MAX_ITERATIONS + " iterations"));
     }
 
     private boolean hasValidHash(String secretKey, int number, String prefix) {

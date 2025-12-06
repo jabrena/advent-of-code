@@ -12,12 +12,22 @@ import info.jab.aoc.Solver;
 
 public class LightCounter implements Solver<Long> {
 
+    /**
+     * Maximum input length to prevent ReDoS attacks.
+     * This limit prevents polynomial runtime due to regex backtracking with alternation patterns.
+     */
+    private static final int MAX_INPUT_LENGTH = 10_000;
+
     private static final String PATTERN = "(turn on|turn off|toggle) (\\d+,\\d+) through (\\d+,\\d+)";
     private static final Pattern PATTERN_COMPILED = Pattern.compile(PATTERN);
 
     private static final int GRID_SIZE = 1000;
 
     private LightCommand parseLightCommand(String line) {
+        if (line.length() > MAX_INPUT_LENGTH) {
+            throw new IllegalArgumentException("Input line exceeds maximum length of " + MAX_INPUT_LENGTH);
+        }
+        
         Matcher matcher = PATTERN_COMPILED.matcher(line);
         if (!matcher.find()) {
             throw new IllegalArgumentException("Invalid format: " + line);

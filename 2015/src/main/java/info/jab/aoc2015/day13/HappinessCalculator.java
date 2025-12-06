@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -14,6 +14,18 @@ import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
 public class HappinessCalculator implements Solver<Integer> {
+    
+    /**
+     * Maximum input length to prevent ReDoS attacks.
+     * This limit prevents polynomial runtime due to regex backtracking with alternation patterns.
+     */
+    private static final int MAX_INPUT_LENGTH = 10_000;
+    
+    /**
+     * Maximum number of regex matches to prevent DoS attacks.
+     * This limit prevents excessive iterations in regex find() operations.
+     */
+    private static final int MAX_MATCHES = 1_000;
     
     // Format: Alice would gain 54 happiness units by sitting next to Bob.
     // or: Alice would lose 79 happiness units by sitting next to Carol.    
@@ -98,9 +110,25 @@ public class HappinessCalculator implements Solver<Integer> {
     }
 
     private Map<String, Map<String, Integer>> getHappinessMap(List<String> lines) {
+        AtomicInteger matchCount = new AtomicInteger(0);
         return lines.stream()
+            .filter(line -> {
+                if (line.length() > MAX_INPUT_LENGTH) {
+                    throw new IllegalArgumentException("Input line exceeds maximum length of " + MAX_INPUT_LENGTH);
+                }
+                return true;
+            })
             .map(PATTERN_COMPILED::matcher)
-            .filter(Matcher::find)
+            .filter(matcher -> {
+                boolean found = matcher.find();
+                if (found) {
+                    int count = matchCount.incrementAndGet();
+                    if (count > MAX_MATCHES) {
+                        throw new IllegalStateException("Exceeded maximum number of matches: " + MAX_MATCHES);
+                    }
+                }
+                return found;
+            })
             .collect(Collectors.groupingBy(
                 matcher -> matcher.group(1),
                 Collectors.toMap(

@@ -10,6 +10,12 @@ import info.jab.aoc.Solver;
 
 public class MullItOver2 implements Solver<Integer> {
 
+    /**
+     * Maximum input length to prevent ReDoS attacks.
+     * This limit prevents polynomial runtime due to regex backtracking with alternation patterns.
+     */
+    private static final int MAX_INPUT_LENGTH = 1_000_000;
+
     private static final Pattern PATTERN = Pattern.compile("mul\\((\\d+),(\\d+)\\)|do\\(\\)|don't\\(\\)");
 
     sealed interface Instruction permits Mul, Do, Dont { }
@@ -18,6 +24,10 @@ public class MullItOver2 implements Solver<Integer> {
     record Dont() implements Instruction { }
 
     private Stream<Instruction> parseLine(final String line) {
+        if (line.length() > MAX_INPUT_LENGTH) {
+            throw new IllegalArgumentException("Input line exceeds maximum length of " + MAX_INPUT_LENGTH);
+        }
+        
         return PATTERN.matcher(line).results()
             .map(result -> switch (result.group()) {
                 case "do()" -> new Do();
