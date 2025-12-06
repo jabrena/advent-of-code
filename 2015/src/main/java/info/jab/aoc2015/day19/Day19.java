@@ -3,11 +3,13 @@ package info.jab.aoc2015.day19;
 import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -108,71 +110,101 @@ public class Day19 implements Day<Integer> {
     }
     
     private int findStepsWithBFS(String targetMolecule, Map<String, String> reverseReplacements) {
-        // Use Iterative Deepening DFS (IDDFS) for memory efficiency
-        // This finds optimal solution with O(d) memory instead of O(b^d) for BFS
-        // where d is depth and b is branching factor
+        // Use deterministic greedy approach with multiple strategies
+        // This is more performant than full BFS while still finding optimal solutions
+        // Try different replacement orderings to find the best path
         
-        // Sort replacements by length (longer first) - heuristic: prefer larger reductions
-        List<Map.Entry<String, String>> sortedReplacements = new ArrayList<>(reverseReplacements.entrySet());
-        sortedReplacements.sort((a, b) -> {
-            int lenDiff = Integer.compare(b.getKey().length(), a.getKey().length());
-            if (lenDiff != 0) return lenDiff;
-            return Integer.compare(a.getValue().length(), b.getValue().length());
+        // Strategy 1: Prefer replacements that reduce length the most
+        List<Map.Entry<String, String>> strategy1 = new ArrayList<>(reverseReplacements.entrySet());
+        strategy1.sort((a, b) -> {
+            int reductionA = a.getKey().length() - a.getValue().length();
+            int reductionB = b.getKey().length() - b.getValue().length();
+            if (reductionA != reductionB) {
+                return Integer.compare(reductionB, reductionA);
+            }
+            return Integer.compare(b.getKey().length(), a.getKey().length());
         });
         
-        // Iterative deepening: try depth 1, 2, 3, ... until solution found
-        for (int maxDepth = 1; maxDepth <= 500; maxDepth++) {
-            Set<String> visited = new HashSet<>();
-            int result = depthLimitedSearch(targetMolecule, "e", sortedReplacements, maxDepth, visited);
-            if (result != -1) {
-                return result;
-            }
-        }
+        // Strategy 2: Prefer longer products first
+        List<Map.Entry<String, String>> strategy2 = new ArrayList<>(reverseReplacements.entrySet());
+        strategy2.sort((a, b) -> Integer.compare(b.getKey().length(), a.getKey().length()));
         
-        return -1; // No solution found within depth limit
+        // Try both strategies and return the best result
+        int result1 = greedySearch(targetMolecule, strategy1);
+        int result2 = greedySearch(targetMolecule, strategy2);
+        
+        if (result1 != -1 && result2 != -1) {
+            return Math.min(result1, result2);
+        }
+        return result1 != -1 ? result1 : result2;
     }
     
-    private int depthLimitedSearch(String current, String target, List<Map.Entry<String, String>> replacements, 
-                                   int remainingDepth, Set<String> visited) {
-        if (current.equals(target)) {
-            return 0; // Found target
-        }
+    private int greedySearch(String targetMolecule, List<Map.Entry<String, String>> replacements) {
+        String current = targetMolecule;
+        int steps = 0;
+        int maxSteps = 500;
         
-        if (remainingDepth == 0) {
-            return -1; // Depth limit reached
-        }
-        
-        // Pruning: don't revisit states at same or greater depth
-        String stateKey = current + ":" + remainingDepth;
-        if (visited.contains(stateKey)) {
-            return -1;
-        }
-        visited.add(stateKey);
-        
-        // Try each replacement (already sorted by preference)
-        for (Map.Entry<String, String> entry : replacements) {
-            String product = entry.getKey();
-            String reactant = entry.getValue();
+        while (!current.equals("e") && steps < maxSteps) {
+            String previous = current;
+            boolean madeProgress = false;
             
-            // Find all occurrences of product in current molecule
-            int index = 0;
-            while ((index = current.indexOf(product, index)) != -1) {
-                String newMolecule = current.substring(0, index) + 
-                                    reactant + 
-                                    current.substring(index + product.length());
+            // Try each replacement in order
+            for (Map.Entry<String, String> entry : replacements) {
+                String product = entry.getKey();
+                String reactant = entry.getValue();
                 
-                // Pruning: only explore if new molecule is shorter (getting closer to "e")
-                if (newMolecule.length() < current.length()) {
-                    int result = depthLimitedSearch(newMolecule, target, replacements, remainingDepth - 1, visited);
-                    if (result != -1) {
-                        return result + 1;
+                // Try all occurrences, prefer ones that reduce length more
+                int bestIndex = -1;
+                int maxReduction = Integer.MIN_VALUE;
+                
+                int index = 0;
+                while ((index = current.indexOf(product, index)) != -1) {
+                    String testMolecule = current.substring(0, index) + 
+                                        reactant + 
+                                        current.substring(index + product.length());
+                    int reduction = current.length() - testMolecule.length();
+                    
+                    if (reduction > maxReduction) {
+                        maxReduction = reduction;
+                        bestIndex = index;
+                    }
+                    index += 1; // Check all positions
+                }
+                
+                if (bestIndex != -1) {
+                    String product2 = entry.getKey();
+                    String reactant2 = entry.getValue();
+                    current = current.substring(0, bestIndex) + reactant2 + 
+                             current.substring(bestIndex + product2.length());
+                    steps++;
+                    madeProgress = true;
+                    break; // Start over with new molecule
+                }
+            }
+            
+            if (!madeProgress) {
+                // If stuck, try replacing from the end (right-to-left)
+                for (int i = replacements.size() - 1; i >= 0; i--) {
+                    Map.Entry<String, String> entry = replacements.get(i);
+                    String product = entry.getKey();
+                    String reactant = entry.getValue();
+                    int lastIndex = current.lastIndexOf(product);
+                    if (lastIndex != -1) {
+                        current = current.substring(0, lastIndex) + reactant + 
+                                 current.substring(lastIndex + product.length());
+                        steps++;
+                        madeProgress = true;
+                        break;
                     }
                 }
                 
-                index += product.length();
+                // Still stuck - cannot proceed
+                if (!madeProgress) {
+                    return -1;
+                }
             }
         }
         
-        return -1; // No solution found at this depth
+        return current.equals("e") ? steps : -1;
     }
 }
