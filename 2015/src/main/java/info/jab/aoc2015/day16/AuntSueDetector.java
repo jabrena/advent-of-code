@@ -47,22 +47,17 @@ public class AuntSueDetector implements Solver<Integer> {
      * 4. The pattern structure is linear with no nested quantifiers or alternations
      */
     private static final Pattern SUE_PATTERN = Pattern.compile("Sue (\\d+): (.*+)");
-    
+
     /**
      * Regex pattern for matching compound entries.
-     * Uses possessive quantifiers (\\w++ and \\d++) to prevent backtracking and ReDoS attacks.
-     * Possessive quantifiers prevent backtracking, making the regex safe from polynomial runtime attacks.
-     * Pattern matches: "<word>: <number>"
+     * Pattern matches: "key: value" preceded by start of string or comma-space.
      *
-     * Security: This pattern is safe from ReDoS because:
-     * 1. Possessive quantifiers \\w++ and \\d++ prevent backtracking (no backtracking possible)
-     * 2. Input length is limited to MAX_INPUT_LENGTH (10,000 characters)
-     * 3. Match iteration is limited to MAX_MATCHES (100 matches)
-     * 4. The pattern structure is linear with no nested quantifiers or alternations
-     * 5. Pattern is compiled once and reused, preventing repeated compilation overhead
-     * 6. Capturing groups are non-backtracking due to possessive quantifiers
+     * Security:
+     * 1. Uses non-capturing group (?:^|,\\s+) to anchor the match, preventing O(N^2) behavior in find().
+     * 2. Input length is limited to MAX_INPUT_LENGTH (10,000 characters).
+     * 3. Match iteration is limited to MAX_MATCHES (100 matches).
      */
-    private static final Pattern COMPOUND_PATTERN = Pattern.compile("(\\w++): (\\d++)");
+    private static final Pattern COMPOUND_PATTERN = Pattern.compile("(?:^|,\\s+)(\\w+): (\\d+)");
 
     @Override
     public Integer solvePartOne(String fileName) {
