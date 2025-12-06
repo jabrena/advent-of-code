@@ -4,14 +4,10 @@ import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -112,74 +108,71 @@ public class Day19 implements Day<Integer> {
     }
     
     private int findStepsWithBFS(String targetMolecule, Map<String, String> reverseReplacements) {
-        // Optimized BFS with better memory management and pruning
-        // Use a priority queue to explore shorter molecules first (heuristic: shorter = closer to "e")
-        PriorityQueue<BFSState> queue = new PriorityQueue<>(
-            Comparator.comparingInt((BFSState s) -> s.molecule.length())
-                     .thenComparingInt(s -> s.steps)
-        );
-        Set<String> visited = new HashSet<>();
+        // Use Iterative Deepening DFS (IDDFS) for memory efficiency
+        // This finds optimal solution with O(d) memory instead of O(b^d) for BFS
+        // where d is depth and b is branching factor
         
-        queue.offer(new BFSState(targetMolecule, 0));
-        visited.add(targetMolecule);
+        // Sort replacements by length (longer first) - heuristic: prefer larger reductions
+        List<Map.Entry<String, String>> sortedReplacements = new ArrayList<>(reverseReplacements.entrySet());
+        sortedReplacements.sort((a, b) -> {
+            int lenDiff = Integer.compare(b.getKey().length(), a.getKey().length());
+            if (lenDiff != 0) return lenDiff;
+            return Integer.compare(a.getValue().length(), b.getValue().length());
+        });
         
-        int maxDepth = 1000; // Safety limit
-        int bestSteps = Integer.MAX_VALUE;
-        
-        while (!queue.isEmpty() && queue.peek().steps < maxDepth) {
-            BFSState current = queue.poll();
-            
-            if (current.molecule.equals("e")) {
-                return current.steps;
-            }
-            
-            // Pruning: if we've found a solution, don't explore deeper
-            if (current.steps >= bestSteps) {
-                continue;
-            }
-            
-            // Generate all possible predecessors by applying reverse replacements
-            // Sort replacements by length (longer first) to reduce molecule size faster
-            List<Map.Entry<String, String>> sortedReplacements = new ArrayList<>(reverseReplacements.entrySet());
-            sortedReplacements.sort((a, b) -> Integer.compare(b.getKey().length(), a.getKey().length()));
-            
-            for (Map.Entry<String, String> entry : sortedReplacements) {
-                String product = entry.getKey();
-                String reactant = entry.getValue();
-                
-                // Find all occurrences of product in current molecule
-                int index = 0;
-                while ((index = current.molecule.indexOf(product, index)) != -1) {
-                    String newMolecule = current.molecule.substring(0, index) + 
-                                        reactant + 
-                                        current.molecule.substring(index + product.length());
-                    
-                    // Pruning: only explore if new molecule is shorter or equal length
-                    // and we haven't seen it before
-                    if (!visited.contains(newMolecule) && newMolecule.length() <= current.molecule.length()) {
-                        visited.add(newMolecule);
-                        int newSteps = current.steps + 1;
-                        queue.offer(new BFSState(newMolecule, newSteps));
-                        
-                        if (newMolecule.equals("e")) {
-                            bestSteps = Math.min(bestSteps, newSteps);
-                        }
-                    }
-                    
-                    index += product.length();
-                }
-            }
-            
-            // Limit visited set size to prevent memory issues
-            if (visited.size() > 100000) {
-                // Clear some old entries (simple strategy: keep recent ones)
-                visited.clear();
-                visited.add(targetMolecule);
+        // Iterative deepening: try depth 1, 2, 3, ... until solution found
+        for (int maxDepth = 1; maxDepth <= 500; maxDepth++) {
+            Set<String> visited = new HashSet<>();
+            int result = depthLimitedSearch(targetMolecule, "e", sortedReplacements, maxDepth, visited);
+            if (result != -1) {
+                return result;
             }
         }
         
-        return bestSteps != Integer.MAX_VALUE ? bestSteps : -1;
+        return -1; // No solution found within depth limit
     }
     
-    private record BFSState(String molecule, int steps) {}
+    private int depthLimitedSearch(String current, String target, List<Map.Entry<String, String>> replacements, 
+                                   int remainingDepth, Set<String> visited) {
+        if (current.equals(target)) {
+            return 0; // Found target
+        }
+        
+        if (remainingDepth == 0) {
+            return -1; // Depth limit reached
+        }
+        
+        // Pruning: don't revisit states at same or greater depth
+        String stateKey = current + ":" + remainingDepth;
+        if (visited.contains(stateKey)) {
+            return -1;
+        }
+        visited.add(stateKey);
+        
+        // Try each replacement (already sorted by preference)
+        for (Map.Entry<String, String> entry : replacements) {
+            String product = entry.getKey();
+            String reactant = entry.getValue();
+            
+            // Find all occurrences of product in current molecule
+            int index = 0;
+            while ((index = current.indexOf(product, index)) != -1) {
+                String newMolecule = current.substring(0, index) + 
+                                    reactant + 
+                                    current.substring(index + product.length());
+                
+                // Pruning: only explore if new molecule is shorter (getting closer to "e")
+                if (newMolecule.length() < current.length()) {
+                    int result = depthLimitedSearch(newMolecule, target, replacements, remainingDepth - 1, visited);
+                    if (result != -1) {
+                        return result + 1;
+                    }
+                }
+                
+                index += product.length();
+            }
+        }
+        
+        return -1; // No solution found at this depth
+    }
 }
