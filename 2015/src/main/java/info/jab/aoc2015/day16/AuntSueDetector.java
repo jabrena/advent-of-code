@@ -34,13 +34,33 @@ public class AuntSueDetector implements Solver<Integer> {
         "perfumes", 1
     );
 
-    // Use atomic group wrapped in capturing group to prevent backtracking: ((?>.*)) instead of (.*)
-    // Atomic groups prevent backtracking, making the regex safe from ReDoS attacks
-    // The pattern matches: "Sue <number>: <rest of line>"
-    // Outer parentheses create capturing group 2, inner atomic group prevents backtracking
-    private static final Pattern SUE_PATTERN = Pattern.compile("Sue (\\d+): ((?>.*))");
-    // Use atomic groups for compound pattern to prevent backtracking
-    private static final Pattern COMPOUND_PATTERN = Pattern.compile("((?>\\w+)): ((?>\\d+))");
+    /**
+     * Regex pattern for matching Sue entries.
+     * Uses possessive quantifier (.*+) to prevent backtracking and ReDoS attacks.
+     * Possessive quantifiers prevent backtracking, making the regex safe from polynomial runtime attacks.
+     * Pattern matches: "Sue <number>: <rest of line>"
+     *
+     * Security: This pattern is safe from ReDoS because:
+     * 1. Possessive quantifier .*+ prevents backtracking
+     * 2. Input length is limited to MAX_INPUT_LENGTH (10,000 characters)
+     * 3. Match iteration is limited to MAX_MATCHES (100 matches)
+     * 4. The pattern structure is linear with no nested quantifiers or alternations
+     */
+    private static final Pattern SUE_PATTERN = Pattern.compile("Sue (\\d+): (.*+)");
+    
+    /**
+     * Regex pattern for matching compound entries.
+     * Uses possessive quantifiers (\\w++ and \\d++) to prevent backtracking and ReDoS attacks.
+     * Possessive quantifiers prevent backtracking, making the regex safe from polynomial runtime attacks.
+     * Pattern matches: "<word>: <number>"
+     *
+     * Security: This pattern is safe from ReDoS because:
+     * 1. Possessive quantifiers \\w++ and \\d++ prevent backtracking
+     * 2. Input length is limited to MAX_INPUT_LENGTH (10,000 characters)
+     * 3. Match iteration is limited to MAX_MATCHES (100 matches)
+     * 4. The pattern structure is linear with no nested quantifiers or alternations
+     */
+    private static final Pattern COMPOUND_PATTERN = Pattern.compile("(\\w++): (\\d++)");
 
     @Override
     public Integer solvePartOne(String fileName) {
