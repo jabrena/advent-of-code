@@ -1,7 +1,6 @@
 package info.jab.aoc2015.day13;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import com.putoet.resources.ResourceLines;
@@ -23,55 +21,71 @@ public class HappinessCalculator implements Solver<Integer> {
     private static final String REGEX = "^(\\w+) would (gain|lose) (\\d+) happiness units by sitting next to (\\w+)\\.$";
     private static final Pattern PATTERN_COMPILED = Pattern.compile(REGEX);
 
-    private int calculateHappiness(List<String> arrangement, Map<String, Map<String, Integer>> happinessMap) {
-        return IntStream.range(0, arrangement.size())
-            .map(i -> {
-                int size = arrangement.size();
-                String current = arrangement.get(i);
-                String left = arrangement.get((i - 1 + size) % size);
-                String right = arrangement.get((i + 1) % size);
-                
-                return happinessMap.get(current).get(left) + 
-                       happinessMap.get(current).get(right);
-            })
-            .sum();
-    }
-
-    private List<List<String>> generatePermutations(List<String> items) {
-        if (items.size() <= 1) {
-            return Collections.singletonList(items);
-        }
-
-        List<List<String>> result = new ArrayList<>();
-        String first = items.get(0);
-        List<String> remaining = items.subList(1, items.size());
+    private int findOptimalHappinessRecursive(
+        List<String> remaining,
+        List<String> currentArrangement,
+        Map<String, Map<String, Integer>> happinessMap,
+        int currentHappiness,
+        int bestHappiness) {
         
-        for (List<String> perm : generatePermutations(remaining)) {
-            for (int i = 0; i <= perm.size(); i++) {
-                List<String> newPerm = new ArrayList<>(perm);
-                newPerm.add(i, first);
-                result.add(newPerm);
+        if (remaining.isEmpty()) {
+            // Calculate final happiness including connection from last to first
+            int size = currentArrangement.size();
+            if (size > 1) {
+                String last = currentArrangement.get(size - 1);
+                String first = currentArrangement.get(0);
+                currentHappiness += happinessMap.get(last).get(first);
+                currentHappiness += happinessMap.get(first).get(last);
             }
+            return Math.max(bestHappiness, currentHappiness);
         }
-        return result;
+        
+        // Branch-and-bound: if current partial happiness + optimistic estimate can't beat best, prune
+        // For circular arrangements, we can't easily estimate, so we skip pruning for now
+        // but the recursive approach is more memory efficient than generating all permutations
+        
+        for (int i = 0; i < remaining.size(); i++) {
+            String nextPerson = remaining.get(i);
+            List<String> newRemaining = new ArrayList<>(remaining);
+            newRemaining.remove(i);
+            
+            List<String> newArrangement = new ArrayList<>(currentArrangement);
+            newArrangement.add(nextPerson);
+            
+            int newHappiness = currentHappiness;
+            if (currentArrangement.size() > 0) {
+                String prevPerson = currentArrangement.get(currentArrangement.size() - 1);
+                newHappiness += happinessMap.get(prevPerson).get(nextPerson);
+                newHappiness += happinessMap.get(nextPerson).get(prevPerson);
+            }
+            
+            bestHappiness = findOptimalHappinessRecursive(
+                newRemaining,
+                newArrangement,
+                happinessMap,
+                newHappiness,
+                bestHappiness
+            );
+        }
+        
+        return bestHappiness;
     }
 
     public int findOptimalHappiness(Set<String> people, Map<String, Map<String, Integer>> happinessMap) {
         List<String> peopleList = new ArrayList<>(people);
-        // Fix the first person to reduce redundant permutations
+        // Fix the first person to reduce redundant permutations from n! to (n-1)!
         String firstPerson = peopleList.remove(0);
         
-        int maxHappiness = Integer.MIN_VALUE;
+        List<String> initialArrangement = new ArrayList<>();
+        initialArrangement.add(firstPerson);
         
-        for (List<String> perm : generatePermutations(peopleList)) {
-            List<String> arrangement = new ArrayList<>();
-            arrangement.add(firstPerson);
-            arrangement.addAll(perm);
-            
-            int happiness = calculateHappiness(arrangement, happinessMap);
-            maxHappiness = Math.max(maxHappiness, happiness);
-        }
-        return maxHappiness;
+        return findOptimalHappinessRecursive(
+            peopleList,
+            initialArrangement,
+            happinessMap,
+            0,
+            Integer.MIN_VALUE
+        );
     }
 
     private Set<String> getPeople(Map<String, Map<String, Integer>> happinessMap) {

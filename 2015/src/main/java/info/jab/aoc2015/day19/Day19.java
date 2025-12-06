@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * https://adventofcode.com/2015/day/19
@@ -18,10 +17,13 @@ import java.util.regex.Pattern;
 public class Day19 implements Day<Integer> {
 
     private static final String REPLACEMENT_SEPARATOR = " => ";
-    private static final int MAX_ATTEMPTS = 1000;
     private static final int MAX_STEPS = 1000;
+    private static final int MAX_ATTEMPTS = 100;
+    private static final String TARGET_MOLECULE = "e";
 
     private record ParsedInput(Map<String, List<String>> replacements, String molecule) {}
+    
+    private record Replacement(String from, String to) {}
 
     @Override
     public Integer getPart1Result(String fileName) {
@@ -82,57 +84,57 @@ public class Day19 implements Day<Integer> {
     }
     
     private int findMinimumSteps(String targetMolecule, Map<String, List<String>> replacements) {
-        Map<String, String> reverseReplacements = buildReverseReplacements(replacements);
-        return findStepsWithDeterministicGreedy(targetMolecule, reverseReplacements);
-    }
-    
-    private Map<String, String> buildReverseReplacements(Map<String, List<String>> replacements) {
-        Map<String, String> reverseReplacements = new HashMap<>();
-        for (Map.Entry<String, List<String>> entry : replacements.entrySet()) {
-            String from = entry.getKey();
-            for (String to : entry.getValue()) {
-                reverseReplacements.put(to, from);
-            }
-        }
-        return reverseReplacements;
-    }
-    
-    private int findStepsWithDeterministicGreedy(String targetMolecule, Map<String, String> reverseReplacements) {
-        // Sort replacements by length (longest first) for deterministic greedy approach
-        // This heuristic works well: longer replacements reduce the molecule size faster
-        List<String> sortedKeys = new ArrayList<>(reverseReplacements.keySet());
-        sortedKeys.sort(Comparator.comparingInt(String::length).reversed());
+        List<Replacement> reverseReplacements = buildReverseReplacements(replacements);
         
-        // Try multiple attempts with slight variations (still needed for some edge cases)
+        // Try multiple attempts with different replacement orderings
+        // The greedy approach works best when replacements are tried in optimal order
         for (int attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-            int steps = attemptGreedyReduction(targetMolecule, reverseReplacements, sortedKeys);
+            int steps = attemptGreedyReduction(targetMolecule, reverseReplacements);
             if (steps > 0) {
                 return steps;
             }
             
-            // On subsequent attempts, try with slightly different ordering
-            // (rotate the list to try different starting points)
-            if (attempt < MAX_ATTEMPTS - 1 && !sortedKeys.isEmpty()) {
-                sortedKeys.add(sortedKeys.remove(0));
+            // Rotate the list to try different ordering on next attempt
+            if (attempt < MAX_ATTEMPTS - 1 && !reverseReplacements.isEmpty()) {
+                reverseReplacements.add(reverseReplacements.remove(0));
             }
         }
         
         throw new IllegalStateException("Failed to find solution after " + MAX_ATTEMPTS + " attempts");
     }
     
-    private int attemptGreedyReduction(String targetMolecule, Map<String, String> reverseReplacements, List<String> sortedKeys) {
+    private List<Replacement> buildReverseReplacements(Map<String, List<String>> replacements) {
+        List<Replacement> reverseReplacements = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : replacements.entrySet()) {
+            String from = entry.getKey();
+            for (String to : entry.getValue()) {
+                reverseReplacements.add(new Replacement(to, from));
+            }
+        }
+        // Sort by length (longest first), then alphabetically for deterministic behavior
+        reverseReplacements.sort(
+            Comparator.comparingInt((Replacement r) -> r.from().length())
+                .reversed()
+                .thenComparing(Replacement::from)
+        );
+        return reverseReplacements;
+    }
+    
+    private int attemptGreedyReduction(String targetMolecule, List<Replacement> reverseReplacements) {
         String current = targetMolecule;
         int steps = 0;
         
-        while (!current.equals("e") && steps < MAX_STEPS) {
+        while (!current.equals(TARGET_MOLECULE) && steps < MAX_STEPS) {
             String previous = current;
             
-            // Try each replacement in order (longest first)
-            for (String product : sortedKeys) {
-                if (current.contains(product)) {
-                    String reactant = reverseReplacements.get(product);
-                    // Replace first occurrence (from left to right)
-                    current = current.replaceFirst(Pattern.quote(product), reactant);
+            // Try each replacement in order (longest first, then alphabetically)
+            for (Replacement replacement : reverseReplacements) {
+                String product = replacement.from();
+                int index = current.indexOf(product);
+                if (index >= 0) {
+                    String reactant = replacement.to();
+                    // Replace first occurrence from left to right
+                    current = current.substring(0, index) + reactant + current.substring(index + product.length());
                     steps++;
                     break;
                 }
@@ -144,6 +146,7 @@ public class Day19 implements Day<Integer> {
             }
         }
         
-        return current.equals("e") ? steps : -1;
+        return current.equals(TARGET_MOLECULE) ? steps : -1;
     }
 }
+

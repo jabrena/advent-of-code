@@ -28,7 +28,6 @@ class Day14Test {
         int result = day14.solve(input, 2503);
         // This should be the actual result for part 1
         assertThat(result).isGreaterThan(0);
-        System.out.println("Part 1 result: " + result);
     }
 
     @Test
@@ -45,6 +44,5 @@ class Day14Test {
         int result = day14.solvePart2(input, 2503);
         // This should be the actual result for part 2
         assertThat(result).isGreaterThan(0);
-        System.out.println("Part 2 result: " + result);
     }
 }
