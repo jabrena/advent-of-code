@@ -127,7 +127,7 @@ public final class MathBlockSolverV2 implements Solver<Long> {
         final List<Integer> separatorColumns = IntStream.range(0, maxLength)
                 .filter(col -> isSeparatorColumn(paddedLines, col))
                 .boxed()
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
 
         if (separatorColumns.isEmpty()) {
             return List.of(new ColumnRange(0, maxLength));
