@@ -2,8 +2,8 @@ package info.jab.aoc2025.day6;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.ToLongFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Collectors;
 import info.jab.aoc.Solver;
@@ -36,7 +36,7 @@ public final class MathBlockSolverV2 implements Solver<Long> {
      * @param blockProcessor The function to process each block
      * @return The sum of all block calculations
      */
-    public Long solve(final List<String> lines, final Function<ColumnRange, Long> blockProcessor) {
+    public Long solve(final List<String> lines, final ToLongFunction<ColumnRange> blockProcessor) {
         if (lines.isEmpty()) {
             return 0L;
         }
@@ -45,7 +45,7 @@ public final class MathBlockSolverV2 implements Solver<Long> {
         final List<String> paddedLines = padLines(lines, maxLength);
 
         return findBlockRanges(paddedLines, maxLength).stream()
-                .mapToLong(blockProcessor::apply)
+                .mapToLong(blockProcessor)
                 .sum();
     }
 
@@ -56,7 +56,7 @@ public final class MathBlockSolverV2 implements Solver<Long> {
      * @param range The column range
      * @return The calculated result for this block
      */
-    public Long processBlockPart1(final List<String> lines, final ColumnRange range) {
+    public long processBlockPart1(final List<String> lines, final ColumnRange range) {
         final List<Long> numbers = lines.stream()
                 .map(line -> safeSubstring(line, range.startCol(), range.endCol()).trim())
                 .filter(sub -> !sub.isEmpty())
@@ -77,7 +77,7 @@ public final class MathBlockSolverV2 implements Solver<Long> {
      * @param range The column range
      * @return The calculated result for this block
      */
-    public Long processBlockPart2(final List<String> lines, final ColumnRange range) {
+    public long processBlockPart2(final List<String> lines, final ColumnRange range) {
         final MathOperator operator = findOperatorInRange(lines, range);
 
         final List<Long> numbers = IntStream.range(range.startCol(), range.endCol())
@@ -193,7 +193,7 @@ public final class MathBlockSolverV2 implements Solver<Long> {
     private Optional<Long> parseLongSafely(final String str) {
         try {
             return Optional.of(Long.parseLong(str));
-        } catch (final NumberFormatException e) {
+        } catch (final NumberFormatException _) {
             return Optional.empty();
         }
     }

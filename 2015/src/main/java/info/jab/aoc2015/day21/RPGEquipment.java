@@ -4,6 +4,7 @@ import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -92,7 +93,7 @@ public final class RPGEquipment implements Solver<Integer> {
                                                 }
                                                 return new Equipment(weapon, armor, ring1, ring2);
                                             })
-                                            .filter(eq -> eq != null)
+                                            .filter(Objects::nonNull)
                                     );
 
                             // One ring

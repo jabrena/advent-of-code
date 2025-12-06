@@ -70,7 +70,7 @@ public final class MathBlockSolver {
             } else {
                 try {
                     numbers.add(Long.parseLong(sub));
-                } catch (final NumberFormatException e) {
+                } catch (final NumberFormatException _) {
                     // Ignore invalid numbers
                 }
             }
@@ -102,7 +102,7 @@ public final class MathBlockSolver {
                 }
             }
 
-            if (numStr.length() > 0) {
+            if (!numStr.isEmpty()) {
                 numbers.add(Long.parseLong(numStr.toString()));
             }
         }

@@ -55,17 +55,12 @@ public class WizardSimulator implements Solver<Integer> {
         while (!queue.isEmpty()) {
             GameState state = queue.poll();
 
-            // Pruning: if we've already spent more mana than our best solution
-            if (state.manaSpent >= minMana) {
-                continue;
-            }
-
             // Create state key for memoization
             String stateKey = state.playerHp + "," + state.playerMana + "," + state.bossHp + "," +
                              state.playerTurn + "," + state.effects.toString();
 
-            // Skip if we've seen this state with equal or better mana cost
-            if (visited.contains(stateKey)) {
+            // Pruning: if we've already spent more mana than our best solution, or we've seen this state
+            if (state.manaSpent >= minMana || visited.contains(stateKey)) {
                 continue;
             }
             visited.add(stateKey);

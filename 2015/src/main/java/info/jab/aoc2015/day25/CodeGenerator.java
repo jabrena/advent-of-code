@@ -65,7 +65,7 @@ public final class CodeGenerator implements Solver<Long> {
      * Formula: position = (r + c - 2) * (r + c - 1) / 2 + c
      */
     private long calculateSequencePosition(final int row, final int column) {
-        final long sum = row + column;
+        final long sum = (long) row + column;
         return (sum - 2) * (sum - 1) / 2 + column;
     }
 

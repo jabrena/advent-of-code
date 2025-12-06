@@ -102,7 +102,7 @@ public final class GridDirections {
         Objects.requireNonNull(grid);
         Objects.requireNonNull(p);
         Objects.requireNonNull(condition);
-        return (int) getNeighbors(grid, p, includeDiagonals).stream()
+        return getNeighbors(grid, p, includeDiagonals).stream()
                 .mapToInt(neighbor -> condition.test(grid.get(neighbor)) ? 1 : 0)
                 .sum();
     }

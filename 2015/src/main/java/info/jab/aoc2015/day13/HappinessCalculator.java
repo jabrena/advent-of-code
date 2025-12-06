@@ -68,7 +68,7 @@ public class HappinessCalculator implements Solver<Integer> {
             newArrangement.add(nextPerson);
             
             int newHappiness = currentHappiness;
-            if (currentArrangement.size() > 0) {
+            if (!currentArrangement.isEmpty()) {
                 String prevPerson = currentArrangement.get(currentArrangement.size() - 1);
                 newHappiness += happinessMap.get(prevPerson).get(nextPerson);
                 newHappiness += happinessMap.get(nextPerson).get(prevPerson);
