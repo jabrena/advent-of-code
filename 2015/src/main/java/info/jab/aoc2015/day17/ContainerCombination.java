@@ -2,11 +2,12 @@ package info.jab.aoc2015.day17;
 
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
+import info.jab.aoc.Trampoline;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Solver for container combination problems.
@@ -22,13 +23,15 @@ public final class ContainerCombination implements Solver<Integer> {
     @Override
     public Integer solvePartOne(final String fileName) {
         final List<Integer> containers = ResourceLines.list(fileName, Integer::parseInt);
-        return countCombinationsMemoized(containers, TARGET_VOLUME, 0, 0, new HashMap<>());
+        return Trampoline.run(countCombinationsTrampoline(
+                containers, TARGET_VOLUME, 0, 0, new HashMap<>()));
     }
     
     @Override
     public Integer solvePartTwo(final String fileName) {
         final List<Integer> containers = ResourceLines.list(fileName, Integer::parseInt);
-        final List<List<Integer>> validCombinations = findAllValidCombinations(containers, TARGET_VOLUME);
+        final List<List<Integer>> validCombinations = Trampoline.run(
+                findCombinationsTrampoline(containers, TARGET_VOLUME, 0, 0, List.of()));
         
         // Find minimum number of containers needed using stream
         final int minContainers = validCombinations.stream()
@@ -43,10 +46,10 @@ public final class ContainerCombination implements Solver<Integer> {
     }
     
     /**
-     * Pure function: counts combinations using memoization.
-     * Uses functional recursion with immutable memo map.
+     * Creates a trampoline computation for counting combinations with memoization.
+     * Uses tail-recursive pattern converted to trampoline for stack safety.
      */
-    private int countCombinationsMemoized(
+    private Trampoline<Integer> countCombinationsTrampoline(
             final List<Integer> containers,
             final int target,
             final int currentSum,
@@ -55,19 +58,21 @@ public final class ContainerCombination implements Solver<Integer> {
         
         final String key = currentSum + "," + index;
         if (memo.containsKey(key)) {
-            return memo.get(key);
+            return new Trampoline.Done<>(memo.get(key));
         }
         
         if (currentSum == target) {
-            return 1;
+            memo.put(key, 1);
+            return new Trampoline.Done<>(1);
         }
         
         if (currentSum > target || index >= containers.size()) {
-            return 0;
+            memo.put(key, 0);
+            return new Trampoline.Done<>(0);
         }
         
-        // Include current container
-        final int withCurrent = countCombinationsMemoized(
+        // Create trampolines for both branches
+        final Trampoline<Integer> withCurrentTrampoline = countCombinationsTrampoline(
                 containers,
                 target,
                 currentSum + containers.get(index),
@@ -75,8 +80,7 @@ public final class ContainerCombination implements Solver<Integer> {
                 memo
         );
         
-        // Exclude current container
-        final int withoutCurrent = countCombinationsMemoized(
+        final Trampoline<Integer> withoutCurrentTrampoline = countCombinationsTrampoline(
                 containers,
                 target,
                 currentSum,
@@ -84,22 +88,44 @@ public final class ContainerCombination implements Solver<Integer> {
                 memo
         );
         
-        final int result = withCurrent + withoutCurrent;
-        memo.put(key, result);
-        return result;
+        // Combine results using a helper that evaluates both trampolines
+        return combineCountTrampolines(key, withCurrentTrampoline, withoutCurrentTrampoline, memo);
     }
     
     /**
-     * Pure function: finds all valid combinations functionally.
+     * Combines two count trampolines and memoizes the result.
      */
-    private List<List<Integer>> findAllValidCombinations(final List<Integer> containers, final int target) {
-        return findCombinations(containers, target, 0, 0, List.of());
+    private Trampoline<Integer> combineCountTrampolines(
+            final String key,
+            final Trampoline<Integer> trampoline1,
+            final Trampoline<Integer> trampoline2,
+            final Map<String, Integer> memo) {
+        
+        // If both are Done, combine immediately
+        if (trampoline1 instanceof Trampoline.Done<Integer> done1 
+                && trampoline2 instanceof Trampoline.Done<Integer> done2) {
+            final int result = done1.result() + done2.result();
+            memo.put(key, result);
+            return new Trampoline.Done<>(result);
+        }
+        
+        // Otherwise, continue evaluation
+        return new Trampoline.More<>(() -> {
+            final Trampoline<Integer> evaluated1 = trampoline1 instanceof Trampoline.More<Integer> more1 
+                    ? more1.compute().get() 
+                    : trampoline1;
+            final Trampoline<Integer> evaluated2 = trampoline2 instanceof Trampoline.More<Integer> more2 
+                    ? more2.compute().get() 
+                    : trampoline2;
+            return combineCountTrampolines(key, evaluated1, evaluated2, memo);
+        });
     }
     
     /**
-     * Pure recursive function: generates combinations using immutable lists.
+     * Creates a trampoline computation for finding all valid combinations.
+     * Uses tail-recursive pattern converted to trampoline for stack safety.
      */
-    private List<List<Integer>> findCombinations(
+    private Trampoline<List<List<Integer>>> findCombinationsTrampoline(
             final List<Integer> containers,
             final int target,
             final int currentSum,
@@ -107,16 +133,16 @@ public final class ContainerCombination implements Solver<Integer> {
             final List<Integer> currentCombination) {
         
         if (currentSum == target) {
-            return List.of(currentCombination);
+            return new Trampoline.Done<>(List.of(currentCombination));
         }
         
         if (currentSum > target || index >= containers.size()) {
-            return List.of();
+            return new Trampoline.Done<>(List.of());
         }
         
         // Include current container
         final List<Integer> withCurrent = append(currentCombination, containers.get(index));
-        final List<List<Integer>> withCurrentResults = findCombinations(
+        final Trampoline<List<List<Integer>>> withCurrentTrampoline = findCombinationsTrampoline(
                 containers,
                 target,
                 currentSum + containers.get(index),
@@ -125,7 +151,7 @@ public final class ContainerCombination implements Solver<Integer> {
         );
         
         // Exclude current container
-        final List<List<Integer>> withoutCurrentResults = findCombinations(
+        final Trampoline<List<List<Integer>>> withoutCurrentTrampoline = findCombinationsTrampoline(
                 containers,
                 target,
                 currentSum,
@@ -134,17 +160,44 @@ public final class ContainerCombination implements Solver<Integer> {
         );
         
         // Combine results functionally
-        return java.util.stream.Stream.concat(
-                withCurrentResults.stream(),
-                withoutCurrentResults.stream()
-        ).toList();
+        return combineListTrampolines(withCurrentTrampoline, withoutCurrentTrampoline);
+    }
+    
+    /**
+     * Combines two list trampolines by concatenating their results.
+     */
+    private Trampoline<List<List<Integer>>> combineListTrampolines(
+            final Trampoline<List<List<Integer>>> trampoline1,
+            final Trampoline<List<List<Integer>>> trampoline2) {
+        
+        // If both are Done, combine immediately
+        if (trampoline1 instanceof Trampoline.Done<List<List<Integer>>> done1 
+                && trampoline2 instanceof Trampoline.Done<List<List<Integer>>> done2) {
+            return new Trampoline.Done<>(
+                    Stream.concat(
+                            done1.result().stream(),
+                            done2.result().stream()
+                    ).toList()
+            );
+        }
+        
+        // Otherwise, continue evaluation
+        return new Trampoline.More<>(() -> {
+            final Trampoline<List<List<Integer>>> evaluated1 = trampoline1 instanceof Trampoline.More<List<List<Integer>>> more1 
+                    ? more1.compute().get() 
+                    : trampoline1;
+            final Trampoline<List<List<Integer>>> evaluated2 = trampoline2 instanceof Trampoline.More<List<List<Integer>>> more2 
+                    ? more2.compute().get() 
+                    : trampoline2;
+            return combineListTrampolines(evaluated1, evaluated2);
+        });
     }
     
     /**
      * Pure function: creates new list with appended element (immutable).
      */
     private List<Integer> append(final List<Integer> list, final int value) {
-        return java.util.stream.Stream.concat(list.stream(), java.util.stream.Stream.of(value))
+        return Stream.concat(list.stream(), Stream.of(value))
                 .toList();
     }
 }
