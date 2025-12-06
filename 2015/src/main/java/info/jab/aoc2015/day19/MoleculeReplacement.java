@@ -20,20 +20,20 @@ public final class MoleculeReplacement implements Solver<Integer> {
 
     @Override
     public Integer solvePartOne(final String fileName) {
-        ParsedInput input = parseInput(fileName);
+        final MoleculeReplacementInput input = parseInput(fileName);
         return countDistinctMolecules(input.molecule(), input.replacements());
     }
 
     @Override
     public Integer solvePartTwo(final String fileName) {
-        ParsedInput input = parseInput(fileName);
+        final MoleculeReplacementInput input = parseInput(fileName);
         return findMinimumSteps(input.molecule(), input.replacements());
     }
 
     /**
      * Pure function: parses input using stream API.
      */
-    private ParsedInput parseInput(final String fileName) {
+    private MoleculeReplacementInput parseInput(final String fileName) {
         final List<String> lines = ResourceLines.list(fileName);
         
         final Map<String, List<String>> replacements = lines.stream()
@@ -41,11 +41,11 @@ public final class MoleculeReplacement implements Solver<Integer> {
                 .filter(line -> !line.isEmpty() && line.contains(REPLACEMENT_SEPARATOR))
                 .map(line -> {
                     final String[] parts = line.split(REPLACEMENT_SEPARATOR);
-                    return new Replacement(parts[0], parts[1]);
+                    return new ReplacementRule(parts[0], parts[1]);
                 })
                 .collect(java.util.stream.Collectors.groupingBy(
-                        Replacement::from,
-                        java.util.stream.Collectors.mapping(Replacement::to, java.util.stream.Collectors.toList())
+                        ReplacementRule::from,
+                        java.util.stream.Collectors.mapping(ReplacementRule::to, java.util.stream.Collectors.toList())
                 ));
         
         final String molecule = lines.stream()
@@ -54,7 +54,7 @@ public final class MoleculeReplacement implements Solver<Integer> {
                 .findFirst()
                 .orElse("");
         
-        return new ParsedInput(replacements, molecule);
+        return new MoleculeReplacementInput(replacements, molecule);
     }
     
     /**
@@ -78,20 +78,20 @@ public final class MoleculeReplacement implements Solver<Integer> {
                 .size();
     }
     
-    private int findMinimumSteps(String targetMolecule, Map<String, List<String>> replacements) {
-        List<Replacement> reverseReplacements = buildReverseReplacements(replacements);
+    private int findMinimumSteps(final String targetMolecule, final Map<String, List<String>> replacements) {
+        final List<ReplacementRule> reverseReplacementRules = buildReverseReplacementRules(replacements);
         
         // Try multiple attempts with different replacement orderings
         // The greedy approach works best when replacements are tried in optimal order
         for (int attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-            int steps = attemptGreedyReduction(targetMolecule, reverseReplacements);
+            final int steps = attemptGreedyReduction(targetMolecule, reverseReplacementRules);
             if (steps > 0) {
                 return steps;
             }
             
             // Rotate the list to try different ordering on next attempt
-            if (attempt < MAX_ATTEMPTS - 1 && !reverseReplacements.isEmpty()) {
-                reverseReplacements.add(reverseReplacements.remove(0));
+            if (attempt < MAX_ATTEMPTS - 1 && !reverseReplacementRules.isEmpty()) {
+                reverseReplacementRules.add(reverseReplacementRules.remove(0));
             }
         }
         
@@ -99,37 +99,37 @@ public final class MoleculeReplacement implements Solver<Integer> {
     }
     
     /**
-     * Builds reverse replacements using stream API.
+     * Builds reverse replacement rules using stream API.
      * Returns a mutable list to allow rotation for different ordering attempts.
      */
-    private List<Replacement> buildReverseReplacements(final Map<String, List<String>> replacements) {
+    private List<ReplacementRule> buildReverseReplacementRules(final Map<String, List<String>> replacements) {
         return new ArrayList<>(replacements.entrySet().stream()
                 .flatMap(entry -> {
                     final String from = entry.getKey();
                     return entry.getValue().stream()
-                            .map(to -> new Replacement(to, from));
+                            .map(to -> new ReplacementRule(to, from));
                 })
                 .sorted(Comparator
-                        .comparingInt((Replacement r) -> r.from().length())
+                        .comparingInt((ReplacementRule r) -> r.from().length())
                         .reversed()
-                        .thenComparing(Replacement::from)
+                        .thenComparing(ReplacementRule::from)
                 )
                 .toList());
     }
     
-    private int attemptGreedyReduction(String targetMolecule, List<Replacement> reverseReplacements) {
+    private int attemptGreedyReduction(final String targetMolecule, final List<ReplacementRule> reverseReplacementRules) {
         String current = targetMolecule;
         int steps = 0;
         
         while (!current.equals(TARGET_MOLECULE) && steps < MAX_STEPS) {
-            String previous = current;
+            final String previous = current;
             
-            // Try each replacement in order (longest first, then alphabetically)
-            for (Replacement replacement : reverseReplacements) {
-                String product = replacement.from();
-                int index = current.indexOf(product);
+            // Try each replacement rule in order (longest first, then alphabetically)
+            for (final ReplacementRule replacementRule : reverseReplacementRules) {
+                final String product = replacementRule.from();
+                final int index = current.indexOf(product);
                 if (index >= 0) {
-                    String reactant = replacement.to();
+                    final String reactant = replacementRule.to();
                     // Replace first occurrence from left to right
                     current = current.substring(0, index) + reactant + current.substring(index + product.length());
                     steps++;
