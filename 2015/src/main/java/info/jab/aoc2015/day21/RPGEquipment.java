@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * - Stream API for generating combinations
  * - Immutable data structures
  */
-public final class RPGEquipmentSolver implements Solver<Integer> {
+public final class RPGEquipment implements Solver<Integer> {
 
     record Item(String name, int cost, int damage, int armor) {}
     record Character(int hitPoints, int damage, int armor) {}

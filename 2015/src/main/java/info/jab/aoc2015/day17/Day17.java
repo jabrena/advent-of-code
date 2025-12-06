@@ -5,15 +5,15 @@ import info.jab.aoc.Solver;
 
 public class Day17 implements Day<Integer> {
 
-    private final Solver<Integer> containerCombinationSolver = new ContainerCombinationSolver();
+    private final Solver<Integer> containerCombination = new ContainerCombination();
 
     @Override
     public Integer getPart1Result(final String fileName) {
-        return containerCombinationSolver.solvePartOne(fileName);
+        return containerCombination.solvePartOne(fileName);
     }
 
     @Override
     public Integer getPart2Result(final String fileName) {
-        return containerCombinationSolver.solvePartTwo(fileName);
+        return containerCombination.solvePartTwo(fileName);
     }
 }

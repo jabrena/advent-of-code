@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * - Stream API for declarative transformations
  * - Immutable data structures
  */
-public final class CookieRecipeSolver implements Solver<Long> {
+public final class CookieRecipe implements Solver<Long> {
 
     private static final int TOTAL_TEASPOONS = 100;
     private static final int TARGET_CALORIES = 500;

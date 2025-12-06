@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
  * - Stream API for declarative transformations
  * - Immutable data structures
  */
-public final class PackageBalancerSolver implements Solver<Long> {
+public final class PackageBalancer implements Solver<Long> {
 
     @Override
     public Long solvePartOne(final String fileName) {

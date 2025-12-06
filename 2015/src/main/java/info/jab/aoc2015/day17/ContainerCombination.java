@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
  * - Immutable data structures
  * - Functional recursion with memoization
  */
-public final class ContainerCombinationSolver implements Solver<Integer> {
+public final class ContainerCombination implements Solver<Integer> {
     
     private static final int TARGET_VOLUME = 150;
     

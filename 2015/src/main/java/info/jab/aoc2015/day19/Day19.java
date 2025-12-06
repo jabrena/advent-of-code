@@ -8,16 +8,16 @@ import info.jab.aoc.Solver;
  */
 public class Day19 implements Day<Integer> {
 
-    private final Solver<Integer> moleculeReplacementSolver = new MoleculeReplacementSolver();
+    private final Solver<Integer> moleculeReplacement = new MoleculeReplacement();
 
     @Override
     public Integer getPart1Result(final String fileName) {
-        return moleculeReplacementSolver.solvePartOne(fileName);
+        return moleculeReplacement.solvePartOne(fileName);
     }
 
     @Override
     public Integer getPart2Result(final String fileName) {
-        return moleculeReplacementSolver.solvePartTwo(fileName);
+        return moleculeReplacement.solvePartTwo(fileName);
     }
 }
 

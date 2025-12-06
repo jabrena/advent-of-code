@@ -5,15 +5,15 @@ import info.jab.aoc.Solver;
 
 public class Day15 implements Day<Long> {
 
-    private final Solver<Long> cookieRecipeSolver = new CookieRecipeSolver();
+    private final Solver<Long> cookieRecipe = new CookieRecipe();
 
     @Override
     public Long getPart1Result(final String fileName) {
-        return cookieRecipeSolver.solvePartOne(fileName);
+        return cookieRecipe.solvePartOne(fileName);
     }
 
     @Override
     public Long getPart2Result(final String fileName) {
-        return cookieRecipeSolver.solvePartTwo(fileName);
+        return cookieRecipe.solvePartTwo(fileName);
     }
 }

@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
  * - Stream API for declarative transformations
  * - Immutable data structures
  */
-public final class ReindeerRaceSolver implements Solver<Integer> {
+public final class ReindeerRace implements Solver<Integer> {
 
     private static final int TOTAL_SECONDS = 2503;
     private static final Pattern REINDEER_PATTERN = Pattern.compile(

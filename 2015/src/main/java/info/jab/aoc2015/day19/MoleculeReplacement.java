@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public final class MoleculeReplacementSolver implements Solver<Integer> {
+public final class MoleculeReplacement implements Solver<Integer> {
 
     private static final String REPLACEMENT_SEPARATOR = " => ";
     private static final int MAX_STEPS = 1000;

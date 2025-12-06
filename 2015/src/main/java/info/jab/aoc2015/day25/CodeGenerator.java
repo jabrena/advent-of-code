@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * - Immutable data structures
  * - Stream API for input processing
  */
-public final class CodeGeneratorSolver implements Solver<Long> {
+public final class CodeGenerator implements Solver<Long> {
 
     private static final Pattern ROW_COLUMN_PATTERN = Pattern.compile("row (\\d+), column (\\d+)");
     private static final long INITIAL_CODE = 20151125L;

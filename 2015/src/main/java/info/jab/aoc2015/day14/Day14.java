@@ -5,15 +5,15 @@ import info.jab.aoc.Solver;
 
 public class Day14 implements Day<Integer> {
 
-    private final Solver<Integer> reindeerRaceSolver = new ReindeerRaceSolver();
+    private final Solver<Integer> reindeerRace = new ReindeerRace();
 
     @Override
     public Integer getPart1Result(final String fileName) {
-        return reindeerRaceSolver.solvePartOne(fileName);
+        return reindeerRace.solvePartOne(fileName);
     }
 
     @Override
     public Integer getPart2Result(final String fileName) {
-        return reindeerRaceSolver.solvePartTwo(fileName);
+        return reindeerRace.solvePartTwo(fileName);
     }
 }
