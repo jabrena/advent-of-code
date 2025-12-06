@@ -2,7 +2,9 @@ package info.jab.aoc2022.day8;
 
 import info.jab.aoc.Day;
 import com.putoet.grid.Grid;
+import com.putoet.grid.GridDirections;
 import com.putoet.grid.GridUtils;
+import com.putoet.grid.Point;
 import com.putoet.resources.ResourceLines;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,37 +23,42 @@ public class Day8 implements Day<Integer> {
 
     private Tuple getDistanceAndVisibility(Grid grid, int x, int y, Edge edge) {
         int treeHeight = Character.getNumericValue(grid.get(x, y));
-        boolean treeVisible = true;
-        int distance = 0;
-
-        //Adjustment
-        int dx = switch (edge) {
-            case LEFT -> -1;
-            case RIGHT -> 1;
-            case TOP -> 0;
-            case BOTTON -> 0;
+        Point start = Point.of(x, y);
+        
+        Point direction = switch (edge) {
+            case LEFT -> Point.WEST;
+            case RIGHT -> Point.EAST;
+            case TOP -> Point.NORTH;
+            case BOTTON -> Point.SOUTH;
         };
-        int dy = switch (edge) {
-            case LEFT -> 0;
-            case RIGHT -> 0;
-            case TOP -> -1;
-            case BOTTON -> 1;
-        };
-        int newX = x + dx;
-        int newY = y + dy;
-
-        while (grid.contains(newX, newY)) {
-            int currentHeight = Character.getNumericValue(grid.get(newX, newY));
-            if (currentHeight <= treeHeight) {
-                distance = distance + 1;
+        
+        // Start scanning from the next cell (not the current one)
+        Point scanStart = start.add(direction);
+        
+        // Scan until we hit a tree >= treeHeight or go out of bounds
+        // scanDirection includes points where stopCondition is false (height < treeHeight)
+        List<Point> scanned = GridDirections.scanDirection(grid, scanStart, direction, 
+            c -> Character.getNumericValue(c) >= treeHeight);
+        
+        // Calculate where we stopped: scanStart + direction * scanned.size()
+        Point stopPoint = Point.of(
+            scanStart.x() + direction.x() * scanned.size(),
+            scanStart.y() + direction.y() * scanned.size()
+        );
+        boolean hitBlocker = grid.contains(stopPoint);
+        
+        // Distance: count all scanned trees (height < treeHeight)
+        // If we hit a blocker with height == treeHeight, include it in distance
+        int distance = scanned.size();
+        if (hitBlocker) {
+            int blockerHeight = Character.getNumericValue(grid.get(stopPoint));
+            if (blockerHeight == treeHeight) {
+                distance++; // Original code counts trees with equal height
             }
-            if (currentHeight >= treeHeight) {
-                treeVisible = false;
-                break;
-            }
-            newX = newX + dx;
-            newY = newY + dy;
         }
+        
+        // Tree is visible if we didn't hit a blocker (went all the way to edge)
+        boolean treeVisible = !hitBlocker;
 
         return new Tuple(treeVisible, distance);
     }

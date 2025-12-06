@@ -1,6 +1,7 @@
 package info.jab.aoc2015.day18;
 
 import com.putoet.grid.Grid;
+import com.putoet.grid.GridDirections;
 import com.putoet.grid.GridUtils;
 import com.putoet.grid.Point;
 import com.putoet.resources.ResourceLines;
@@ -63,7 +64,7 @@ public class LightGrid implements Solver<Integer> {
         
         for (int y = grid.minY(); y < grid.maxY(); y++) {
             for (int x = grid.minX(); x < grid.maxX(); x++) {
-                int neighbors = countNeighbors(grid, x, y);
+                int neighbors = GridDirections.countNeighbors(grid, x, y, c -> c == '#', true);
                 char currentState = grid.get(x, y);
                 
                 if (currentState == '#') {
@@ -79,26 +80,6 @@ public class LightGrid implements Solver<Integer> {
         return newGrid;
     }
     
-    private int countNeighbors(Grid grid, int x, int y) {
-        int count = 0;
-        
-        // Check all 8 adjacent cells (including diagonals)
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                if (dx == 0 && dy == 0) continue; // Skip the current cell
-                
-                int newX = x + dx;
-                int newY = y + dy;
-                
-                // Check bounds and count if light is on
-                if (grid.contains(newX, newY) && grid.get(newX, newY) == '#') {
-                    count++;
-                }
-            }
-        }
-        
-        return count;
-    }
     
     private void turnOnCorners(Grid grid) {
         int rows = grid.height();
@@ -122,7 +103,7 @@ public class LightGrid implements Solver<Integer> {
                 if (isCorner(x, y, grid.minX(), grid.minY(), rows, cols)) {
                     newGrid.set(x, y, '#'); // Corners are always on
                 } else {
-                    int neighbors = countNeighbors(grid, x, y);
+                    int neighbors = GridDirections.countNeighbors(grid, x, y, c -> c == '#', true);
                     char currentState = grid.get(x, y);
                     
                     if (currentState == '#') {
