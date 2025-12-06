@@ -1,20 +1,23 @@
 package info.jab.aoc2015.day9;
 
 import info.jab.aoc.Day;
+import info.jab.aoc.Solver;
 
 /**
  * https://adventofcode.com/2015/day/9
  */
 public class Day9 implements Day<Integer> {
 
+    private final Solver<Integer> routeOptimizer = new RouteOptimizer();
+
     @Override
-    public Integer getPart1Result(String fileName) {
-        return new RouteOptimizer().solvePartOne(fileName);
+    public Integer getPart1Result(final String fileName) {
+        return routeOptimizer.solvePartOne(fileName);
     }
 
     @Override
-    public Integer getPart2Result(String fileName) {
-        return new RouteOptimizer().solvePartTwo(fileName);
+    public Integer getPart2Result(final String fileName) {
+        return routeOptimizer.solvePartTwo(fileName);
     }
 
     public static void main(String[] args) {

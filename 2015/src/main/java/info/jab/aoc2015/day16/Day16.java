@@ -1,20 +1,23 @@
 package info.jab.aoc2015.day16;
 
 import info.jab.aoc.Day;
+import info.jab.aoc.Solver;
 
 /**
  * https://adventofcode.com/2015/day/16
  */
 public class Day16 implements Day<Integer> {
 
+    private final Solver<Integer> auntSueDetector = new AuntSueDetector();
+
     @Override
-    public Integer getPart1Result(String fileName) {
-        return new AuntSueDetector().solvePartOne(fileName);
+    public Integer getPart1Result(final String fileName) {
+        return auntSueDetector.solvePartOne(fileName);
     }
 
     @Override
-    public Integer getPart2Result(String fileName) {
-        return new AuntSueDetector().solvePartTwo(fileName);
+    public Integer getPart2Result(final String fileName) {
+        return auntSueDetector.solvePartTwo(fileName);
     }
 
     private static final String DEFAULT_INPUT_FILE = "/day16/day16-input.txt";

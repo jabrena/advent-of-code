@@ -1,8 +1,28 @@
 package info.jab.aoc2015.day10;
 
-public class LookAndSay {
+import com.putoet.resources.ResourceLines;
+import info.jab.aoc.Solver;
 
-    public String applyLookAndSay(String input, int iterations) {
+public class LookAndSay implements Solver<Integer> {
+
+    private static final int PART1_ITERATIONS = 40;
+    private static final int PART2_ITERATIONS = 50;
+
+    @Override
+    public Integer solvePartOne(final String fileName) {
+        String input = ResourceLines.line(fileName);
+        String result = applyLookAndSay(input, PART1_ITERATIONS);
+        return result.length();
+    }
+
+    @Override
+    public Integer solvePartTwo(final String fileName) {
+        String input = ResourceLines.line(fileName);
+        String result = applyLookAndSay(input, PART2_ITERATIONS);
+        return result.length();
+    }
+
+    private String applyLookAndSay(String input, int iterations) {
         String sequence = input;
         for (int i = 0; i < iterations; i++) {
             sequence = generateNextSequence(sequence);
