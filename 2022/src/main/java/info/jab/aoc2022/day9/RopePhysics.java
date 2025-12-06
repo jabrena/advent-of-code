@@ -1,5 +1,7 @@
 package info.jab.aoc2022.day9;
 
+import com.putoet.grid.Grid;
+import com.putoet.grid.GridUtils;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -10,7 +12,7 @@ class RopePhysics {
     private boolean[][] cellsT;
     private boolean[][] cellsS;
 
-    private boolean[][] cellsVisited;
+    private Grid cellsVisited;
     private Integer currentHX = 0;
     private Integer currentHY = 0;
     private Integer currentTX = 0;
@@ -20,13 +22,12 @@ class RopePhysics {
         cellsH = new boolean[noOfRows][noOfColumns];
         cellsT = new boolean[noOfRows][noOfColumns];
         cellsS = new boolean[noOfRows][noOfColumns];
-        cellsVisited = new boolean[noOfRows][noOfColumns];
+        cellsVisited = new Grid(GridUtils.of(0, noOfColumns, 0, noOfRows, '.'));
         for (int y = 0; y < cellsH.length; y++) {
             for (int x = 0; x < cellsH[0].length; x++) {
                 cellsH[y][x] = false;
                 cellsT[y][x] = false;
                 cellsS[y][x] = false;
-                cellsVisited[y][x] = false;
             }
         }
     }
@@ -49,9 +50,9 @@ class RopePhysics {
     }
 
     public void printVisited() {
-        for (int y = 0; y < cellsVisited.length; y++) {
-            for (int x = 0; x < cellsVisited[0].length; x++) {
-                System.out.print(cellsVisited[y][x] ? "#" : ".");
+        for (int y = cellsVisited.minY(); y < cellsVisited.maxY(); y++) {
+            for (int x = cellsVisited.minX(); x < cellsVisited.maxX(); x++) {
+                System.out.print(cellsVisited.get(x, y));
             }
             System.out.println();
         }
@@ -62,14 +63,14 @@ class RopePhysics {
         Lock readLock = lock.readLock();
         try {
             readLock.lock();
-            this.currentHX = this.cellsH.length / 2;
-            this.currentHY = this.cellsH.length / 2;
+            this.currentHX = cellsH.length / 2;
+            this.currentHY = cellsH.length / 2;
             this.currentTX = this.currentHX;
             this.currentTY = this.currentHY;
             cellsH[this.currentHY][this.currentHX] = true;
             cellsT[this.currentTY][this.currentTX] = true;
             cellsS[this.currentTY][this.currentTX] = true;
-            cellsVisited[this.currentTY][this.currentTX] = true;
+            cellsVisited.set(this.currentTX, this.currentTY, '#');
         } finally {
             readLock.unlock();
         }
@@ -156,11 +157,11 @@ class RopePhysics {
             }
         }
         this.cellsT[this.currentTY][this.currentTX] = true;
-        this.cellsVisited[this.currentTY][this.currentTX] = true;
+        this.cellsVisited.set(this.currentTX, this.currentTY, '#');
         //End Transaction
     }
 
-    public boolean[][] getCellsVisited() {
+    public Grid getCellsVisited() {
         return cellsVisited;
     }
 }

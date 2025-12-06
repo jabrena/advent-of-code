@@ -1,6 +1,8 @@
 package info.jab.aoc2016.day8;
 
 import info.jab.aoc.Day;
+import com.putoet.grid.Grid;
+import com.putoet.grid.GridUtils;
 import com.putoet.resources.ResourceLines;
 
 import java.util.List;
@@ -20,16 +22,16 @@ public class Day8 implements Day<String> {
     private static final Pattern ROTATE_COLUMN_PATTERN = Pattern.compile("rotate column x=(\\d+) by (\\d+)");
 
     public Integer countLitPixels(List<String> instructions, int width, int height) {
-        boolean[][] screen = new boolean[height][width];
+        Grid screen = new Grid(GridUtils.of(0, width, 0, height, '.'));
         
         for (String instruction : instructions) {
             processInstruction(screen, instruction, width, height);
         }
         
-        return countLitPixels(screen);
+        return (int) screen.count('#');
     }
     
-    private void processInstruction(boolean[][] screen, String instruction, int width, int height) {
+    private void processInstruction(Grid screen, String instruction, int width, int height) {
         var rectMatcher = RECT_PATTERN.matcher(instruction);
         if (rectMatcher.matches()) {
             int w = Integer.parseInt(rectMatcher.group(1));
@@ -57,54 +59,44 @@ public class Day8 implements Day<String> {
         throw new IllegalArgumentException("Unknown instruction: " + instruction);
     }
     
-    private void drawRect(boolean[][] screen, int width, int height) {
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                screen[row][col] = true;
+    private void drawRect(Grid screen, int width, int height) {
+        for (int y = screen.minY(); y < screen.minY() + height; y++) {
+            for (int x = screen.minX(); x < screen.minX() + width; x++) {
+                screen.set(x, y, '#');
             }
         }
     }
     
-    private void rotateRow(boolean[][] screen, int row, int shift, int width) {
-        boolean[] temp = new boolean[width];
+    private void rotateRow(Grid screen, int row, int shift, int width) {
+        char[] temp = new char[width];
         
-        // Copy the row with rotation
+        // Copy the row
         for (int col = 0; col < width; col++) {
-            temp[(col + shift) % width] = screen[row][col];
+            temp[col] = screen.get(screen.minX() + col, screen.minY() + row);
         }
         
-        // Copy back to screen
-        System.arraycopy(temp, 0, screen[row], 0, width);
-    }
-    
-    private void rotateColumn(boolean[][] screen, int column, int shift, int height) {
-        boolean[] temp = new boolean[height];
-        
-        // Copy the column with rotation
-        for (int row = 0; row < height; row++) {
-            temp[(row + shift) % height] = screen[row][column];
-        }
-        
-        // Copy back to screen
-        for (int row = 0; row < height; row++) {
-            screen[row][column] = temp[row];
+        // Copy back with rotation
+        for (int col = 0; col < width; col++) {
+            screen.set(screen.minX() + col, screen.minY() + row, temp[(col - shift + width) % width]);
         }
     }
     
-    private int countLitPixels(boolean[][] screen) {
-        int count = 0;
-        for (boolean[] row : screen) {
-            for (boolean pixel : row) {
-                if (pixel) {
-                    count++;
-                }
-            }
+    private void rotateColumn(Grid screen, int column, int shift, int height) {
+        char[] temp = new char[height];
+        
+        // Copy the column
+        for (int row = 0; row < height; row++) {
+            temp[row] = screen.get(screen.minX() + column, screen.minY() + row);
         }
-        return count;
+        
+        // Copy back with rotation
+        for (int row = 0; row < height; row++) {
+            screen.set(screen.minX() + column, screen.minY() + row, temp[(row - shift + height) % height]);
+        }
     }
 
     public String decodeScreen(List<String> instructions, int width, int height) {
-        boolean[][] screen = new boolean[height][width];
+        Grid screen = new Grid(GridUtils.of(0, width, 0, height, '.'));
         
         for (String instruction : instructions) {
             processInstruction(screen, instruction, width, height);
@@ -114,11 +106,11 @@ public class Day8 implements Day<String> {
     }
     
     
-    private String screenToString(boolean[][] screen) {
+    private String screenToString(Grid screen) {
         StringBuilder result = new StringBuilder();
         
         // Each letter is 5 pixels wide, so we process 5-pixel chunks
-        int numLetters = screen[0].length / 5;
+        int numLetters = screen.width() / 5;
         
         for (int letterIndex = 0; letterIndex < numLetters; letterIndex++) {
             char letter = decodeLetter(screen, letterIndex * 5);
@@ -128,13 +120,15 @@ public class Day8 implements Day<String> {
         return result.toString();
     }
     
-    private char decodeLetter(boolean[][] screen, int startCol) {
+    private char decodeLetter(Grid screen, int startCol) {
         // Extract 5x6 letter pattern
-        boolean[][] letterPattern = new boolean[6][5];
+        char[][] letterPattern = new char[6][5];
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 5; col++) {
-                if (startCol + col < screen[0].length) {
-                    letterPattern[row][col] = screen[row][startCol + col];
+                if (startCol + col < screen.width()) {
+                    letterPattern[row][col] = screen.get(screen.minX() + startCol + col, screen.minY() + row);
+                } else {
+                    letterPattern[row][col] = '.';
                 }
             }
         }
@@ -142,12 +136,12 @@ public class Day8 implements Day<String> {
         return recognizeLetter(letterPattern);
     }
     
-    private char recognizeLetter(boolean[][] pattern) {
+    private char recognizeLetter(char[][] pattern) {
         // Convert pattern to string for easier matching
         StringBuilder patternStr = new StringBuilder();
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 5; col++) {
-                patternStr.append(pattern[row][col] ? '#' : '.');
+                patternStr.append(pattern[row][col]);
             }
         }
         

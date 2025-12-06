@@ -1,6 +1,11 @@
 package info.jab.aoc2022.day8;
 
 import info.jab.aoc.Day;
+import com.putoet.grid.Grid;
+import com.putoet.grid.GridDirections;
+import com.putoet.grid.GridUtils;
+import com.putoet.grid.Point;
+import com.putoet.resources.ResourceLines;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,63 +21,74 @@ public class Day8 implements Day<Integer> {
 
     record Tuple(boolean isVisible, Integer distance) {}
 
-    private Tuple getDistanceAndVisibility(Integer[][] grid, int i, int j, Edge edge) {
-        int treeHeight = grid[i][j];
-        boolean treeVisible = true;
-        int distance = 0;
-
-        //Adjustment
-        int ti = switch (edge) {
-            case LEFT -> 0;
-            case RIGHT -> 0;
-            case TOP -> -1;
-            case BOTTON -> 1;
+    private Tuple getDistanceAndVisibility(Grid grid, int x, int y, Edge edge) {
+        int treeHeight = Character.getNumericValue(grid.get(x, y));
+        Point start = Point.of(x, y);
+        
+        Point direction = switch (edge) {
+            case LEFT -> Point.WEST;
+            case RIGHT -> Point.EAST;
+            case TOP -> Point.NORTH;
+            case BOTTON -> Point.SOUTH;
         };
-        int tj = switch (edge) {
-            case LEFT -> -1;
-            case RIGHT -> 1;
-            case TOP -> 0;
-            case BOTTON -> 0;
-        };
-        i = i + ti;
-        j = j + tj;
-
-        while (i >= 0 && i < grid.length && j >= 0 && j < grid[0].length) {
-            if (grid[i][j] <= treeHeight) {
-                distance = distance + 1;
+        
+        // Start scanning from the next cell (not the current one)
+        Point scanStart = start.add(direction);
+        
+        // Scan until we hit a tree >= treeHeight or go out of bounds
+        // scanDirection includes points where stopCondition is false (height < treeHeight)
+        List<Point> scanned = GridDirections.scanDirection(grid, scanStart, direction, 
+            c -> Character.getNumericValue(c) >= treeHeight);
+        
+        // Calculate where we stopped: scanStart + direction * scanned.size()
+        Point stopPoint = Point.of(
+            scanStart.x() + direction.x() * scanned.size(),
+            scanStart.y() + direction.y() * scanned.size()
+        );
+        boolean hitBlocker = grid.contains(stopPoint);
+        
+        // Distance: count all scanned trees (height < treeHeight)
+        // If we hit a blocker with height == treeHeight, include it in distance
+        int distance = scanned.size();
+        if (hitBlocker) {
+            int blockerHeight = Character.getNumericValue(grid.get(stopPoint));
+            if (blockerHeight == treeHeight) {
+                distance++; // Original code counts trees with equal height
             }
-            if (grid[i][j] >= treeHeight) {
-                treeVisible = false;
-                break;
-            }
-            i = i + ti;
-            j = j + tj;
         }
+        
+        // Tree is visible if we didn't hit a blocker (went all the way to edge)
+        boolean treeVisible = !hitBlocker;
 
         return new Tuple(treeVisible, distance);
     }
 
     // @formatter:off
-    private boolean isVisibleFromOutside(Integer[][] grid, Integer i, Integer j) {
-        return (getDistanceAndVisibility(grid, i, j, Edge.LEFT).isVisible()
-            || getDistanceAndVisibility(grid, i, j, Edge.RIGHT).isVisible()
-            || getDistanceAndVisibility(grid, i, j, Edge.TOP).isVisible()
-            || getDistanceAndVisibility(grid, i, j, Edge.BOTTON).isVisible()
+    private boolean isVisibleFromOutside(Grid grid, Integer x, Integer y) {
+        return (getDistanceAndVisibility(grid, x, y, Edge.LEFT).isVisible()
+            || getDistanceAndVisibility(grid, x, y, Edge.RIGHT).isVisible()
+            || getDistanceAndVisibility(grid, x, y, Edge.TOP).isVisible()
+            || getDistanceAndVisibility(grid, x, y, Edge.BOTTON).isVisible()
         );
     }
 
     // @formatter:on
 
+    private Grid createGrid(String fileName) {
+        var lines = ResourceLines.list("/" + fileName);
+        return new Grid(GridUtils.of(lines));
+    }
+
     @Override
     public Integer getPart1Result(String fileName) {
         //Source
-        Integer[][] grid = MatrixHelper.getMatrix(fileName);
+        Grid grid = createGrid(fileName);
 
         //Transform
         //Sink
         Integer visibleTrees = 0;
-        for (int y = 0; y < grid.length; y++) {
-            for (int x = 0; x < grid[0].length; x++) {
+        for (int y = grid.minY(); y < grid.maxY(); y++) {
+            for (int x = grid.minX(); x < grid.maxX(); x++) {
                 if (isVisibleFromOutside(grid, x, y)) {
                     visibleTrees++;
                 }
@@ -82,11 +98,11 @@ public class Day8 implements Day<Integer> {
     }
 
     // @formatter:off
-    private Integer scenicScore(int i, int j, Integer[][] grid) {
-        return (getDistanceAndVisibility(grid, i, j, Edge.LEFT).distance()
-                * getDistanceAndVisibility(grid, i, j, Edge.RIGHT).distance()
-                * getDistanceAndVisibility(grid, i, j, Edge.TOP).distance()
-                * getDistanceAndVisibility(grid, i, j, Edge.BOTTON).distance()
+    private Integer scenicScore(int x, int y, Grid grid) {
+        return (getDistanceAndVisibility(grid, x, y, Edge.LEFT).distance()
+                * getDistanceAndVisibility(grid, x, y, Edge.RIGHT).distance()
+                * getDistanceAndVisibility(grid, x, y, Edge.TOP).distance()
+                * getDistanceAndVisibility(grid, x, y, Edge.BOTTON).distance()
         );
     }
 
@@ -95,13 +111,13 @@ public class Day8 implements Day<Integer> {
     @Override
     public Integer getPart2Result(String fileName) {
         //Source
-        Integer[][] grid = MatrixHelper.getMatrix(fileName);
+        Grid grid = createGrid(fileName);
 
         //Transform
         List<Integer> scores = new ArrayList<>();
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                scores.add(scenicScore(i, j, grid));
+        for (int y = grid.minY(); y < grid.maxY(); y++) {
+            for (int x = grid.minX(); x < grid.maxX(); x++) {
+                scores.add(scenicScore(x, y, grid));
             }
         }
 

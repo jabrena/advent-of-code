@@ -1,9 +1,9 @@
 package info.jab.aoc2025.day4;
 
 import com.putoet.grid.Grid;
+import com.putoet.grid.GridDirections;
 import com.putoet.grid.GridUtils;
 import com.putoet.grid.Point;
-import com.putoet.grid.Points;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 import java.util.List;
@@ -25,7 +25,6 @@ public final class GridNeighborSolverV2 implements Solver<Integer> {
     private static final char TARGET_CELL = '@';
     private static final char EMPTY_CELL = '.';
     private static final int MIN_NEIGHBORS = 4;
-    private static final List<Point> NEIGHBOR_DIRECTIONS = Points.directionsAll();
 
     /**
      * Counts '@' symbols that have fewer than 4 neighbors.
@@ -39,7 +38,7 @@ public final class GridNeighborSolverV2 implements Solver<Integer> {
         final Grid grid = createGrid(fileName);
 
         return grid.findAll(c -> c == TARGET_CELL).stream()
-                .filter(p -> countNeighbors(grid, p) < MIN_NEIGHBORS)
+                .filter(p -> GridDirections.countNeighbors(grid, p, c -> c == TARGET_CELL, true) < MIN_NEIGHBORS)
                 .mapToInt(p -> 1)
                 .sum();
     }
@@ -60,22 +59,6 @@ public final class GridNeighborSolverV2 implements Solver<Integer> {
     }
 
 
-    /**
-     * Pure function that counts the number of '@' neighbors around a cell.
-     * Checks all 8 adjacent cells (including diagonals).
-     * Uses Point objects and Stream API for functional neighbor checking.
-     *
-     * @param grid The grid
-     * @param point The point to check neighbors for
-     * @return The count of '@' neighbors
-     */
-    private int countNeighbors(final Grid grid, final Point point) {
-        return (int) NEIGHBOR_DIRECTIONS.stream()
-                .map(point::add)
-                .filter(grid::contains)
-                .filter(p -> grid.get(p) == TARGET_CELL)
-                .count();
-    }
 
     /**
      * Iteratively removes '@' symbols that have fewer than 4 neighbors
@@ -129,7 +112,7 @@ public final class GridNeighborSolverV2 implements Solver<Integer> {
      */
     private List<Point> findCellsToRemove(final Grid grid) {
         return grid.findAll(c -> c == TARGET_CELL).stream()
-                .filter(p -> countNeighbors(grid, p) < MIN_NEIGHBORS)
+                .filter(p -> GridDirections.countNeighbors(grid, p, c -> c == TARGET_CELL, true) < MIN_NEIGHBORS)
                 .toList();
     }
 

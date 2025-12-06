@@ -1,5 +1,9 @@
 package info.jab.aoc2015.day18;
 
+import com.putoet.grid.Grid;
+import com.putoet.grid.GridDirections;
+import com.putoet.grid.GridUtils;
+import com.putoet.grid.Point;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
@@ -16,7 +20,7 @@ public class LightGrid implements Solver<Integer> {
         List<String> lines = ResourceLines.list("/" + fileName);
         
         // Parse the initial grid
-        boolean[][] grid = parseGrid(lines);
+        Grid grid = parseGrid(lines);
         
         // Simulate steps
         for (int step = 0; step < steps; step++) {
@@ -24,7 +28,7 @@ public class LightGrid implements Solver<Integer> {
         }
         
         // Count lights that are on
-        return countLightsOn(grid);
+        return (int) grid.count('#');
     }
 
     @Override
@@ -36,7 +40,7 @@ public class LightGrid implements Solver<Integer> {
         List<String> lines = ResourceLines.list("/" + fileName);
         
         // Parse the initial grid
-        boolean[][] grid = parseGrid(lines);
+        Grid grid = parseGrid(lines);
         
         // Turn on corner lights (stuck on)
         turnOnCorners(grid);
@@ -47,41 +51,28 @@ public class LightGrid implements Solver<Integer> {
         }
         
         // Count lights that are on
-        return countLightsOn(grid);
+        return (int) grid.count('#');
     }
     
-    private boolean[][] parseGrid(List<String> lines) {
-        int rows = lines.size();
-        int cols = lines.get(0).trim().length();
-        boolean[][] grid = new boolean[rows][cols];
-        
-        for (int i = 0; i < rows; i++) {
-            String line = lines.get(i).trim();
-            int lineLength = Math.min(line.length(), cols);
-            for (int j = 0; j < lineLength; j++) {
-                grid[i][j] = line.charAt(j) == '#';
-            }
-        }
-        
-        return grid;
+    private Grid parseGrid(List<String> lines) {
+        char[][] gridData = GridUtils.of(lines);
+        return new Grid(gridData);
     }
     
-    private boolean[][] simulateStep(boolean[][] grid) {
-        int rows = grid.length;
-        int cols = grid[0].length;
-        boolean[][] newGrid = new boolean[rows][cols];
+    private Grid simulateStep(Grid grid) {
+        Grid newGrid = grid.copy();
         
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                int neighbors = countNeighbors(grid, i, j);
-                boolean currentState = grid[i][j];
+        for (int y = grid.minY(); y < grid.maxY(); y++) {
+            for (int x = grid.minX(); x < grid.maxX(); x++) {
+                int neighbors = GridDirections.countNeighbors(grid, x, y, c -> c == '#', true);
+                char currentState = grid.get(x, y);
                 
-                if (currentState) {
+                if (currentState == '#') {
                     // Light is on: stays on if 2 or 3 neighbors are on
-                    newGrid[i][j] = (neighbors == 2 || neighbors == 3);
+                    newGrid.set(x, y, (neighbors == 2 || neighbors == 3) ? '#' : '.');
                 } else {
                     // Light is off: turns on if exactly 3 neighbors are on
-                    newGrid[i][j] = (neighbors == 3);
+                    newGrid.set(x, y, (neighbors == 3) ? '#' : '.');
                 }
             }
         }
@@ -89,71 +80,38 @@ public class LightGrid implements Solver<Integer> {
         return newGrid;
     }
     
-    private int countNeighbors(boolean[][] grid, int row, int col) {
-        int rows = grid.length;
-        int cols = grid[0].length;
-        int count = 0;
-        
-        // Check all 8 adjacent cells (including diagonals)
-        for (int di = -1; di <= 1; di++) {
-            for (int dj = -1; dj <= 1; dj++) {
-                if (di == 0 && dj == 0) continue; // Skip the current cell
-                
-                int newRow = row + di;
-                int newCol = col + dj;
-                
-                // Check bounds and count if light is on
-                if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && grid[newRow][newCol]) {
-                    count++;
-                }
-            }
-        }
-        
-        return count;
-    }
     
-    private int countLightsOn(boolean[][] grid) {
-        int count = 0;
-        for (boolean[] row : grid) {
-            for (boolean light : row) {
-                if (light) count++;
-            }
-        }
-        return count;
-    }
-    
-    
-    private void turnOnCorners(boolean[][] grid) {
-        int rows = grid.length;
-        int cols = grid[0].length;
+    private void turnOnCorners(Grid grid) {
+        int rows = grid.height();
+        int cols = grid.width();
         
         // Turn on the four corners
-        grid[0][0] = true;           // Top-left
-        grid[0][cols - 1] = true;    // Top-right
-        grid[rows - 1][0] = true;    // Bottom-left
-        grid[rows - 1][cols - 1] = true; // Bottom-right
+        grid.set(grid.minX(), grid.minY(), '#');           // Top-left
+        grid.set(grid.minX() + cols - 1, grid.minY(), '#');    // Top-right
+        grid.set(grid.minX(), grid.minY() + rows - 1, '#');    // Bottom-left
+        grid.set(grid.minX() + cols - 1, grid.minY() + rows - 1, '#'); // Bottom-right
     }
     
-    private boolean[][] simulateStepWithStuckCorners(boolean[][] grid) {
-        int rows = grid.length;
-        int cols = grid[0].length;
-        boolean[][] newGrid = new boolean[rows][cols];
+    private Grid simulateStepWithStuckCorners(Grid grid) {
+        Grid newGrid = grid.copy();
+        int rows = grid.height();
+        int cols = grid.width();
         
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int y = grid.minY(); y < grid.maxY(); y++) {
+            for (int x = grid.minX(); x < grid.maxX(); x++) {
                 // Check if this is a corner (stuck on)
-                if (isCorner(i, j, rows, cols)) {
-                    newGrid[i][j] = true; // Corners are always on
+                if (isCorner(x, y, grid.minX(), grid.minY(), rows, cols)) {
+                    newGrid.set(x, y, '#'); // Corners are always on
                 } else {
-                    int neighbors = countNeighbors(grid, i, j);
-                    boolean currentState = grid[i][j];
+                    int neighbors = GridDirections.countNeighbors(grid, x, y, c -> c == '#', true);
+                    char currentState = grid.get(x, y);
                     
-                    if (currentState) {
+                    if (currentState == '#') {
                         // Light is on: stays on if 2 or 3 neighbors are on
-                        newGrid[i][j] = (neighbors == 2 || neighbors == 3);
+                        newGrid.set(x, y, (neighbors == 2 || neighbors == 3) ? '#' : '.');
                     } else {
                         // Light is off: turns on if exactly 3 neighbors are on
-                        newGrid[i][j] = (neighbors == 3);
+                        newGrid.set(x, y, (neighbors == 3) ? '#' : '.');
                     }
                 }
             }
@@ -162,10 +120,10 @@ public class LightGrid implements Solver<Integer> {
         return newGrid;
     }
     
-    private boolean isCorner(int row, int col, int rows, int cols) {
-        return (row == 0 && col == 0) ||           // Top-left
-               (row == 0 && col == cols - 1) ||    // Top-right
-               (row == rows - 1 && col == 0) ||    // Bottom-left
-               (row == rows - 1 && col == cols - 1); // Bottom-right
+    private boolean isCorner(int x, int y, int minX, int minY, int rows, int cols) {
+        return (x == minX && y == minY) ||           // Top-left
+               (x == minX + cols - 1 && y == minY) ||    // Top-right
+               (x == minX && y == minY + rows - 1) ||    // Bottom-left
+               (x == minX + cols - 1 && y == minY + rows - 1); // Bottom-right
     }
 }
