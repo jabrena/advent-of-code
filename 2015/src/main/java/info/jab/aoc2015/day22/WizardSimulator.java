@@ -3,7 +3,13 @@ package info.jab.aoc2015.day22;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 public class WizardSimulator implements Solver<Integer> {
 
@@ -44,31 +50,42 @@ public class WizardSimulator implements Solver<Integer> {
         queue.offer(new GameState(PLAYER_HP, PLAYER_MANA, boss.hp, 0, new EnumMap<>(Effect.class), true));
         
         int minMana = Integer.MAX_VALUE;
+        Set<String> visited = new HashSet<>(); // Memoization for repeated states
         
         while (!queue.isEmpty()) {
             GameState state = queue.poll();
             
             // Pruning: if we've already spent more mana than our best solution
             if (state.manaSpent >= minMana) {
-                // Skip this state
-            } else {
-                // Hard mode: player loses 1 HP at start of player turn
-                if (hardMode && state.playerTurn) {
-                    state = new GameState(state.playerHp - 1, state.playerMana, state.bossHp, 
-                                        state.manaSpent, state.effects, state.playerTurn);
-                }
+                continue;
+            }
+            
+            // Create state key for memoization
+            String stateKey = state.playerHp + "," + state.playerMana + "," + state.bossHp + "," + 
+                             state.playerTurn + "," + state.effects.toString();
+            
+            // Skip if we've seen this state with equal or better mana cost
+            if (visited.contains(stateKey)) {
+                continue;
+            }
+            visited.add(stateKey);
+            
+            // Hard mode: player loses 1 HP at start of player turn
+            if (hardMode && state.playerTurn) {
+                state = new GameState(state.playerHp - 1, state.playerMana, state.bossHp, 
+                                    state.manaSpent, state.effects, state.playerTurn);
+            }
+            
+            // Check if player is dead in hard mode
+            if (state.playerHp > 0) {
+                // Apply effects at start of turn
+                state = applyEffects(state);
                 
-                // Check if player is dead in hard mode
-                if (state.playerHp > 0) {
-                    // Apply effects at start of turn
-                    state = applyEffects(state);
-                    
-                    // Check if boss is dead after effects
-                    if (state.bossHp <= 0) {
-                        minMana = Math.min(minMana, state.manaSpent);
-                    } else {
-                        processTurn(state, queue, boss);
-                    }
+                // Check if boss is dead after effects
+                if (state.bossHp <= 0) {
+                    minMana = Math.min(minMana, state.manaSpent);
+                } else {
+                    processTurn(state, queue, boss);
                 }
             }
         }

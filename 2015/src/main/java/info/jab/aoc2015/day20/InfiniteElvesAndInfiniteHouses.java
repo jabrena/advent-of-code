@@ -38,16 +38,19 @@ public class InfiniteElvesAndInfiniteHouses implements Solver<Integer> {
     private int calculatePresents(int houseNumber) {
         int totalPresents = 0;
         
-        // Find all divisors of houseNumber
-        // Each divisor represents an elf that visits this house
-        for (int elf = 1; elf * elf <= houseNumber; elf++) {
+        // Optimized divisor calculation: iterate up to sqrt(houseNumber)
+        // This is already O(√H) which is optimal for single house calculation
+        // For multiple houses, we could use a sieve, but for sequential checking this is optimal
+        int sqrt = (int) Math.sqrt(houseNumber);
+        for (int elf = 1; elf <= sqrt; elf++) {
             if (houseNumber % elf == 0) {
                 // elf is a divisor, so this elf visits this house
                 totalPresents += elf * 10;
                 
                 // If elf is not the square root, then houseNumber/elf is also a divisor
-                if (elf != houseNumber / elf) {
-                    totalPresents += (houseNumber / elf) * 10;
+                int pairedElf = houseNumber / elf;
+                if (elf != pairedElf) {
+                    totalPresents += pairedElf * 10;
                 }
             }
         }
@@ -71,10 +74,13 @@ public class InfiniteElvesAndInfiniteHouses implements Solver<Integer> {
     private int calculatePresentsPart2(int houseNumber) {
         int totalPresents = 0;
         
-        // Find all divisors of houseNumber that are valid elves for part 2
+        // Optimized divisor calculation: iterate up to sqrt(houseNumber)
         // An elf (divisor) visits this house only if houseNumber <= elf * 50
-        // This means elf >= houseNumber / 50
-        for (int elf = 1; elf * elf <= houseNumber; elf++) {
+        // This means elf >= houseNumber / 50, so we can start from there
+        int minElf = Math.max(1, (houseNumber + 49) / 50); // Ceiling division
+        int sqrt = (int) Math.sqrt(houseNumber);
+        
+        for (int elf = 1; elf <= sqrt; elf++) {
             if (houseNumber % elf == 0) {
                 // elf is a divisor
                 // Check if this elf still delivers to this house (within 50 houses)

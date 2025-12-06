@@ -3,7 +3,12 @@ package info.jab.aoc2015.day19;
 import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -112,7 +117,7 @@ public class Day19 implements Day<Integer> {
             
             // Create a shuffled list of replacement keys for this attempt
             List<String> keys = new ArrayList<>(reverseReplacements.keySet());
-            Collections.shuffle(keys);
+            java.util.Collections.shuffle(keys);
             
             while (!current.equals("e") && steps < 1000) {
                 String previous = current;
