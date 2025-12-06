@@ -1,10 +1,26 @@
 package info.jab.aoc2015.day11;
 
+import com.putoet.resources.ResourceLines;
+import info.jab.aoc.Solver;
+
 import java.util.stream.IntStream;
 
-public class PasswordValidator {
+public class PasswordValidator implements Solver<String> {
 
-    public String findNextValidPassword(String currentPassword) {
+    @Override
+    public String solvePartOne(final String fileName) {
+        String currentPassword = ResourceLines.line(fileName);
+        return findNextValidPassword(currentPassword);
+    }
+
+    @Override
+    public String solvePartTwo(final String fileName) {
+        String currentPassword = ResourceLines.line(fileName);
+        String firstPassword = findNextValidPassword(currentPassword);
+        return findNextValidPassword(firstPassword);
+    }
+
+    private String findNextValidPassword(String currentPassword) {
         String nextPassword = currentPassword;
         do {
             nextPassword = incrementPassword(nextPassword);

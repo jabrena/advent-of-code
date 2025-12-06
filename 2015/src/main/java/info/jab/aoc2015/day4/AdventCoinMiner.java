@@ -1,13 +1,28 @@
 package info.jab.aoc2015.day4;
 
+import com.putoet.resources.ResourceLines;
+import info.jab.aoc.Solver;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 import java.util.stream.IntStream;
 
-public class AdventCoinMiner {
+public class AdventCoinMiner implements Solver<Integer> {
 
-    public int findLowestNumber(String secretKey, boolean isPart1) {
+    @Override
+    public Integer solvePartOne(final String fileName) {
+        String secretKey = ResourceLines.line(fileName);
+        return findLowestNumber(secretKey, true);
+    }
+
+    @Override
+    public Integer solvePartTwo(final String fileName) {
+        String secretKey = ResourceLines.line(fileName);
+        return findLowestNumber(secretKey, false);
+    }
+
+    private int findLowestNumber(String secretKey, boolean isPart1) {
         String prefix = isPart1 ? "00000" : "000000";
         
         // Use parallel processing for better performance on brute force search

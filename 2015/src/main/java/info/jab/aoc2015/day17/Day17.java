@@ -1,108 +1,19 @@
 package info.jab.aoc2015.day17;
 
 import info.jab.aoc.Day;
-import com.putoet.resources.ResourceLines;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import info.jab.aoc.Solver;
 
 public class Day17 implements Day<Integer> {
-    
-    private static final int TARGET_VOLUME = 150;
-    
+
+    private final Solver<Integer> containerCombinationSolver = new ContainerCombinationSolver();
+
     @Override
-    public Integer getPart1Result(String fileName) {
-        var containers = ResourceLines.list(fileName, Integer::parseInt);
-        return countCombinationsMemoized(containers, TARGET_VOLUME, 0, 0, new HashMap<>());
+    public Integer getPart1Result(final String fileName) {
+        return containerCombinationSolver.solvePartOne(fileName);
     }
-    
+
     @Override
-    public Integer getPart2Result(String fileName) {
-        var containers = ResourceLines.list(fileName, Integer::parseInt);
-        var validCombinations = findAllValidCombinations(containers, TARGET_VOLUME);
-        
-        // Find minimum number of containers needed
-        int minContainers = validCombinations.stream()
-                .mapToInt(List::size)
-                .min()
-                .orElse(0);
-        
-        // Count combinations that use exactly the minimum number of containers
-        return (int) validCombinations.stream()
-                .filter(combination -> combination.size() == minContainers)
-                .count();
-    }
-    
-    private int countCombinationsMemoized(List<Integer> containers, int target, int currentSum, int index, 
-                                         Map<String, Integer> memo) {
-        String key = currentSum + "," + index;
-        if (memo.containsKey(key)) {
-            return memo.get(key);
-        }
-        
-        if (currentSum == target) {
-            return 1;
-        }
-        
-        if (currentSum > target || index >= containers.size()) {
-            return 0;
-        }
-        
-        // Include current container
-        int withCurrent = countCombinationsMemoized(containers, target, currentSum + containers.get(index), index + 1, memo);
-        
-        // Exclude current container
-        int withoutCurrent = countCombinationsMemoized(containers, target, currentSum, index + 1, memo);
-        
-        int result = withCurrent + withoutCurrent;
-        memo.put(key, result);
-        return result;
-    }
-    
-    private int countCombinations(List<Integer> containers, int target, int currentSum, int index) {
-        if (currentSum == target) {
-            return 1;
-        }
-        
-        if (currentSum > target || index >= containers.size()) {
-            return 0;
-        }
-        
-        // Include current container
-        int withCurrent = countCombinations(containers, target, currentSum + containers.get(index), index + 1);
-        
-        // Exclude current container
-        int withoutCurrent = countCombinations(containers, target, currentSum, index + 1);
-        
-        return withCurrent + withoutCurrent;
-    }
-    
-    private List<List<Integer>> findAllValidCombinations(List<Integer> containers, int target) {
-        List<List<Integer>> validCombinations = new ArrayList<>();
-        findCombinations(containers, target, 0, 0, new ArrayList<>(), validCombinations);
-        return validCombinations;
-    }
-    
-    private void findCombinations(List<Integer> containers, int target, int currentSum, int index, 
-                                List<Integer> currentCombination, List<List<Integer>> validCombinations) {
-        if (currentSum == target) {
-            validCombinations.add(new ArrayList<>(currentCombination));
-            return;
-        }
-        
-        if (currentSum > target || index >= containers.size()) {
-            return;
-        }
-        
-        // Include current container
-        currentCombination.add(containers.get(index));
-        findCombinations(containers, target, currentSum + containers.get(index), index + 1, 
-                        currentCombination, validCombinations);
-        currentCombination.remove(currentCombination.size() - 1);
-        
-        // Exclude current container
-        findCombinations(containers, target, currentSum, index + 1, currentCombination, validCombinations);
+    public Integer getPart2Result(final String fileName) {
+        return containerCombinationSolver.solvePartTwo(fileName);
     }
 }
