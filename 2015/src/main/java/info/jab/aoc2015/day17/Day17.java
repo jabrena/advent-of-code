@@ -4,7 +4,9 @@ import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Day17 implements Day<Integer> {
     
@@ -13,7 +15,7 @@ public class Day17 implements Day<Integer> {
     @Override
     public Integer getPart1Result(String fileName) {
         var containers = ResourceLines.list(fileName, Integer::parseInt);
-        return countCombinations(containers, TARGET_VOLUME, 0, 0);
+        return countCombinationsMemoized(containers, TARGET_VOLUME, 0, 0, new HashMap<>());
     }
     
     @Override
@@ -31,6 +33,32 @@ public class Day17 implements Day<Integer> {
         return (int) validCombinations.stream()
                 .filter(combination -> combination.size() == minContainers)
                 .count();
+    }
+    
+    private int countCombinationsMemoized(List<Integer> containers, int target, int currentSum, int index, 
+                                         Map<String, Integer> memo) {
+        String key = currentSum + "," + index;
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+        
+        if (currentSum == target) {
+            return 1;
+        }
+        
+        if (currentSum > target || index >= containers.size()) {
+            return 0;
+        }
+        
+        // Include current container
+        int withCurrent = countCombinationsMemoized(containers, target, currentSum + containers.get(index), index + 1, memo);
+        
+        // Exclude current container
+        int withoutCurrent = countCombinationsMemoized(containers, target, currentSum, index + 1, memo);
+        
+        int result = withCurrent + withoutCurrent;
+        memo.put(key, result);
+        return result;
     }
     
     private int countCombinations(List<Integer> containers, int target, int currentSum, int index) {

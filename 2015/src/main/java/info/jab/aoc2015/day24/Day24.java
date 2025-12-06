@@ -73,13 +73,14 @@ public class Day24 implements Day<Long> {
     
     private List<List<Integer>> findCombinations(List<Integer> packages, int targetWeight) {
         List<List<Integer>> result = new ArrayList<>();
-        findCombinationsRecursive(packages, targetWeight, 0, new ArrayList<>(), result);
+        Map<String, List<List<Integer>>> memo = new HashMap<>();
+        findCombinationsRecursive(packages, targetWeight, 0, new ArrayList<>(), result, memo);
         return result;
     }
     
     private void findCombinationsRecursive(List<Integer> packages, int remainingWeight, 
                                          int startIndex, List<Integer> currentCombination, 
-                                         List<List<Integer>> result) {
+                                         List<List<Integer>> result, Map<String, List<List<Integer>>> memo) {
         if (remainingWeight == 0) {
             result.add(new ArrayList<>(currentCombination));
             return;
@@ -89,15 +90,22 @@ public class Day24 implements Day<Long> {
             return;
         }
         
+        // Create memo key
+        String memoKey = remainingWeight + "," + startIndex;
+        
+        // Check memoization - but note: we need to track current combination state
+        // For this problem, memoization helps less because we need all combinations, not just count
+        // However, we can still optimize by early termination and pruning
+        
         // Include current package
         currentCombination.add(packages.get(startIndex));
         findCombinationsRecursive(packages, remainingWeight - packages.get(startIndex), 
-                                startIndex + 1, currentCombination, result);
+                                startIndex + 1, currentCombination, result, memo);
         currentCombination.remove(currentCombination.size() - 1);
         
         // Exclude current package
         findCombinationsRecursive(packages, remainingWeight, startIndex + 1, 
-                                currentCombination, result);
+                                currentCombination, result, memo);
     }
     
     private long calculateQuantumEntanglement(List<Integer> packages) {

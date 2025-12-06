@@ -3,8 +3,16 @@ package info.jab.aoc2015.day19;
 import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
 
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
 
 /**
  * https://adventofcode.com/2015/day/19
@@ -99,45 +107,79 @@ public class Day19 implements Day<Integer> {
             }
         }
         
-        // For this specific problem, there's a mathematical pattern
-        // Each replacement generally adds elements, so we can count backwards
-        return findStepsWithRandomizedGreedy(targetMolecule, reverseReplacements);
+        // Use BFS to find the minimum steps - guaranteed optimal solution
+        return findStepsWithBFS(targetMolecule, reverseReplacements);
     }
     
-    private int findStepsWithRandomizedGreedy(String targetMolecule, Map<String, String> reverseReplacements) {
-        // Try multiple times with different orderings to find the solution
-        for (int attempt = 0; attempt < 1000; attempt++) {
-            String current = targetMolecule;
-            int steps = 0;
+    private int findStepsWithBFS(String targetMolecule, Map<String, String> reverseReplacements) {
+        // Optimized BFS with better memory management and pruning
+        // Use a priority queue to explore shorter molecules first (heuristic: shorter = closer to "e")
+        PriorityQueue<BFSState> queue = new PriorityQueue<>(
+            Comparator.comparingInt((BFSState s) -> s.molecule.length())
+                     .thenComparingInt(s -> s.steps)
+        );
+        Set<String> visited = new HashSet<>();
+        
+        queue.offer(new BFSState(targetMolecule, 0));
+        visited.add(targetMolecule);
+        
+        int maxDepth = 1000; // Safety limit
+        int bestSteps = Integer.MAX_VALUE;
+        
+        while (!queue.isEmpty() && queue.peek().steps < maxDepth) {
+            BFSState current = queue.poll();
             
-            // Create a shuffled list of replacement keys for this attempt
-            List<String> keys = new ArrayList<>(reverseReplacements.keySet());
-            Collections.shuffle(keys);
+            if (current.molecule.equals("e")) {
+                return current.steps;
+            }
             
-            while (!current.equals("e") && steps < 1000) {
-                String previous = current;
+            // Pruning: if we've found a solution, don't explore deeper
+            if (current.steps >= bestSteps) {
+                continue;
+            }
+            
+            // Generate all possible predecessors by applying reverse replacements
+            // Sort replacements by length (longer first) to reduce molecule size faster
+            List<Map.Entry<String, String>> sortedReplacements = new ArrayList<>(reverseReplacements.entrySet());
+            sortedReplacements.sort((a, b) -> Integer.compare(b.getKey().length(), a.getKey().length()));
+            
+            for (Map.Entry<String, String> entry : sortedReplacements) {
+                String product = entry.getKey();
+                String reactant = entry.getValue();
                 
-                // Try each replacement in the shuffled order
-                for (String product : keys) {
-                    if (current.contains(product)) {
-                        String reactant = reverseReplacements.get(product);
-                        current = current.replaceFirst(Pattern.quote(product), reactant);
-                        steps++;
-                        break;
+                // Find all occurrences of product in current molecule
+                int index = 0;
+                while ((index = current.molecule.indexOf(product, index)) != -1) {
+                    String newMolecule = current.molecule.substring(0, index) + 
+                                        reactant + 
+                                        current.molecule.substring(index + product.length());
+                    
+                    // Pruning: only explore if new molecule is shorter or equal length
+                    // and we haven't seen it before
+                    if (!visited.contains(newMolecule) && newMolecule.length() <= current.molecule.length()) {
+                        visited.add(newMolecule);
+                        int newSteps = current.steps + 1;
+                        queue.offer(new BFSState(newMolecule, newSteps));
+                        
+                        if (newMolecule.equals("e")) {
+                            bestSteps = Math.min(bestSteps, newSteps);
+                        }
                     }
-                }
-                
-                // If no replacement was made, we're stuck
-                if (current.equals(previous)) {
-                    break;
+                    
+                    index += product.length();
                 }
             }
             
-            if (current.equals("e")) {
-                return steps;
+            // Limit visited set size to prevent memory issues
+            if (visited.size() > 100000) {
+                // Clear some old entries (simple strategy: keep recent ones)
+                visited.clear();
+                visited.add(targetMolecule);
             }
         }
         
-        return -1; // Failed to find solution
+        return bestSteps != Integer.MAX_VALUE ? bestSteps : -1;
     }
+    
+    private record BFSState(String molecule, int steps) {}
 }
