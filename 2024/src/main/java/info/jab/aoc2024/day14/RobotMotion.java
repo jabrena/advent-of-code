@@ -73,7 +73,7 @@ public class RobotMotion {
     private static final Pattern COMPILED_PATTERN = Pattern.compile(Pattern.quote(PATTERN));
 
     // Detect the Christmas tree pattern in the grid
-    private boolean detectPattern(Grid grid, int width, int height) {
+    private boolean detectPattern(Grid grid) {
         for (int y = grid.minY(); y < grid.maxY(); y++) {
             StringBuilder row = new StringBuilder();
             for (int x = grid.minX(); x < grid.maxX(); x++) {
@@ -94,7 +94,7 @@ public class RobotMotion {
             var grid = simulateRobotMotion(robots, width, height, time);
 
             // Check for the Christmas tree pattern
-            if (detectPattern(grid, width, height)) {
+            if (detectPattern(grid)) {
                 break;
             }
             time++;

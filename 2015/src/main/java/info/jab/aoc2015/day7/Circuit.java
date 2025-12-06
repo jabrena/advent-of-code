@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
@@ -201,7 +200,7 @@ public class Circuit implements Solver<Integer> {
         // Filter out instruction that sets 'b'
         List<Instruction> filteredInstructions = instructions.stream()
             .filter(inst -> !inst.output().equals("b"))
-            .collect(Collectors.toList());
+            .toList();
         
         // Use topological sort for O(G) complexity
         processInstructionsTopologically(filteredInstructions);

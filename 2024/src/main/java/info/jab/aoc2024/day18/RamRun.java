@@ -76,7 +76,7 @@ public class RamRun {
         path.add(0, new int[]{0, 0}); // Add the starting point
     }
 
-    private void visualizeGrid(Grid grid, int gridSize, List<int[]> path) {
+    private void visualizeGrid(Grid grid, List<int[]> path) {
         Grid visualGrid = grid.copy();
 
         // Mark the path with 'O'
@@ -128,12 +128,12 @@ public class RamRun {
         if (shortestPath != -1) {
             System.out.println("Minimum number of steps to reach the exit: " + shortestPath);
             if(debug) {
-                visualizeGrid(grid, gridSize, path);
+                visualizeGrid(grid, path);
             }
         } else {
             System.out.println("The exit is unreachable.");
             if(debug) {
-                visualizeGrid(grid, gridSize, path);
+                visualizeGrid(grid, path);
             }
         }
         return String.valueOf(shortestPath);
@@ -163,12 +163,12 @@ public class RamRun {
             if (shortestPath != -1) {
                 if(debug) {
                     System.out.println("Minimum number of steps to reach the exit: " + shortestPath);
-                    visualizeGrid(grid, gridSize, path);
+                    visualizeGrid(grid, path);
                 }
             } else {
                 System.out.println("The exit is unreachable.");
                 if(debug) {
-                    visualizeGrid(grid, gridSize, path);
+                    visualizeGrid(grid, path);
                 }
 
                 //If we are not able to find a path, we found the solution
