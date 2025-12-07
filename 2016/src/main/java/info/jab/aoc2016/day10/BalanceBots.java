@@ -62,7 +62,7 @@ public final class BalanceBots implements Solver<Integer> {
                 }
                 return true; // Include in instructions
             })
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 
     private Map<Integer, BotInstruction> parseBotInstructions(final List<String> instructions) {
@@ -122,7 +122,7 @@ public final class BalanceBots implements Solver<Integer> {
     private List<Bot> getReadyBots(final Map<Integer, Bot> bots) {
         return bots.values().stream()
             .filter(Bot::hasTwo)
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 
     private void processBotInstruction(

@@ -71,7 +71,7 @@ public final class RTGState {
 
     public List<Item> getItemsOnFloor(final int floor) {
         return floors.getOrDefault(floor, Set.of()).stream()
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
 
     public int getElevatorFloor() {
@@ -133,7 +133,7 @@ public final class RTGState {
                     
                     return elementFloors.values().stream()
                             .sorted()
-                            .collect(Collectors.toList());
+                            .toList();
                 })
                 .collect(Collectors.collectingAndThen(
                         Collectors.toList(),
