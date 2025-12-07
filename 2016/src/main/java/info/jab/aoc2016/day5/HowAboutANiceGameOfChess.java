@@ -1,24 +1,24 @@
 package info.jab.aoc2016.day5;
 
 import com.putoet.resources.ResourceLines;
-import com.putoet.security.MD5;
 import info.jab.aoc.Solver;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Solver for Day 5: How About a Nice Game of Chess?
  * Generates passwords using MD5 hashes.
- * Optimized with parallel processing for improved performance.
+ * Optimized with parallel processing and zero-allocation checks.
  */
 public final class HowAboutANiceGameOfChess implements Solver<String> {
 
     private static final int BATCH_SIZE = 10000;
     private static final int PASSWORD_LENGTH = 8;
+    private static final char[] HEX_ARRAY = "0123456789abcdef".toCharArray();
 
     @Override
     public String solvePartOne(final String fileName) {
@@ -35,78 +35,80 @@ public final class HowAboutANiceGameOfChess implements Solver<String> {
     }
     
     private String findPassword(final String doorId) {
-        List<PasswordChar> found = new ArrayList<>();
+        StringBuilder result = new StringBuilder();
         int startIndex = 0;
         
-        while (found.size() < PASSWORD_LENGTH) {
+        while (result.length() < PASSWORD_LENGTH) {
             int endIndex = startIndex + BATCH_SIZE;
             
-            List<PasswordChar> batchResults = IntStream.range(startIndex, endIndex)
+            // Collect all matches in this batch
+            var batchMatches = IntStream.range(startIndex, endIndex)
                 .parallel()
-                .mapToObj(index -> {
-                    String input = doorId + index;
-                    String hash = MD5.hash(input).toLowerCase();
-                    
-                    if (hash.startsWith("00000")) {
-                        return Optional.of(new PasswordChar(index, hash.charAt(5)));
+                .boxed()
+                .flatMap(i -> {
+                    MD5Worker worker = getWorker();
+                    byte[] digest = worker.hash(doorId + i);
+                    if (startsWithFiveZeros(digest)) {
+                        // 6th char is the low nibble of 3rd byte
+                        char c = HEX_ARRAY[digest[2] & 0x0F];
+                        return Stream.of(new Match(i, c));
                     }
-                    return Optional.<PasswordChar>empty();
+                    return Stream.empty();
                 })
-                .flatMap(Optional::stream)
-                .sorted(Comparator.comparingInt(PasswordChar::index))
-                .limit(PASSWORD_LENGTH - found.size())
+                .sorted((a, b) -> Integer.compare(a.index, b.index))
                 .toList();
             
-            found.addAll(batchResults);
+            for (Match m : batchMatches) {
+                if (result.length() < PASSWORD_LENGTH) {
+                    result.append(m.character);
+                }
+            }
+            
             startIndex = endIndex;
         }
         
-        return found.stream()
-            .sorted(Comparator.comparingInt(PasswordChar::index))
-            .limit(PASSWORD_LENGTH)
-            .map(PasswordChar::character)
-            .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
-            .toString();
+        return result.toString();
     }
+    
+    private record Match(int index, char character) {}
     
     private String findPasswordWithPosition(final String doorId) {
         char[] password = new char[PASSWORD_LENGTH];
         boolean[] filled = new boolean[PASSWORD_LENGTH];
         AtomicInteger filledCount = new AtomicInteger(0);
+        
         int startIndex = 0;
         
         while (filledCount.get() < PASSWORD_LENGTH) {
             int endIndex = startIndex + BATCH_SIZE;
             
-            IntStream.range(startIndex, endIndex)
+            var batchMatches = IntStream.range(startIndex, endIndex)
                 .parallel()
-                .forEach(index -> {
-                    if (filledCount.get() >= PASSWORD_LENGTH) {
-                        return;
+                .boxed()
+                .flatMap(i -> {
+                    MD5Worker worker = getWorker();
+                    byte[] digest = worker.hash(doorId + i);
+                    if (startsWithFiveZeros(digest)) {
+                        // Position: 6th char (low nibble of byte 2)
+                        int posIndex = digest[2] & 0x0F;
+                        // Value: 7th char (high nibble of byte 3)
+                        int valIndex = (digest[3] & 0xF0) >>> 4;
+                        char val = HEX_ARRAY[valIndex];
+                        return Stream.of(new PosMatch(i, posIndex, val));
                     }
-                    
-                    String input = doorId + index;
-                    String hash = MD5.hash(input).toLowerCase();
-                    
-                    if (hash.startsWith("00000")) {
-                        char positionChar = hash.charAt(5);
-                        char valueChar = hash.charAt(6);
-                        
-                        // Check if position is valid (0-7)
-                        if (positionChar >= '0' && positionChar <= '7') {
-                            int position = positionChar - '0';
-                            
-                            // Use only the first result for each position (thread-safe check)
-                            synchronized (password) {
-                                if (!filled[position] && filledCount.get() < PASSWORD_LENGTH) {
-                                    password[position] = valueChar;
-                                    filled[position] = true;
-                                    filledCount.incrementAndGet();
-                                }
-                            }
-                        }
-                    }
-                });
+                    return Stream.empty();
+                })
+                .sorted((a, b) -> Integer.compare(a.index, b.index))
+                .toList();
+            
+            for (PosMatch m : batchMatches) {
+                if (m.pos < PASSWORD_LENGTH && !filled[m.pos]) {
+                    password[m.pos] = m.val;
+                    filled[m.pos] = true;
+                    filledCount.incrementAndGet();
+                    if (filledCount.get() == PASSWORD_LENGTH) break;
+                }
+            }
             
             startIndex = endIndex;
         }
@@ -114,7 +116,34 @@ public final class HowAboutANiceGameOfChess implements Solver<String> {
         return new String(password);
     }
     
-    private record PasswordChar(int index, char character) {
+    private record PosMatch(int index, int pos, char val) {}
+    
+    private boolean startsWithFiveZeros(byte[] digest) {
+        return digest[0] == 0 && digest[1] == 0 && (digest[2] & 0xF0) == 0;
+    }
+    
+    private static final ThreadLocal<MD5Worker> WORKER = ThreadLocal.withInitial(MD5Worker::new);
+    
+    private static MD5Worker getWorker() {
+        return WORKER.get();
+    }
+
+    private static class MD5Worker {
+        private final MessageDigest md;
+
+        MD5Worker() {
+            try {
+                md = MessageDigest.getInstance("MD5");
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        
+        byte[] hash(String input) {
+            md.reset();
+            md.update(input.getBytes());
+            return md.digest();
+        }
     }
 }
 

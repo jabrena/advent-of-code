@@ -3,9 +3,8 @@ package info.jab.aoc2016.day12;
 import info.jab.aoc.Solver;
 import com.putoet.resources.ResourceLines;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Assembunny interpreter for Day 12
@@ -13,78 +12,117 @@ import java.util.Map;
  */
 public class AssembunnyInterpreter implements Solver<Integer> {
 
+    private enum OpCode { CPY, INC, DEC, JNZ }
+
+    private record Instruction(OpCode op, int arg1, int arg2, boolean arg1IsReg) {}
+
     @Override
     public Integer solvePartOne(String fileName) {
-        List<String> instructions = ResourceLines.list(fileName);
-        Map<String, Integer> registers = new HashMap<>();
-        registers.put("a", 0);
-        registers.put("b", 0);
-        registers.put("c", 0);
-        registers.put("d", 0);
+        List<String> lines = ResourceLines.list(fileName);
+        List<Instruction> instructions = parseInstructions(lines);
+        int[] registers = new int[4];
         
         execute(instructions, registers);
-        return registers.get("a");
+        return registers[0];
     }
 
     @Override
     public Integer solvePartTwo(String fileName) {
-        List<String> instructions = ResourceLines.list(fileName);
-        Map<String, Integer> registers = new HashMap<>();
-        registers.put("a", 0);
-        registers.put("b", 0);
-        registers.put("c", 1); // For part 2, c starts at 1
-        registers.put("d", 0);
+        List<String> lines = ResourceLines.list(fileName);
+        List<Instruction> instructions = parseInstructions(lines);
+        int[] registers = new int[4];
+        registers[2] = 1; // c = 1
         
         execute(instructions, registers);
-        return registers.get("a");
+        return registers[0];
     }
     
-    private void execute(List<String> instructions, Map<String, Integer> registers) {
-        int pc = 0; // program counter
-        
-        while (pc < instructions.size()) {
-            String[] parts = instructions.get(pc).split(" ");
-            String instruction = parts[0];
+    private List<Instruction> parseInstructions(List<String> lines) {
+        List<Instruction> instructions = new ArrayList<>(lines.size());
+        for (String line : lines) {
+            String[] parts = line.split(" ");
+            String opStr = parts[0];
             
-            switch (instruction) {
+            switch (opStr) {
                 case "cpy" -> {
-                    String source = parts[1];
-                    String target = parts[2];
-                    int value = getValue(source, registers);
-                    registers.put(target, value);
-                    pc++;
+                    // cpy x y
+                    int arg1;
+                    boolean arg1IsReg = false;
+                    if (isRegister(parts[1])) {
+                        arg1 = getRegisterIndex(parts[1]);
+                        arg1IsReg = true;
+                    } else {
+                        arg1 = Integer.parseInt(parts[1]);
+                    }
+                    int arg2 = getRegisterIndex(parts[2]);
+                    instructions.add(new Instruction(OpCode.CPY, arg1, arg2, arg1IsReg));
                 }
                 case "inc" -> {
-                    String register = parts[1];
-                    registers.put(register, registers.get(register) + 1);
-                    pc++;
+                    // inc x
+                    int arg1 = getRegisterIndex(parts[1]);
+                    instructions.add(new Instruction(OpCode.INC, arg1, 0, true));
                 }
                 case "dec" -> {
-                    String register = parts[1];
-                    registers.put(register, registers.get(register) - 1);
-                    pc++;
+                    // dec x
+                    int arg1 = getRegisterIndex(parts[1]);
+                    instructions.add(new Instruction(OpCode.DEC, arg1, 0, true));
                 }
                 case "jnz" -> {
-                    String condition = parts[1];
-                    String offset = parts[2];
-                    int conditionValue = getValue(condition, registers);
-                    if (conditionValue != 0) {
-                        int offsetValue = getValue(offset, registers);
-                        pc += offsetValue;
+                    // jnz x y
+                    int arg1;
+                    boolean arg1IsReg = false;
+                    if (isRegister(parts[1])) {
+                        arg1 = getRegisterIndex(parts[1]);
+                        arg1IsReg = true;
+                    } else {
+                        arg1 = Integer.parseInt(parts[1]);
+                    }
+                    int arg2 = Integer.parseInt(parts[2]);
+                    instructions.add(new Instruction(OpCode.JNZ, arg1, arg2, arg1IsReg));
+                }
+            }
+        }
+        return instructions;
+    }
+    
+    private boolean isRegister(String s) {
+        return s.length() == 1 && s.charAt(0) >= 'a' && s.charAt(0) <= 'd';
+    }
+    
+    private int getRegisterIndex(String s) {
+        return s.charAt(0) - 'a';
+    }
+
+    private void execute(List<Instruction> instructions, int[] registers) {
+        int pc = 0;
+        int size = instructions.size();
+        
+        while (pc < size) {
+            Instruction ins = instructions.get(pc);
+            
+            switch (ins.op) {
+                case CPY -> {
+                    int val = ins.arg1IsReg ? registers[ins.arg1] : ins.arg1;
+                    registers[ins.arg2] = val;
+                    pc++;
+                }
+                case INC -> {
+                    registers[ins.arg1]++;
+                    pc++;
+                }
+                case DEC -> {
+                    registers[ins.arg1]--;
+                    pc++;
+                }
+                case JNZ -> {
+                    int val = ins.arg1IsReg ? registers[ins.arg1] : ins.arg1;
+                    if (val != 0) {
+                        pc += ins.arg2;
                     } else {
                         pc++;
                     }
                 }
-                default -> throw new IllegalArgumentException("Unknown instruction: " + instruction);
             }
-        }
-    }
-    
-    private int getValue(String source, Map<String, Integer> registers) {
-        try {
-            return Integer.parseInt(source);
-        } catch (NumberFormatException _) {
-            return registers.get(source);
         }
     }
 }
