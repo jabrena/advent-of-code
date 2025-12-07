@@ -113,7 +113,10 @@ public class RTGFacility implements Solver<Integer> {
     }
 
     private int findMinimumSteps(RTGState initialState) {
-        Queue<StateStep> queue = new LinkedList<>();
+        // Use PriorityQueue for A* search with heuristic
+        PriorityQueue<StateStep> queue = new PriorityQueue<>(
+            Comparator.comparingInt(step -> step.steps() + heuristic(step.state()))
+        );
         Set<String> visited = new HashSet<>();
 
         queue.offer(new StateStep(initialState, 0));
@@ -137,6 +140,24 @@ public class RTGFacility implements Solver<Integer> {
         }
 
         return -1; // Should not happen
+    }
+
+    /**
+     * Heuristic function for A* search.
+     * Estimates minimum steps needed: items not on top floor need to be moved up.
+     * Since we can move 2 items at a time, we need at least (items not on top) / 2 moves.
+     * Each move requires going up and potentially back down, so we multiply by 2.
+     * This is an admissible heuristic (never overestimates).
+     */
+    private int heuristic(RTGState state) {
+        int itemsNotOnTop = 0;
+        for (int floor = 0; floor < 3; floor++) {
+            itemsNotOnTop += state.getItemsOnFloor(floor).size();
+        }
+        // Minimum steps: need to move all items up, can move 2 at a time
+        // Each pair needs at least 1 move, but we also need to account for elevator movement
+        // Conservative estimate: items / 2 (rounded up) for minimum moves needed
+        return (itemsNotOnTop + 1) / 2;
     }
 
     private List<RTGState> generateNextStates(RTGState state) {

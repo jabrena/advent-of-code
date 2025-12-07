@@ -4,8 +4,9 @@ import com.putoet.resources.ResourceLines;
 import com.putoet.security.MD5;
 import info.jab.aoc.Solver;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 
 /**
  * Solver for Day 14: One-Time Pad
@@ -13,8 +14,8 @@ import java.util.Map;
  */
 public final class OneTimePad implements Solver<Integer> {
 
-    private final Map<String, String> hashCache = new HashMap<>();
-    private final Map<String, String> stretchedHashCache = new HashMap<>();
+    private final Map<String, String> hashCache = new ConcurrentHashMap<>();
+    private final Map<String, String> stretchedHashCache = new ConcurrentHashMap<>();
 
     @Override
     public Integer solvePartOne(final String fileName) {
@@ -90,13 +91,13 @@ public final class OneTimePad implements Solver<Integer> {
     private boolean hasQuintupletInNext1000(final String salt, final int startIndex, final char character, final boolean useStretching) {
         String quintuplet = String.valueOf(character).repeat(5);
         
-        for (int i = startIndex + 1; i <= startIndex + 1000; i++) {
-            String hash = useStretching ? getStretchedHash(salt, i) : getHash(salt, i);
-            if (hash.contains(quintuplet)) {
-                return true;
-            }
-        }
-        return false;
+        // Pre-compute hashes in parallel for the next 1000 indices
+        return IntStream.range(startIndex + 1, startIndex + 1001)
+            .parallel()
+            .anyMatch(i -> {
+                String hash = useStretching ? getStretchedHash(salt, i) : getHash(salt, i);
+                return hash.contains(quintuplet);
+            });
     }
 }
 
