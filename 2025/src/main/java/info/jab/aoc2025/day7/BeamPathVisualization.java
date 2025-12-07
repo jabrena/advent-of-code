@@ -339,9 +339,13 @@ public final class BeamPathVisualization extends Application {
         splitsLabel.setText("Splits: " + totalSplits);
         pathsLabel.setText("Paths: " + totalPaths);
         currentRowLabel.setText("Row: " + currentRow);
-        statusLabel.setText(isComplete 
-                ? "Complete!" 
-                : (showPart1 ? "Processing splits..." : "Processing paths..."));
+        final String statusText;
+        if (isComplete) {
+            statusText = "Complete!";
+        } else {
+            statusText = showPart1 ? "Processing splits..." : "Processing paths...";
+        }
+        statusLabel.setText(statusText);
     }
 
     private void draw() {

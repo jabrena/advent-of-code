@@ -38,33 +38,37 @@ public final class HowAboutANiceGameOfChess implements Solver<String> {
         StringBuilder result = new StringBuilder();
         int startIndex = 0;
         
-        while (result.length() < PASSWORD_LENGTH) {
-            int endIndex = startIndex + BATCH_SIZE;
-            
-            // Collect all matches in this batch
-            var batchMatches = IntStream.range(startIndex, endIndex)
-                .parallel()
-                .boxed()
-                .flatMap(i -> {
-                    MD5Worker worker = getWorker();
-                    byte[] digest = worker.hash(doorId + i);
-                    if (startsWithFiveZeros(digest)) {
-                        // 6th char is the low nibble of 3rd byte
-                        char c = HEX_ARRAY[digest[2] & 0x0F];
-                        return Stream.of(new Match(i, c));
+        try {
+            while (result.length() < PASSWORD_LENGTH) {
+                int endIndex = startIndex + BATCH_SIZE;
+                
+                // Collect all matches in this batch
+                var batchMatches = IntStream.range(startIndex, endIndex)
+                    .parallel()
+                    .boxed()
+                    .flatMap(i -> {
+                        MD5Worker worker = getWorker();
+                        byte[] digest = worker.hash(doorId + i);
+                        if (startsWithFiveZeros(digest)) {
+                            // 6th char is the low nibble of 3rd byte
+                            char c = HEX_ARRAY[digest[2] & 0x0F];
+                            return Stream.of(new Match(i, c));
+                        }
+                        return Stream.empty();
+                    })
+                    .sorted((a, b) -> Integer.compare(a.index, b.index))
+                    .toList();
+                
+                for (Match m : batchMatches) {
+                    if (result.length() < PASSWORD_LENGTH) {
+                        result.append(m.character);
                     }
-                    return Stream.empty();
-                })
-                .sorted((a, b) -> Integer.compare(a.index, b.index))
-                .toList();
-            
-            for (Match m : batchMatches) {
-                if (result.length() < PASSWORD_LENGTH) {
-                    result.append(m.character);
                 }
+                
+                startIndex = endIndex;
             }
-            
-            startIndex = endIndex;
+        } finally {
+            WORKER.remove();
         }
         
         return result.toString();
@@ -79,38 +83,42 @@ public final class HowAboutANiceGameOfChess implements Solver<String> {
         
         int startIndex = 0;
         
-        while (filledCount.get() < PASSWORD_LENGTH) {
-            int endIndex = startIndex + BATCH_SIZE;
-            
-            var batchMatches = IntStream.range(startIndex, endIndex)
-                .parallel()
-                .boxed()
-                .flatMap(i -> {
-                    MD5Worker worker = getWorker();
-                    byte[] digest = worker.hash(doorId + i);
-                    if (startsWithFiveZeros(digest)) {
-                        // Position: 6th char (low nibble of byte 2)
-                        int posIndex = digest[2] & 0x0F;
-                        // Value: 7th char (high nibble of byte 3)
-                        int valIndex = (digest[3] & 0xF0) >>> 4;
-                        char val = HEX_ARRAY[valIndex];
-                        return Stream.of(new PosMatch(i, posIndex, val));
+        try {
+            while (filledCount.get() < PASSWORD_LENGTH) {
+                int endIndex = startIndex + BATCH_SIZE;
+                
+                var batchMatches = IntStream.range(startIndex, endIndex)
+                    .parallel()
+                    .boxed()
+                    .flatMap(i -> {
+                        MD5Worker worker = getWorker();
+                        byte[] digest = worker.hash(doorId + i);
+                        if (startsWithFiveZeros(digest)) {
+                            // Position: 6th char (low nibble of byte 2)
+                            int posIndex = digest[2] & 0x0F;
+                            // Value: 7th char (high nibble of byte 3)
+                            int valIndex = (digest[3] & 0xF0) >>> 4;
+                            char val = HEX_ARRAY[valIndex];
+                            return Stream.of(new PosMatch(i, posIndex, val));
+                        }
+                        return Stream.empty();
+                    })
+                    .sorted((a, b) -> Integer.compare(a.index, b.index))
+                    .toList();
+                
+                for (PosMatch m : batchMatches) {
+                    if (m.pos < PASSWORD_LENGTH && !filled[m.pos]) {
+                        password[m.pos] = m.val;
+                        filled[m.pos] = true;
+                        filledCount.incrementAndGet();
+                        if (filledCount.get() == PASSWORD_LENGTH) break;
                     }
-                    return Stream.empty();
-                })
-                .sorted((a, b) -> Integer.compare(a.index, b.index))
-                .toList();
-            
-            for (PosMatch m : batchMatches) {
-                if (m.pos < PASSWORD_LENGTH && !filled[m.pos]) {
-                    password[m.pos] = m.val;
-                    filled[m.pos] = true;
-                    filledCount.incrementAndGet();
-                    if (filledCount.get() == PASSWORD_LENGTH) break;
                 }
+                
+                startIndex = endIndex;
             }
-            
-            startIndex = endIndex;
+        } finally {
+            WORKER.remove();
         }
         
         return new String(password);

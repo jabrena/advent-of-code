@@ -50,13 +50,11 @@ public final class OneTimePad implements Solver<Integer> {
             String currentHash = window.remove(0);
             Character triplet = findTriplet(currentHash);
             
-            if (triplet != null) {
+            if (triplet != null && hasQuintuplet(window, triplet)) {
                 // Check next 1000 hashes
-                if (hasQuintuplet(window, triplet)) {
-                    keysFound++;
-                    if (keysFound == n) {
-                        return index;
-                    }
+                keysFound++;
+                if (keysFound == n) {
+                    return index;
                 }
             }
             index++;
@@ -66,14 +64,18 @@ public final class OneTimePad implements Solver<Integer> {
     }
     
     private void fillWindow(List<String> window, String salt, int startIndex, int count, boolean stretched) {
-        List<String> newHashes = IntStream.range(startIndex, startIndex + count)
-            .parallel()
-            .mapToObj(i -> {
-                MD5Worker w = getWorker();
-                return stretched ? w.stretchedHash(salt + i) : w.hash(salt + i);
-            })
-            .toList();
-        window.addAll(newHashes);
+        try {
+            List<String> newHashes = IntStream.range(startIndex, startIndex + count)
+                .parallel()
+                .mapToObj(i -> {
+                    MD5Worker w = getWorker();
+                    return stretched ? w.stretchedHash(salt + i) : w.hash(salt + i);
+                })
+                .toList();
+            window.addAll(newHashes);
+        } finally {
+            WORKER.remove();
+        }
     }
 
     private Character findTriplet(final String hash) {
