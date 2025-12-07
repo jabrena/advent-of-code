@@ -18,7 +18,7 @@ class Day10Test {
         var result = day10.getPart1Result(fileName);
 
         //Then
-        then(result).isEqualTo(826);
+        then(result).isEqualTo("826");
     }
   
     @Test

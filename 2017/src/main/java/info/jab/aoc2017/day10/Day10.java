@@ -4,13 +4,35 @@ import info.jab.aoc.Day;
 import com.putoet.resources.ResourceLines;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class Day10 implements Day<String> {
 
     @Override
     public String getPart1Result(String fileName) {
-        throw new UnsupportedOperationException("Not implemented");
+        String input = ResourceLines.line(fileName).trim();
+
+        List<Integer> lengths = new ArrayList<>();
+        if (!input.isBlank()) {
+            for (String token : input.split(",")) {
+                String trimmed = token.trim();
+                if (!trimmed.isEmpty()) {
+                    lengths.add(Integer.parseInt(trimmed));
+                }
+            }
+        }
+
+        List<Integer> list = createInitialList();
+        int currentPosition = 0;
+        int skipSize = 0;
+
+        for (int length : lengths) {
+            reverseSublist(list, currentPosition, length);
+            currentPosition = (currentPosition + length + skipSize) % list.size();
+            skipSize++;
+        }
+
+        int result = list.get(0) * list.get(1);
+        return String.valueOf(result);
     }
 
     @Override
@@ -27,10 +49,7 @@ public class Day10 implements Day<String> {
         lengths.addAll(List.of(17, 31, 73, 47, 23));
         
         // Initialize list with 256 elements
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < 256; i++) {
-            list.add(i);
-        }
+        List<Integer> list = createInitialList();
         
         int currentPosition = 0;
         int skipSize = 0;
@@ -77,5 +96,13 @@ public class Day10 implements Day<String> {
             list.set(pos1, list.get(pos2));
             list.set(pos2, temp);
         }
+    }
+    
+    private List<Integer> createInitialList() {
+        List<Integer> list = new ArrayList<>(256);
+        for (int i = 0; i < 256; i++) {
+            list.add(i);
+        }
+        return list;
     }
 }
