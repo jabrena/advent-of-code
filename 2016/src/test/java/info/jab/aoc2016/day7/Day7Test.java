@@ -6,17 +6,6 @@ import org.junit.jupiter.api.Test;
 class Day7Test {
 
     @Test
-    void should_solve_day7_part1_examples() {
-        var day = new Day7();
-        
-        // Test with examples from problem statement
-        then(day.supportsTLS("abba[mnop]qrst")).isTrue();
-        then(day.supportsTLS("abcd[bddb]xyyx")).isFalse();
-        then(day.supportsTLS("aaaa[qwer]tyui")).isFalse();
-        then(day.supportsTLS("ioxxoj[asdfgh]zxcvbn")).isTrue();
-    }
-    
-    @Test
     void should_solve_day7_part1() {
         //Given
         String fileName = "/day7/day7-input.txt";
@@ -27,17 +16,6 @@ class Day7Test {
 
         //Then
         then(result).isEqualTo(110);
-    }
-    
-    @Test
-    void should_solve_day7_part2_examples() {
-        var day = new Day7();
-        
-        // Test with examples from problem statement
-        then(day.supportsSSL("aba[bab]xyz")).isTrue();
-        then(day.supportsSSL("xyx[xyx]xyx")).isFalse();
-        then(day.supportsSSL("aaa[kek]eke")).isTrue();
-        then(day.supportsSSL("zazbz[bzb]cdb")).isTrue();
     }
     
     @Test

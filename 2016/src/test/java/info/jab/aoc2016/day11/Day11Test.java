@@ -16,7 +16,6 @@ class Day11Test {
         var result = day.getPart1Result(fileName);
 
         //Then
-        System.out.println("Day 11 Part 1 result: " + result);
         then(result).isEqualTo(37);
     }
 
@@ -30,7 +29,6 @@ class Day11Test {
         var result = day.getPart2Result(fileName);
 
         //Then
-        System.out.println("Day 11 Part 2 result: " + result);
         then(result).isEqualTo(61);
     }
 }
