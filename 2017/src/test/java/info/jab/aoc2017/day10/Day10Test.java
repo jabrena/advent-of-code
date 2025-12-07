@@ -18,7 +18,21 @@ class Day10Test {
         var result = day10.getPart1Result(fileName);
 
         //Then
-        then(result).isEqualTo(826);
+        then(result).isEqualTo("826");
+    }
+  
+    @Test
+    @Timeout(30)
+    void should_solve_day10_part2() {
+        //Given
+        String fileName = "/day10/day10-input.txt";
+
+        //When
+        Day10 day10 = new Day10();
+        var result = day10.getPart2Result(fileName);
+
+        //Then
+        then(result).isEqualTo("d067d3f14d07e09c2e7308c3926605c4");
     }
 
 }
