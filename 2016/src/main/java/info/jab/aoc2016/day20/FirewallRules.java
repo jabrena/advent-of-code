@@ -13,16 +13,6 @@ import java.util.List;
  */
 public final class FirewallRules implements Solver<Long> {
 
-    private record Range(long start, long end) {
-        boolean overlaps(final Range other) {
-            return start <= other.end + 1 && other.start <= end + 1;
-        }
-
-        Range merge(final Range other) {
-            return new Range(Math.min(start, other.start), Math.max(end, other.end));
-        }
-    }
-
     @Override
     public Long solvePartOne(final String fileName) {
         var lines = ResourceLines.list(fileName);
@@ -59,12 +49,12 @@ public final class FirewallRules implements Solver<Long> {
         
         // Find the lowest IP not blocked
         // If the first range doesn't start at 0, then 0 is the answer
-        if (merged.get(0).start > 0) {
+        if (merged.get(0).start() > 0) {
             return 0L;
         }
         
         // Otherwise, return the first IP after the first range
-        return merged.get(0).end + 1;
+        return merged.get(0).end() + 1;
     }
 
     @Override
@@ -103,7 +93,7 @@ public final class FirewallRules implements Solver<Long> {
         
         // Calculate total blocked IPs
         long blocked = merged.stream()
-            .mapToLong(range -> range.end - range.start + 1)
+            .mapToLong(range -> range.end() - range.start() + 1)
             .sum();
         
         // Total IPs from 0 to 4294967295 (inclusive) = 4294967296

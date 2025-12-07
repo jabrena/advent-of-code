@@ -170,7 +170,5 @@ public final class InternetProtocolVersion7 implements Solver<Integer> {
                 .mapToInt(ip -> supportsSSL(ip) ? 1 : 0)
                 .sum();
     }
-    
-    private record IPParts(List<String> supernetSequences, List<String> hypernetSequences) {}
 }
 

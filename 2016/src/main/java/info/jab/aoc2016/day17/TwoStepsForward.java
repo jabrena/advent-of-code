@@ -35,33 +35,33 @@ public final class TwoStepsForward implements Solver<String> {
      * Find the shortest path to the vault using BFS
      */
     private String findShortestPath(final String passcode) {
-        Queue<State> queue = new LinkedList<>();
-        queue.offer(new State(0, 0, ""));
+        Queue<VaultState> queue = new LinkedList<>();
+        queue.offer(new VaultState(0, 0, ""));
 
         while (!queue.isEmpty()) {
-            State current = queue.poll();
+            VaultState current = queue.poll();
 
             // Check if we reached the target
-            if (current.x == TARGET_X && current.y == TARGET_Y) {
-                return current.path;
+            if (current.x() == TARGET_X && current.y() == TARGET_Y) {
+                return current.path();
             }
 
             // Get open doors based on MD5 hash
-            String hash = MD5.hash(passcode + current.path).toLowerCase();
+            String hash = MD5.hash(passcode + current.path()).toLowerCase();
             boolean[] doors = getOpenDoors(hash);
 
             // Try moving in each direction
-            if (doors[0] && current.y > 0) { // Up
-                queue.offer(new State(current.x, current.y - 1, current.path + "U"));
+            if (doors[0] && current.y() > 0) { // Up
+                queue.offer(new VaultState(current.x(), current.y() - 1, current.path() + "U"));
             }
-            if (doors[1] && current.y < GRID_SIZE - 1) { // Down
-                queue.offer(new State(current.x, current.y + 1, current.path + "D"));
+            if (doors[1] && current.y() < GRID_SIZE - 1) { // Down
+                queue.offer(new VaultState(current.x(), current.y() + 1, current.path() + "D"));
             }
-            if (doors[2] && current.x > 0) { // Left
-                queue.offer(new State(current.x - 1, current.y, current.path + "L"));
+            if (doors[2] && current.x() > 0) { // Left
+                queue.offer(new VaultState(current.x() - 1, current.y(), current.path() + "L"));
             }
-            if (doors[3] && current.x < GRID_SIZE - 1) { // Right
-                queue.offer(new State(current.x + 1, current.y, current.path + "R"));
+            if (doors[3] && current.x() < GRID_SIZE - 1) { // Right
+                queue.offer(new VaultState(current.x() + 1, current.y(), current.path() + "R"));
             }
         }
 
@@ -139,21 +139,6 @@ public final class TwoStepsForward implements Solver<String> {
      */
     private boolean isOpen(final char c) {
         return c == 'b' || c == 'c' || c == 'd' || c == 'e' || c == 'f';
-    }
-
-    /**
-     * Represents a state in the vault navigation
-     */
-    private static class State {
-        final int x;
-        final int y;
-        final String path;
-
-        State(final int x, final int y, final String path) {
-            this.x = x;
-            this.y = y;
-            this.path = path;
-        }
     }
 }
 

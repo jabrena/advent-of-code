@@ -18,9 +18,6 @@ public final class TimingIsEverything implements Solver<Integer> {
             "Disc #(\\d+) has (\\d+) positions; at time=0, it is at position (\\d+)\\."
     );
 
-    private record Disc(int number, int positions, int initialPosition) {
-    }
-
     @Override
     public Integer solvePartOne(final String fileName) {
         var lines = ResourceLines.list(fileName);

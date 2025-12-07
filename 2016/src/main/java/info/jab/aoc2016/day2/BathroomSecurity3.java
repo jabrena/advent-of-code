@@ -22,34 +22,9 @@ public class BathroomSecurity3 implements Solver<String>{
         {' ', ' ', 'D', ' ', ' '}
     };
 
-    private enum Move {
-        U, D, L, R;
-
-        public static Move fromChar(char direction) {
-            return Move.valueOf(String.valueOf(direction));
-        }
-    }
-
-    private record Direction(Point point) {
-        Direction move(char direction) {
-            Move move = Move.fromChar(direction);
-            Point newPoint = calculate(move);
-            return new Direction(newPoint);
-        }
-
-        private Point calculate(Move move) {
-            return switch (move) {
-                case U -> point.sub(Point.NORTH);
-                case D -> point.sub(Point.SOUTH);
-                case L -> point.add(Point.WEST);
-                case R -> point.add(Point.EAST);
-            };
-        }
-    }
-
-    private Direction initializeStartPosition(Grid grid) {
+    private KeypadDirection initializeStartPosition(Grid grid) {
         Point start = grid.findFirst(c -> c == '5').orElseThrow();
-        return new Direction(start);
+        return new KeypadDirection(start);
     }
 
     //The second condition is not required in the first part.
@@ -58,44 +33,42 @@ public class BathroomSecurity3 implements Solver<String>{
                grid.get(point) != ' ';
     }
 
-    record State(Direction current, StringBuilder result) {}
-
-    private State processLine(Grid grid, String line, State state) {
-        Direction current = state.current;
+    private KeypadState processLine(Grid grid, String line, KeypadState state) {
+        KeypadDirection current = state.current();
         for (char move : line.toCharArray()) {
-            Direction next = current.move(move);
+            KeypadDirection next = current.move(move);
             if (isValidPosition(next.point(), grid)) {
                 current = next;
             }
         }
-        return new State(current, state.result.append(grid.get(current.point())));
+        return state.withCurrent(current).append(grid.get(current.point()));
     }
 
     @Override
     public String solvePartOne(String fileName) {
         Grid grid = new Grid(keypadPart1);
-        Direction initial = initializeStartPosition(grid);
+        KeypadDirection initial = initializeStartPosition(grid);
         
         var list = ResourceLines.list(fileName);
         return list.stream()
-            .reduce(new State(initial, new StringBuilder()),
+            .reduce(new KeypadState(initial, ""),
                 (state, line) -> processLine(grid, line, state),
                 (s1, s2) -> s1
             )
-            .result().toString();
+            .result();
     }
 
     @Override
     public String solvePartTwo(String fileName) {
         Grid grid = new Grid(keypadPart2);
-        Direction initial = initializeStartPosition(grid);
+        KeypadDirection initial = initializeStartPosition(grid);
         
         var list = ResourceLines.list(fileName);
         return list.stream()
-            .reduce(new State(initial, new StringBuilder()),
+            .reduce(new KeypadState(initial, ""),
                 (state, line) -> processLine(grid, line, state),
                 (s1, s2) -> s1
             )
-            .result().toString();
+            .result();
     }
 }
