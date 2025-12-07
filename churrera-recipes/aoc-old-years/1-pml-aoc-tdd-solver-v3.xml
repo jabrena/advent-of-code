@@ -263,6 +263,12 @@ public class DayX implements Day<Integer> {
                 Repeat the steps 5 and 6 to solve the problem for part 2.
             </step-content>
         </step>
+        <step number="8">
+            <step-title>Solve 3 problems in a row</step-title>
+            <step-content>
+                Repeat Step 2-6 3 times in a row to solve 3 problems in a row.
+            </step-content>
+        </step>
     </steps>
 
     <safeguards>
