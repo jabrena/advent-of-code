@@ -14,9 +14,67 @@ public class Day7 implements Day<Long> {
         return solvePart1(lines);
     }
 
+    private Long[][] memo;
+
     @Override
     public Long getPart2Result(String fileName) {
-        throw new UnsupportedOperationException("Not implemented");
+        List<String> lines = ResourceLines.list(fileName);
+        return solvePart2(lines);
+    }
+
+    private Long solvePart2(List<String> lines) {
+        int height = lines.size();
+        int width = lines.stream().mapToInt(String::length).max().orElse(0);
+        
+        memo = new Long[height][width];
+        
+        int startX = -1;
+        int startY = -1;
+        for (int y = 0; y < height; y++) {
+            String line = lines.get(y);
+            int index = line.indexOf('S');
+            if (index != -1) {
+                startX = index;
+                startY = y;
+                break;
+            }
+        }
+        
+        if (startX == -1) {
+            throw new IllegalArgumentException("No start position S found");
+        }
+
+        return countPaths(lines, startX, startY + 1, width, height);
+    }
+
+    private long countPaths(List<String> lines, int x, int y, int width, int height) {
+        if (y >= height) {
+            return 1;
+        }
+        if (x < 0 || x >= width) {
+            return 1;
+        }
+        
+        String line = lines.get(y);
+        if (x >= line.length()) {
+            return 1;
+        }
+
+        if (memo[y][x] != null) {
+            return memo[y][x];
+        }
+        
+        char c = line.charAt(x);
+        long result;
+        if (c == '^') {
+            result = countPaths(lines, x - 1, y + 1, width, height) + 
+                     countPaths(lines, x + 1, y + 1, width, height);
+        } else {
+            result = countPaths(lines, x, y + 1, width, height);
+        }
+        
+        memo[y][x] = result;
+        return result;
     }
 
     private Long solvePart1(List<String> lines) {

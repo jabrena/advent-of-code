@@ -23,4 +23,20 @@ public class Day7Test {
         Long result = day7.getPart1Result("/day7/day7-input.txt");
         assertEquals(1537L, result);
     }
+
+    @Test
+    @Timeout(value = 30, unit = TimeUnit.SECONDS)
+    public void testPart2Sample() {
+        Day<Long> day7 = new Day7();
+        Long result = day7.getPart2Result("/day7/day7-input-sample.txt");
+        assertEquals(40L, result);
+    }
+
+    @Test
+    @Timeout(value = 30, unit = TimeUnit.SECONDS)
+    public void testPart2() {
+        Day<Long> day7 = new Day7();
+        Long result = day7.getPart2Result("/day7/day7-input.txt");
+        assertEquals(18818811755665L, result);
+    }
 }
