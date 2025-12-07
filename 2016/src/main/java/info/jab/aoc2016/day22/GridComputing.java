@@ -21,15 +21,6 @@ public class GridComputing implements Solver<Integer> {
         "/dev/grid/node-x(\\d+)-y(\\d+)\\s+(\\d+)T\\s+(\\d+)T\\s+(\\d+)T\\s+(\\d+)%"
     );
 
-    record Node(int x, int y, int size, int used, int avail) {
-        boolean isEmpty() {
-            return used == 0;
-        }
-
-        boolean canFit(int dataSize) {
-            return avail >= dataSize;
-        }
-    }
 
     @Override
     public Integer solvePartOne(String fileName) {
@@ -71,9 +62,6 @@ public class GridComputing implements Solver<Integer> {
         return findShortestPath(mapData);
     }
 
-    private record NodeMapData(Map<String, Node> originalNodeMap, int maxX, int maxY, Node emptyNode, int goalX) {}
-
-    private record State(int goalX, int goalY, int emptyX, int emptyY) {}
 
     private NodeMapData buildNodeMap(List<Node> nodes) {
         Map<String, Node> originalNodeMap = new HashMap<>();
@@ -83,11 +71,11 @@ public class GridComputing implements Solver<Integer> {
         int goalX = 0;
         
         for (Node node : nodes) {
-            originalNodeMap.put(node.x + "," + node.y, node);
-            if (node.x > maxX) maxX = node.x;
-            if (node.y > maxY) maxY = node.y;
-            if (node.y == 0 && node.x > goalX) {
-                goalX = node.x;
+            originalNodeMap.put(node.x() + "," + node.y(), node);
+            if (node.x() > maxX) maxX = node.x();
+            if (node.y() > maxY) maxY = node.y();
+            if (node.y() == 0 && node.x() > goalX) {
+                goalX = node.x();
             }
             if (node.isEmpty()) {
                 emptyNode = node;
@@ -98,10 +86,10 @@ public class GridComputing implements Solver<Integer> {
     }
 
     private Integer findShortestPath(NodeMapData mapData) {
-        State initialState = new State(mapData.goalX(), 0, mapData.emptyNode().x(), mapData.emptyNode().y());
+        GridState initialState = new GridState(mapData.goalX(), 0, mapData.emptyNode().x(), mapData.emptyNode().y());
         
-        Queue<State> queue = new ArrayDeque<>();
-        Map<State, Integer> steps = new HashMap<>();
+        Queue<GridState> queue = new ArrayDeque<>();
+        Map<GridState, Integer> steps = new HashMap<>();
         
         queue.offer(initialState);
         steps.put(initialState, 0);
@@ -110,10 +98,10 @@ public class GridComputing implements Solver<Integer> {
         int[] dy = {1, -1, 0, 0};
         
         while (!queue.isEmpty()) {
-            State current = queue.poll();
+            GridState current = queue.poll();
             int currentSteps = steps.get(current);
             
-            if (current.goalX == 0 && current.goalY == 0) {
+            if (current.goalX() == 0 && current.goalY() == 0) {
                 return currentSteps;
             }
             
@@ -123,18 +111,18 @@ public class GridComputing implements Solver<Integer> {
         return 0;
     }
 
-    private void processAdjacentStates(State current, int currentSteps, NodeMapData mapData,
-                                       Queue<State> queue, Map<State, Integer> steps,
+    private void processAdjacentStates(GridState current, int currentSteps, NodeMapData mapData,
+                                       Queue<GridState> queue, Map<GridState, Integer> steps,
                                        int[] dx, int[] dy) {
-        Node emptyNodeOriginal = mapData.originalNodeMap().get(current.emptyX + "," + current.emptyY);
+        Node emptyNodeOriginal = mapData.originalNodeMap().get(current.emptyX() + "," + current.emptyY());
         if (emptyNodeOriginal == null) {
             return;
         }
         int emptyAvail = emptyNodeOriginal.size();
         
         for (int i = 0; i < 4; i++) {
-            int newEmptyX = current.emptyX + dx[i];
-            int newEmptyY = current.emptyY + dy[i];
+            int newEmptyX = current.emptyX() + dx[i];
+            int newEmptyY = current.emptyY() + dy[i];
             
             if (isValidPosition(newEmptyX, newEmptyY, mapData.maxX(), mapData.maxY())) {
                 processNodeMove(current, currentSteps, newEmptyX, newEmptyY, emptyAvail,
@@ -147,19 +135,19 @@ public class GridComputing implements Solver<Integer> {
         return x >= 0 && x <= maxX && y >= 0 && y <= maxY;
     }
 
-    private void processNodeMove(State current, int currentSteps, int newEmptyX, int newEmptyY,
+    private void processNodeMove(GridState current, int currentSteps, int newEmptyX, int newEmptyY,
                                  int emptyAvail, NodeMapData mapData,
-                                 Queue<State> queue, Map<State, Integer> steps) {
+                                 Queue<GridState> queue, Map<GridState, Integer> steps) {
         Node sourceNode = mapData.originalNodeMap().get(newEmptyX + "," + newEmptyY);
         if (sourceNode == null) {
             return;
         }
         
-        int sourceUsed = calculateSourceUsed(newEmptyX, newEmptyY, current.goalX, current.goalY,
+        int sourceUsed = calculateSourceUsed(newEmptyX, newEmptyY, current.goalX(), current.goalY(),
                                              mapData.originalNodeMap(), sourceNode);
         
         if (sourceUsed > 0 && emptyAvail >= sourceUsed) {
-            State newState = calculateNewState(current, newEmptyX, newEmptyY);
+            GridState newState = calculateNewState(current, newEmptyX, newEmptyY);
             
             steps.computeIfAbsent(newState, k -> {
                 queue.offer(newState);
@@ -177,16 +165,16 @@ public class GridComputing implements Solver<Integer> {
         return sourceNode.used();
     }
 
-    private State calculateNewState(State current, int newEmptyX, int newEmptyY) {
-        int newGoalX = current.goalX;
-        int newGoalY = current.goalY;
+    private GridState calculateNewState(GridState current, int newEmptyX, int newEmptyY) {
+        int newGoalX = current.goalX();
+        int newGoalY = current.goalY();
         
-        if (newEmptyX == current.goalX && newEmptyY == current.goalY) {
-            newGoalX = current.emptyX;
-            newGoalY = current.emptyY;
+        if (newEmptyX == current.goalX() && newEmptyY == current.goalY()) {
+            newGoalX = current.emptyX();
+            newGoalY = current.emptyY();
         }
         
-        return new State(newGoalX, newGoalY, newEmptyX, newEmptyY);
+        return new GridState(newGoalX, newGoalY, newEmptyX, newEmptyY);
     }
 
     private List<Node> parseNodes(List<String> lines) {

@@ -16,7 +16,6 @@ class Day10Test {
         var result = day.getPart1Result(fileName);
 
         //Then
-        System.out.println("Day 10 Part 1 result: " + result);
         then(result).isEqualTo(157);
     }
 }

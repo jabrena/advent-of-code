@@ -2,12 +2,13 @@ package info.jab.aoc2016.day5;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
-
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Timeout;
 
 class Day5Test {
 
+    @Timeout(value = 30, unit = TimeUnit.SECONDS)
     @Test
     void should_solve_day5_part1() {
         //Given
@@ -21,7 +22,7 @@ class Day5Test {
         then(result).isEqualTo("2414bc77");
     }
 
-    @Disabled("Part 2 test disabled - implementation may be incomplete or slow")
+    @Timeout(value = 30, unit = TimeUnit.SECONDS)
     @Test
     void should_solve_day5_part2() {
         //Given

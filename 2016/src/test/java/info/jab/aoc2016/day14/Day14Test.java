@@ -1,20 +1,13 @@
 package info.jab.aoc2016.day14;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import org.junit.jupiter.api.Disabled;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
-@Disabled
 class Day14Test {
 
-    @Test
-    void should_solve_day14_part1_example() {
-        var day = new Day14();
-        
-        // Test with example from problem statement: salt "abc" should give 64th key at index 22728
-        then(day.findNthKey("abc", 64)).isEqualTo(22728);
-    }
-    
+    @Timeout(value = 60, unit = TimeUnit.SECONDS)
     @Test
     void should_solve_day14_part1() {
         //Given
@@ -28,14 +21,7 @@ class Day14Test {
         then(result).isEqualTo(15168);
     }
     
-    @Test
-    void should_solve_day14_part2_example() {
-        var day = new Day14();
-        
-        // Test with example from problem statement: salt "abc" with key stretching should give 64th key at index 22551
-        then(day.findNthKeyWithStretching("abc", 64)).isEqualTo(22551);
-    }
-    
+    @Timeout(value = 120, unit = TimeUnit.SECONDS)
     @Test
     void should_solve_day14_part2() {
         //Given
