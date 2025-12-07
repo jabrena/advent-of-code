@@ -62,3 +62,4 @@
 ## 2025
 
 - Day 4: [`Day4`](../../2025/src/main/java/info/jab/aoc2025/day4/Day4.java)
+- Day 7: [`BeamPathCounter`](../../2025/src/main/java/info/jab/aoc2025/day7/BeamPathCounter.java)
