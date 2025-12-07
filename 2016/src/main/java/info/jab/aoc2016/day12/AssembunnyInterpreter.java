@@ -71,6 +71,7 @@ public class AssembunnyInterpreter implements Solver<Integer> {
                     int offset = Integer.parseInt(parts[2]);
                     instructions.add(new Jnz(source, offset));
                 }
+                default -> throw new IllegalArgumentException("Unknown instruction: " + opStr);
             }
         }
         return instructions;
