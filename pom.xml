@@ -56,7 +56,7 @@
         <maven-plugin-project-info-reports.version>3.4.5</maven-plugin-project-info-reports.version>
         <maven-plugin-resources.version>3.3.1</maven-plugin-resources.version>
         <maven-plugin-jar.version>3.3.0</maven-plugin-jar.version>
-        <maven-plugin-site.version>3.12.1</maven-plugin-site.version>
+        <maven-plugin-site.version>3.21.0</maven-plugin-site.version>
 
         <!-- Quality thresholds -->
         <coverage.level>15</coverage.level>
