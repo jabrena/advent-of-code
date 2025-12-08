@@ -4,10 +4,8 @@ import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Day;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,10 +22,9 @@ public class Day8 implements Day<Long> {
 
     record Connection(int p1Index, int p2Index, long distanceSquared) {}
 
-    @Override
-    public Long getPart1Result(String fileName) {
+    private List<Point> parsePoints(String fileName) {
         List<String> lines = ResourceLines.list(fileName);
-        List<Point> points = lines.stream()
+        return lines.stream()
                 .filter(line -> !line.trim().isEmpty())
                 .map(line -> {
                     String[] parts = line.split(",");
@@ -38,15 +35,23 @@ public class Day8 implements Day<Long> {
                     );
                 })
                 .collect(Collectors.toList());
+    }
 
+    private List<Connection> getSortedConnections(List<Point> points) {
         List<Connection> connections = new ArrayList<>();
         for (int i = 0; i < points.size(); i++) {
             for (int j = i + 1; j < points.size(); j++) {
                 connections.add(new Connection(i, j, points.get(i).distanceSquared(points.get(j))));
             }
         }
-
         connections.sort(Comparator.comparingLong(Connection::distanceSquared));
+        return connections;
+    }
+
+    @Override
+    public Long getPart1Result(String fileName) {
+        List<Point> points = parsePoints(fileName);
+        List<Connection> connections = getSortedConnections(points);
 
         int limit = 1000;
         List<Connection> topConnections = connections.stream()
@@ -71,16 +76,31 @@ public class Day8 implements Day<Long> {
 
     @Override
     public Long getPart2Result(String fileName) {
-        throw new UnsupportedOperationException("Not implemented");
+        List<Point> points = parsePoints(fileName);
+        List<Connection> connections = getSortedConnections(points);
+
+        DSU dsu = new DSU(points.size());
+        for (Connection conn : connections) {
+            if (dsu.union(conn.p1Index, conn.p2Index)) {
+                if (dsu.getCount() == 1) {
+                    Point p1 = points.get(conn.p1Index);
+                    Point p2 = points.get(conn.p2Index);
+                    return (long) p1.x * p2.x;
+                }
+            }
+        }
+        return 0L;
     }
 
     private static class DSU {
         private final int[] parent;
         private final int[] size;
+        private int count;
 
         public DSU(int n) {
             parent = new int[n];
             size = new int[n];
+            count = n;
             for (int i = 0; i < n; i++) {
                 parent[i] = i;
                 size[i] = 1;
@@ -94,7 +114,7 @@ public class Day8 implements Day<Long> {
             return parent[i];
         }
 
-        public void union(int i, int j) {
+        public boolean union(int i, int j) {
             int rootI = find(i);
             int rootJ = find(j);
 
@@ -106,7 +126,14 @@ public class Day8 implements Day<Long> {
                 }
                 parent[rootJ] = rootI;
                 size[rootI] += size[rootJ];
+                count--;
+                return true;
             }
+            return false;
+        }
+
+        public int getCount() {
+            return count;
         }
 
         public List<Integer> getComponentSizes() {

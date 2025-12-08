@@ -33,7 +33,7 @@ class Day8Test {
         Long result = day8.getPart2Result("/day8/day8-input.txt");
 
         // Then
-        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(169521198L);
         System.out.println("Day 8 Part 2 Result: " + result);
     }
 }
