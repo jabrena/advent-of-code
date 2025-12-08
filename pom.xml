@@ -54,7 +54,7 @@
         <maven-plugin-sonar.version>5.4.0.6343</maven-plugin-sonar.version>
         <maven-plugin-jacoco.version>0.8.14</maven-plugin-jacoco.version>
         <maven-plugin-project-info-reports.version>3.4.5</maven-plugin-project-info-reports.version>
-        <maven-plugin-resources.version>3.3.1</maven-plugin-resources.version>
+        <maven-plugin-resources.version>3.4.0</maven-plugin-resources.version>
         <maven-plugin-jar.version>3.3.0</maven-plugin-jar.version>
         <maven-plugin-site.version>3.12.1</maven-plugin-site.version>
 
