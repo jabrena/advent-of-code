@@ -51,6 +51,7 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 - https://adventofcode.com/
 - https://www.reddit.com/r/adventofcode/
 - https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Funny%22
+- https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Visualization%22
 - https://www.reddit.com/r/adventofcode/search/?q=flair_name%3A%22SOLUTION%20MEGATHREAD%22&restrict_sr=1
 
 ## Acknowledgements
