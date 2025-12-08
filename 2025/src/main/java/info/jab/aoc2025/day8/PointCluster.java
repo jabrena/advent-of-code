@@ -1,22 +1,21 @@
 package info.jab.aoc2025.day8;
 
 import com.putoet.resources.ResourceLines;
-import info.jab.aoc.Solver;
+import info.jab.aoc.Solver2;
 import java.util.Comparator;
 import java.util.List;
 
 import java.util.stream.IntStream;
 
-public final class PointCluster implements Solver<Long> {
+public final class PointCluster implements Solver2<Long, String, Integer> {
 
     @Override
-    public Long solvePartOne(String fileName) {
+    public Long solvePartOne(String fileName, Integer connectionLimit) {
         List<Point3D> points = parsePoint3Ds(fileName);
         List<Connection> connections = getSortedConnections(points);
 
-        int limit = 1000;
         List<Connection> topConnections = connections.stream()
-                .limit(limit)
+                .limit(connectionLimit)
                 .toList();
 
         DSU dsu = new DSU(points.size());
@@ -30,7 +29,7 @@ public final class PointCluster implements Solver<Long> {
     }
 
     @Override
-    public Long solvePartTwo(String fileName) {
+    public Long solvePartTwo(String fileName, Integer unused) {
         List<Point3D> points = parsePoint3Ds(fileName);
         List<Connection> connections = getSortedConnections(points);
 
