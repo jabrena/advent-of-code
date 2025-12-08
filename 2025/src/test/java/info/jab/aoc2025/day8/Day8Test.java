@@ -16,10 +16,10 @@ class Day8Test {
         Day<Long> day8 = new Day8();
 
         // When
-        Long result = day8.getPart1Result("day8/day8-input.txt");
+        Long result = day8.getPart1Result("/day8/day8-input.txt");
 
         // Then
-        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(164475L);
         System.out.println("Day 8 Part 1 Result: " + result);
     }
 
@@ -30,7 +30,7 @@ class Day8Test {
         Day<Long> day8 = new Day8();
 
         // When
-        Long result = day8.getPart2Result("day8/day8-input.txt");
+        Long result = day8.getPart2Result("/day8/day8-input.txt");
 
         // Then
         assertThat(result).isNotNull();
