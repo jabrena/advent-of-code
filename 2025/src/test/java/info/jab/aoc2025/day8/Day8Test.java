@@ -20,7 +20,6 @@ class Day8Test {
 
         // Then
         assertThat(result).isEqualTo(164475L);
-        System.out.println("Day 8 Part 1 Result: " + result);
     }
 
     @Test
@@ -34,6 +33,5 @@ class Day8Test {
 
         // Then
         assertThat(result).isEqualTo(169521198L);
-        System.out.println("Day 8 Part 2 Result: " + result);
     }
 }

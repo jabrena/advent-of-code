@@ -2,9 +2,10 @@ package info.jab.aoc2025.day8;
 
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import java.util.stream.IntStream;
 
 public final class PointCluster implements Solver<Long> {
 
@@ -19,19 +20,13 @@ public final class PointCluster implements Solver<Long> {
                 .toList();
 
         DSU dsu = new DSU(points.size());
-        for (Connection conn : topConnections) {
-            dsu.union(conn.p1Index(), conn.p2Index());
-        }
+        topConnections.forEach(conn -> dsu.union(conn.p1Index(), conn.p2Index()));
 
-        List<Integer> sizes = dsu.getComponentSizes();
-        sizes.sort(Comparator.reverseOrder());
-
-        long result = 1;
-        for (int i = 0; i < Math.min(3, sizes.size()); i++) {
-            result *= sizes.get(i);
-        }
-
-        return result;
+        return dsu.getComponentSizes().stream()
+                .sorted(Comparator.reverseOrder())
+                .limit(3)
+                .mapToLong(Integer::longValue)
+                .reduce(1L, (acc, size) -> acc * size);
     }
 
     @Override
@@ -60,15 +55,14 @@ public final class PointCluster implements Solver<Long> {
                 .toList();
     }
 
+    @SuppressWarnings("null")
     private List<Connection> getSortedConnections(List<Point3D> points) {
-        List<Connection> connections = new ArrayList<>();
-        for (int i = 0; i < points.size(); i++) {
-            for (int j = i + 1; j < points.size(); j++) {
-                connections.add(new Connection(i, j, points.get(i).distanceSquared(points.get(j))));
-            }
-        }
-        connections.sort(Comparator.comparingLong(Connection::distanceSquared));
-        return connections;
+        return IntStream.range(0, points.size())
+                .boxed()
+                .flatMap(i -> IntStream.range(i + 1, points.size())
+                        .mapToObj(j -> new Connection(i, j, points.get(i).distanceSquared(points.get(j)))))
+                .sorted(Comparator.comparingLong(Connection::distanceSquared))
+                .toList();
     }
 }
 
