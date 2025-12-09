@@ -38,6 +38,18 @@ class Day9Test {
         var result = day9.getPart2Result("/day9/day9-input-sample.txt");
 
         // Then
-        assertThat(result).isEqualTo(0L); // Placeholder
+        assertThat(result).isEqualTo(24L);
+    }
+
+    @Test
+    void should_solve_day9_part2_real_input() {
+        // Given
+        var day9 = new Day9();
+
+        // When
+        var result = day9.getPart2Result("/day9/day9-input.txt");
+
+        // Then
+        assertThat(result).isEqualTo(1508918480L);
     }
 }
