@@ -53,4 +53,5 @@
 
 ## 2025
 
-(No problems classified in this category for 2025)
+- Day 8: [`PointCluster`](../../2025/src/main/java/info/jab/aoc2025/day8/PointCluster.java)
+- Day 9: [`MaxRectangleArea`](../../2025/src/main/java/info/jab/aoc2025/day9/MaxRectangleArea.java)
