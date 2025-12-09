@@ -104,17 +104,24 @@ public final class MaxRectangleArea implements Solver<Long> {
     /**
      * Pure function that finds the maximum area rectangle that fits inside a polygon.
      * Uses Stream API for declarative pair generation and filtering.
+     * Optimized with parallel processing for independent pair validations.
      *
      * @param points The list of points
      * @param edges The edges of the polygon
      * @return The maximum area rectangle that fits inside the polygon
      */
     private Long findMaxRectangleInPolygon(final List<Point> points, final List<Edge> edges) {
+        // Pre-compute vertical edges for faster ray casting
+        final List<Edge> verticalEdges = edges.stream()
+                .filter(Edge::isVertical)
+                .toList();
+        
         return IntStream.range(0, points.size())
                 .boxed()
+                .parallel() // Parallel processing for independent pair validations
                 .flatMap(i -> IntStream.range(i + 1, points.size())
                         .mapToObj(j -> new PointPair(points.get(i), points.get(j))))
-                .map(pair -> calculateValidArea(pair, edges))
+                .map(pair -> calculateValidArea(pair, edges, verticalEdges))
                 .filter(area -> area > 0)
                 .max(Long::compareTo)
                 .orElse(0L);
@@ -132,12 +139,14 @@ public final class MaxRectangleArea implements Solver<Long> {
     /**
      * Pure function that calculates the area of a rectangle if it's valid within the polygon.
      * Returns 0 if the rectangle is invalid.
+     * Optimized with pre-computed vertical edges and combined point-in-polygon check.
      *
      * @param pair The pair of points
      * @param edges The edges of the polygon
+     * @param verticalEdges Pre-computed list of vertical edges for ray casting
      * @return The area if valid, 0 otherwise
      */
-    private long calculateValidArea(final PointPair pair, final List<Edge> edges) {
+    private long calculateValidArea(final PointPair pair, final List<Edge> edges, final List<Edge> verticalEdges) {
         final long width = Math.abs((long) pair.p1().x() - pair.p2().x()) + 1L;
         final long height = Math.abs((long) pair.p1().y() - pair.p2().y()) + 1L;
         final long area = width * height;
@@ -147,14 +156,14 @@ public final class MaxRectangleArea implements Solver<Long> {
         final int yMin = Math.min(pair.p1().y(), pair.p2().y());
         final int yMax = Math.max(pair.p1().y(), pair.p2().y());
 
-        // Check 1: Midpoint inside polygon (or on boundary)
+        // Check 1: Midpoint inside polygon (or on boundary) - optimized with pre-computed vertical edges
         final double midX = (xMin + xMax) / 2.0;
         final double midY = (yMin + yMax) / 2.0;
-        if (!isPointInPolygon(midX, midY, edges)) {
+        if (!isPointInPolygon(midX, midY, edges, verticalEdges)) {
             return 0L;
         }
 
-        // Check 2: No edge intersects interior
+        // Check 2: No edge intersects interior - optimized with quick bounds filtering
         if (edgesIntersectRect(xMin, xMax, yMin, yMax, edges)) {
             return 0L;
         }
@@ -179,26 +188,30 @@ public final class MaxRectangleArea implements Solver<Long> {
     /**
      * Checks if a point is inside or on the boundary of a polygon using ray casting algorithm.
      * This is a pure function that determines point-in-polygon relationship.
-     * Uses Stream API for declarative edge checking.
+     * Optimized to use pre-computed vertical edges and combine checks in single pass.
      *
      * @param x The x coordinate of the point
      * @param y The y coordinate of the point
      * @param edges The edges of the polygon
+     * @param verticalEdges Pre-computed list of vertical edges for ray casting
      * @return true if the point is inside or on the boundary of the polygon
      */
-    private boolean isPointInPolygon(final double x, final double y, final List<Edge> edges) {
-        // Check if point is on any edge
-        final boolean onEdge = edges.stream()
-                .anyMatch(edge -> isPointOnEdge(x, y, edge));
-        if (onEdge) {
-            return true;
+    private boolean isPointInPolygon(final double x, final double y, final List<Edge> edges, final List<Edge> verticalEdges) {
+        // Combined check: point on edge OR ray casting
+        // First check if point is on any edge (short-circuit)
+        for (final Edge edge : edges) {
+            if (isPointOnEdge(x, y, edge)) {
+                return true;
+            }
         }
 
-        // Ray casting: count intersections with vertical edges
-        final long intersections = edges.stream()
-                .filter(Edge::isVertical)
-                .filter(edge -> intersectsRay(x, y, edge))
-                .count();
+        // Ray casting: count intersections with vertical edges (using pre-computed list)
+        long intersections = 0;
+        for (final Edge edge : verticalEdges) {
+            if (intersectsRay(x, y, edge)) {
+                intersections++;
+            }
+        }
 
         return (intersections % 2) != 0;
     }
@@ -247,7 +260,7 @@ public final class MaxRectangleArea implements Solver<Long> {
     /**
      * Checks if any polygon edge intersects the interior of a rectangle.
      * This is a pure function that determines geometric intersection.
-     * Uses Stream API for declarative edge checking.
+     * Optimized with quick bounds filtering before expensive intersection checks.
      *
      * @param xMin Minimum x coordinate of the rectangle
      * @param xMax Maximum x coordinate of the rectangle
@@ -257,8 +270,39 @@ public final class MaxRectangleArea implements Solver<Long> {
      * @return true if any edge intersects the interior of the rectangle
      */
     private boolean edgesIntersectRect(final int xMin, final int xMax, final int yMin, final int yMax, final List<Edge> edges) {
-        return edges.stream()
-                .anyMatch(edge -> edgeIntersectsRect(xMin, xMax, yMin, yMax, edge));
+        for (final Edge edge : edges) {
+            // Quick bounds check before expensive intersection calculation
+            if (edge.isVertical()) {
+                final int ex = edge.p1().x();
+                // Quick filter: edge must be strictly inside rectangle x bounds
+                if (ex <= xMin || ex >= xMax) {
+                    continue;
+                }
+                final int ey1 = Math.min(edge.p1().y(), edge.p2().y());
+                final int ey2 = Math.max(edge.p1().y(), edge.p2().y());
+                // Quick filter: edge must overlap rectangle y bounds
+                if (ey2 <= yMin || ey1 >= yMax) {
+                    continue;
+                }
+            } else {
+                final int ey = edge.p1().y();
+                // Quick filter: edge must be strictly inside rectangle y bounds
+                if (ey <= yMin || ey >= yMax) {
+                    continue;
+                }
+                final int ex1 = Math.min(edge.p1().x(), edge.p2().x());
+                final int ex2 = Math.max(edge.p1().x(), edge.p2().x());
+                // Quick filter: edge must overlap rectangle x bounds
+                if (ex2 <= xMin || ex1 >= xMax) {
+                    continue;
+                }
+            }
+            // Only perform expensive intersection check if edge passes quick filters
+            if (edgeIntersectsRect(xMin, xMax, yMin, yMax, edge)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
