@@ -121,16 +121,26 @@ public final class DSU {
      * <p>
      * Each element in the returned list represents the size of one connected component.
      * The list contains one entry per distinct root in the DSU structure.
+     * <p>
+     * Optimized to avoid distinct() operation by using direct array access and early collection.
      *
      * @return an immutable list of component sizes, one per disjoint set
      */
     public List<Integer> getComponentSizes() {
-        return IntStream.range(0, parent.length)
-                .map(this::find)
-                .distinct()
-                .map(root -> size[root])
-                .boxed()
-                .toList();
+        // Optimized: Use boolean array to track seen roots, collect sizes directly
+        // Avoids distinct() overhead and stream intermediate operations
+        boolean[] seen = new boolean[parent.length];
+        java.util.ArrayList<Integer> sizes = new java.util.ArrayList<>();
+        
+        for (int i = 0; i < parent.length; i++) {
+            int root = find(i);
+            if (!seen[root]) {
+                seen[root] = true;
+                sizes.add(size[root]);
+            }
+        }
+        
+        return List.copyOf(sizes);
     }
 }
 
