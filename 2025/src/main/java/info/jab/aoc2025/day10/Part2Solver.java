@@ -1,293 +1,296 @@
 package info.jab.aoc2025.day10;
 
-import jdk.incubator.vector.IntVector;
-import jdk.incubator.vector.VectorOperators;
-import jdk.incubator.vector.VectorSpecies;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.RecursiveTask;
+import java.util.concurrent.atomic.AtomicLong;
 
 public final class Part2Solver {
 
-    private static final VectorSpecies<Integer> SPECIES = IntVector.SPECIES_PREFERRED;
+    private static final long DEFAULT_MAX_LIMIT = 1000L;
 
     public long solve(Part2Problem problem) {
-        int[] targets = problem.targets().clone(); // Clone to avoid modifying the input record
+        RationalMatrix matrix = new RationalMatrix(problem.targets(), problem.buttons());
+        matrix.toRREF();
 
-        int[][] buttons = problem.buttons();
-        int numRows = targets.length;
-        int numCols = buttons.length;
+        if (!matrix.isConsistent()) {
+            return 0; // Impossible
+        }
 
-        long[] rowMasks = new long[numRows];
-        long[] colMasks = new long[numCols];
+        List<Integer> freeVars = matrix.getFreeVariables();
+        int[] pivotColForRows = matrix.getPivotColForRows();
+        int numPivots = matrix.getPivotRowCount();
+        int numCols = matrix.getCols();
 
-        for (int j = 0; j < numCols; j++) {
-            int[] button = buttons[j];
-            for (int r : button) {
-                if (r < numRows) {
-                    rowMasks[r] |= (1L << j);
-                    colMasks[j] |= (1L << r);
-                }
+        // Precompute coefficient matrices for faster access in search loop
+        // freeCoeffNum[pivotRow][freeVarIdx] = coefficient numerator
+        // freeCoeffDen[pivotRow][freeVarIdx] = coefficient denominator
+        long[][] freeCoeffNum = new long[numPivots][freeVars.size()];
+        long[][] freeCoeffDen = new long[numPivots][freeVars.size()];
+        long[] rhsNum = new long[numPivots];
+        long[] rhsDen = new long[numPivots];
+
+        for (int i = 0; i < numPivots; i++) {
+            rhsNum[i] = matrix.getRHSNumerator(i);
+            rhsDen[i] = matrix.getRHSDenominator(i);
+            for (int fIdx = 0; fIdx < freeVars.size(); fIdx++) {
+                int freeVarCol = freeVars.get(fIdx);
+                freeCoeffNum[i][fIdx] = matrix.getNumerator(i, freeVarCol);
+                freeCoeffDen[i][fIdx] = matrix.getDenominator(i, freeVarCol);
             }
         }
 
-        long[] bestHolder = {Long.MAX_VALUE};
-        long activeCols = (1L << numCols) - 1;
+        // Solve
+        // We need to pick non-negative integers for free variables such that pivot variables are non-negative integers.
+        // And minimize sum.
 
-        // Preallocate buffers for recursion
-        // Max depth is numCols (since we remove at least 1 col per step)
-        int[][] propColsStack = new int[numCols + 1][numCols];
-        int[][] propValsStack = new int[numCols + 1][numCols];
+        // Always use parallel search with thread-safe atomic
+        AtomicLong bestTotal = new AtomicLong(Long.MAX_VALUE);
 
-        dfsPart2(activeCols, targets, 0, rowMasks, colMasks, bestHolder, 0, propColsStack, propValsStack);
-
-        return bestHolder[0] == Long.MAX_VALUE ? 0 : bestHolder[0];
-    }
-
-    private void dfsPart2(long activeCols, int[] currentTargets, long currentPresses,
-                         long[] rowMasks, long[] colMasks, long[] bestHolder,
-                         int depth, int[][] propColsStack, int[][] propValsStack) {
-        if (currentPresses >= bestHolder[0]) {
-            return;
+        if (freeVars.isEmpty()) {
+            // No free variables - just check if solution exists
+            search(0, freeVars, pivotColForRows, numPivots, new long[numCols], bestTotal,
+                   freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
+        } else {
+            // Parallelize by splitting the first free variable's search space
+            executeParallelSearch(freeVars, pivotColForRows, numPivots, numCols, bestTotal,
+                                 freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
         }
 
-        int numRows = rowMasks.length;
+        long result = bestTotal.get();
+        return result == Long.MAX_VALUE ? 0 : result;
+    }
 
-        // History for backtracking singleton propagation
-        // Use preallocated stack buffers to avoid allocation
-        int[] propCols = propColsStack[depth];
-        int[] propVals = propValsStack[depth];
-        int propCount = 0;
+    private static void executeParallelSearch(List<Integer> freeVars, int[] pivotColForRows,
+                                             int numPivots, int numCols, AtomicLong bestTotal,
+                                             long[][] freeCoeffNum, long[][] freeCoeffDen,
+                                             long[] rhsNum, long[] rhsDen) {
+        int firstFreeVar = freeVars.get(0);
+        long maxLimit = DEFAULT_MAX_LIMIT;
+        int numThreads = Runtime.getRuntime().availableProcessors();
+        long chunkSize = Math.max(1, maxLimit / (numThreads * 2));
 
-        // 1. Singleton Propagation
-        boolean changed = true;
-        boolean possible = true;
+        try (ForkJoinPool pool = new ForkJoinPool(numThreads)) {
+            // Collect all tasks to ensure they complete before pool shutdown
+            List<ForkJoinTask<Long>> tasks = new ArrayList<>();
 
-        while (changed && possible) {
-            changed = false;
-            for (int r = 0; r < numRows; r++) {
-                if (currentTargets[r] < 0) {
+            for (long start = 0; start <= maxLimit; start += chunkSize) {
+                long end = Math.min(start + chunkSize - 1, maxLimit);
+
+                ParallelSearchTask task = new ParallelSearchTask(freeVars, pivotColForRows, numPivots,
+                        numCols, bestTotal, freeCoeffNum, freeCoeffDen, rhsNum, rhsDen, firstFreeVar, start, end);
+                // Submit task and collect it to await completion
+                tasks.add(pool.submit(task));
+            }
+
+            // Wait for all tasks to complete before pool shutdown
+            // This ensures correctness and proper parallel execution
+            for (ForkJoinTask<Long> task : tasks) {
+                task.join(); // Blocks until task completes
+            }
+        }
+    }
+
+    private static void search(int freeIdx, List<Integer> freeVars,
+                       int[] pivotColForRows, int numPivots,
+                       long[] currentAssignment, AtomicLong bestTotal,
+                       long[][] freeCoeffNum, long[][] freeCoeffDen,
+                       long[] rhsNum, long[] rhsDen) {
+
+        // Pruning: Calculate current sum of assigned free vars
+        long currentFreeSum = 0;
+        for(int i=0; i<freeIdx; i++) {
+            currentFreeSum += currentAssignment[freeVars.get(i)];
+        }
+        if (currentFreeSum >= bestTotal.get()) return;
+
+        if (freeIdx == freeVars.size()) {
+            // Calculate pivots
+            long totalPresses = 0;
+
+            // Re-calculate pivots based on free vars
+            // x_pivot = b' - sum(coeff * x_free)
+            // But we have the matrix.
+            // Row i corresponds to pivot variable pivotColForRows[i].
+            // matrix[i][pivot] is 1.
+            // matrix[i][free] is coeff.
+            // x_pivot + sum(coeff * x_free) = rhs
+            // x_pivot = rhs - sum(coeff * x_free)
+
+            boolean possible = true;
+            // Threshold to prevent overflow - normalize when denominator exceeds this
+            // Using a smaller threshold to prevent overflow while still reducing GCD calls
+            final long NORMALIZE_THRESHOLD = 1L << 20; // 2^20 (~1M)
+
+            for (int i = 0; i < numPivots; i++) {
+                int pCol = pivotColForRows[i];
+
+                // Get RHS from precomputed arrays
+                long valNum = rhsNum[i];
+                long valDen = rhsDen[i];
+
+                // Subtract: val - sum(coeff * x_free)
+                // Use precomputed coefficients for faster access
+                for (int fIdx = 0; fIdx < freeVars.size(); fIdx++) {
+                    long coeffNum = freeCoeffNum[i][fIdx];
+                    long coeffDen = freeCoeffDen[i][fIdx];
+
+                    if (coeffNum != 0) {
+                        int freeVarCol = freeVars.get(fIdx);
+                        long xFree = currentAssignment[freeVarCol];
+
+                        // Fast-path: when coeffDen == 1 (common after RREF)
+                        if (coeffDen == 1) {
+                            // Fast-path: when valDen == 1 too (both are integers)
+                            if (valDen == 1) {
+                                valNum = valNum - coeffNum * xFree;
+                                // valDen remains 1
+                            } else {
+                                // valDen != 1, but coeffDen == 1
+                                valNum = valNum - coeffNum * xFree * valDen;
+                                // valDen unchanged
+                                // Normalize if denominator is getting large
+                                if (valDen > NORMALIZE_THRESHOLD) {
+                                    long g = gcd(Math.abs(valNum), valDen);
+                                    valNum /= g;
+                                    valDen /= g;
+                                }
+                            }
+                        } else {
+                            // General case: val - (coeffNum/coeffDen) * x_free
+                            // = (valNum/valDen) - (coeffNum * x_free) / coeffDen
+                            // = (valNum * coeffDen - coeffNum * x_free * valDen) / (valDen * coeffDen)
+
+                            // Check for potential overflow before multiplication
+                            if (valDen > NORMALIZE_THRESHOLD || coeffDen > NORMALIZE_THRESHOLD) {
+                                // Normalize first to prevent overflow
+                                long g = gcd(Math.abs(valNum), valDen);
+                                valNum /= g;
+                                valDen /= g;
+                            }
+
+                            valNum = valNum * coeffDen - coeffNum * xFree * valDen;
+                            valDen = valDen * coeffDen;
+
+                            // Normalize after operation to prevent overflow in next iteration
+                            if (valDen > NORMALIZE_THRESHOLD) {
+                                long g = gcd(Math.abs(valNum), valDen);
+                                valNum /= g;
+                                valDen /= g;
+                            }
+                        }
+                    }
+                }
+
+                // Final normalization before checking if integer
+                // This is necessary to ensure valDen == 1 for integer solutions
+                if (valDen != 1) {
+                    long g = gcd(Math.abs(valNum), valDen);
+                    valNum /= g;
+                    valDen /= g;
+                }
+
+                // Check if integer and non-negative
+                if (valDen != 1 || valNum < 0) {
                     possible = false;
                     break;
                 }
-                if (currentTargets[r] > 0) {
-                    long avail = rowMasks[r] & activeCols;
-                    if (avail == 0) {
-                        possible = false; // Impossible
-                        break;
-                    }
-                    if (Long.bitCount(avail) == 1) {
-                        int col = Long.numberOfTrailingZeros(avail);
-                        int val = currentTargets[r]; // Must use this col to satisfy this row
-
-                        if (currentPresses + val >= bestHolder[0]) {
-                            possible = false;
-                            break;
-                        }
-
-                        // Record change for undo
-                        propCols[propCount] = col;
-                        propVals[propCount] = val;
-                        propCount++;
-
-                        activeCols &= ~(1L << col);
-                        long rowsAffected = colMasks[col];
-                        while (rowsAffected != 0) {
-                            int k = Long.numberOfTrailingZeros(rowsAffected);
-                            rowsAffected &= ~(1L << k);
-                            currentTargets[k] -= val;
-                            if (currentTargets[k] < 0) {
-                                possible = false;
-                            }
-                        }
-                        if (!possible) break;
-
-                        currentPresses += val;
-                        changed = true;
-                    }
-                }
+                long pVal = valNum;
+                currentAssignment[pCol] = pVal;
+                totalPresses += pVal;
             }
-        }
 
-        if (!possible) {
-            undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
+            if (possible) {
+                // Add free vars
+                for(int f : freeVars) totalPresses += currentAssignment[f];
+
+                // Thread-safe update of best total
+                final long finalTotalPresses = totalPresses;
+                bestTotal.updateAndGet(current -> Math.min(current, finalTotalPresses));
+            }
             return;
         }
 
-        // 2. Check Solved
-        boolean allSatisfied = true;
-        int i = 0;
-        int vectorLimit = SPECIES.loopBound(currentTargets.length);
-        for (; i < vectorLimit; i += SPECIES.length()) {
-            IntVector v = IntVector.fromArray(SPECIES, currentTargets, i);
-            if (v.reduceLanes(VectorOperators.OR) != 0) {
-                allSatisfied = false;
-                break;
-            }
-        }
-        if (allSatisfied) {
-            for (; i < currentTargets.length; i++) {
-                if (currentTargets[i] != 0) {
-                    allSatisfied = false;
-                    break;
-                }
+        // Iterate free variable with improved bounds
+        int fCol = freeVars.get(freeIdx);
+
+        // Improved bounds: Use remaining budget to dynamically limit search space
+        long maxLimit = DEFAULT_MAX_LIMIT;
+        long currentBest = bestTotal.get();
+        if (currentBest != Long.MAX_VALUE && currentFreeSum < currentBest) {
+            // We've found at least one solution, use remaining budget
+            long remainingBudget = currentBest - currentFreeSum;
+            if (remainingBudget >= 0 && remainingBudget < maxLimit) {
+                maxLimit = remainingBudget;
             }
         }
 
-        if (allSatisfied) {
-            bestHolder[0] = currentPresses;
-            undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-            return;
+        for (long val = 0; val <= maxLimit; val++) {
+            currentAssignment[fCol] = val;
+
+            search(freeIdx + 1, freeVars, pivotColForRows, numPivots, currentAssignment, bestTotal,
+                   freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
+
+            // Early termination: if we found optimal solution (0 cost), stop searching
+            if (bestTotal.get() == 0) return;
         }
-
-        if (activeCols == 0) {
-            undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-            return;
-        }
-
-        // 3. Lower Bound Pruning
-        long sumRemaining = 0;
-        int maxTarget = 0;
-
-        i = 0;
-        for (; i < vectorLimit; i += SPECIES.length()) {
-            IntVector v = IntVector.fromArray(SPECIES, currentTargets, i);
-            // reduceLanes(ADD) wraps on overflow, but maxTarget is safe.
-            // For sum, we accumulate to long to be safe from total overflow,
-            // but lane overflow is still possible if elements are > 2B.
-            // Assuming elements are modest as per problem domain.
-            sumRemaining += v.reduceLanes(VectorOperators.ADD);
-            maxTarget = Math.max(maxTarget, v.reduceLanes(VectorOperators.MAX));
-        }
-
-        for (; i < currentTargets.length; i++) {
-            int t = currentTargets[i];
-            sumRemaining += t;
-            if (t > maxTarget) {
-                maxTarget = t;
-            }
-        }
-
-        if (currentPresses + maxTarget >= bestHolder[0]) {
-             undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-             return;
-        }
-
-        int maxCov = 0;
-        long temp = activeCols;
-        while (temp != 0) {
-            int c = Long.numberOfTrailingZeros(temp);
-            temp &= ~(1L << c);
-            maxCov = Math.max(maxCov, Long.bitCount(colMasks[c]));
-        }
-
-        if (maxCov > 0) {
-            long minNeeded = (sumRemaining + maxCov - 1) / maxCov;
-            if (currentPresses + minNeeded >= bestHolder[0]) {
-                undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-                return;
-            }
-        } else if (sumRemaining > 0) {
-            undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-            return;
-        }
-
-        // 4. Branching
-        // Heuristic: Pick row with fewest active columns
-        int minDegree = Integer.MAX_VALUE;
-        int bestRow = -1;
-
-        for (int r = 0; r < numRows; r++) {
-            if (currentTargets[r] > 0) {
-                long avail = rowMasks[r] & activeCols;
-                int deg = Long.bitCount(avail);
-                if (deg < minDegree) {
-                    minDegree = deg;
-                    bestRow = r;
-                }
-            }
-        }
-
-        if (bestRow == -1) {
-            undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-            return;
-        }
-
-        // Pick a column from bestRow with highest coverage
-        long avail = rowMasks[bestRow] & activeCols;
-        int bestCol = -1;
-        int maxColCov = -1;
-
-        long temp2 = avail;
-        while (temp2 != 0) {
-            int c = Long.numberOfTrailingZeros(temp2);
-            temp2 &= ~(1L << c);
-            int cov = Long.bitCount(colMasks[c]);
-            if (cov > maxColCov) {
-                maxColCov = cov;
-                bestCol = c;
-            }
-        }
-
-        int col = bestCol;
-
-        // Max value is limited by targets of all affected rows
-        int limit = Integer.MAX_VALUE;
-        long rowsAffected = colMasks[col];
-
-        long tempRows = rowsAffected;
-        while (tempRows != 0) {
-            int k = Long.numberOfTrailingZeros(tempRows);
-            tempRows &= ~(1L << k);
-            limit = Math.min(limit, currentTargets[k]);
-        }
-
-        long nextActive = activeCols & ~(1L << col);
-
-        // Iterate val from 0 to limit
-        int subtractedTimes = 0;
-
-        for (int val = 0; val <= limit; val++) {
-            if (currentPresses + val >= bestHolder[0]) {
-                break;
-            }
-
-            if (val > 0) {
-                // Incremental subtract
-                tempRows = rowsAffected;
-                while (tempRows != 0) {
-                    int k = Long.numberOfTrailingZeros(tempRows);
-                    tempRows &= ~(1L << k);
-                    currentTargets[k]--;
-                }
-                subtractedTimes++;
-            }
-
-            dfsPart2(nextActive, currentTargets, currentPresses + val, rowMasks, colMasks, bestHolder, depth + 1, propColsStack, propValsStack);
-        }
-
-        // Backtrack the loop changes
-        if (subtractedTimes > 0) {
-            tempRows = rowsAffected;
-            while (tempRows != 0) {
-                int k = Long.numberOfTrailingZeros(tempRows);
-                tempRows &= ~(1L << k);
-                currentTargets[k] += subtractedTimes;
-            }
-        }
-
-        undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
     }
 
-    private void undoPropagation(int[] currentTargets, long[] colMasks,
-                               int[] propCols, int[] propVals, int propCount) {
-        for (int i = propCount - 1; i >= 0; i--) {
-            int col = propCols[i];
-            int val = propVals[i];
-            long rowsAffected = colMasks[col];
-            while (rowsAffected != 0) {
-                int k = Long.numberOfTrailingZeros(rowsAffected);
-                rowsAffected &= ~(1L << k);
-                currentTargets[k] += val;
-            }
+    /**
+     * Task for parallel search using ForkJoinPool.
+     * Splits the search space across multiple threads when beneficial.
+     */
+    private static class ParallelSearchTask extends RecursiveTask<Long> {
+        private final List<Integer> freeVars;
+        private final int[] pivotColForRows;
+        private final int numPivots;
+        private final int numCols;
+        private final AtomicLong bestTotal;
+        private final long[][] freeCoeffNum;
+        private final long[][] freeCoeffDen;
+        private final long[] rhsNum;
+        private final long[] rhsDen;
+        private final int firstFreeVar;
+        private final long startVal;
+        private final long endVal;
+
+        ParallelSearchTask(List<Integer> freeVars, int[] pivotColForRows, int numPivots,
+                          int numCols, AtomicLong bestTotal,
+                          long[][] freeCoeffNum, long[][] freeCoeffDen,
+                          long[] rhsNum, long[] rhsDen, int firstFreeVar, long startVal, long endVal) {
+            this.freeVars = freeVars;
+            this.pivotColForRows = pivotColForRows;
+            this.numPivots = numPivots;
+            this.numCols = numCols;
+            this.bestTotal = bestTotal;
+            this.freeCoeffNum = freeCoeffNum;
+            this.freeCoeffDen = freeCoeffDen;
+            this.rhsNum = rhsNum;
+            this.rhsDen = rhsDen;
+            this.firstFreeVar = firstFreeVar;
+            this.startVal = startVal;
+            this.endVal = endVal;
         }
+
+        @Override
+        protected Long compute() {
+            // Allocate array once per task - no cloning needed
+            // Initialize with zeros (default for long arrays)
+            long[] assignment = new long[numCols];
+
+            // Search the assigned range for the first free variable
+            for (long val = startVal; val <= endVal && bestTotal.get() != 0; val++) {
+                assignment[firstFreeVar] = val;
+                search(1, freeVars, pivotColForRows, numPivots, assignment,
+                      bestTotal, freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
+            }
+            return bestTotal.get();
+        }
+    }
+
+    private static long gcd(long a, long b) {
+        return b == 0 ? a : gcd(b, a % b);
     }
 }
-
