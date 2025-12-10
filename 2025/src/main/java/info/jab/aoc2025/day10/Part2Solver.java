@@ -102,35 +102,27 @@ public final class Part2Solver {
             return;
         }
 
-        // Iterate free variable
-        // We need bounds.
-        // Heuristic: Input targets are up to ~300. Buttons add ~1-5 lights.
-        // Max presses shouldn't exceed max target drastically.
-        // But with negative interference, it could be higher?
-        // Let's use a safe upper bound. 1000 is reasonable given problem constraints.
-
+        // Iterate free variable with improved bounds
         int fCol = freeVars.get(freeIdx);
 
-        // Try to derive bound for this variable
-        long maxLimit = 1000; // Safety cap
+        // Improved pruning: Use remaining budget to dynamically limit search space
+        // As we find better solutions, the search space shrinks
+        long maxLimit = 1000L; // Default safety cap
+        if (bestTotal[0] != Long.MAX_VALUE && currentFreeSum < bestTotal[0]) {
+            // We've found at least one solution, use remaining budget
+            long remainingBudget = bestTotal[0] - currentFreeSum;
+            if (remainingBudget < maxLimit) {
+                maxLimit = remainingBudget;
+            }
+        }
 
         for (long val = 0; val <= maxLimit; val++) {
             currentAssignment[fCol] = val;
 
-            // Check partial feasibility?
-            // Only if coefficients are all positive/negative?
-            // With mixed coefficients, we can't easily prune without full check.
-            // But we can check if any row *already* violated?
-            // Only if future free vars can't fix it.
-            // If x_p = 10 - x_f1 - x_f2. If x_f1=20, x_p = -10 - x_f2. Since x_f2 >= 0, x_p <= -10. Impossible.
-            // So if x_p becomes negative and all remaining coefficients for future free vars are non-negative (subtracting them), we can break.
-            // In our equation: x_p = RHS - coeff * x_f.
-            // If RHS - coeff*x_f < 0, and future terms are - coeff2 * x_f2...
-            // It gets complicated.
-
             search(freeIdx + 1, freeVars, matrix, pivotColForRows, numPivots, currentAssignment, bestTotal);
 
-            if (currentAssignment[fCol] == 0 && bestTotal[0] == 0) return; // Optimization if 0 cost possible
+            // Early termination: if we found optimal solution (0 cost), stop searching
+            if (bestTotal[0] == 0) return;
         }
     }
 
