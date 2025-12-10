@@ -22,4 +22,7 @@
 
 # Day 8
 ./mvnw -pl 2025 exec:java -Dexec.mainClass="info.jab.aoc2025.day8.PointClusterVisualization" -Dexec.classpathScope=test
+
+# Day 9
+./mvnw -pl 2025 exec:java -Dexec.mainClass="info.jab.aoc2025.day9.RectangleAreaVisualization" -Dexec.classpathScope=test
 ```
