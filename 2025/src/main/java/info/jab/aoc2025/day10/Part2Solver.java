@@ -1,293 +1,191 @@
 package info.jab.aoc2025.day10;
 
-import jdk.incubator.vector.IntVector;
-import jdk.incubator.vector.VectorOperators;
-import jdk.incubator.vector.VectorSpecies;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public final class Part2Solver {
 
-    private static final VectorSpecies<Integer> SPECIES = IntVector.SPECIES_PREFERRED;
-
     public long solve(Part2Problem problem) {
-        int[] targets = problem.targets().clone(); // Clone to avoid modifying the input record
-
+        int[] targets = problem.targets();
         int[][] buttons = problem.buttons();
-        int numRows = targets.length;
-        int numCols = buttons.length;
 
-        long[] rowMasks = new long[numRows];
-        long[] colMasks = new long[numCols];
+        int rows = targets.length;
+        int cols = buttons.length;
 
-        for (int j = 0; j < numCols; j++) {
-            int[] button = buttons[j];
-            for (int r : button) {
-                if (r < numRows) {
-                    rowMasks[r] |= (1L << j);
-                    colMasks[j] |= (1L << r);
+        // Convert to Fraction matrix [rows][cols+1] (augmented)
+        Fraction[][] matrix = new Fraction[rows][cols + 1];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                // Determine if button j affects target i
+                boolean affects = false;
+                for (int r : buttons[j]) {
+                    if (r == i) {
+                        affects = true;
+                        break;
+                    }
                 }
+                matrix[i][j] = affects ? Fraction.ONE : Fraction.ZERO;
+            }
+            matrix[i][cols] = new Fraction(targets[i]);
+        }
+
+        // Gaussian Elimination to RREF
+        int pivotRow = 0;
+        int[] pivotColForRows = new int[rows];
+        Arrays.fill(pivotColForRows, -1);
+        boolean[] isPivotCol = new boolean[cols];
+
+        for (int j = 0; j < cols && pivotRow < rows; j++) {
+            // Find pivot
+            int sel = -1;
+            for (int i = pivotRow; i < rows; i++) {
+                if (!matrix[i][j].isZero()) {
+                    sel = i;
+                    break;
+                }
+            }
+
+            if (sel == -1) continue;
+
+            // Swap rows
+            Fraction[] temp = matrix[pivotRow];
+            matrix[pivotRow] = matrix[sel];
+            matrix[sel] = temp;
+
+            // Normalize pivot row
+            Fraction div = matrix[pivotRow][j];
+            for (int k = j; k <= cols; k++) {
+                matrix[pivotRow][k] = matrix[pivotRow][k].divide(div);
+            }
+
+            // Eliminate other rows
+            for (int i = 0; i < rows; i++) {
+                if (i != pivotRow && !matrix[i][j].isZero()) {
+                    Fraction mul = matrix[i][j];
+                    for (int k = j; k <= cols; k++) {
+                        matrix[i][k] = matrix[i][k].subtract(mul.multiply(matrix[pivotRow][k]));
+                    }
+                }
+            }
+
+            pivotColForRows[pivotRow] = j;
+            isPivotCol[j] = true;
+            pivotRow++;
+        }
+
+        // Check consistency for zero rows
+        for (int i = pivotRow; i < rows; i++) {
+            if (!matrix[i][cols].isZero()) {
+                return 0; // Impossible
             }
         }
 
-        long[] bestHolder = {Long.MAX_VALUE};
-        long activeCols = (1L << numCols) - 1;
-
-        // Preallocate buffers for recursion
-        // Max depth is numCols (since we remove at least 1 col per step)
-        int[][] propColsStack = new int[numCols + 1][numCols];
-        int[][] propValsStack = new int[numCols + 1][numCols];
-
-        dfsPart2(activeCols, targets, 0, rowMasks, colMasks, bestHolder, 0, propColsStack, propValsStack);
-
-        return bestHolder[0] == Long.MAX_VALUE ? 0 : bestHolder[0];
-    }
-
-    private void dfsPart2(long activeCols, int[] currentTargets, long currentPresses,
-                         long[] rowMasks, long[] colMasks, long[] bestHolder,
-                         int depth, int[][] propColsStack, int[][] propValsStack) {
-        if (currentPresses >= bestHolder[0]) {
-            return;
+        // Identify free variables
+        List<Integer> freeVars = new ArrayList<>();
+        for (int j = 0; j < cols; j++) {
+            if (!isPivotCol[j]) {
+                freeVars.add(j);
+            }
         }
 
-        int numRows = rowMasks.length;
+        // Solve
+        // We need to pick non-negative integers for free variables such that pivot variables are non-negative integers.
+        // And minimize sum.
 
-        // History for backtracking singleton propagation
-        // Use preallocated stack buffers to avoid allocation
-        int[] propCols = propColsStack[depth];
-        int[] propVals = propValsStack[depth];
-        int propCount = 0;
+        long[] bestTotal = {Long.MAX_VALUE};
+        long[] currentAssignment = new long[cols];
 
-        // 1. Singleton Propagation
-        boolean changed = true;
-        boolean possible = true;
+        search(0, freeVars, matrix, pivotColForRows, pivotRow, currentAssignment, bestTotal);
 
-        while (changed && possible) {
-            changed = false;
-            for (int r = 0; r < numRows; r++) {
-                if (currentTargets[r] < 0) {
+        return bestTotal[0] == Long.MAX_VALUE ? 0 : bestTotal[0];
+    }
+
+    private void search(int freeIdx, List<Integer> freeVars, Fraction[][] matrix,
+                       int[] pivotColForRows, int numPivots,
+                       long[] currentAssignment, long[] bestTotal) {
+
+        // Pruning: Calculate current sum of assigned free vars
+        long currentFreeSum = 0;
+        for(int i=0; i<freeIdx; i++) {
+            currentFreeSum += currentAssignment[freeVars.get(i)];
+        }
+        if (currentFreeSum >= bestTotal[0]) return;
+
+        if (freeIdx == freeVars.size()) {
+            // Calculate pivots
+            long totalPresses = 0;
+
+            // Re-calculate pivots based on free vars
+            // x_pivot = b' - sum(coeff * x_free)
+            // But we have the matrix.
+            // Row i corresponds to pivot variable pivotColForRows[i].
+            // matrix[i][pivot] is 1.
+            // matrix[i][free] is coeff.
+            // x_pivot + sum(coeff * x_free) = rhs
+            // x_pivot = rhs - sum(coeff * x_free)
+
+            boolean possible = true;
+            for (int i = 0; i < numPivots; i++) {
+                int pCol = pivotColForRows[i];
+                Fraction val = matrix[i][matrix[0].length - 1]; // RHS
+
+                for (int fIdx : freeVars) {
+                    Fraction coeff = matrix[i][fIdx];
+                    if (!coeff.isZero()) {
+                        val = val.subtract(coeff.multiply(new Fraction(currentAssignment[fIdx])));
+                    }
+                }
+
+                if (!val.isInteger() || val.numerator() < 0) {
                     possible = false;
                     break;
                 }
-                if (currentTargets[r] > 0) {
-                    long avail = rowMasks[r] & activeCols;
-                    if (avail == 0) {
-                        possible = false; // Impossible
-                        break;
-                    }
-                    if (Long.bitCount(avail) == 1) {
-                        int col = Long.numberOfTrailingZeros(avail);
-                        int val = currentTargets[r]; // Must use this col to satisfy this row
+                long pVal = val.numerator() / val.denominator();
+                currentAssignment[pCol] = pVal;
+                totalPresses += pVal;
+            }
 
-                        if (currentPresses + val >= bestHolder[0]) {
-                            possible = false;
-                            break;
-                        }
+            if (possible) {
+                // Add free vars
+                for(int f : freeVars) totalPresses += currentAssignment[f];
 
-                        // Record change for undo
-                        propCols[propCount] = col;
-                        propVals[propCount] = val;
-                        propCount++;
-
-                        activeCols &= ~(1L << col);
-                        long rowsAffected = colMasks[col];
-                        while (rowsAffected != 0) {
-                            int k = Long.numberOfTrailingZeros(rowsAffected);
-                            rowsAffected &= ~(1L << k);
-                            currentTargets[k] -= val;
-                            if (currentTargets[k] < 0) {
-                                possible = false;
-                            }
-                        }
-                        if (!possible) break;
-
-                        currentPresses += val;
-                        changed = true;
-                    }
+                if (totalPresses < bestTotal[0]) {
+                    bestTotal[0] = totalPresses;
                 }
             }
-        }
-
-        if (!possible) {
-            undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
             return;
         }
 
-        // 2. Check Solved
-        boolean allSatisfied = true;
-        int i = 0;
-        int vectorLimit = SPECIES.loopBound(currentTargets.length);
-        for (; i < vectorLimit; i += SPECIES.length()) {
-            IntVector v = IntVector.fromArray(SPECIES, currentTargets, i);
-            if (v.reduceLanes(VectorOperators.OR) != 0) {
-                allSatisfied = false;
-                break;
-            }
-        }
-        if (allSatisfied) {
-            for (; i < currentTargets.length; i++) {
-                if (currentTargets[i] != 0) {
-                    allSatisfied = false;
-                    break;
-                }
-            }
-        }
+        // Iterate free variable
+        // We need bounds.
+        // Heuristic: Input targets are up to ~300. Buttons add ~1-5 lights.
+        // Max presses shouldn't exceed max target drastically.
+        // But with negative interference, it could be higher?
+        // Let's use a safe upper bound. 1000 is reasonable given problem constraints.
 
-        if (allSatisfied) {
-            bestHolder[0] = currentPresses;
-            undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-            return;
-        }
+        int fCol = freeVars.get(freeIdx);
 
-        if (activeCols == 0) {
-            undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-            return;
-        }
+        // Try to derive bound for this variable
+        long maxLimit = 1000; // Safety cap
 
-        // 3. Lower Bound Pruning
-        long sumRemaining = 0;
-        int maxTarget = 0;
+        for (long val = 0; val <= maxLimit; val++) {
+            currentAssignment[fCol] = val;
 
-        i = 0;
-        for (; i < vectorLimit; i += SPECIES.length()) {
-            IntVector v = IntVector.fromArray(SPECIES, currentTargets, i);
-            // reduceLanes(ADD) wraps on overflow, but maxTarget is safe.
-            // For sum, we accumulate to long to be safe from total overflow,
-            // but lane overflow is still possible if elements are > 2B.
-            // Assuming elements are modest as per problem domain.
-            sumRemaining += v.reduceLanes(VectorOperators.ADD);
-            maxTarget = Math.max(maxTarget, v.reduceLanes(VectorOperators.MAX));
-        }
+            // Check partial feasibility?
+            // Only if coefficients are all positive/negative?
+            // With mixed coefficients, we can't easily prune without full check.
+            // But we can check if any row *already* violated?
+            // Only if future free vars can't fix it.
+            // If x_p = 10 - x_f1 - x_f2. If x_f1=20, x_p = -10 - x_f2. Since x_f2 >= 0, x_p <= -10. Impossible.
+            // So if x_p becomes negative and all remaining coefficients for future free vars are non-negative (subtracting them), we can break.
+            // In our equation: x_p = RHS - coeff * x_f.
+            // If RHS - coeff*x_f < 0, and future terms are - coeff2 * x_f2...
+            // It gets complicated.
 
-        for (; i < currentTargets.length; i++) {
-            int t = currentTargets[i];
-            sumRemaining += t;
-            if (t > maxTarget) {
-                maxTarget = t;
-            }
-        }
+            search(freeIdx + 1, freeVars, matrix, pivotColForRows, numPivots, currentAssignment, bestTotal);
 
-        if (currentPresses + maxTarget >= bestHolder[0]) {
-             undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-             return;
-        }
-
-        int maxCov = 0;
-        long temp = activeCols;
-        while (temp != 0) {
-            int c = Long.numberOfTrailingZeros(temp);
-            temp &= ~(1L << c);
-            maxCov = Math.max(maxCov, Long.bitCount(colMasks[c]));
-        }
-
-        if (maxCov > 0) {
-            long minNeeded = (sumRemaining + maxCov - 1) / maxCov;
-            if (currentPresses + minNeeded >= bestHolder[0]) {
-                undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-                return;
-            }
-        } else if (sumRemaining > 0) {
-            undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-            return;
-        }
-
-        // 4. Branching
-        // Heuristic: Pick row with fewest active columns
-        int minDegree = Integer.MAX_VALUE;
-        int bestRow = -1;
-
-        for (int r = 0; r < numRows; r++) {
-            if (currentTargets[r] > 0) {
-                long avail = rowMasks[r] & activeCols;
-                int deg = Long.bitCount(avail);
-                if (deg < minDegree) {
-                    minDegree = deg;
-                    bestRow = r;
-                }
-            }
-        }
-
-        if (bestRow == -1) {
-            undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-            return;
-        }
-
-        // Pick a column from bestRow with highest coverage
-        long avail = rowMasks[bestRow] & activeCols;
-        int bestCol = -1;
-        int maxColCov = -1;
-
-        long temp2 = avail;
-        while (temp2 != 0) {
-            int c = Long.numberOfTrailingZeros(temp2);
-            temp2 &= ~(1L << c);
-            int cov = Long.bitCount(colMasks[c]);
-            if (cov > maxColCov) {
-                maxColCov = cov;
-                bestCol = c;
-            }
-        }
-
-        int col = bestCol;
-
-        // Max value is limited by targets of all affected rows
-        int limit = Integer.MAX_VALUE;
-        long rowsAffected = colMasks[col];
-
-        long tempRows = rowsAffected;
-        while (tempRows != 0) {
-            int k = Long.numberOfTrailingZeros(tempRows);
-            tempRows &= ~(1L << k);
-            limit = Math.min(limit, currentTargets[k]);
-        }
-
-        long nextActive = activeCols & ~(1L << col);
-
-        // Iterate val from 0 to limit
-        int subtractedTimes = 0;
-
-        for (int val = 0; val <= limit; val++) {
-            if (currentPresses + val >= bestHolder[0]) {
-                break;
-            }
-
-            if (val > 0) {
-                // Incremental subtract
-                tempRows = rowsAffected;
-                while (tempRows != 0) {
-                    int k = Long.numberOfTrailingZeros(tempRows);
-                    tempRows &= ~(1L << k);
-                    currentTargets[k]--;
-                }
-                subtractedTimes++;
-            }
-
-            dfsPart2(nextActive, currentTargets, currentPresses + val, rowMasks, colMasks, bestHolder, depth + 1, propColsStack, propValsStack);
-        }
-
-        // Backtrack the loop changes
-        if (subtractedTimes > 0) {
-            tempRows = rowsAffected;
-            while (tempRows != 0) {
-                int k = Long.numberOfTrailingZeros(tempRows);
-                tempRows &= ~(1L << k);
-                currentTargets[k] += subtractedTimes;
-            }
-        }
-
-        undoPropagation(currentTargets, colMasks, propCols, propVals, propCount);
-    }
-
-    private void undoPropagation(int[] currentTargets, long[] colMasks,
-                               int[] propCols, int[] propVals, int propCount) {
-        for (int i = propCount - 1; i >= 0; i--) {
-            int col = propCols[i];
-            int val = propVals[i];
-            long rowsAffected = colMasks[col];
-            while (rowsAffected != 0) {
-                int k = Long.numberOfTrailingZeros(rowsAffected);
-                rowsAffected &= ~(1L << k);
-                currentTargets[k] += val;
-            }
+            if (currentAssignment[fCol] == 0 && bestTotal[0] == 0) return; // Optimization if 0 cost possible
         }
     }
 }
-
