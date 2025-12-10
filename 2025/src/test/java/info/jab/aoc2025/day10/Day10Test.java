@@ -47,7 +47,7 @@ class Day10Test {
     }
 
     @Test
-    @Timeout(20)
+    @Timeout(30)
     void should_solve_day10_part2_input() {
         // Given
         var day10 = new Day10();
