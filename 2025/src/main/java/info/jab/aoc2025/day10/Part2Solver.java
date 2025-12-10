@@ -5,30 +5,7 @@ import java.util.List;
 public final class Part2Solver {
 
     public long solve(Part2Problem problem) {
-        int[] targets = problem.targets();
-        int[][] buttons = problem.buttons();
-
-        int rows = targets.length;
-        int cols = buttons.length;
-
-        // Convert to Fraction matrix [rows][cols+1] (augmented)
-        Fraction[][] data = new Fraction[rows][cols + 1];
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                // Determine if button j affects target i
-                boolean affects = false;
-                for (int r : buttons[j]) {
-                    if (r == i) {
-                        affects = true;
-                        break;
-                    }
-                }
-                data[i][j] = affects ? Fraction.ONE : Fraction.ZERO;
-            }
-            data[i][cols] = new Fraction(targets[i]);
-        }
-        
-        Matrix<Fraction> matrix = new Matrix<>(data);
+        RationalMatrix matrix = new RationalMatrix(problem.targets(), problem.buttons());
         matrix.toRREF();
 
         if (!matrix.isConsistent()) {
@@ -52,7 +29,7 @@ public final class Part2Solver {
         return bestTotal[0] == Long.MAX_VALUE ? 0 : bestTotal[0];
     }
 
-    private void search(int freeIdx, List<Integer> freeVars, Matrix<Fraction> matrix,
+    private void search(int freeIdx, List<Integer> freeVars, RationalMatrix matrix,
                        int[] pivotColForRows, int numPivots,
                        long[] currentAssignment, long[] bestTotal) {
 
@@ -79,20 +56,37 @@ public final class Part2Solver {
             boolean possible = true;
             for (int i = 0; i < numPivots; i++) {
                 int pCol = pivotColForRows[i];
-                Fraction val = matrix.getRHS(i); // RHS
+                
+                // Get RHS as rational
+                long valNum = matrix.getRHSNumerator(i);
+                long valDen = matrix.getRHSDenominator(i);
 
+                // Subtract: val - sum(coeff * x_free)
                 for (int fIdx : freeVars) {
-                    Fraction coeff = matrix.get(i, fIdx);
-                    if (!coeff.isZero()) {
-                        val = val.subtract(coeff.multiply(new Fraction(currentAssignment[fIdx])));
+                    long coeffNum = matrix.getNumerator(i, fIdx);
+                    long coeffDen = matrix.getDenominator(i, fIdx);
+                    
+                    if (coeffNum != 0) {
+                        // val - (coeffNum/coeffDen) * x_free
+                        // = (valNum/valDen) - (coeffNum * x_free) / coeffDen
+                        // = (valNum * coeffDen - coeffNum * x_free * valDen) / (valDen * coeffDen)
+                        long xFree = currentAssignment[fIdx];
+                        valNum = valNum * coeffDen - coeffNum * xFree * valDen;
+                        valDen = valDen * coeffDen;
+                        
+                        // Always normalize to keep fractions reduced
+                        long g = gcd(Math.abs(valNum), valDen);
+                        valNum /= g;
+                        valDen /= g;
                     }
                 }
 
-                if (!val.isInteger() || val.numerator() < 0) {
+                // Check if integer and non-negative
+                if (valDen != 1 || valNum < 0) {
                     possible = false;
                     break;
                 }
-                long pVal = val.numerator() / val.denominator();
+                long pVal = valNum;
                 currentAssignment[pCol] = pVal;
                 totalPresses += pVal;
             }
@@ -139,4 +133,9 @@ public final class Part2Solver {
             if (currentAssignment[fCol] == 0 && bestTotal[0] == 0) return; // Optimization if 0 cost possible
         }
     }
+    
+    private static long gcd(long a, long b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
 }
+
