@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class Day10Test {
 
-    @Disabled("Part 2 is not implemented")
     @Test
     @Timeout(30)
     void should_solve_day10_part1() {

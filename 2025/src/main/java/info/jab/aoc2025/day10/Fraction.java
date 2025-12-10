@@ -1,6 +1,6 @@
 package info.jab.aoc2025.day10;
 
-public record Fraction(long numerator, long denominator) {
+public record Fraction(long numerator, long denominator) implements FieldElement<Fraction> {
     static final Fraction ZERO = new Fraction(0, 1);
     static final Fraction ONE = new Fraction(1, 1);
 
@@ -19,21 +19,36 @@ public record Fraction(long numerator, long denominator) {
         denominator /= gcd;
     }
 
-    Fraction subtract(Fraction other) {
+    @Override
+    public Fraction add(Fraction other) {
+        return new Fraction(numerator * other.denominator + other.numerator * denominator,
+                denominator * other.denominator);
+    }
+
+    @Override
+    public Fraction subtract(Fraction other) {
         return new Fraction(numerator * other.denominator - other.numerator * denominator,
                 denominator * other.denominator);
     }
 
-    Fraction multiply(Fraction other) {
+    @Override
+    public Fraction multiply(Fraction other) {
         return new Fraction(numerator * other.numerator, denominator * other.denominator);
     }
 
-    Fraction divide(Fraction other) {
+    @Override
+    public Fraction divide(Fraction other) {
         return new Fraction(numerator * other.denominator, denominator * other.numerator);
     }
     
-    boolean isZero() {
+    @Override
+    public boolean isZero() {
         return numerator == 0;
+    }
+
+    @Override
+    public boolean isOne() {
+        return numerator == 1 && denominator == 1;
     }
     
     boolean isInteger() {

@@ -3,34 +3,21 @@ package info.jab.aoc2025.day10;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.lang.reflect.Array;
 
-public class Matrix {
+public class Matrix<T extends FieldElement<T>> {
 
-    private final Fraction[][] data;
+    private final T[][] data;
     private final int rows;
     private final int cols;
     private int[] pivotColForRows;
     private boolean[] isPivotCol;
     private int pivotRow;
 
-    public Matrix(int[] targets, int[][] buttons) {
-        this.rows = targets.length;
-        this.cols = buttons.length;
-        this.data = new Fraction[rows][cols + 1];
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                boolean affects = false;
-                for (int r : buttons[j]) {
-                    if (r == i) {
-                        affects = true;
-                        break;
-                    }
-                }
-                data[i][j] = affects ? Fraction.ONE : Fraction.ZERO;
-            }
-            data[i][cols] = new Fraction(targets[i]);
-        }
+    public Matrix(T[][] data) {
+        this.rows = data.length;
+        this.cols = data[0].length - 1; // Last column is augmented part
+        this.data = data;
     }
 
     public void toRREF() {
@@ -51,12 +38,13 @@ public class Matrix {
             if (sel == -1) continue;
 
             // Swap rows
-            Fraction[] temp = data[pivotRow];
+            T[] temp = data[pivotRow];
             data[pivotRow] = data[sel];
             data[sel] = temp;
 
             // Normalize pivot row
-            Fraction div = data[pivotRow][j];
+            T div = data[pivotRow][j];
+            // Assuming divide is supported by T
             for (int k = j; k <= cols; k++) {
                 data[pivotRow][k] = data[pivotRow][k].divide(div);
             }
@@ -64,7 +52,7 @@ public class Matrix {
             // Eliminate other rows
             for (int i = 0; i < rows; i++) {
                 if (i != pivotRow && !data[i][j].isZero()) {
-                    Fraction mul = data[i][j];
+                    T mul = data[i][j];
                     for (int k = j; k <= cols; k++) {
                         data[i][k] = data[i][k].subtract(mul.multiply(data[pivotRow][k]));
                     }
@@ -96,11 +84,11 @@ public class Matrix {
         return freeVars;
     }
 
-    public Fraction get(int row, int col) {
+    public T get(int row, int col) {
         return data[row][col];
     }
-    
-    public Fraction getRHS(int row) {
+
+    public T getRHS(int row) {
         return data[row][cols];
     }
 
@@ -111,9 +99,8 @@ public class Matrix {
     public int getPivotRowCount() {
         return pivotRow;
     }
-    
+
     public int getCols() {
         return cols;
     }
 }
-
