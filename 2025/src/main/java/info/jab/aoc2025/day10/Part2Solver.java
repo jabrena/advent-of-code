@@ -1,7 +1,9 @@
 package info.jab.aoc2025.day10;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -71,14 +73,22 @@ public final class Part2Solver {
         long chunkSize = Math.max(1, maxLimit / (numThreads * 2));
 
         try (ForkJoinPool pool = new ForkJoinPool(numThreads)) {
+            // Collect all tasks to ensure they complete before pool shutdown
+            List<ForkJoinTask<Long>> tasks = new ArrayList<>();
+
             for (long start = 0; start <= maxLimit; start += chunkSize) {
                 long end = Math.min(start + chunkSize - 1, maxLimit);
-                long[] assignment = new long[numCols];
-                assignment[firstFreeVar] = start;
 
                 ParallelSearchTask task = new ParallelSearchTask(freeVars, pivotColForRows, numPivots,
-                        assignment, bestTotal, freeCoeffNum, freeCoeffDen, rhsNum, rhsDen, firstFreeVar, start, end);
-                pool.execute(task);
+                        numCols, bestTotal, freeCoeffNum, freeCoeffDen, rhsNum, rhsDen, firstFreeVar, start, end);
+                // Submit task and collect it to await completion
+                tasks.add(pool.submit(task));
+            }
+
+            // Wait for all tasks to complete before pool shutdown
+            // This ensures correctness and proper parallel execution
+            for (ForkJoinTask<Long> task : tasks) {
+                task.join(); // Blocks until task completes
             }
         }
     }
@@ -236,7 +246,7 @@ public final class Part2Solver {
         private final List<Integer> freeVars;
         private final int[] pivotColForRows;
         private final int numPivots;
-        private final long[] currentAssignment;
+        private final int numCols;
         private final AtomicLong bestTotal;
         private final long[][] freeCoeffNum;
         private final long[][] freeCoeffDen;
@@ -247,13 +257,13 @@ public final class Part2Solver {
         private final long endVal;
 
         ParallelSearchTask(List<Integer> freeVars, int[] pivotColForRows, int numPivots,
-                          long[] currentAssignment, AtomicLong bestTotal,
+                          int numCols, AtomicLong bestTotal,
                           long[][] freeCoeffNum, long[][] freeCoeffDen,
                           long[] rhsNum, long[] rhsDen, int firstFreeVar, long startVal, long endVal) {
             this.freeVars = freeVars;
             this.pivotColForRows = pivotColForRows;
             this.numPivots = numPivots;
-            this.currentAssignment = currentAssignment;
+            this.numCols = numCols;
             this.bestTotal = bestTotal;
             this.freeCoeffNum = freeCoeffNum;
             this.freeCoeffDen = freeCoeffDen;
@@ -266,7 +276,9 @@ public final class Part2Solver {
 
         @Override
         protected Long compute() {
-            long[] assignment = currentAssignment.clone();
+            // Allocate array once per task - no cloning needed
+            // Initialize with zeros (default for long arrays)
+            long[] assignment = new long[numCols];
 
             // Search the assigned range for the first free variable
             for (long val = startVal; val <= endVal && bestTotal.get() != 0; val++) {
