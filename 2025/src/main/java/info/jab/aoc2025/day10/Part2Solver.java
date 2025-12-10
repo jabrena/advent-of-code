@@ -128,13 +128,13 @@ public final class Part2Solver {
         // Iterate free variable with improved bounds
         int fCol = freeVars.get(freeIdx);
 
-        // Improved pruning: Use remaining budget to dynamically limit search space
+        // Improved bounds: Use remaining budget to dynamically limit search space
         // As we find better solutions, the search space shrinks
         long maxLimit = 1000L; // Default safety cap
         if (bestTotal[0] != Long.MAX_VALUE && currentFreeSum < bestTotal[0]) {
             // We've found at least one solution, use remaining budget
             long remainingBudget = bestTotal[0] - currentFreeSum;
-            if (remainingBudget < maxLimit) {
+            if (remainingBudget >= 0 && remainingBudget < maxLimit) {
                 maxLimit = remainingBudget;
             }
         }
@@ -149,6 +149,7 @@ public final class Part2Solver {
             if (bestTotal[0] == 0) return;
         }
     }
+
 
     private static long gcd(long a, long b) {
         return b == 0 ? a : gcd(b, a % b);
