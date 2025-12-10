@@ -1,6 +1,9 @@
 package info.jab.aoc2025.day10;
 
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
+import java.util.concurrent.atomic.AtomicLong;
 
 public final class Part2Solver {
 
@@ -39,18 +42,52 @@ public final class Part2Solver {
         // We need to pick non-negative integers for free variables such that pivot variables are non-negative integers.
         // And minimize sum.
 
-        long[] bestTotal = {Long.MAX_VALUE};
+        // Use thread-safe atomic for parallel search
+        AtomicLong bestTotal = new AtomicLong(Long.MAX_VALUE);
         long[] currentAssignment = new long[numCols];
 
-        search(0, freeVars, pivotColForRows, numPivots, currentAssignment, bestTotal,
-               freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
+        // Determine if search space is large enough for parallelization
+        // Parallelize if we have multiple free variables and large search space
+        boolean useParallel = freeVars.size() > 1 && numCols > 10;
 
-        return bestTotal[0] == Long.MAX_VALUE ? 0 : bestTotal[0];
+        if (useParallel && !freeVars.isEmpty()) {
+            // Parallelize by splitting the first free variable's search space
+            int firstFreeVar = freeVars.get(0);
+            long maxLimit = 1000L; // Default safety cap
+            if (bestTotal.get() != Long.MAX_VALUE) {
+                maxLimit = Math.min(maxLimit, bestTotal.get());
+            }
+
+            // Split search space across threads
+            ForkJoinPool pool = ForkJoinPool.commonPool();
+            long chunkSize = Math.max(1, maxLimit / (Runtime.getRuntime().availableProcessors() * 2));
+
+            for (long start = 0; start <= maxLimit; start += chunkSize) {
+                long end = Math.min(start + chunkSize - 1, maxLimit);
+                long[] assignment = new long[numCols];
+                assignment[firstFreeVar] = start;
+
+                ParallelSearchTask task = new ParallelSearchTask(0, freeVars, pivotColForRows, numPivots,
+                        assignment, bestTotal, freeCoeffNum, freeCoeffDen, rhsNum, rhsDen, firstFreeVar, start, end);
+                pool.execute(task);
+            }
+            pool.shutdown();
+            try {
+                pool.awaitTermination(Long.MAX_VALUE, java.util.concurrent.TimeUnit.NANOSECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        } else {
+            search(0, freeVars, pivotColForRows, numPivots, currentAssignment, bestTotal,
+                   freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
+        }
+
+        return bestTotal.get() == Long.MAX_VALUE ? 0 : bestTotal.get();
     }
 
     private void search(int freeIdx, List<Integer> freeVars,
                        int[] pivotColForRows, int numPivots,
-                       long[] currentAssignment, long[] bestTotal,
+                       long[] currentAssignment, AtomicLong bestTotal,
                        long[][] freeCoeffNum, long[][] freeCoeffDen,
                        long[] rhsNum, long[] rhsDen) {
 
@@ -59,7 +96,7 @@ public final class Part2Solver {
         for(int i=0; i<freeIdx; i++) {
             currentFreeSum += currentAssignment[freeVars.get(i)];
         }
-        if (currentFreeSum >= bestTotal[0]) return;
+        if (currentFreeSum >= bestTotal.get()) return;
 
         if (freeIdx == freeVars.size()) {
             // Calculate pivots
@@ -118,9 +155,9 @@ public final class Part2Solver {
                 // Add free vars
                 for(int f : freeVars) totalPresses += currentAssignment[f];
 
-                if (totalPresses < bestTotal[0]) {
-                    bestTotal[0] = totalPresses;
-                }
+                // Thread-safe update of best total
+                final long finalTotalPresses = totalPresses;
+                bestTotal.updateAndGet(current -> Math.min(current, finalTotalPresses));
             }
             return;
         }
@@ -131,9 +168,10 @@ public final class Part2Solver {
         // Improved bounds: Use remaining budget to dynamically limit search space
         // As we find better solutions, the search space shrinks
         long maxLimit = 1000L; // Default safety cap
-        if (bestTotal[0] != Long.MAX_VALUE && currentFreeSum < bestTotal[0]) {
+        long currentBest = bestTotal.get();
+        if (currentBest != Long.MAX_VALUE && currentFreeSum < currentBest) {
             // We've found at least one solution, use remaining budget
-            long remainingBudget = bestTotal[0] - currentFreeSum;
+            long remainingBudget = currentBest - currentFreeSum;
             if (remainingBudget >= 0 && remainingBudget < maxLimit) {
                 maxLimit = remainingBudget;
             }
@@ -146,10 +184,62 @@ public final class Part2Solver {
                    freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
 
             // Early termination: if we found optimal solution (0 cost), stop searching
-            if (bestTotal[0] == 0) return;
+            if (bestTotal.get() == 0) return;
         }
     }
 
+
+    /**
+     * Recursive task for parallel search using ForkJoinPool.
+     * Splits the search space across multiple threads when beneficial.
+     */
+    private static class ParallelSearchTask extends RecursiveTask<Long> {
+        private final List<Integer> freeVars;
+        private final int[] pivotColForRows;
+        private final int numPivots;
+        private final long[] currentAssignment;
+        private final AtomicLong bestTotal;
+        private final long[][] freeCoeffNum;
+        private final long[][] freeCoeffDen;
+        private final long[] rhsNum;
+        private final long[] rhsDen;
+        private final int firstFreeVar;
+        private final long startVal;
+        private final long endVal;
+
+        ParallelSearchTask(int freeIdx, List<Integer> freeVars, int[] pivotColForRows, int numPivots,
+                          long[] currentAssignment, AtomicLong bestTotal,
+                          long[][] freeCoeffNum, long[][] freeCoeffDen,
+                          long[] rhsNum, long[] rhsDen, int firstFreeVar, long startVal, long endVal) {
+            this.freeVars = freeVars;
+            this.pivotColForRows = pivotColForRows;
+            this.numPivots = numPivots;
+            this.currentAssignment = currentAssignment;
+            this.bestTotal = bestTotal;
+            this.freeCoeffNum = freeCoeffNum;
+            this.freeCoeffDen = freeCoeffDen;
+            this.rhsNum = rhsNum;
+            this.rhsDen = rhsDen;
+            this.firstFreeVar = firstFreeVar;
+            this.startVal = startVal;
+            this.endVal = endVal;
+        }
+
+        @Override
+        protected Long compute() {
+            Part2Solver solver = new Part2Solver();
+            long[] assignment = currentAssignment.clone();
+
+            // Search the assigned range for the first free variable
+            for (long val = startVal; val <= endVal; val++) {
+                assignment[firstFreeVar] = val;
+                solver.search(1, freeVars, pivotColForRows, numPivots, assignment,
+                             bestTotal, freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
+                if (bestTotal.get() == 0) break; // Early termination
+            }
+            return bestTotal.get();
+        }
+    }
 
     private static long gcd(long a, long b) {
         return b == 0 ? a : gcd(b, a % b);
