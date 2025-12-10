@@ -1,11 +1,13 @@
 package info.jab.aoc2025.day10;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class Day10Test {
 
     @Test
+    @Timeout(30)
     void should_solve_day10_part1() {
         // Given
         var day10 = new Day10();
@@ -18,6 +20,7 @@ class Day10Test {
     }
     
     @Test
+    @Timeout(30)
     void should_solve_day10_part1_input() {
         // Given
         var day10 = new Day10();
@@ -30,6 +33,7 @@ class Day10Test {
     }
 
     @Test
+    @Timeout(30)
     void should_solve_day10_part2_sample() {
         // Given
         var day10 = new Day10();
@@ -42,6 +46,7 @@ class Day10Test {
     }
     
     @Test
+    @Timeout(30)
     void should_solve_day10_part2_input() {
         // Given
         var day10 = new Day10();
