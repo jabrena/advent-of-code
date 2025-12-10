@@ -56,7 +56,7 @@ public final class Part2Solver {
             boolean possible = true;
             for (int i = 0; i < numPivots; i++) {
                 int pCol = pivotColForRows[i];
-                
+
                 // Get RHS as rational
                 long valNum = matrix.getRHSNumerator(i);
                 long valDen = matrix.getRHSDenominator(i);
@@ -65,7 +65,7 @@ public final class Part2Solver {
                 for (int fIdx : freeVars) {
                     long coeffNum = matrix.getNumerator(i, fIdx);
                     long coeffDen = matrix.getDenominator(i, fIdx);
-                    
+
                     if (coeffNum != 0) {
                         // val - (coeffNum/coeffDen) * x_free
                         // = (valNum/valDen) - (coeffNum * x_free) / coeffDen
@@ -73,7 +73,7 @@ public final class Part2Solver {
                         long xFree = currentAssignment[fIdx];
                         valNum = valNum * coeffDen - coeffNum * xFree * valDen;
                         valDen = valDen * coeffDen;
-                        
+
                         // Always normalize to keep fractions reduced
                         long g = gcd(Math.abs(valNum), valDen);
                         valNum /= g;
@@ -133,7 +133,7 @@ public final class Part2Solver {
             if (currentAssignment[fCol] == 0 && bestTotal[0] == 0) return; // Optimization if 0 cost possible
         }
     }
-    
+
     private static long gcd(long a, long b) {
         return b == 0 ? a : gcd(b, a % b);
     }

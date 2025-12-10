@@ -72,11 +72,11 @@ public final class RationalMatrix {
             int pivotIdx = index(pivotRow, j);
             long divNum = numerators[pivotIdx];
             long divDen = denominators[pivotIdx];
-            
+
             if (divNum == 0) {
                 throw new ArithmeticException("Pivot element is zero");
             }
-            
+
             for (int k = j; k <= cols; k++) {
                 int idx = index(pivotRow, k);
                 // Divide: (num/den) / (divNum/divDen) = (num * divDen) / (den * divNum)
@@ -92,29 +92,29 @@ public final class RationalMatrix {
                     if (numerators[mulIdx] != 0) {
                         long mulNum = numerators[mulIdx];
                         long mulDen = denominators[mulIdx];
-                        
+
                         for (int k = j; k <= cols; k++) {
                             int pivotIdx2 = index(pivotRow, k);
                             int targetIdx = index(i, k);
-                            
+
                             // Subtract: (num/den) - (mulNum/mulDen) * (pivotNum/pivotDen)
                             // = (num/den) - (mulNum * pivotNum) / (mulDen * pivotDen)
                             // = (num * mulDen * pivotDen - mulNum * pivotNum * den) / (den * mulDen * pivotDen)
                             long pivotNum = numerators[pivotIdx2];
                             long pivotDen = denominators[pivotIdx2];
-                            
+
                             long num = numerators[targetIdx];
                             long den = denominators[targetIdx];
-                            
+
                             long newNum = num * mulDen * pivotDen - mulNum * pivotNum * den;
                             long newDen = den * mulDen * pivotDen;
-                            
+
                             if (newDen == 0) {
                                 // This should not happen if denominators are properly maintained
                                 // But if it does, skip this operation
                                 continue;
                             }
-                            
+
                             normalizeAndSet(targetIdx, newNum, newDen);
                         }
                     }
@@ -131,7 +131,7 @@ public final class RationalMatrix {
         for (int j = 0; j <= cols; j++) {
             int idx1 = index(row1, j);
             int idx2 = index(row2, j);
-            
+
             long tempNum = numerators[idx1];
             long tempDen = denominators[idx1];
             numerators[idx1] = numerators[idx2];
@@ -149,13 +149,13 @@ public final class RationalMatrix {
             num = -num;
             den = -den;
         }
-        
+
         // Always normalize to keep fractions reduced
         // This prevents precision loss and overflow
         long g = gcd(Math.abs(num), den);
         num /= g;
         den /= g;
-        
+
         numerators[idx] = num;
         denominators[idx] = den;
     }
