@@ -21,28 +21,28 @@ public class Day10 implements Day<Long> {
     @Override
     public Long getPart2Result(String fileName) {
         List<String> lines = ResourceLines.list(fileName);
-        return lines.stream()
+        return lines.parallelStream()
             .filter(line -> line.contains("["))
             .mapToLong(this::solveMachinePart2)
             .sum();
     }
-    
+
     private long solveMachine(String line) {
         // Parse line
         int openBracket = line.indexOf('[');
         int closeBracket = line.indexOf(']');
         String diagram = line.substring(openBracket + 1, closeBracket);
-        
+
         long target = 0;
         for (int i = 0; i < diagram.length(); i++) {
             if (diagram.charAt(i) == '#') {
                 target |= (1L << i);
             }
         }
-        
+
         int openBrace = line.indexOf('{');
         String buttonsPart = line.substring(closeBracket + 1, openBrace).trim();
-        
+
         List<Long> buttons = new ArrayList<>();
         Pattern p = Pattern.compile("\\(([0-9,]+)\\)");
         Matcher m = p.matcher(buttonsPart);
@@ -58,14 +58,14 @@ public class Day10 implements Day<Long> {
             }
             buttons.add(buttonMask);
         }
-        
+
         return findMinPresses(target, buttons);
     }
-    
+
     private long findMinPresses(long target, List<Long> buttons) {
         int n = buttons.size();
         long minPresses = Long.MAX_VALUE;
-        
+
         long limit = 1L << n;
         for (long i = 0; i < limit; i++) {
             long current = 0;
@@ -76,14 +76,14 @@ public class Day10 implements Day<Long> {
                     presses++;
                 }
             }
-            
+
             if (current == target) {
                 if (presses < minPresses) {
                     minPresses = presses;
                 }
             }
         }
-        
+
         return minPresses == Long.MAX_VALUE ? 0 : minPresses;
     }
 
@@ -134,119 +134,188 @@ public class Day10 implements Day<Long> {
     }
 
     private static class SolverPart2 {
-        private final int[][] matrix; // [row][col]
+        private final long[] rowMasks; // row -> bitmask of columns
+        private final long[] colMasks; // col -> bitmask of rows
         private final int[] targets;
         private final int numRows;
         private final int numCols;
-        private long minTotalPresses = Long.MAX_VALUE;
-        private final boolean[] isAssigned;
-        private final int[] assignment;
+        private long best = Long.MAX_VALUE;
 
         public SolverPart2(int[][] matrix, int[] targets) {
-            this.matrix = matrix;
-            this.targets = targets;
             this.numRows = matrix.length;
             this.numCols = matrix[0].length;
-            this.isAssigned = new boolean[numCols];
-            this.assignment = new int[numCols];
+            this.targets = targets;
+
+            this.rowMasks = new long[numRows];
+            this.colMasks = new long[numCols];
+
+            for (int r = 0; r < numRows; r++) {
+                for (int c = 0; c < numCols; c++) {
+                    if (matrix[r][c] == 1) {
+                        rowMasks[r] |= (1L << c);
+                        colMasks[c] |= (1L << r);
+                    }
+                }
+            }
         }
 
         public long solve() {
-            backtrack(0);
-            return minTotalPresses == Long.MAX_VALUE ? 0 : minTotalPresses;
+            long activeCols = (1L << numCols) - 1;
+            dfs(activeCols, targets.clone(), 0);
+            return best == Long.MAX_VALUE ? 0 : best;
         }
 
-        private void backtrack(long currentSum) {
-            if (currentSum >= minTotalPresses) {
+        private void dfs(long activeCols, int[] currentTargets, long currentPresses) {
+            if (currentPresses >= best) {
                 return;
             }
 
-            // Check if all rows satisfied
-            // And pick the best row to branch on
-            int bestRow = -1;
-            long minCombinations = Long.MAX_VALUE;
-            
-            boolean allSatisfied = true;
-            
-            for (int r = 0; r < numRows; r++) {
-                // Calculate current sum for this row from ASSIGNED variables
-                int currentVal = 0;
-                List<Integer> unassignedVars = new ArrayList<>();
-                for (int c = 0; c < numCols; c++) {
-                    if (matrix[r][c] == 1) {
-                        if (isAssigned[c]) {
-                            currentVal += assignment[c];
-                        } else {
-                            unassignedVars.add(c);
+            // 1. Singleton Propagation
+            boolean changed = true;
+            while (changed) {
+                changed = false;
+                for (int r = 0; r < numRows; r++) {
+                    if (currentTargets[r] < 0) {
+                        return; // Invalid
+                    }
+                    if (currentTargets[r] > 0) {
+                        long avail = rowMasks[r] & activeCols;
+                        if (avail == 0) {
+                            return; // Impossible
+                        }
+                        if (Long.bitCount(avail) == 1) {
+                            int col = Long.numberOfTrailingZeros(avail);
+                            int val = currentTargets[r]; // Must use this col to satisfy this row
+
+                            if (currentPresses + val >= best) {
+                                return;
+                            }
+
+                            activeCols &= ~(1L << col);
+                            long rowsAffected = colMasks[col];
+                            long tempRows = rowsAffected;
+                            while (tempRows != 0) {
+                                int k = Long.numberOfTrailingZeros(tempRows);
+                                tempRows &= ~(1L << k);
+                                currentTargets[k] -= val;
+                                if (currentTargets[k] < 0) {
+                                    return;
+                                }
+                            }
+                            currentPresses += val;
+                            changed = true;
                         }
                     }
                 }
-                
-                int remaining = targets[r] - currentVal;
-                if (remaining < 0) {
-                    return; // Invalid state
-                }
-                
-                if (unassignedVars.isEmpty()) {
-                    if (remaining != 0) {
-                        return; // Invalid state
-                    }
-                } else {
+            }
+
+            // 2. Check Solved
+            boolean allSatisfied = true;
+            for (int t : currentTargets) {
+                if (t != 0) {
                     allSatisfied = false;
-                    // Heuristic: pick row with few combinations
-                    long combos = remaining + unassignedVars.size(); 
-                    if (combos < minCombinations) {
-                        minCombinations = combos;
+                    break;
+                }
+            }
+            if (allSatisfied) {
+                best = currentPresses;
+                return;
+            }
+
+            if (activeCols == 0) {
+                return;
+            }
+
+            // 3. Lower Bound Pruning
+            long sumRemaining = 0;
+            for (int t : currentTargets) {
+                sumRemaining += t;
+            }
+
+            int maxCov = 0;
+            long temp = activeCols;
+            while (temp != 0) {
+                int c = Long.numberOfTrailingZeros(temp);
+                temp &= ~(1L << c);
+                maxCov = Math.max(maxCov, Long.bitCount(colMasks[c]));
+            }
+
+            if (maxCov > 0) {
+                long minNeeded = (sumRemaining + maxCov - 1) / maxCov;
+                if (currentPresses + minNeeded >= best) {
+                    return;
+                }
+            } else if (sumRemaining > 0) {
+                return;
+            }
+
+            // 4. Branching
+            // Heuristic: Pick row with fewest active columns
+            int minDegree = Integer.MAX_VALUE;
+            int bestRow = -1;
+
+            for (int r = 0; r < numRows; r++) {
+                if (currentTargets[r] > 0) {
+                    long avail = rowMasks[r] & activeCols;
+                    int deg = Long.bitCount(avail);
+                    if (deg < minDegree) {
+                        minDegree = deg;
                         bestRow = r;
                     }
                 }
             }
-            
-            if (allSatisfied) {
-                minTotalPresses = currentSum;
+
+            if (bestRow == -1) {
                 return;
             }
-            
-            // Branch on bestRow
-            List<Integer> vars = new ArrayList<>();
-            int currentVal = 0;
-            for (int c = 0; c < numCols; c++) {
-                if (matrix[bestRow][c] == 1) {
-                    if (isAssigned[c]) {
-                        currentVal += assignment[c];
-                    } else {
-                        vars.add(c);
-                    }
+
+            // Pick a column from bestRow with highest coverage
+            long avail = rowMasks[bestRow] & activeCols;
+            int bestCol = -1;
+            int maxColCov = -1;
+
+            long temp2 = avail;
+            while (temp2 != 0) {
+                int c = Long.numberOfTrailingZeros(temp2);
+                temp2 &= ~(1L << c);
+                int cov = Long.bitCount(colMasks[c]);
+                if (cov > maxColCov) {
+                    maxColCov = cov;
+                    bestCol = c;
                 }
             }
-            int targetVal = targets[bestRow] - currentVal;
-            
-            generatePartitions(targetVal, vars, 0, currentSum);
-        }
-        
-        private void generatePartitions(int target, List<Integer> vars, int varIdx, long currentSum) {
-             if (currentSum >= minTotalPresses) return;
 
-             if (varIdx == vars.size() - 1) {
-                 // Last variable takes the remainder
-                 int val = target;
-                 int col = vars.get(varIdx);
-                 
-                 assignment[col] = val;
-                 isAssigned[col] = true;
-                 backtrack(currentSum + val);
-                 isAssigned[col] = false;
-                 return;
-             }
-             
-             int col = vars.get(varIdx);
-             // Try values for this variable from 0 to target
-             for (int val = 0; val <= target; val++) {
-                 assignment[col] = val;
-                 isAssigned[col] = true;
-                 generatePartitions(target - val, vars, varIdx + 1, currentSum + val);
-                 isAssigned[col] = false;
-             }
+            int col = bestCol;
+
+            // Max value is limited by targets of all affected rows
+            int limit = Integer.MAX_VALUE;
+            long rowsAffected = colMasks[col];
+
+            long tempRows = rowsAffected;
+            while (tempRows != 0) {
+                int k = Long.numberOfTrailingZeros(tempRows);
+                tempRows &= ~(1L << k);
+                limit = Math.min(limit, currentTargets[k]);
+            }
+
+            long nextActive = activeCols & ~(1L << col);
+
+            // Iterate val from 0 to limit
+            for (int val = 0; val <= limit; val++) {
+                if (currentPresses + val >= best) {
+                    break;
+                }
+
+                int[] nextTargets = currentTargets.clone();
+                tempRows = rowsAffected;
+                while (tempRows != 0) {
+                    int k = Long.numberOfTrailingZeros(tempRows);
+                    tempRows &= ~(1L << k);
+                    nextTargets[k] -= val;
+                }
+
+                dfs(nextActive, nextTargets, currentPresses + val);
+            }
         }
     }
 }

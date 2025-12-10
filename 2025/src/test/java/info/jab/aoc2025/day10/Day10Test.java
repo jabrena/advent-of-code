@@ -46,9 +46,8 @@ class Day10Test {
         assertThat(result).isEqualTo(33L);
     }
 
-    @Disabled
     @Test
-    @Timeout(30)
+    @Timeout(20)
     void should_solve_day10_part2_input() {
         // Given
         var day10 = new Day10();
@@ -57,7 +56,6 @@ class Day10Test {
         var result = day10.getPart2Result("/day10/day10-input.txt");
 
         // Then
-        System.out.println("Day 10 Part 2 Result: " + result);
-        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(15688L);
     }
 }
