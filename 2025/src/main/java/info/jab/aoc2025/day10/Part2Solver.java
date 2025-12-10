@@ -70,21 +70,16 @@ public final class Part2Solver {
         int numThreads = Runtime.getRuntime().availableProcessors();
         long chunkSize = Math.max(1, maxLimit / (numThreads * 2));
 
-        ForkJoinPool pool = ForkJoinPool.commonPool();
-        for (long start = 0; start <= maxLimit; start += chunkSize) {
-            long end = Math.min(start + chunkSize - 1, maxLimit);
-            long[] assignment = new long[numCols];
-            assignment[firstFreeVar] = start;
+        try (ForkJoinPool pool = new ForkJoinPool(numThreads)) {
+            for (long start = 0; start <= maxLimit; start += chunkSize) {
+                long end = Math.min(start + chunkSize - 1, maxLimit);
+                long[] assignment = new long[numCols];
+                assignment[firstFreeVar] = start;
 
-            ParallelSearchTask task = new ParallelSearchTask(freeVars, pivotColForRows, numPivots,
-                    assignment, bestTotal, freeCoeffNum, freeCoeffDen, rhsNum, rhsDen, firstFreeVar, start, end);
-            pool.execute(task);
-        }
-        pool.shutdown();
-        try {
-            pool.awaitTermination(Long.MAX_VALUE, java.util.concurrent.TimeUnit.NANOSECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+                ParallelSearchTask task = new ParallelSearchTask(freeVars, pivotColForRows, numPivots,
+                        assignment, bestTotal, freeCoeffNum, freeCoeffDen, rhsNum, rhsDen, firstFreeVar, start, end);
+                pool.execute(task);
+            }
         }
     }
 
@@ -189,7 +184,6 @@ public final class Part2Solver {
             if (bestTotal.get() == 0) return;
         }
     }
-
 
     /**
      * Task for parallel search using ForkJoinPool.
