@@ -11,7 +11,7 @@ class Day10Test {
         var day10 = new Day10();
 
         // When
-        var result = day10.getPart1Result("day10/day10-input-sample.txt");
+        var result = day10.getPart1Result("/day10/day10-input-sample.txt");
 
         // Then
         assertThat(result).isEqualTo(7L);
@@ -23,9 +23,9 @@ class Day10Test {
         var day10 = new Day10();
 
         // When
-        var result = day10.getPart1Result("day10/day10-input.txt");
+        var result = day10.getPart1Result("/day10/day10-input.txt");
 
         // Then
-        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(396L);
     }
 }
