@@ -6,9 +6,10 @@ import java.util.List;
 
 public final class RationalMatrix {
 
-    // Store as flattened arrays: [row * (cols+1) + col]
-    private final long[] numerators;
-    private final long[] denominators;
+    // Interleaved memory layout: [num0, den0, num1, den1, ...]
+    // Better cache locality - numerator and denominator are adjacent in memory
+    // Index calculation: baseIdx = row * (cols+1) + col, then data[baseIdx*2] = num, data[baseIdx*2+1] = den
+    private final long[] data;
     private final int rows;
     private final int cols;
     private int[] pivotColForRows;
@@ -19,8 +20,8 @@ public final class RationalMatrix {
         this.rows = targets.length;
         this.cols = buttons.length;
         int totalSize = rows * (cols + 1);
-        this.numerators = new long[totalSize];
-        this.denominators = new long[totalSize];
+        // Interleaved: each element needs 2 slots (num, den)
+        this.data = new long[totalSize * 2];
 
         // Initialize matrix
         for (int i = 0; i < rows; i++) {
@@ -32,14 +33,14 @@ public final class RationalMatrix {
                         break;
                     }
                 }
-                int idx = index(i, j);
-                numerators[idx] = affects ? 1 : 0;
-                denominators[idx] = 1;
+                int baseIdx = index(i, j);
+                data[baseIdx * 2] = affects ? 1 : 0;     // numerator
+                data[baseIdx * 2 + 1] = 1;                // denominator
             }
             // RHS (augmented column)
-            int rhsIdx = index(i, cols);
-            numerators[rhsIdx] = targets[i];
-            denominators[rhsIdx] = 1;
+            int rhsBaseIdx = index(i, cols);
+            data[rhsBaseIdx * 2] = targets[i];            // numerator
+            data[rhsBaseIdx * 2 + 1] = 1;                 // denominator
         }
     }
 
@@ -56,8 +57,8 @@ public final class RationalMatrix {
         for (int j = 0; j < cols && pivotRow < rows; j++) {
             int sel = -1;
             for (int i = pivotRow; i < rows; i++) {
-                int idx = index(i, j);
-                if (numerators[idx] != 0) {
+                int baseIdx = index(i, j);
+                if (data[baseIdx * 2] != 0) {  // Check numerator
                     sel = i;
                     break;
                 }
@@ -69,42 +70,44 @@ public final class RationalMatrix {
             swapRows(pivotRow, sel);
 
             // Normalize pivot row
-            int pivotIdx = index(pivotRow, j);
-            long divNum = numerators[pivotIdx];
-            long divDen = denominators[pivotIdx];
+            int pivotBaseIdx = index(pivotRow, j);
+            long divNum = data[pivotBaseIdx * 2];      // numerator
+            long divDen = data[pivotBaseIdx * 2 + 1];  // denominator
 
             if (divNum == 0) {
                 throw new ArithmeticException("Pivot element is zero");
             }
 
             for (int k = j; k <= cols; k++) {
-                int idx = index(pivotRow, k);
+                int baseIdx = index(pivotRow, k);
                 // Divide: (num/den) / (divNum/divDen) = (num * divDen) / (den * divNum)
-                long newNum = numerators[idx] * divDen;
-                long newDen = denominators[idx] * divNum;
-                normalizeAndSet(idx, newNum, newDen);
+                long num = data[baseIdx * 2];
+                long den = data[baseIdx * 2 + 1];
+                long newNum = num * divDen;
+                long newDen = den * divNum;
+                normalizeAndSet(baseIdx, newNum, newDen);
             }
 
             // Eliminate other rows
             for (int i = 0; i < rows; i++) {
                 if (i != pivotRow) {
-                    int mulIdx = index(i, j);
-                    if (numerators[mulIdx] != 0) {
-                        long mulNum = numerators[mulIdx];
-                        long mulDen = denominators[mulIdx];
+                    int mulBaseIdx = index(i, j);
+                    if (data[mulBaseIdx * 2] != 0) {  // Check numerator
+                        long mulNum = data[mulBaseIdx * 2];
+                        long mulDen = data[mulBaseIdx * 2 + 1];
 
                         for (int k = j; k <= cols; k++) {
-                            int pivotIdx2 = index(pivotRow, k);
-                            int targetIdx = index(i, k);
+                            int pivotBaseIdx2 = index(pivotRow, k);
+                            int targetBaseIdx = index(i, k);
 
                             // Subtract: (num/den) - (mulNum/mulDen) * (pivotNum/pivotDen)
                             // = (num/den) - (mulNum * pivotNum) / (mulDen * pivotDen)
                             // = (num * mulDen * pivotDen - mulNum * pivotNum * den) / (den * mulDen * pivotDen)
-                            long pivotNum = numerators[pivotIdx2];
-                            long pivotDen = denominators[pivotIdx2];
+                            long pivotNum = data[pivotBaseIdx2 * 2];
+                            long pivotDen = data[pivotBaseIdx2 * 2 + 1];
 
-                            long num = numerators[targetIdx];
-                            long den = denominators[targetIdx];
+                            long num = data[targetBaseIdx * 2];
+                            long den = data[targetBaseIdx * 2 + 1];
 
                             long newNum = num * mulDen * pivotDen - mulNum * pivotNum * den;
                             long newDen = den * mulDen * pivotDen;
@@ -115,7 +118,7 @@ public final class RationalMatrix {
                                 continue;
                             }
 
-                            normalizeAndSet(targetIdx, newNum, newDen);
+                            normalizeAndSet(targetBaseIdx, newNum, newDen);
                         }
                     }
                 }
@@ -129,19 +132,20 @@ public final class RationalMatrix {
 
     private void swapRows(int row1, int row2) {
         for (int j = 0; j <= cols; j++) {
-            int idx1 = index(row1, j);
-            int idx2 = index(row2, j);
+            int baseIdx1 = index(row1, j);
+            int baseIdx2 = index(row2, j);
 
-            long tempNum = numerators[idx1];
-            long tempDen = denominators[idx1];
-            numerators[idx1] = numerators[idx2];
-            denominators[idx1] = denominators[idx2];
-            numerators[idx2] = tempNum;
-            denominators[idx2] = tempDen;
+            // Swap both numerator and denominator (adjacent in interleaved layout)
+            long tempNum = data[baseIdx1 * 2];
+            long tempDen = data[baseIdx1 * 2 + 1];
+            data[baseIdx1 * 2] = data[baseIdx2 * 2];
+            data[baseIdx1 * 2 + 1] = data[baseIdx2 * 2 + 1];
+            data[baseIdx2 * 2] = tempNum;
+            data[baseIdx2 * 2 + 1] = tempDen;
         }
     }
 
-    private void normalizeAndSet(int idx, long num, long den) {
+    private void normalizeAndSet(int baseIdx, long num, long den) {
         if (den == 0) {
             throw new ArithmeticException("Division by zero");
         }
@@ -156,8 +160,9 @@ public final class RationalMatrix {
         num /= g;
         den /= g;
 
-        numerators[idx] = num;
-        denominators[idx] = den;
+        // Store in interleaved layout
+        data[baseIdx * 2] = num;         // numerator
+        data[baseIdx * 2 + 1] = den;     // denominator
     }
 
     private static long gcd(long a, long b) {
@@ -166,8 +171,8 @@ public final class RationalMatrix {
 
     public boolean isConsistent() {
         for (int i = pivotRow; i < rows; i++) {
-            int rhsIdx = index(i, cols);
-            if (numerators[rhsIdx] != 0) {
+            int rhsBaseIdx = index(i, cols);
+            if (data[rhsBaseIdx * 2] != 0) {  // Check numerator
                 return false;
             }
         }
@@ -185,19 +190,23 @@ public final class RationalMatrix {
     }
 
     public long getNumerator(int row, int col) {
-        return numerators[index(row, col)];
+        int baseIdx = index(row, col);
+        return data[baseIdx * 2];
     }
 
     public long getDenominator(int row, int col) {
-        return denominators[index(row, col)];
+        int baseIdx = index(row, col);
+        return data[baseIdx * 2 + 1];
     }
 
     public long getRHSNumerator(int row) {
-        return numerators[index(row, cols)];
+        int baseIdx = index(row, cols);
+        return data[baseIdx * 2];
     }
 
     public long getRHSDenominator(int row) {
-        return denominators[index(row, cols)];
+        int baseIdx = index(row, cols);
+        return data[baseIdx * 2 + 1];
     }
 
     public int[] getPivotColForRows() {

@@ -1,6 +1,5 @@
 package info.jab.aoc2025.day10;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import static org.assertj.core.api.Assertions.assertThat;
