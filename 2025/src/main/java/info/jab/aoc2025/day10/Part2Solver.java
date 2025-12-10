@@ -110,6 +110,10 @@ public final class Part2Solver {
             // x_pivot = rhs - sum(coeff * x_free)
 
             boolean possible = true;
+            // Threshold to prevent overflow - normalize when denominator exceeds this
+            // Using a smaller threshold to prevent overflow while still reducing GCD calls
+            final long NORMALIZE_THRESHOLD = 1L << 20; // 2^20 (~1M)
+
             for (int i = 0; i < numPivots; i++) {
                 int pCol = pivotColForRows[i];
 
@@ -124,19 +128,58 @@ public final class Part2Solver {
                     long coeffDen = freeCoeffDen[i][fIdx];
 
                     if (coeffNum != 0) {
-                        // val - (coeffNum/coeffDen) * x_free
-                        // = (valNum/valDen) - (coeffNum * x_free) / coeffDen
-                        // = (valNum * coeffDen - coeffNum * x_free * valDen) / (valDen * coeffDen)
                         int freeVarCol = freeVars.get(fIdx);
                         long xFree = currentAssignment[freeVarCol];
-                        valNum = valNum * coeffDen - coeffNum * xFree * valDen;
-                        valDen = valDen * coeffDen;
 
-                        // Always normalize to keep fractions reduced
-                        long g = gcd(Math.abs(valNum), valDen);
-                        valNum /= g;
-                        valDen /= g;
+                        // Fast-path: when coeffDen == 1 (common after RREF)
+                        if (coeffDen == 1) {
+                            // Fast-path: when valDen == 1 too (both are integers)
+                            if (valDen == 1) {
+                                valNum = valNum - coeffNum * xFree;
+                                // valDen remains 1
+                            } else {
+                                // valDen != 1, but coeffDen == 1
+                                valNum = valNum - coeffNum * xFree * valDen;
+                                // valDen unchanged
+                                // Normalize if denominator is getting large
+                                if (valDen > NORMALIZE_THRESHOLD) {
+                                    long g = gcd(Math.abs(valNum), valDen);
+                                    valNum /= g;
+                                    valDen /= g;
+                                }
+                            }
+                        } else {
+                            // General case: val - (coeffNum/coeffDen) * x_free
+                            // = (valNum/valDen) - (coeffNum * x_free) / coeffDen
+                            // = (valNum * coeffDen - coeffNum * x_free * valDen) / (valDen * coeffDen)
+
+                            // Check for potential overflow before multiplication
+                            if (valDen > NORMALIZE_THRESHOLD || coeffDen > NORMALIZE_THRESHOLD) {
+                                // Normalize first to prevent overflow
+                                long g = gcd(Math.abs(valNum), valDen);
+                                valNum /= g;
+                                valDen /= g;
+                            }
+
+                            valNum = valNum * coeffDen - coeffNum * xFree * valDen;
+                            valDen = valDen * coeffDen;
+
+                            // Normalize after operation to prevent overflow in next iteration
+                            if (valDen > NORMALIZE_THRESHOLD) {
+                                long g = gcd(Math.abs(valNum), valDen);
+                                valNum /= g;
+                                valDen /= g;
+                            }
+                        }
                     }
+                }
+
+                // Final normalization before checking if integer
+                // This is necessary to ensure valDen == 1 for integer solutions
+                if (valDen != 1) {
+                    long g = gcd(Math.abs(valNum), valDen);
+                    valNum /= g;
+                    valDen /= g;
                 }
 
                 // Check if integer and non-negative
