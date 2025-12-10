@@ -17,6 +17,24 @@ public final class Part2Solver {
         int numPivots = matrix.getPivotRowCount();
         int numCols = matrix.getCols();
 
+        // Precompute coefficient matrices for faster access in search loop
+        // freeCoeffNum[pivotRow][freeVarIdx] = coefficient numerator
+        // freeCoeffDen[pivotRow][freeVarIdx] = coefficient denominator
+        long[][] freeCoeffNum = new long[numPivots][freeVars.size()];
+        long[][] freeCoeffDen = new long[numPivots][freeVars.size()];
+        long[] rhsNum = new long[numPivots];
+        long[] rhsDen = new long[numPivots];
+
+        for (int i = 0; i < numPivots; i++) {
+            rhsNum[i] = matrix.getRHSNumerator(i);
+            rhsDen[i] = matrix.getRHSDenominator(i);
+            for (int fIdx = 0; fIdx < freeVars.size(); fIdx++) {
+                int freeVarCol = freeVars.get(fIdx);
+                freeCoeffNum[i][fIdx] = matrix.getNumerator(i, freeVarCol);
+                freeCoeffDen[i][fIdx] = matrix.getDenominator(i, freeVarCol);
+            }
+        }
+
         // Solve
         // We need to pick non-negative integers for free variables such that pivot variables are non-negative integers.
         // And minimize sum.
@@ -24,14 +42,17 @@ public final class Part2Solver {
         long[] bestTotal = {Long.MAX_VALUE};
         long[] currentAssignment = new long[numCols];
 
-        search(0, freeVars, matrix, pivotColForRows, numPivots, currentAssignment, bestTotal);
+        search(0, freeVars, pivotColForRows, numPivots, currentAssignment, bestTotal,
+               freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
 
         return bestTotal[0] == Long.MAX_VALUE ? 0 : bestTotal[0];
     }
 
-    private void search(int freeIdx, List<Integer> freeVars, RationalMatrix matrix,
+    private void search(int freeIdx, List<Integer> freeVars,
                        int[] pivotColForRows, int numPivots,
-                       long[] currentAssignment, long[] bestTotal) {
+                       long[] currentAssignment, long[] bestTotal,
+                       long[][] freeCoeffNum, long[][] freeCoeffDen,
+                       long[] rhsNum, long[] rhsDen) {
 
         // Pruning: Calculate current sum of assigned free vars
         long currentFreeSum = 0;
@@ -57,20 +78,22 @@ public final class Part2Solver {
             for (int i = 0; i < numPivots; i++) {
                 int pCol = pivotColForRows[i];
 
-                // Get RHS as rational
-                long valNum = matrix.getRHSNumerator(i);
-                long valDen = matrix.getRHSDenominator(i);
+                // Get RHS from precomputed arrays
+                long valNum = rhsNum[i];
+                long valDen = rhsDen[i];
 
                 // Subtract: val - sum(coeff * x_free)
-                for (int fIdx : freeVars) {
-                    long coeffNum = matrix.getNumerator(i, fIdx);
-                    long coeffDen = matrix.getDenominator(i, fIdx);
+                // Use precomputed coefficients for faster access
+                for (int fIdx = 0; fIdx < freeVars.size(); fIdx++) {
+                    long coeffNum = freeCoeffNum[i][fIdx];
+                    long coeffDen = freeCoeffDen[i][fIdx];
 
                     if (coeffNum != 0) {
                         // val - (coeffNum/coeffDen) * x_free
                         // = (valNum/valDen) - (coeffNum * x_free) / coeffDen
                         // = (valNum * coeffDen - coeffNum * x_free * valDen) / (valDen * coeffDen)
-                        long xFree = currentAssignment[fIdx];
+                        int freeVarCol = freeVars.get(fIdx);
+                        long xFree = currentAssignment[freeVarCol];
                         valNum = valNum * coeffDen - coeffNum * xFree * valDen;
                         valDen = valDen * coeffDen;
 
@@ -119,7 +142,8 @@ public final class Part2Solver {
         for (long val = 0; val <= maxLimit; val++) {
             currentAssignment[fCol] = val;
 
-            search(freeIdx + 1, freeVars, matrix, pivotColForRows, numPivots, currentAssignment, bestTotal);
+            search(freeIdx + 1, freeVars, pivotColForRows, numPivots, currentAssignment, bestTotal,
+                   freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
 
             // Early termination: if we found optimal solution (0 cost), stop searching
             if (bestTotal[0] == 0) return;
