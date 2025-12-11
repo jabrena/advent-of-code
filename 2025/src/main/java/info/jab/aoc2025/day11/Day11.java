@@ -17,7 +17,17 @@ public class Day11 implements Day<Long> {
 
     @Override
     public Long getPart2Result(String fileName) {
-         throw new UnsupportedOperationException("Not implemented");
+        var graph = parseInput(fileName);
+        
+        long svrToDac = countPaths("svr", "dac", graph, new HashMap<>());
+        long dacToFft = countPaths("dac", "fft", graph, new HashMap<>());
+        long fftToOut = countPaths("fft", "out", graph, new HashMap<>());
+        
+        long svrToFft = countPaths("svr", "fft", graph, new HashMap<>());
+        long fftToDac = countPaths("fft", "dac", graph, new HashMap<>());
+        long dacToOut = countPaths("dac", "out", graph, new HashMap<>());
+        
+        return (svrToDac * dacToFft * fftToOut) + (svrToFft * fftToDac * dacToOut);
     }
 
     private Map<String, List<String>> parseInput(String fileName) {

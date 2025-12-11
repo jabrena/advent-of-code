@@ -39,7 +39,7 @@ class Day11Test {
         assertTimeoutPreemptively(Duration.ofSeconds(30), () -> {
             Day11 day11 = new Day11();
             Long result = day11.getPart2Result("/day11/day11-input.txt");
-            System.out.println("Part 2 Result: " + result);
+            assertEquals(287039700129600L, result);
         });
     }
 }
