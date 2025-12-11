@@ -102,3 +102,4 @@
 - Day 3: [`MaxJoltageSolver`](../../2025/src/main/java/info/jab/aoc2025/day3/MaxJoltageSolver.java)
 - Day 5: [`RangeSolverV2`](../../2025/src/main/java/info/jab/aoc2025/day5/RangeSolverV2.java)
 - Day 6: [`MathBlockSolverV2`](../../2025/src/main/java/info/jab/aoc2025/day6/MathBlockSolverV2.java)
+- Day 11: [`GraphPathCounter`](../../2025/src/main/java/info/jab/aoc2025/day11/GraphPathCounter.java)
