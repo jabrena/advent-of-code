@@ -199,13 +199,11 @@ public class Day12 implements Day<Long> {
             return false;
         }
         
-        // For small grids, run backtracking
         if (region.regionArea <= 200) { 
              shapeIdsToPlace.sort((a, b) -> Integer.compare(shapes.get(b).area, shapes.get(a).area));
              return canFit(region, shapes, shapeIdsToPlace);
         }
 
-        // For large grids, assume Area is sufficient
         return true;
     }
 
