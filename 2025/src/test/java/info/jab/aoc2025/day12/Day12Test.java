@@ -28,6 +28,6 @@ class Day12Test {
         var result = day12.getPart1Result(input);
 
         // Then
-        assertThat(result).isGreaterThan(0L);
+        assertThat(result).isEqualTo(577L);
     }
 }
