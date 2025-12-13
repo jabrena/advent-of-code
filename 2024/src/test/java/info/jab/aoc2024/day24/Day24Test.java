@@ -14,7 +14,6 @@ class Day24Test {
         "/day24/day24-input-sample2.txt, 2024",
         "/day24/day24-input.txt, 42410633905894"
     })
-    @Disabled("Part 1 test disabled - implementation may be incomplete or slow")
     void should_solve_day24_part1(String fileName, String expectedResult) {
         //Given
         //When

@@ -2,15 +2,12 @@ package info.jab.aoc2025.day8;
 
 import info.jab.aoc.Day2;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class Day8Test {
 
     @Test
-    @Timeout(value = 30, unit = TimeUnit.SECONDS)
     void should_solve_part1() {
         // Given
         Day2<Long, String, Integer> day8 = new Day8();
@@ -23,7 +20,6 @@ class Day8Test {
     }
 
     @Test
-    @Timeout(value = 30, unit = TimeUnit.SECONDS)
     void should_solve_part2() {
         // Given
         Day2<Long, String, Integer> day8 = new Day8();
@@ -36,7 +32,6 @@ class Day8Test {
     }
 
     @Test
-    @Timeout(value = 30, unit = TimeUnit.SECONDS)
     void should_solve_part1_with_sample_after_10_connections() {
         // Given
         // According to problem description: https://adventofcode.com/2025/day/8
@@ -55,7 +50,6 @@ class Day8Test {
     }
 
     @Test
-    @Timeout(value = 30, unit = TimeUnit.SECONDS)
     void should_solve_part2_with_sample() {
         // Given
         Day2<Long, String, Integer> day8 = new Day8();

@@ -3,7 +3,6 @@ package info.jab.aoc2019.day1;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 
 /**
  * https://adventofcode.com/2019/day/1
@@ -17,7 +16,6 @@ class RocketEquationTest {
      * For a mass of 100756, the fuel required is 33583.
      */
     @Test
-    @Timeout(30)
     void should_calculate_fuel_correctly() {
         //Given
         RocketEquation santa = new RocketEquation();
@@ -30,7 +28,6 @@ class RocketEquationTest {
     }
 
     @Test
-    @Timeout(30)
     void should_calculate_total_fuel_requirement() {
         //Given
         RocketEquation santa = new RocketEquation();

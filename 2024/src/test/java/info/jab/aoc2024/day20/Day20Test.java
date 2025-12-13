@@ -3,10 +3,7 @@ package info.jab.aoc2024.day20;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Disabled;
 
-//TODO Solution doesn´t perform well
-@Disabled
 class Day20Test {
 
     @Test

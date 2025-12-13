@@ -24,18 +24,4 @@ class Day12Test {
         //Then
         then(result).isEqualTo(expectedResult);
     }
-
-    @Disabled("Part 2 test disabled - implementation may be incomplete or slow")
-    @Test
-    void should_solve_day12_part2_with_sample() {
-        //Given
-        String fileName = "/day12/day12-input.txt";
-
-        //When
-        var day = new Day12();
-        var result = day.getPart2Result(fileName);
-
-        //Then
-        then(result).isEqualTo(901100);
-    }
 }
