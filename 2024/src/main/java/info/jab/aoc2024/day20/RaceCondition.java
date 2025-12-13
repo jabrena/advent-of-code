@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 import com.putoet.grid.Grid;
@@ -36,28 +37,39 @@ public final class RaceCondition {
         if (path.isEmpty()) {
             return 0;
         }
+
         int pathSize = path.size();
         HashSet<String> cheatSpots = new HashSet<>();
-        HashSet<String> visited = new HashSet<>();
-        int count = 0;
-        for (String keys: path) {
-            int[] position = fromKeys(keys);
-            visited.add(keys);
-            int finalCount = count++;
-            path.stream()
-                .filter(candidate ->
-                    distance(position, fromKeys(candidate)) <= cheatTime &&
-                    !visited.contains(candidate))
-                .forEach(candidate -> {
-                    int newPosition = path.indexOf(candidate);
-                    if (newPosition > 0) {
-                        int finalTime = finalCount + distance(position, fromKeys(candidate)) + (pathSize - newPosition);
-                        if (pathSize - finalTime >= picoseconds) {
-                            cheatSpots.add(keys + "+" + candidate);
-                        }
-                    }
-                 });
+
+        // Pre-compute indices and positions (O(P)) - Optimizations 1 & 2
+        Map<String, Integer> pathIndex = new HashMap<>();
+        Map<String, int[]> positionCache = new HashMap<>();
+        for (int i = 0; i < path.size(); i++) {
+            String key = path.get(i);
+            pathIndex.put(key, i);
+            positionCache.put(key, fromKeys(key));
         }
+
+        // Nested loops with O(1) lookups (O(P²)) - Optimization 3
+        for (int i = 0; i < path.size(); i++) {
+            String keys = path.get(i);
+            int[] position = positionCache.get(keys);
+
+            for (int j = i + 1; j < path.size(); j++) {
+                String candidate = path.get(j);
+                int[] candidatePos = positionCache.get(candidate);
+                int dist = distance(position, candidatePos);
+
+                if (dist <= cheatTime) {
+                    int newPosition = pathIndex.get(candidate);
+                    int finalTime = i + dist + (pathSize - newPosition);
+                    if (pathSize - finalTime >= picoseconds) {
+                        cheatSpots.add(keys + "+" + candidate);
+                    }
+                }
+            }
+        }
+
         return cheatSpots.size();
     }
 

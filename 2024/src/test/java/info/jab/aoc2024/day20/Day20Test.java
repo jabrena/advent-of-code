@@ -2,10 +2,8 @@ package info.jab.aoc2024.day20;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-//TODO Solution doesn´t perform well
 class Day20Test {
 
     @Test
@@ -34,7 +32,6 @@ class Day20Test {
         then(result).isEqualTo(1452);
     }
 
-    @Disabled("Part 2 test disabled - implementation may be incomplete or slow")
     @Test
     void should_solve_day20_part2() {
         //Given
