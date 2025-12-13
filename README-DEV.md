@@ -37,5 +37,16 @@
 # View reports
 jwebserver -p 8005 -d "$(pwd)/target/site"
 # Aggregated report will be at: http://127.0.0.1:8005/target/reports/surefire-report.html
+
+# Generate aggregated Allure report
+# 1. Run tests (automatically aggregates results)
+./mvnw clean test
+
+# 2. Generate the report
+./mvnw allure:report
+
+# Serve Allure report
+jwebserver -p 8005 -d "$(pwd)/target/site/allure-maven-plugin"
+# Aggregated report will be at: http://127.0.0.1:8005/index.html
 ```
 

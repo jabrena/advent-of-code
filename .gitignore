@@ -7,3 +7,6 @@ target
 .cursor/rules
 CURSOR-RULES-JAVA.md
 .env
+
+.allure/
+allure-results/
