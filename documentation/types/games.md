@@ -55,3 +55,4 @@
 
 - Day 8: [`PointCluster`](../../2025/src/main/java/info/jab/aoc2025/day8/PointCluster.java)
 - Day 9: [`MaxRectangleArea`](../../2025/src/main/java/info/jab/aoc2025/day9/MaxRectangleArea.java)
+- Day 12: [`ShapePacking`](../../2025/src/main/java/info/jab/aoc2025/day12/ShapePacking.java) - Backtracking constraint satisfaction problem for packing shapes into regions
