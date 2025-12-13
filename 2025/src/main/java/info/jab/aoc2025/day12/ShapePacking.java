@@ -150,13 +150,19 @@ public final class ShapePacking implements Solver<Long> {
 
     /**
      * Checks if a variant can be placed at the given position using bitmask operations.
+     * Optimized with precomputed relative offsets for efficient bit index calculation.
      * Pure function logic: checks bounds and overlaps using bitwise AND.
      */
     private boolean canPlaceBitmask(long[] grid, int width, ShapeVariant variant, int x, int y) {
-        for (Point p : variant.points()) {
-            int gridX = x + p.x();
-            int gridY = y + p.y();
-            int bitIndex = gridY * width + gridX;
+        // Compute base bit index once: y * width + x
+        int baseBitIndex = y * width + x;
+        // Use precomputed points for efficiency
+        List<Point> points = variant.points();
+        for (int i = 0; i < points.size(); i++) {
+            Point p = points.get(i);
+            // Compute bit index: baseBitIndex + relative offset
+            // bitIndex = (y + py) * width + (x + px) = y * width + x + py * width + px
+            int bitIndex = baseBitIndex + p.y() * width + p.x();
             int longIndex = bitIndex / 64;
             int bitOffset = bitIndex % 64;
             if ((grid[longIndex] & (1L << bitOffset)) != 0) {
@@ -168,13 +174,19 @@ public final class ShapePacking implements Solver<Long> {
 
     /**
      * Places or removes a variant from the grid using bitmask operations.
+     * Optimized with precomputed relative offsets for efficient bit index calculation.
      * Mutable operation for performance in backtracking algorithm.
      */
     private void placeBitmask(long[] grid, int width, ShapeVariant variant, int x, int y, boolean val) {
-        for (Point p : variant.points()) {
-            int gridX = x + p.x();
-            int gridY = y + p.y();
-            int bitIndex = gridY * width + gridX;
+        // Compute base bit index once: y * width + x
+        int baseBitIndex = y * width + x;
+        // Use precomputed points for efficiency
+        List<Point> points = variant.points();
+        for (int i = 0; i < points.size(); i++) {
+            Point p = points.get(i);
+            // Compute bit index: baseBitIndex + relative offset
+            // bitIndex = (y + py) * width + (x + px) = y * width + x + py * width + px
+            int bitIndex = baseBitIndex + p.y() * width + p.x();
             int longIndex = bitIndex / 64;
             int bitOffset = bitIndex % 64;
             if (val) {

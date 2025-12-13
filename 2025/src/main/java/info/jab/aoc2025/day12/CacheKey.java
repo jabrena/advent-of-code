@@ -1,11 +1,12 @@
 package info.jab.aoc2025.day12;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Cache key for memoization in shape packing backtracking.
  * Represents grid state and remaining shapes to place.
- * Uses efficient representation: grid bitmask and remaining shape IDs starting from index.
+ * Optimized to avoid grid cloning: computes hash directly from grid array.
  * Immutable class following functional programming principles.
  */
 public final class CacheKey {
@@ -15,13 +16,16 @@ public final class CacheKey {
 
     /**
      * Creates a cache key from grid state and remaining shapes.
+     * Optimized: computes hash directly from grid without cloning.
      *
      * @param grid The bitmask representation of the grid state
      * @param shapeIds The list of all shape IDs to place
      * @param index The starting index of remaining shapes to place
      */
     public CacheKey(long[] grid, List<Integer> shapeIds, int index) {
-        this.grid = grid.clone();
+        // OPTIMIZATION: Don't clone grid - compute hash directly from it
+        // We still need to store grid reference for equals(), but avoid expensive clone()
+        this.grid = grid;
         // Store only remaining shapes for efficient comparison
         this.remainingShapeIds = new int[shapeIds.size() - index];
         for (int i = index; i < shapeIds.size(); i++) {
@@ -30,14 +34,14 @@ public final class CacheKey {
         this.hashCode = computeHashCode();
     }
 
+    /**
+     * Computes hash code directly from grid array without cloning.
+     * Uses Arrays.hashCode() for efficient hash computation.
+     */
     private int computeHashCode() {
-        int result = remainingShapeIds.length;
-        for (int id : remainingShapeIds) {
-            result = 31 * result + id;
-        }
-        for (long l : grid) {
-            result = 31 * result + Long.hashCode(l);
-        }
+        int result = Arrays.hashCode(remainingShapeIds);
+        // Compute hash from grid array directly (no clone needed)
+        result = 31 * result + Arrays.hashCode(grid);
         return result;
     }
 
@@ -46,15 +50,9 @@ public final class CacheKey {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CacheKey cacheKey = (CacheKey) o;
-        if (grid.length != cacheKey.grid.length) return false;
-        if (remainingShapeIds.length != cacheKey.remainingShapeIds.length) return false;
-        for (int i = 0; i < grid.length; i++) {
-            if (grid[i] != cacheKey.grid[i]) return false;
-        }
-        for (int i = 0; i < remainingShapeIds.length; i++) {
-            if (remainingShapeIds[i] != cacheKey.remainingShapeIds[i]) return false;
-        }
-        return true;
+        // Compare arrays directly using Arrays.equals() - no clone needed
+        return Arrays.equals(remainingShapeIds, cacheKey.remainingShapeIds)
+                && Arrays.equals(grid, cacheKey.grid);
     }
 
     @Override
