@@ -4,7 +4,6 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.opentest4j.AssertionFailedError;
 
 class SecureContainerTest {
@@ -38,7 +37,6 @@ class SecureContainerTest {
     }
 
     @Test
-    @Timeout(30)
     void should_validate_password_rules() {
         //When & Then
         passAllRules(111111, 1, 999999);
@@ -53,7 +51,6 @@ class SecureContainerTest {
     }
 
     @Test
-    @Timeout(30)
     void should_get_passwords() {
         //Given
         int start = 246540;

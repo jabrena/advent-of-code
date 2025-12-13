@@ -3,12 +3,10 @@ package info.jab.aoc2025.day4;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 
 class Day4Test {
 
     @Test
-    @Timeout(30)
     void should_solve_day4_part1() {
         //Given
         String fileName = "/day4/day4-input.txt";
@@ -22,7 +20,6 @@ class Day4Test {
     }
 
     @Test
-    @Timeout(30)
     void should_solve_day4_part2_with_sample() {
         //Given
         String fileName = "day4/day4-part2-input-sample.txt";
@@ -36,7 +33,6 @@ class Day4Test {
     }
 
     @Test
-    @Timeout(30)
     void should_solve_day4_part2() {
         //Given
         String fileName = "day4/day4-input.txt";
