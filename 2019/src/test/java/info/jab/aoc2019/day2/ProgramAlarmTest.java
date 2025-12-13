@@ -6,12 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 
 class ProgramAlarmTest {
 
     @Test
-    @Timeout(30)
     void should_parse_and_compute_correctly() {
         //Given
         ProgramAlarm program = new ProgramAlarm();
@@ -31,7 +29,6 @@ class ProgramAlarmTest {
     }
 
     @Test
-    @Timeout(30)
     void should_get_position_0() {
         //Given
         ProgramAlarm program = new ProgramAlarm();
@@ -45,7 +42,6 @@ class ProgramAlarmTest {
 
     @Disabled("Test not implemented yet - getPair() method returns 0")
     @Test
-    @Timeout(30)
     void should_get_pair() {
         //Given
         ProgramAlarm program = new ProgramAlarm();

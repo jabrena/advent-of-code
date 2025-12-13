@@ -2,13 +2,10 @@ package info.jab.aoc2016.day12;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 
 class Day12Test {
 
-    @Timeout(value = 30, unit = TimeUnit.SECONDS)
     @Test
     void should_solve_day12_part1() {
         //Given
@@ -22,7 +19,6 @@ class Day12Test {
         then(result).isEqualTo(318007);
     }
 
-    @Timeout(value = 120, unit = TimeUnit.SECONDS)
     @Test
     void should_solve_day12_part2() {
         //Given

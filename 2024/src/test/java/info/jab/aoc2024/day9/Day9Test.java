@@ -2,7 +2,6 @@ package info.jab.aoc2024.day9;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class Day9Test {
@@ -20,20 +19,6 @@ class Day9Test {
 
         //Then
         then(result).isEqualTo(expectedResult);
-    }
-
-    @Disabled("Test disabled - sample3 input file may not exist or test is redundant")
-    @org.junit.jupiter.api.Test
-    void should_solve_day9_part1_with_sample3() {
-        //Given
-        String fileName = "/day9/day9-input-sample3.txt";
-
-        //When
-        var day = new Day9();
-        var result = day.getPart1Result(fileName);
-
-        //Then
-        then(result).isEqualTo(60);
     }
 
     @Test

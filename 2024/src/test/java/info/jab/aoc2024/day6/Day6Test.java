@@ -33,7 +33,7 @@ class Day6Test {
         then(result).isEqualTo(5312);
     }
 
-    @Disabled("Part 2 test disabled - implementation may be incomplete or slow")
+    @Disabled("Part 2 test disabled - implementation may be incomplete")
     @Test
     void should_solve_day6_part2_with_sample() {
         //Given
@@ -47,7 +47,7 @@ class Day6Test {
         then(result).isEqualTo(6);
     }
 
-    @Disabled("Part 2 test disabled - implementation may be incomplete or slow")
+    @Disabled("Part 2 test disabled - implementation may be incomplete")
     @Test
     void should_solve_day6_part2() {
         //Given

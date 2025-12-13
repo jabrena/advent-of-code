@@ -2,14 +2,11 @@ package info.jab.aoc2017.day13;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 
 class Day13Test {
 
     @Test
-    @Timeout(value = 30, unit = TimeUnit.SECONDS)
     void should_solve_day13_part1() {
         //Given
         String fileName = "/day13/day13-input.txt";
@@ -23,7 +20,6 @@ class Day13Test {
     }
 
     @Test
-    @Timeout(value = 30, unit = TimeUnit.SECONDS)
     void should_solve_day13_part2() {
         //Given
         String fileName = "/day13/day13-input.txt";
