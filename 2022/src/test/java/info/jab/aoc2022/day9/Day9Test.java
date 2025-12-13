@@ -2,7 +2,6 @@ package info.jab.aoc2022.day9;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class Day9Test {

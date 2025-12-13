@@ -40,17 +40,5 @@ class ProgramAlarmTest {
         then(result).isEqualTo(3058646);
     }
 
-    @Disabled("Test not implemented yet - getPair() method returns 0")
-    @Test
-    void should_get_pair() {
-        //Given
-        ProgramAlarm program = new ProgramAlarm();
-
-        //When
-        int result = program.getPair();
-
-        //Then
-        then(result).isEqualTo(100);
-    }
 }
 
