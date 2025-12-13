@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * @param shapes Map of shape IDs to their corresponding Shape objects
  * @param regions List of regions to pack shapes into
  */
-record ParsedData(Map<Integer, Shape> shapes, List<Region> regions) {
+public record ParsedData(Map<Integer, Shape> shapes, List<Region> regions) {
     /**
      * Compact constructor ensuring immutability through defensive copying.
      */

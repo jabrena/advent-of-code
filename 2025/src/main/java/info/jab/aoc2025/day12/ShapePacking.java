@@ -2,6 +2,7 @@ package info.jab.aoc2025.day12;
 
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -10,6 +11,7 @@ import java.util.stream.IntStream;
  * Solver for packing shapes into regions.
  * Determines if given shapes can be placed into regions according to requirements.
  * Follows functional programming principles: immutable data structures, pure functions, and Stream API.
+ * Optimized with bitmask representation, memoization, and constraint propagation.
  */
 public final class ShapePacking implements Solver<Long> {
 
@@ -74,55 +76,90 @@ public final class ShapePacking implements Solver<Long> {
     }
 
     /**
-     * Determines if shapes can fit in the region using backtracking.
-     * Uses mutable grid for performance-critical backtracking while keeping other parts functional.
+     * Determines if shapes can fit in the region using optimized backtracking.
+     * Uses bitmask representation, memoization, and constraint propagation for performance.
      */
     private boolean canFit(Region region, Map<Integer, Shape> shapes, List<Integer> shapeIds) {
-        boolean[][] grid = new boolean[region.width()][region.height()];
-        return backtrack(grid, shapes, shapeIds, 0);
+        int width = region.width();
+        int height = region.height();
+        int totalCells = width * height;
+
+        // Use bitmask representation for efficient operations
+        long[] grid = new long[(totalCells + 63) / 64];
+        Map<CacheKey, Boolean> memo = new HashMap<>();
+
+        // Precompute minimum area needed for remaining shapes (for constraint propagation)
+        long[] minAreaRemaining = new long[shapeIds.size() + 1];
+        for (int i = shapeIds.size() - 1; i >= 0; i--) {
+            minAreaRemaining[i] = minAreaRemaining[i + 1] + shapes.get(shapeIds.get(i)).area();
+        }
+
+        return backtrack(grid, width, height, shapes, shapeIds, 0, totalCells, minAreaRemaining, memo);
     }
 
     /**
-     * Backtracking algorithm using mutable grid for performance.
+     * Optimized backtracking algorithm using bitmask representation, memoization, and constraint propagation.
      * The backtracking algorithm is inherently stateful and performance-critical,
-     * so we use a mutable grid here while maintaining functional principles elsewhere.
+     * so we use mutable grid here while maintaining functional principles elsewhere.
      */
-    private boolean backtrack(boolean[][] grid, Map<Integer, Shape> shapes, List<Integer> shapeIds, int index) {
+    private boolean backtrack(long[] grid, int width, int height, Map<Integer, Shape> shapes,
+                             List<Integer> shapeIds, int index, long remainingArea,
+                             long[] minAreaRemaining, Map<CacheKey, Boolean> memo) {
         if (index == shapeIds.size()) {
             return true;
+        }
+
+        // Constraint propagation: Check if remaining area is sufficient
+        if (remainingArea < minAreaRemaining[index]) {
+            return false;
+        }
+
+        // Memoization: Check cache
+        CacheKey key = new CacheKey(grid, shapeIds, index);
+        Boolean cached = memo.get(key);
+        if (cached != null) {
+            return cached;
         }
 
         int shapeId = shapeIds.get(index);
         Shape shape = shapes.get(shapeId);
 
         for (ShapeVariant variant : shape.variants()) {
-            int maxX = grid.length - variant.width();
-            int maxY = grid[0].length - variant.height();
+            int maxX = width - variant.width();
+            int maxY = height - variant.height();
 
             for (int x = 0; x <= maxX; x++) {
                 for (int y = 0; y <= maxY; y++) {
-                    if (canPlace(grid, variant, x, y)) {
-                        place(grid, variant, x, y, true);
-                        if (backtrack(grid, shapes, shapeIds, index + 1)) {
+                    if (canPlaceBitmask(grid, width, variant, x, y)) {
+                        placeBitmask(grid, width, variant, x, y, true);
+                        long newRemainingArea = remainingArea - variant.points().size();
+                        if (backtrack(grid, width, height, shapes, shapeIds, index + 1,
+                                    newRemainingArea, minAreaRemaining, memo)) {
+                            memo.put(key, true);
                             return true;
                         }
-                        place(grid, variant, x, y, false);
+                        placeBitmask(grid, width, variant, x, y, false);
                     }
                 }
             }
         }
+
+        memo.put(key, false);
         return false;
     }
 
     /**
-     * Checks if a variant can be placed at the given position.
-     * Pure function logic: checks bounds and overlaps.
+     * Checks if a variant can be placed at the given position using bitmask operations.
+     * Pure function logic: checks bounds and overlaps using bitwise AND.
      */
-    private boolean canPlace(boolean[][] grid, ShapeVariant variant, int x, int y) {
+    private boolean canPlaceBitmask(long[] grid, int width, ShapeVariant variant, int x, int y) {
         for (Point p : variant.points()) {
             int gridX = x + p.x();
             int gridY = y + p.y();
-            if (grid[gridX][gridY]) {
+            int bitIndex = gridY * width + gridX;
+            int longIndex = bitIndex / 64;
+            int bitOffset = bitIndex % 64;
+            if ((grid[longIndex] & (1L << bitOffset)) != 0) {
                 return false;
             }
         }
@@ -130,12 +167,21 @@ public final class ShapePacking implements Solver<Long> {
     }
 
     /**
-     * Places or removes a variant from the grid.
+     * Places or removes a variant from the grid using bitmask operations.
      * Mutable operation for performance in backtracking algorithm.
      */
-    private void place(boolean[][] grid, ShapeVariant variant, int x, int y, boolean val) {
+    private void placeBitmask(long[] grid, int width, ShapeVariant variant, int x, int y, boolean val) {
         for (Point p : variant.points()) {
-            grid[x + p.x()][y + p.y()] = val;
+            int gridX = x + p.x();
+            int gridY = y + p.y();
+            int bitIndex = gridY * width + gridX;
+            int longIndex = bitIndex / 64;
+            int bitOffset = bitIndex % 64;
+            if (val) {
+                grid[longIndex] |= (1L << bitOffset);
+            } else {
+                grid[longIndex] &= ~(1L << bitOffset);
+            }
         }
     }
 }
