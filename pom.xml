@@ -38,6 +38,8 @@
         <jol.version>0.17</jol.version>
         <jmh.version>1.37</jmh.version>
         <javafx.version>25.0.1</javafx.version>
+        <dataframe-ec.version>1.4.0</dataframe-ec.version>
+        <parallel-collectors.version>3.4.0</parallel-collectors.version>
 
         <!-- Testing dependency versions -->
         <junit.version>5.14.1</junit.version>
@@ -134,6 +136,16 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.vmzakharov</groupId>
+                <artifactId>dataframe-ec</artifactId>
+                <version>${dataframe-ec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.pivovarit</groupId>
+                <artifactId>parallel-collectors</artifactId>
+                <version>${parallel-collectors.version}</version>
             </dependency>
 
             <!-- JavaFX -->

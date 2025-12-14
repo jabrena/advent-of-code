@@ -22,6 +22,7 @@ This document catalogs all data structures used across the Advent of Code proble
 - **Sets**: [HashSet](collections.md#hashset), [TreeSet](collections.md#treeset), [LinkedHashSet](collections.md#linkedhashset)
 - **Maps**: [HashMap](collections.md#hashmap), [TreeMap](collections.md#treemap), [LinkedHashMap](collections.md#linkedhashmap)
 - **Queues**: [PriorityQueue](collections.md#priorityqueue), [ArrayDeque](collections.md#arraydeque), [Stack](collections.md#stack-legacy)
+- **External Libraries**: [DataFrame](collections.md#dataframe-dataframe-ec) (dataframe-ec)
 
 See [Collections Documentation](collections.md) for detailed information.
 
@@ -121,6 +122,7 @@ See [Grids Documentation](grids.md) for detailed information.
 - **DSU**: Custom Union-Find implementation
 - **Records**: Extensive use of records for immutable data (`ParsedData`, `Region`, `Shape`, `GraphNode`, `GraphEdge`, etc.)
 - **Arrays**: Grid state representation, parent/size arrays in DSU
+- **DataFrame** (dataframe-ec): Tabular data processing with functional operations (rotation string processing)
 
 ---
 
@@ -138,6 +140,7 @@ See [Grids Documentation](grids.md) for detailed information.
 8. **Arrays**: For fixed-size data with known dimensions, especially for 2D grids
 9. **DSU**: For connected component problems, cycle detection, equivalence relations
 10. **Records**: For immutable data carriers with clear structure
+11. **DataFrame**: For tabular data processing with functional operations, when working with structured columnar data
 
 ### Performance Characteristics
 
@@ -153,8 +156,10 @@ See [Grids Documentation](grids.md) for detailed information.
 | PriorityQueue | O(1) | O(n) | O(log n) | O(log n) | Min at root |
 | ArrayDeque | O(1) | O(n) | O(1) | O(1) | Both ends |
 | DSU | O(α(n)) | O(α(n)) | O(α(n)) | - | Near constant |
+| DataFrame | O(1) | O(n) | O(1)* | O(n) | Columnar access |
 
 *α(n) is the inverse Ackermann function, effectively constant for practical purposes.
+*DataFrame row insertion is O(1) amortized at end.
 
 ---
 

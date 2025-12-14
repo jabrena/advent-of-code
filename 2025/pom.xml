@@ -32,6 +32,16 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.vmzakharov</groupId>
+            <artifactId>dataframe-ec</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.collections</groupId>
+                    <artifactId>eclipse-collections-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <build>

@@ -312,6 +312,62 @@ Stack<String> paths = new Stack<>();
 
 ---
 
+## External Data Structure Libraries
+
+### DataFrame (dataframe-ec)
+
+**Description**: Tabular data structure from the `dataframe-ec` library (built on Eclipse Collections) providing columnar data manipulation with functional operations.
+
+**Library**: `io.github.vmzakharov:dataframe-ec`
+
+**Time Complexity**:
+- Column access: O(1)
+- Row iteration: O(n)
+- Filter/collect operations: O(n)
+- Row insertion: O(1)* (amortized)
+
+**Usage Examples**:
+- **2025 Day 1** (`DialRotator.java`): Processing rotation strings with filtering and stateful reduction
+
+**Code Reference**:
+```java
+import io.github.vmzakharov.ecdataframe.dataframe.DataFrame;
+
+// Create DataFrame from data
+DataFrame df = new DataFrame("Rotations")
+        .addStringColumn("rotation");
+
+rotations.forEach(rotation -> df.addRow(rotation));
+
+// Process with collect (reduce-like operation)
+final DialState[] stateHolder = {DialState.initial(INITIAL_POSITION)};
+df.collect(
+        () -> stateHolder[0],
+        (state, cursor) -> {
+            final String rotationStr = cursor.getString("rotation");
+            if (isValidRotation(rotationStr)) {
+                final Rotation rotation = Rotation.from(rotationStr);
+                stateHolder[0] = stateHolder[0].applyRotation(rotation, this);
+            }
+        }
+);
+```
+
+**When to Use**:
+- Need tabular data representation with named columns
+- Want functional-style data manipulation operations
+- Processing structured data with filtering and aggregation
+- When working with Eclipse Collections ecosystem
+- Alternative to Stream API for data processing pipelines
+
+**Key Features**:
+- Column-based data storage
+- Type-safe column access (`getString()`, `getInt()`, `getLong()`, etc.)
+- Functional operations: `collect()`, `forEach()`, `selectBy()`
+- Integration with Eclipse Collections
+
+---
+
 ## Summary
 
 | Collection | Best For | Time Complexity | Order |
@@ -327,6 +383,7 @@ Stack<String> paths = new Stack<>();
 | PriorityQueue | Priority-based processing | O(log n) insert/remove | Priority order |
 | ArrayDeque | Queue/Stack operations | O(1) at both ends | Insertion order |
 | Stack | Legacy LIFO (avoid in new code) | O(1) push/pop | LIFO order |
+| DataFrame | Tabular data manipulation | O(n) iteration, O(1) column access | Column order |
 
 *Average case; worst case may be O(n) for hash-based structures.
 
