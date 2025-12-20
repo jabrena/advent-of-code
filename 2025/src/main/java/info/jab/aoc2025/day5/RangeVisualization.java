@@ -51,8 +51,8 @@ public final class RangeVisualization extends Application {
 
     private Input inputPart1;
     private Input inputPart2;
-    private List<Range> sortedRanges;
-    private List<Range> mergedRanges;
+    private List<RangeData> sortedRanges;
+    private List<RangeData> mergedRanges;
     private long minValue;
     private long maxValue;
     private double scaleX;
@@ -88,13 +88,13 @@ public final class RangeVisualization extends Application {
 
     private void calculateBounds(final Input input) {
         sortedRanges = input.ranges().stream()
-                .sorted(Comparator.comparingLong(Range::start))
+                .sorted(Comparator.comparingLong(RangeData::start))
                 .toList();
 
         mergedRanges = mergeRangesFunctional(sortedRanges);
 
-        final long minRange = sortedRanges.stream().mapToLong(Range::start).min().orElse(0);
-        final long maxRange = sortedRanges.stream().mapToLong(Range::end).max().orElse(0);
+        final long minRange = sortedRanges.stream().mapToLong(RangeData::start).min().orElse(0);
+        final long maxRange = sortedRanges.stream().mapToLong(RangeData::end).max().orElse(0);
 
         if (!input.ids().isEmpty()) {
             final long minId = input.ids().stream().mapToLong(Long::longValue).min().orElse(0);
@@ -133,14 +133,14 @@ public final class RangeVisualization extends Application {
     /**
      * Record representing a step in the ID checking process.
      */
-    private record IdCheckStep(long id, boolean isContained, Range containingRange, int checkedCount) {}
+    private record IdCheckStep(long id, boolean isContained, RangeData containingRange, int checkedCount) {}
 
     private void prepareIdCheckSteps(final Input input) {
         idCheckSteps = new ArrayList<>();
         int checkedCount = 0;
 
         for (final Long id : input.ids()) {
-            final Range containingRange = input.ranges().stream()
+            final RangeData containingRange = input.ranges().stream()
                     .filter(range -> range.contains(id))
                     .findFirst()
                     .orElse(null);
@@ -302,8 +302,8 @@ public final class RangeVisualization extends Application {
         panel.setStyle(BACKGROUND_COLOR_STYLE);
         panel.setPrefWidth(200);
 
-        final List<Range> sorted = input.ranges().stream()
-                .sorted(Comparator.comparingLong(Range::start))
+        final List<RangeData> sorted = input.ranges().stream()
+                .sorted(Comparator.comparingLong(RangeData::start))
                 .toList();
 
         final Label question = new Label("How many ingredient IDs are considered to be fresh according to the fresh ingredient ID ranges?");
@@ -342,7 +342,7 @@ public final class RangeVisualization extends Application {
                 part2CoverageLabel.setText("Total Coverage: 0");
                 part2ResultLabel.setText(RESULT_LABEL_PREFIX + "0");
             } else {
-                final List<Range> currentMerged;
+                final List<RangeData> currentMerged;
                 if (step < mergeSteps.size()) {
                     final MergeState state = mergeSteps.get(step);
                     currentMerged = Stream.concat(
@@ -354,7 +354,7 @@ public final class RangeVisualization extends Application {
                 }
 
                 final long currentCoverage = currentMerged.stream()
-                        .mapToLong(Range::size)
+                        .mapToLong(RangeData::size)
                         .sum();
 
                 part2MergedCountLabel.setText("Merged Ranges: " + currentMerged.size());
@@ -499,9 +499,9 @@ public final class RangeVisualization extends Application {
     }
 
     private void drawRangesWithHighlight(final Pane canvas, final int step) {
-        Range highlightedRange = getHighlightedRange(step);
+        RangeData highlightedRange = getHighlightedRange(step);
         int rangeIndex = 0;
-        for (final Range range : sortedRanges) {
+        for (final RangeData range : sortedRanges) {
             final boolean isHighlighted = isRangeHighlighted(range, highlightedRange);
             final Color rangeColor = isHighlighted
                     ? Color.rgb(255, 200, 100, 0.9)
@@ -511,7 +511,7 @@ public final class RangeVisualization extends Application {
         }
     }
 
-    private Range getHighlightedRange(final int step) {
+    private RangeData getHighlightedRange(final int step) {
         if (step > 0 && step <= idCheckSteps.size()) {
             final IdCheckStep currentStep = idCheckSteps.get(step - 1);
             if (currentStep.isContained() && currentStep.containingRange() != null) {
@@ -521,7 +521,7 @@ public final class RangeVisualization extends Application {
         return null;
     }
 
-    private boolean isRangeHighlighted(final Range range, final Range highlightedRange) {
+    private boolean isRangeHighlighted(final RangeData range, final RangeData highlightedRange) {
         return highlightedRange != null &&
                 range.start() == highlightedRange.start() &&
                 range.end() == highlightedRange.end();
@@ -530,13 +530,13 @@ public final class RangeVisualization extends Application {
     private void drawIdsWithAnimation(final Pane canvas, final Input input, final int step) {
         final double timelineY = CANVAS_HEIGHT - 50;
         final double idY = Math.min(sortedRanges.size() * RANGE_SPACING + 100, timelineY - 80);
-        
+
         for (int i = 0; i < input.ids().size(); i++) {
             final Long id = input.ids().get(i);
             final double x = TIMELINE_OFFSET + (id - minValue) * scaleX;
             drawIdMarker(canvas, id, x, idY, i, step);
         }
-        
+
         drawIdLabel(canvas, idY);
         drawIdCount(canvas, idY, timelineY, step);
     }
@@ -666,7 +666,7 @@ public final class RangeVisualization extends Application {
 
             // Draw original ranges (faded)
             int rangeIndex = 0;
-            for (final Range range : sortedRanges) {
+            for (final RangeData range : sortedRanges) {
                 final boolean isCurrent = rangeIndex == state.index();
                 final Color color = isCurrent
                         ? Color.rgb(255, 200, 100, 0.8)
@@ -677,7 +677,7 @@ public final class RangeVisualization extends Application {
 
             // Draw merged ranges so far
             int mergedIndex = sortedRanges.size() + 1;
-            for (final Range merged : state.merged()) {
+            for (final RangeData merged : state.merged()) {
                 drawRange(canvas, merged, mergedIndex, Color.rgb(100, 255, 150, 0.8), false);
                 mergedIndex++;
             }
@@ -687,7 +687,7 @@ public final class RangeVisualization extends Application {
         } else {
             // Draw final merged ranges
             int mergedIndex = 0;
-            for (final Range merged : mergedRanges) {
+            for (final RangeData merged : mergedRanges) {
                 drawRange(canvas, merged, mergedIndex, Color.rgb(100, 255, 150, 0.8), false);
                 mergedIndex++;
             }
@@ -724,7 +724,7 @@ public final class RangeVisualization extends Application {
         }
     }
 
-    private void drawRange(final Pane canvas, final Range range, final int index,
+    private void drawRange(final Pane canvas, final RangeData range, final int index,
                           final Color color, final boolean highlight) {
         final double y = 50 + index * RANGE_SPACING;
         final double startX = TIMELINE_OFFSET + (range.start() - minValue) * scaleX;
@@ -751,7 +751,7 @@ public final class RangeVisualization extends Application {
         canvas.getChildren().addAll(startMarker, endMarker);
     }
 
-    private List<Range> mergeRangesFunctional(final List<Range> sortedRanges) {
+    private List<RangeData> mergeRangesFunctional(final List<RangeData> sortedRanges) {
         if (sortedRanges.isEmpty()) {
             return List.of();
         }

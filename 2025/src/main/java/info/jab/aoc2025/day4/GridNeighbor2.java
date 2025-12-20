@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * - Separates pure functions from side effects
  * - Uses Stream.iterate for iterative processes
  */
-public final class GridNeighborSolverV2 implements Solver<Integer> {
+public final class GridNeighbor2 implements Solver<Integer> {
 
     private static final char TARGET_CELL = '@';
     private static final char EMPTY_CELL = '.';

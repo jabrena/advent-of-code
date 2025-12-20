@@ -327,30 +327,44 @@ Stack<String> paths = new Stack<>();
 - Row insertion: O(1)* (amortized)
 
 **Usage Examples**:
-- **2025 Day 1** (`DialRotator.java`): Processing rotation strings with filtering and stateful reduction
+- **2025 Day 1** (`DialRotator2.java`): Pure DataFrame-oriented solution with single-pass processing and direct aggregation
+- **2025 Day 2** (`InvalidIdValidator3.java`): Lazy on-demand processing with DataFrame collect for range expansion and validation
 
 **Code Reference**:
 ```java
 import io.github.vmzakharov.ecdataframe.dataframe.DataFrame;
+import org.eclipse.collections.api.factory.Lists;
 
-// Create DataFrame from data
-DataFrame df = new DataFrame("Rotations")
-        .addStringColumn("rotation");
+// Create DataFrame from data (single DataFrame)
+final DataFrame df = new DataFrame("Rotations")
+        .addStringColumn("rotation", Lists.mutable.ofAll(rotations));
 
-rotations.forEach(rotation -> df.addRow(rotation));
+// Single-pass processing with direct aggregation
+// Accumulator pattern: [position, zeroCount]
+final int[] accumulator = {INITIAL_POSITION, 0};
 
-// Process with collect (reduce-like operation)
-final DialState[] stateHolder = {DialState.initial(INITIAL_POSITION)};
 df.collect(
-        () -> stateHolder[0],
-        (state, cursor) -> {
+        () -> null,
+        (acc, cursor) -> {
             final String rotationStr = cursor.getString("rotation");
+            
+            // Inline validation and processing
             if (isValidRotation(rotationStr)) {
-                final Rotation rotation = Rotation.from(rotationStr);
-                stateHolder[0] = stateHolder[0].applyRotation(rotation, this);
+                // Parse direction and distance directly without intermediate objects
+                final char directionChar = parseDirection(rotationStr);
+                final int distance = parseDistance(rotationStr);
+                final Direction direction = Direction.from(directionChar);
+
+                // Apply rotation and accumulate zero count directly
+                accumulator[0] = rotateDial(accumulator[0], direction, distance);
+                if (accumulator[0] == 0) {
+                    accumulator[1]++;
+                }
             }
         }
 );
+
+return accumulator[1];
 ```
 
 **When to Use**:
@@ -359,12 +373,21 @@ df.collect(
 - Processing structured data with filtering and aggregation
 - When working with Eclipse Collections ecosystem
 - Alternative to Stream API for data processing pipelines
+- Need single-pass processing with direct aggregation (avoiding intermediate collections)
 
 **Key Features**:
 - Column-based data storage
 - Type-safe column access (`getString()`, `getInt()`, `getLong()`, etc.)
 - Functional operations: `collect()`, `forEach()`, `selectBy()`
 - Integration with Eclipse Collections
+- Single-pass processing pattern for optimal performance
+
+**Performance Best Practices**:
+- **Single DataFrame**: Create one DataFrame and process it in a single pass
+- **Direct Aggregation**: Use accumulator arrays/objects for direct accumulation instead of building intermediate collections
+- **Inline Parsing**: Parse and process data inline during DataFrame iteration to avoid multiple passes
+- **Avoid Intermediate Collections**: Eliminate `MutableList`, `MutableIntList`, etc. when possible - use direct accumulation instead
+- **Single-Pass Pattern**: Combine parsing, validation, and processing in one `collect()` call for O(n) time complexity
 
 ---
 

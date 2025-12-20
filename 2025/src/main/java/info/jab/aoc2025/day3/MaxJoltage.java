@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
  * Finds the maximum number that can be formed by selecting digits
  * in order while maintaining a specific sequence length.
  */
-public final class MaxJoltageSolver implements Solver<Long> {
+public final class MaxJoltage implements Solver<Long> {
 
     private static final int PART_ONE_LENGTH = 2;
     private static final int PART_TWO_LENGTH = 12;

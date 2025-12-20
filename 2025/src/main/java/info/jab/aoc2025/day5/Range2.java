@@ -17,7 +17,7 @@ import java.util.List;
  * - Uses Stream.iterate for functional iteration
  * - Leverages method references and function composition
  */
-public final class RangeSolverV2 implements Solver<Long> {
+public final class Range2 implements Solver<Long> {
 
     /**
      * Counts IDs that are contained within any of the given ranges.
@@ -66,11 +66,11 @@ public final class RangeSolverV2 implements Solver<Long> {
      * @return The total number of values covered by merged ranges
      */
     private Long calculateTotalCoverage(final Input input) {
-        final List<Range> sortedRanges = input.ranges().stream()
-                .sorted(Comparator.comparingLong(Range::start))
+        final List<RangeData> sortedRanges = input.ranges().stream()
+                .sorted(Comparator.comparingLong(RangeData::start))
                 .toList();
         return mergeRanges(sortedRanges).stream()
-                .mapToLong(Range::size)
+                .mapToLong(RangeData::size)
                 .sum();
     }
 
@@ -82,7 +82,7 @@ public final class RangeSolverV2 implements Solver<Long> {
      * @param sortedRanges Ranges sorted by start value
      * @return Immutable list of merged ranges
      */
-    private List<Range> mergeRanges(final List<Range> sortedRanges) {
+    private List<RangeData> mergeRanges(final List<RangeData> sortedRanges) {
         if (sortedRanges.isEmpty()) {
             return List.of();
         }

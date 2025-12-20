@@ -5,7 +5,7 @@ import info.jab.aoc.Solver;
 
 public class Day1 implements Day<Integer> {
 
-    private final Solver<Integer> dialRotator = new DialRotatorV2();
+    private final Solver<Integer> dialRotator = new DialRotator();
 
     @Override
     public Integer getPart1Result(final String fileName) {

@@ -1,92 +1,116 @@
 package info.jab.aoc2025.day5;
 
+import com.putoet.resources.ResourceLines;
+import info.jab.aoc.Solver;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 /**
- * Represents a range with start and end values (inclusive).
- * Immutable record following functional programming principles.
+ * Solver for range-based problems.
+ * Part 1: Counts IDs that are contained within any of the given ranges.
+ * Part 2: Merges overlapping and adjacent ranges, then calculates total coverage.
+ *
+ * This implementation follows functional programming principles:
+ * - Uses Stream API for declarative transformations
+ * - Employs immutable collections where possible
+ * - Separates pure functions from I/O operations
  */
-public record Range(long start, long end) {
+public final class Range implements Solver<Long> {
+
     /**
-     * Compact constructor with validation for type safety.
-     * Ensures start <= end, making invalid states unrepresentable.
+     * Counts IDs that are contained within any of the given ranges.
+     *
+     * @param fileName The input file name
+     * @return The count of IDs contained in any range
      */
-    public Range {
-        if (start > end) {
-            throw new IllegalArgumentException(
-                    "Range start (%d) must be less than or equal to end (%d)".formatted(start, end)
-            );
+    @Override
+    public Long solvePartOne(final String fileName) {
+        final Input input = parse(fileName);
+        return input.ids().stream()
+                .filter(id -> input.ranges().stream().anyMatch(range -> range.contains(id)))
+                .count();
+    }
+
+    /**
+     * Merges overlapping and adjacent ranges, then calculates the total coverage.
+     *
+     * @param fileName The input file name
+     * @return The total number of values covered by merged ranges
+     */
+    @Override
+    public Long solvePartTwo(final String fileName) {
+        final Input input = parse(fileName);
+        final List<RangeData> sortedRanges = input.ranges().stream()
+                .sorted(Comparator.comparingLong(RangeData::start))
+                .toList();
+
+        if (sortedRanges.isEmpty()) {
+            return 0L;
         }
+
+        final List<RangeData> mergedRanges = mergeRanges(sortedRanges);
+
+        return mergedRanges.stream()
+                .mapToLong(r -> r.end() - r.start() + 1)
+                .sum();
     }
 
     /**
-     * Checks if a value is contained within this range.
-     * Pure function: depends only on input parameters, no side effects.
+     * Pure function that merges overlapping and adjacent ranges.
+     * Ranges are merged if they overlap or are adjacent (end + 1 >= start).
      *
-     * @param value The value to check
-     * @return true if the value is within the range, false otherwise
+     * @param sortedRanges Ranges sorted by start value
+     * @return List of merged ranges
      */
-    public boolean contains(long value) {
-        return value >= start && value <= end;
-    }
+    private List<RangeData> mergeRanges(final List<RangeData> sortedRanges) {
+        final List<RangeData> mergedRanges = new ArrayList<>();
+        RangeData current = sortedRanges.get(0);
 
-    /**
-     * Calculates the size (number of values) in this range.
-     * Pure function for functional composition.
-     *
-     * @return The size of the range (end - start + 1)
-     */
-    public long size() {
-        return end - start + 1;
-    }
-
-    /**
-     * Checks if this range overlaps or is adjacent to another range.
-     * Pure function for functional composition.
-     *
-     * @param other The other range to check
-     * @return true if ranges overlap or are adjacent, false otherwise
-     */
-    public boolean overlapsOrAdjacent(Range other) {
-        return other.start() <= this.end() + 1;
-    }
-
-    /**
-     * Merges this range with another range, assuming they overlap or are adjacent.
-     * Pure function that returns a new immutable Range instance.
-     *
-     * @param other The other range to merge with
-     * @return A new Range representing the merged range
-     */
-    public Range merge(Range other) {
-        return new Range(
-                Math.min(this.start(), other.start()),
-                Math.max(this.end(), other.end())
-        );
-    }
-
-    /**
-     * Static factory method that creates a Range from a string representation.
-     * Pure function: depends only on input parameter, no side effects.
-     * Follows the "Consider static factory methods instead of constructors" principle.
-     *
-     * @param line The line containing range in format "start-end"
-     * @return A Range record
-     * @throws IllegalArgumentException if the format is invalid or parsing fails
-     */
-    public static Range from(final String line) {
-        final String[] parts = line.split("-");
-        if (parts.length != 2) {
-            throw new IllegalArgumentException(
-                    "Invalid range format: '%s'. Expected format: 'start-end'".formatted(line)
-            );
+        for (int i = 1; i < sortedRanges.size(); i++) {
+            final RangeData next = sortedRanges.get(i);
+            // Merge if overlapping or adjacent
+            if (next.start() <= current.end() + 1) {
+                current = new RangeData(current.start(), Math.max(current.end(), next.end()));
+            } else {
+                mergedRanges.add(current);
+                current = next;
+            }
         }
-        try {
-            return new Range(Long.parseLong(parts[0]), Long.parseLong(parts[1]));
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(
-                    "Invalid range format: '%s'. Start and end must be valid numbers.".formatted(line),
-                    e
-            );
+        mergedRanges.add(current);
+        return mergedRanges;
+    }
+
+    /**
+     * Parses the input file into ranges and IDs.
+     * The file format: ranges first (one per line, format: "start-end"),
+     * followed by a blank line, then IDs (one per line).
+     *
+     * @param fileName The input file name
+     * @return Parsed input containing ranges and IDs
+     */
+    private Input parse(final String fileName) {
+        final List<String> lines = ResourceLines.list(fileName);
+        final List<RangeData> ranges = new ArrayList<>();
+        final List<Long> ids = new ArrayList<>();
+
+        boolean parsingRanges = true;
+        for (final String line : lines) {
+            if (line.isBlank()) {
+                if (parsingRanges) {
+                    parsingRanges = false;
+                }
+                continue;
+            }
+
+            if (parsingRanges) {
+                final String[] parts = line.split("-");
+                ranges.add(new RangeData(Long.parseLong(parts[0]), Long.parseLong(parts[1])));
+            } else {
+                ids.add(Long.parseLong(line.trim()));
+            }
         }
+        return new Input(ranges, ids);
     }
 }
 

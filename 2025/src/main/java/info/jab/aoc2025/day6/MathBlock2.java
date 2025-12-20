@@ -15,7 +15,7 @@ import com.putoet.resources.ResourceLines;
  * Part 1: Processes blocks row by row, extracting numbers and operators.
  * Part 2: Processes blocks column by column (right to left), extracting numbers vertically.
  */
-public final class MathBlockSolverV2 implements Solver<Long> {
+public final class MathBlock2 implements Solver<Long> {
 
     @Override
     public Long solvePartOne(final String fileName) {
