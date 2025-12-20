@@ -45,9 +45,15 @@ Arrays are fixed-size data structures providing O(1) random access. They are the
 
 #### Long Arrays (`long[]`)
 
-- **2025 Day 12** (`CacheKey.java`): Grid state representation using bitmasks
+- **2025 Day 12** (`CacheKey.java`, `ShapePacking.java`): Grid state representation using bitmasks
   ```java
   private final long[] grid;
+  ```
+  
+- **2025 Day 10** (`RationalMatrix.java`): Interleaved memory layout for rational numbers (numerator/denominator pairs)
+  ```java
+  // Interleaved: [num0, den0, num1, den1, ...]
+  private final long[] data;
   ```
 
 #### Character Arrays (`char[]`)
@@ -64,6 +70,7 @@ int[] disk = new int[totalBlocks];
 int[] parent = new int[n];
 int[] size = new int[n];
 char[] passwordDigits = String.valueOf(password).toCharArray();
+long[] grid = new long[gridSize]; // Bitmask representation
 ```
 
 **When to Use**:
@@ -150,6 +157,145 @@ boolean[][] lights = new boolean[height][width];
 - Fixed dimensions
 - Memory overhead for sparse data
 - Column-major access less cache-friendly
+
+---
+
+## Specialized Array Patterns
+
+### Bitmask Arrays (`long[]`)
+
+**Description**: Using `long[]` arrays to represent 2D grids as bitmasks, where each bit represents a cell state. Each `long` can represent up to 64 cells, providing efficient bitwise operations.
+
+**Time Complexity**:
+- Placement check: O(1) (bitwise AND)
+- Placement/removal: O(1) (bitwise OR/AND)
+- Grid comparison: O(n/64) where n is number of cells
+
+**Memory**: More memory-efficient than `boolean[][]` for large grids, with better cache locality.
+
+**Usage Examples**:
+- **2025 Day 12** (`ShapePacking.java`, `CacheKey.java`): Grid state representation for shape packing backtracking
+  ```java
+  // Grid represented as bitmask array
+  private final long[] grid;
+  
+  // Each long represents up to 64 cells
+  // Index calculation: longIndex = (y * width + x) / 64
+  // Bit offset: bitOffset = (y * width + x) % 64
+  
+  // Check if cell is occupied
+  boolean occupied = (grid[longIndex] & (1L << bitOffset)) != 0;
+  
+  // Place shape (set bits)
+  grid[longIndex] |= (1L << bitOffset);
+  
+  // Remove shape (clear bits)
+  grid[longIndex] &= ~(1L << bitOffset);
+  ```
+
+**Code Reference**:
+```java
+// Initialize bitmask grid
+int width = 10;
+int height = 10;
+int gridSize = (width * height + 63) / 64; // Ceiling division
+long[] grid = new long[gridSize];
+
+// Check if cell (x, y) is occupied
+int index = y * width + x;
+int longIndex = index / 64;
+int bitOffset = index % 64;
+boolean occupied = (grid[longIndex] & (1L << bitOffset)) != 0;
+
+// Set cell (x, y)
+grid[longIndex] |= (1L << bitOffset);
+
+// Clear cell (x, y)
+grid[longIndex] &= ~(1L << bitOffset);
+```
+
+**When to Use**:
+- Large 2D grids with boolean cell states
+- Need fast bitwise operations for placement/removal checks
+- Memory-efficient representation for sparse or dense grids
+- Cache-friendly operations (better than `boolean[][]`)
+
+**Advantages**:
+- O(1) bitwise operations (faster than array access)
+- Memory efficient (64 cells per long)
+- Better cache locality than `boolean[][]`
+- Fast grid state comparison using bitwise operations
+
+**Disadvantages**:
+- More complex indexing calculations
+- Fixed to 64 cells per long (less flexible than boolean arrays)
+- Requires bit manipulation knowledge
+
+---
+
+### Interleaved Arrays (`long[]`)
+
+**Description**: Using a single `long[]` array to store pairs of values in interleaved memory layout (e.g., numerator/denominator pairs). Adjacent values are stored next to each other for better cache locality.
+
+**Time Complexity**:
+- Access: O(1) (with index calculation)
+- Update: O(1)
+
+**Memory**: Better cache locality than separate arrays for related pairs.
+
+**Usage Examples**:
+- **2025 Day 10** (`RationalMatrix.java`): Storing rational numbers (numerator/denominator pairs) in interleaved layout
+  ```java
+  // Interleaved memory layout: [num0, den0, num1, den1, ...]
+  // Better cache locality - numerator and denominator are adjacent
+  private final long[] data;
+  
+  // Index calculation: baseIdx = row * (cols+1) + col
+  // Then data[baseIdx*2] = numerator, data[baseIdx*2+1] = denominator
+  
+  // Access numerator
+  long num = data[baseIdx * 2];
+  
+  // Access denominator
+  long den = data[baseIdx * 2 + 1];
+  
+  // Update both
+  data[baseIdx * 2] = newNum;
+  data[baseIdx * 2 + 1] = newDen;
+  ```
+
+**Code Reference**:
+```java
+// Initialize interleaved array for pairs
+int numPairs = 100;
+long[] data = new long[numPairs * 2]; // Each pair needs 2 slots
+
+// Access pair at index i
+int baseIdx = i;
+long first = data[baseIdx * 2];
+long second = data[baseIdx * 2 + 1];
+
+// Update pair
+data[baseIdx * 2] = newFirst;
+data[baseIdx * 2 + 1] = newSecond;
+```
+
+**When to Use**:
+- Need to store pairs of related values
+- Cache locality is important (adjacent access patterns)
+- Memory efficiency matters
+- Frequently access both values together
+
+**Advantages**:
+- Better cache locality (adjacent pairs)
+- Single array allocation (simpler memory management)
+- Efficient for sequential access patterns
+- Reduces memory fragmentation
+
+**Disadvantages**:
+- More complex indexing (multiply by 2)
+- Less intuitive than separate arrays
+- Fixed to pairs (less flexible)
 
 ---
 

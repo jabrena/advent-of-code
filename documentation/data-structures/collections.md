@@ -391,6 +391,118 @@ return accumulator[1];
 
 ---
 
+## Eclipse Collections Primitive Structures
+
+### LongIntHashMap
+
+**Description**: Primitive map implementation from Eclipse Collections providing O(1) average-case operations for long keys and int values, avoiding boxing overhead.
+
+**Library**: `org.eclipse.collections:collections`
+
+**Time Complexity**:
+- Access: O(1)* (average case)
+- Search: O(1)* (average case)
+- Insertion: O(1)* (average case)
+- Deletion: O(1)* (average case)
+- *Worst case: O(n) due to hash collisions
+
+**Memory**: More memory-efficient than `HashMap<Long, Integer>` by avoiding boxing overhead.
+
+**Usage Examples**:
+- **2025 Day 10** (`Part1Solver.java`): Meet-in-the-middle algorithm storing XOR state → minimum presses mapping
+  ```java
+  import org.eclipse.collections.impl.map.mutable.primitive.LongIntHashMap;
+  
+  LongIntHashMap leftMap = new LongIntHashMap(1 << leftSize);
+  leftMap.put(0L, 0);
+  int existing = leftMap.getIfAbsent(current, Integer.MAX_VALUE);
+  ```
+
+**Code Reference**:
+```java
+import org.eclipse.collections.impl.map.mutable.primitive.LongIntHashMap;
+
+// Pre-sized to avoid resizing
+LongIntHashMap map = new LongIntHashMap(initialCapacity);
+
+// Operations
+map.put(key, value);
+int value = map.get(key);
+int value = map.getIfAbsent(key, defaultValue);
+boolean contains = map.containsKey(key);
+```
+
+**When to Use**:
+- Need primitive long → int mappings
+- Performance-critical code where boxing overhead matters
+- Pre-sized maps for predictable memory usage
+- When working with Eclipse Collections ecosystem
+
+**Advantages**:
+- No boxing overhead (faster than `HashMap<Long, Integer>`)
+- Memory efficient (primitive storage)
+- Pre-sizing support for predictable performance
+- Same O(1) average complexity as HashMap
+
+**Disadvantages**:
+- External dependency (Eclipse Collections)
+- Less flexible than generic HashMap (fixed key/value types)
+
+---
+
+### MutableLongList / LongArrayList
+
+**Description**: Primitive list implementations from Eclipse Collections providing O(1) average-case operations for long values, avoiding boxing overhead.
+
+**Library**: `org.eclipse.collections:collections`
+
+**Time Complexity**:
+- Access: O(1)
+- Search: O(n)
+- Insertion: O(1)* (amortized at end)
+- Deletion: O(n)
+
+**Memory**: More memory-efficient than `ArrayList<Long>` by avoiding boxing overhead.
+
+**Usage Examples**:
+- **2025 Day 5** (`Range3.java`): Storing range start/end values during DataFrame processing
+  ```java
+  import org.eclipse.collections.api.list.primitive.MutableLongList;
+  import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+  
+  MutableLongList startList = new LongArrayList();
+  MutableLongList endList = new LongArrayList();
+  ```
+
+**Code Reference**:
+```java
+import org.eclipse.collections.api.list.primitive.MutableLongList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+
+MutableLongList list = new LongArrayList();
+list.add(value);
+long value = list.get(index);
+int size = list.size();
+```
+
+**When to Use**:
+- Need primitive long lists
+- Performance-critical code where boxing overhead matters
+- When working with Eclipse Collections ecosystem
+- Processing large sequences of primitive values
+
+**Advantages**:
+- No boxing overhead (faster than `ArrayList<Long>`)
+- Memory efficient (primitive storage)
+- Rich functional API from Eclipse Collections
+- Same O(1) average complexity as ArrayList
+
+**Disadvantages**:
+- External dependency (Eclipse Collections)
+- Less flexible than generic ArrayList (fixed element type)
+
+---
+
 ## Summary
 
 | Collection | Best For | Time Complexity | Order |
@@ -407,6 +519,8 @@ return accumulator[1];
 | ArrayDeque | Queue/Stack operations | O(1) at both ends | Insertion order |
 | Stack | Legacy LIFO (avoid in new code) | O(1) push/pop | LIFO order |
 | DataFrame | Tabular data manipulation | O(n) iteration, O(1) column access | Column order |
+| LongIntHashMap | Primitive long→int mappings | O(1)* average | No order |
+| MutableLongList | Primitive long lists | O(1) access, O(1)* insert at end | Insertion order |
 
 *Average case; worst case may be O(n) for hash-based structures.
 

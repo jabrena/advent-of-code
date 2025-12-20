@@ -217,6 +217,57 @@ size[rootI] += size[rootJ];
   public record Connection(Point3D from, Point3D to)
   ```
 
+### 2025 Day 6 - Math Block Processing
+
+- **ColumnRange**: Immutable record representing a column range for block processing
+  ```java
+  public record ColumnRange(int startCol, int endCol) {
+      public ColumnRange {
+          if (startCol < 0) {
+              throw new IllegalArgumentException("startCol must be non-negative: " + startCol);
+          }
+          if (endCol < startCol) {
+              throw new IllegalArgumentException("endCol must be >= startCol");
+          }
+      }
+  }
+  ```
+
+- **MathOperator**: Sealed interface representing mathematical operators (sealed interface with records)
+  ```java
+  public sealed interface MathOperator 
+      permits MathOperator.Addition, MathOperator.Multiplication, MathOperator.None {
+      
+      long apply(List<Long> numbers);
+      String symbol();
+      
+      record Addition() implements MathOperator {
+          @Override
+          public long apply(List<Long> numbers) {
+              return numbers.stream().mapToLong(Long::longValue).sum();
+          }
+          @Override
+          public String symbol() { return "+"; }
+      }
+      
+      record Multiplication() implements MathOperator {
+          @Override
+          public long apply(List<Long> numbers) {
+              return numbers.stream().mapToLong(Long::longValue).reduce(1, (a, b) -> a * b);
+          }
+          @Override
+          public String symbol() { return "*"; }
+      }
+      
+      record None() implements MathOperator {
+          @Override
+          public long apply(List<Long> numbers) { return 0; }
+          @Override
+          public String symbol() { return " "; }
+      }
+  }
+  ```
+
 ### 2024 Day 9 - Disk Compaction
 
 - **GapInfo**: Information about a gap in the disk

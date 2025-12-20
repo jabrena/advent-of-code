@@ -120,9 +120,11 @@ See [Grids Documentation](grids.md) for detailed information.
 - **PriorityQueue**: Point clustering
 - **ArrayDeque**: Queue operations
 - **DSU**: Custom Union-Find implementation
-- **Records**: Extensive use of records for immutable data (`ParsedData`, `Region`, `Shape`, `GraphNode`, `GraphEdge`, etc.)
-- **Arrays**: Grid state representation, parent/size arrays in DSU
+- **Records**: Extensive use of records for immutable data (`ParsedData`, `Region`, `Shape`, `GraphNode`, `GraphEdge`, `ColumnRange`, `MathOperator`, etc.)
+- **Arrays**: Grid state representation (bitmask arrays `long[]`), parent/size arrays in DSU, interleaved arrays for rational matrices
 - **DataFrame** (dataframe-ec): Tabular data processing with functional operations (rotation string processing)
+- **LongIntHashMap** (Eclipse Collections): Primitive map for meet-in-the-middle algorithm (Day 10)
+- **MutableLongList** (Eclipse Collections): Primitive lists for range processing (Day 5)
 
 ---
 
@@ -141,6 +143,10 @@ See [Grids Documentation](grids.md) for detailed information.
 9. **DSU**: For connected component problems, cycle detection, equivalence relations
 10. **Records**: For immutable data carriers with clear structure
 11. **DataFrame**: For tabular data processing with functional operations, when working with structured columnar data
+12. **Bitmask Arrays** (`long[]`): For efficient 2D grid representation with O(1) bitwise operations
+13. **Interleaved Arrays** (`long[]`): For storing pairs of related values with better cache locality
+14. **Eclipse Collections Primitive Maps**: For performance-critical primitive key-value mappings (LongIntHashMap)
+15. **Eclipse Collections Primitive Lists**: For performance-critical primitive lists (MutableLongList, LongArrayList)
 
 ### Performance Characteristics
 
