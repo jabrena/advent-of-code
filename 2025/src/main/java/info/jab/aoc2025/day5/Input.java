@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
  * Immutable record following functional programming principles.
  * The lists are expected to be immutable (e.g., from List.of() or List.copyOf()).
  */
-public record Input(List<Range> ranges, List<Long> ids) {
+public record Input(List<RangeData> ranges, List<Long> ids) {
     /**
      * Compact constructor ensuring immutability through defensive copying.
      */
@@ -34,10 +34,10 @@ public record Input(List<Range> ranges, List<Long> ids) {
                 .findFirst()
                 .orElse(lines.size());
 
-        final List<Range> ranges = lines.stream()
+        final List<RangeData> ranges = lines.stream()
                 .limit(separatorIndex)
                 .filter(line -> !line.isBlank())
-                .map(Range::from)
+                .map(RangeData::from)
                 .toList();
 
         final List<Long> ids = lines.stream()

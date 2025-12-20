@@ -312,6 +312,197 @@ Stack<String> paths = new Stack<>();
 
 ---
 
+## External Data Structure Libraries
+
+### DataFrame (dataframe-ec)
+
+**Description**: Tabular data structure from the `dataframe-ec` library (built on Eclipse Collections) providing columnar data manipulation with functional operations.
+
+**Library**: `io.github.vmzakharov:dataframe-ec`
+
+**Time Complexity**:
+- Column access: O(1)
+- Row iteration: O(n)
+- Filter/collect operations: O(n)
+- Row insertion: O(1)* (amortized)
+
+**Usage Examples**:
+- **2025 Day 1** (`DialRotator2.java`): Pure DataFrame-oriented solution with single-pass processing and direct aggregation
+- **2025 Day 2** (`InvalidIdValidator3.java`): Lazy on-demand processing with DataFrame collect for range expansion and validation
+
+**Code Reference**:
+```java
+import io.github.vmzakharov.ecdataframe.dataframe.DataFrame;
+import org.eclipse.collections.api.factory.Lists;
+
+// Create DataFrame from data (single DataFrame)
+final DataFrame df = new DataFrame("Rotations")
+        .addStringColumn("rotation", Lists.mutable.ofAll(rotations));
+
+// Single-pass processing with direct aggregation
+// Accumulator pattern: [position, zeroCount]
+final int[] accumulator = {INITIAL_POSITION, 0};
+
+df.collect(
+        () -> null,
+        (acc, cursor) -> {
+            final String rotationStr = cursor.getString("rotation");
+            
+            // Inline validation and processing
+            if (isValidRotation(rotationStr)) {
+                // Parse direction and distance directly without intermediate objects
+                final char directionChar = parseDirection(rotationStr);
+                final int distance = parseDistance(rotationStr);
+                final Direction direction = Direction.from(directionChar);
+
+                // Apply rotation and accumulate zero count directly
+                accumulator[0] = rotateDial(accumulator[0], direction, distance);
+                if (accumulator[0] == 0) {
+                    accumulator[1]++;
+                }
+            }
+        }
+);
+
+return accumulator[1];
+```
+
+**When to Use**:
+- Need tabular data representation with named columns
+- Want functional-style data manipulation operations
+- Processing structured data with filtering and aggregation
+- When working with Eclipse Collections ecosystem
+- Alternative to Stream API for data processing pipelines
+- Need single-pass processing with direct aggregation (avoiding intermediate collections)
+
+**Key Features**:
+- Column-based data storage
+- Type-safe column access (`getString()`, `getInt()`, `getLong()`, etc.)
+- Functional operations: `collect()`, `forEach()`, `selectBy()`
+- Integration with Eclipse Collections
+- Single-pass processing pattern for optimal performance
+
+**Performance Best Practices**:
+- **Single DataFrame**: Create one DataFrame and process it in a single pass
+- **Direct Aggregation**: Use accumulator arrays/objects for direct accumulation instead of building intermediate collections
+- **Inline Parsing**: Parse and process data inline during DataFrame iteration to avoid multiple passes
+- **Avoid Intermediate Collections**: Eliminate `MutableList`, `MutableIntList`, etc. when possible - use direct accumulation instead
+- **Single-Pass Pattern**: Combine parsing, validation, and processing in one `collect()` call for O(n) time complexity
+
+---
+
+## Eclipse Collections Primitive Structures
+
+### LongIntHashMap
+
+**Description**: Primitive map implementation from Eclipse Collections providing O(1) average-case operations for long keys and int values, avoiding boxing overhead.
+
+**Library**: `org.eclipse.collections:collections`
+
+**Time Complexity**:
+- Access: O(1)* (average case)
+- Search: O(1)* (average case)
+- Insertion: O(1)* (average case)
+- Deletion: O(1)* (average case)
+- *Worst case: O(n) due to hash collisions
+
+**Memory**: More memory-efficient than `HashMap<Long, Integer>` by avoiding boxing overhead.
+
+**Usage Examples**:
+- **2025 Day 10** (`Part1Solver.java`): Meet-in-the-middle algorithm storing XOR state → minimum presses mapping
+  ```java
+  import org.eclipse.collections.impl.map.mutable.primitive.LongIntHashMap;
+  
+  LongIntHashMap leftMap = new LongIntHashMap(1 << leftSize);
+  leftMap.put(0L, 0);
+  int existing = leftMap.getIfAbsent(current, Integer.MAX_VALUE);
+  ```
+
+**Code Reference**:
+```java
+import org.eclipse.collections.impl.map.mutable.primitive.LongIntHashMap;
+
+// Pre-sized to avoid resizing
+LongIntHashMap map = new LongIntHashMap(initialCapacity);
+
+// Operations
+map.put(key, value);
+int value = map.get(key);
+int value = map.getIfAbsent(key, defaultValue);
+boolean contains = map.containsKey(key);
+```
+
+**When to Use**:
+- Need primitive long → int mappings
+- Performance-critical code where boxing overhead matters
+- Pre-sized maps for predictable memory usage
+- When working with Eclipse Collections ecosystem
+
+**Advantages**:
+- No boxing overhead (faster than `HashMap<Long, Integer>`)
+- Memory efficient (primitive storage)
+- Pre-sizing support for predictable performance
+- Same O(1) average complexity as HashMap
+
+**Disadvantages**:
+- External dependency (Eclipse Collections)
+- Less flexible than generic HashMap (fixed key/value types)
+
+---
+
+### MutableLongList / LongArrayList
+
+**Description**: Primitive list implementations from Eclipse Collections providing O(1) average-case operations for long values, avoiding boxing overhead.
+
+**Library**: `org.eclipse.collections:collections`
+
+**Time Complexity**:
+- Access: O(1)
+- Search: O(n)
+- Insertion: O(1)* (amortized at end)
+- Deletion: O(n)
+
+**Memory**: More memory-efficient than `ArrayList<Long>` by avoiding boxing overhead.
+
+**Usage Examples**:
+- **2025 Day 5** (`Range3.java`): Storing range start/end values during DataFrame processing
+  ```java
+  import org.eclipse.collections.api.list.primitive.MutableLongList;
+  import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+  
+  MutableLongList startList = new LongArrayList();
+  MutableLongList endList = new LongArrayList();
+  ```
+
+**Code Reference**:
+```java
+import org.eclipse.collections.api.list.primitive.MutableLongList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+
+MutableLongList list = new LongArrayList();
+list.add(value);
+long value = list.get(index);
+int size = list.size();
+```
+
+**When to Use**:
+- Need primitive long lists
+- Performance-critical code where boxing overhead matters
+- When working with Eclipse Collections ecosystem
+- Processing large sequences of primitive values
+
+**Advantages**:
+- No boxing overhead (faster than `ArrayList<Long>`)
+- Memory efficient (primitive storage)
+- Rich functional API from Eclipse Collections
+- Same O(1) average complexity as ArrayList
+
+**Disadvantages**:
+- External dependency (Eclipse Collections)
+- Less flexible than generic ArrayList (fixed element type)
+
+---
+
 ## Summary
 
 | Collection | Best For | Time Complexity | Order |
@@ -327,6 +518,9 @@ Stack<String> paths = new Stack<>();
 | PriorityQueue | Priority-based processing | O(log n) insert/remove | Priority order |
 | ArrayDeque | Queue/Stack operations | O(1) at both ends | Insertion order |
 | Stack | Legacy LIFO (avoid in new code) | O(1) push/pop | LIFO order |
+| DataFrame | Tabular data manipulation | O(n) iteration, O(1) column access | Column order |
+| LongIntHashMap | Primitive long→int mappings | O(1)* average | No order |
+| MutableLongList | Primitive long lists | O(1) access, O(1)* insert at end | Insertion order |
 
 *Average case; worst case may be O(n) for hash-based structures.
 

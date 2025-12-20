@@ -8,14 +8,14 @@ import java.util.stream.Stream;
  * Encapsulates the current merged range, accumulated results, and current index.
  * Used in functional iteration for merging overlapping and adjacent ranges.
  */
-record MergeState(Range current, List<Range> merged, int index) {
+record MergeState(RangeData current, List<RangeData> merged, int index) {
     /**
      * Checks if there are more ranges to process.
      *
      * @param sortedRanges The sorted list of ranges being processed
      * @return true if there are more ranges to process, false otherwise
      */
-    boolean hasNext(final List<Range> sortedRanges) {
+    boolean hasNext(final List<RangeData> sortedRanges) {
         return index + 1 < sortedRanges.size();
     }
 
@@ -26,8 +26,8 @@ record MergeState(Range current, List<Range> merged, int index) {
      * @param sortedRanges The sorted list of ranges being processed
      * @return A new MergeState with the updated state
      */
-    MergeState next(final List<Range> sortedRanges) {
-        final Range next = sortedRanges.get(index + 1);
+    MergeState next(final List<RangeData> sortedRanges) {
+        final RangeData next = sortedRanges.get(index + 1);
         if (current.overlapsOrAdjacent(next)) {
             return new MergeState(current.merge(next), merged, index + 1);
         } else {
@@ -41,7 +41,7 @@ record MergeState(Range current, List<Range> merged, int index) {
      *
      * @return The final immutable list of merged ranges
      */
-    List<Range> complete() {
+    List<RangeData> complete() {
         return Stream.concat(merged.stream(), Stream.of(current))
                 .toList();
     }
