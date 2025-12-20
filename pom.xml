@@ -63,6 +63,7 @@
         <maven-plugin-site.version>3.21.0</maven-plugin-site.version>
         <maven-plugin-allure.version>2.15.2</maven-plugin-allure.version>
         <allure.version>2.29.0</allure.version>
+        <maven-plugin-rewrite.version>6.23.0</maven-plugin-rewrite.version>
 
         <!-- Quality thresholds -->
         <coverage.level>15</coverage.level>
@@ -372,7 +373,24 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.openrewrite.maven</groupId>
+                <artifactId>rewrite-maven-plugin</artifactId>
+                <version>${maven-plugin-rewrite.version}</version>
+                <configuration>
+                    <activeRecipes>
+                        <recipe>org.openrewrite.java.RemoveUnusedImports</recipe>
+                    </activeRecipes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

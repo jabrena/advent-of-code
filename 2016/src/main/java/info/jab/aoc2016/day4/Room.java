@@ -1,6 +1,6 @@
 package info.jab.aoc2016.day4;
 
-import java.util.*;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 

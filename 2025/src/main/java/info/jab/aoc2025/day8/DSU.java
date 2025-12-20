@@ -1,7 +1,6 @@
 package info.jab.aoc2025.day8;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * Disjoint Set Union (DSU) data structure, also known as Union-Find.
