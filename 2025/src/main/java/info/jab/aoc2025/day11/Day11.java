@@ -5,7 +5,7 @@ import info.jab.aoc.Solver;
 
 public class Day11 implements Day<Long> {
 
-    private final Solver<Long> solver = new GraphPathCounter2();
+    private final Solver<Long> solver = new GraphPathCounter();
 
     @Override
     public Long getPart1Result(final String fileName) {
