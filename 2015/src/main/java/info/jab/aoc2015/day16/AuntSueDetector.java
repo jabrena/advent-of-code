@@ -3,7 +3,8 @@ package info.jab.aoc2015.day16;
 import info.jab.aoc.Solver;
 import com.putoet.resources.ResourceLines;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class AuntSueDetector implements Solver<Integer> {
