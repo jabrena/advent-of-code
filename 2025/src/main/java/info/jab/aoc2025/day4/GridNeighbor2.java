@@ -76,7 +76,7 @@ public final class GridNeighbor2 implements Solver<Integer> {
     /**
      * Iteratively removes '@' symbols that have fewer than 4 neighbors
      * until no more can be removed, then returns the total count removed.
-     * Uses Stream.iterate for functional iteration.
+     * Uses an Imperative approach for clarity.
      *
      * @param fileName The input file name
      * @return The total number of cells removed
