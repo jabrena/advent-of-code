@@ -7,7 +7,6 @@ import com.putoet.grid.Point;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Solver for counting and removing grid cells based on neighbor count.
@@ -38,7 +37,7 @@ public final class GridNeighbor2 implements Solver<Integer> {
         final Grid grid = createGrid(fileName);
 
         return grid.findAll(c -> c == TARGET_CELL).stream()
-                .filter(p -> GridDirections.countNeighbors(grid, p, c -> c == TARGET_CELL, true) < MIN_NEIGHBORS)
+                .filter(p -> hasFewerThanMinimumNeighbors(grid, p))
                 .mapToInt(p -> 1)
                 .sum();
     }
@@ -51,14 +50,28 @@ public final class GridNeighbor2 implements Solver<Integer> {
      * @return A Grid object representing the grid
      */
     private Grid createGrid(final String fileName) {
-        final String resourceName = fileName.startsWith("/") ? fileName : "/" + fileName;
-        final List<String> lines = ResourceLines.list(resourceName).stream()
+        final List<String> lines = ResourceLines.list(fileName).stream()
                 .filter(line -> !line.isEmpty())
                 .toList();
         return new Grid(GridUtils.of(lines));
     }
 
-
+    /**
+     * Predicate that checks if a cell has fewer than the minimum required
+     * neighbors.
+     * A cell is considered to have insufficient neighbors if it has fewer than
+     * MIN_NEIGHBORS (4) adjacent cells containing the TARGET_CELL character.
+     * This predicate encapsulates the business rule for identifying cells that
+     * should be removed or counted.
+     *
+     * @param grid  The grid to check neighbors in
+     * @param point The point to check
+     * @return true if the cell has fewer than MIN_NEIGHBORS neighbors with
+     *         TARGET_CELL
+     */
+    private boolean hasFewerThanMinimumNeighbors(final Grid grid, final Point point) {
+        return GridDirections.countNeighbors(grid, point, c -> c == TARGET_CELL, true) < MIN_NEIGHBORS;
+    }
 
     /**
      * Iteratively removes '@' symbols that have fewer than 4 neighbors
@@ -72,34 +85,17 @@ public final class GridNeighbor2 implements Solver<Integer> {
     public Integer solvePartTwo(final String fileName) {
         final Grid grid = createGrid(fileName);
 
-        final List<Point> initialCellsToRemove = findCellsToRemove(grid);
-        if (initialCellsToRemove.isEmpty()) {
-            return 0;
+        List<Point> cellsToRemove = findCellsToRemove(grid);
+        int totalRemoved = 0;
+
+        while (!cellsToRemove.isEmpty()) {
+            final int cellsRemovedThisIteration = cellsToRemove.size();
+            removeCells(grid, cellsToRemove);
+            totalRemoved += cellsRemovedThisIteration;
+            cellsToRemove = findCellsToRemove(grid);
         }
 
-        return Stream.iterate(
-                        new RemovalState(grid, initialCellsToRemove, 0),
-                        state -> !state.cellsToRemove().isEmpty(),
-                        state -> {
-                            final int cellsRemovedThisIteration = state.cellsToRemove().size();
-                            removeCells(state.grid(), state.cellsToRemove());
-                            final List<Point> nextCellsToRemove = findCellsToRemove(state.grid());
-                            return new RemovalState(
-                                    state.grid(),
-                                    nextCellsToRemove,
-                                    state.totalRemoved() + cellsRemovedThisIteration
-                            );
-                        }
-                )
-                .reduce((first, second) -> second)
-                // Stream.iterate stops when the predicate becomes false, which means
-                // the last state in the stream has cellsToRemove that were removed
-                // in the 'next' function when generating the following state (with empty cellsToRemove).
-                // That following state's totalRemoved includes the count, but it's not in the stream.
-                // Therefore, we need to add state.cellsToRemove().size() to account for
-                // the cells removed in the final iteration.
-                .map(state -> state.totalRemoved() + state.cellsToRemove().size())
-                .orElse(0);
+        return totalRemoved;
     }
 
     /**
@@ -112,7 +108,7 @@ public final class GridNeighbor2 implements Solver<Integer> {
      */
     private List<Point> findCellsToRemove(final Grid grid) {
         return grid.findAll(c -> c == TARGET_CELL).stream()
-                .filter(p -> GridDirections.countNeighbors(grid, p, c -> c == TARGET_CELL, true) < MIN_NEIGHBORS)
+                .filter(p -> hasFewerThanMinimumNeighbors(grid, p))
                 .toList();
     }
 
