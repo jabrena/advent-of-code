@@ -8,13 +8,13 @@ import java.util.stream.IntStream;
  * Immutable record following functional programming principles.
  * The lists are expected to be immutable (e.g., from List.of() or List.copyOf()).
  */
-public record RangeProblemInput(List<Interval> ranges, List<Long> ids) {
+public record RangeProblemInput(List<Interval> intervals, List<Long> ids) {
     /**
      * Compact constructor ensuring immutability through defensive copying.
      */
     public RangeProblemInput {
         // Defensive copy to ensure immutability
-        ranges = List.copyOf(ranges);
+        intervals = List.copyOf(intervals);
         ids = List.copyOf(ids);
     }
 
@@ -34,7 +34,7 @@ public record RangeProblemInput(List<Interval> ranges, List<Long> ids) {
                 .findFirst()
                 .orElse(lines.size());
 
-        final List<Interval> ranges = lines.stream()
+        final List<Interval> intervals = lines.stream()
                 .limit(separatorIndex)
                 .filter(line -> !line.isBlank())
                 .map(Interval::from)
@@ -47,7 +47,7 @@ public record RangeProblemInput(List<Interval> ranges, List<Long> ids) {
                 .map(Long::parseLong)
                 .toList();
 
-        return new RangeProblemInput(ranges, ids);
+        return new RangeProblemInput(intervals, ids);
     }
 }
 

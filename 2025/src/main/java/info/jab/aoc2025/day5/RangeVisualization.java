@@ -87,7 +87,7 @@ public final class RangeVisualization extends Application {
     }
 
     private void calculateBounds(final RangeProblemInput input) {
-        sortedRanges = input.ranges().stream()
+        sortedRanges = input.intervals().stream()
                 .sorted(Comparator.comparingLong(Interval::start))
                 .toList();
 
@@ -140,7 +140,7 @@ public final class RangeVisualization extends Application {
         int checkedCount = 0;
 
         for (final Long id : input.ids()) {
-            final Interval containingRange = input.ranges().stream()
+            final Interval containingRange = input.intervals().stream()
                     .filter(range -> range.contains(id))
                     .findFirst()
                     .orElse(null);
@@ -255,7 +255,7 @@ public final class RangeVisualization extends Application {
         title.setFont(Font.font(16));
         title.setTextFill(Color.WHITE);
 
-        final Label totalRanges = new Label("Total Ranges: " + input.ranges().size());
+        final Label totalRanges = new Label("Total Ranges: " + input.intervals().size());
         totalRanges.setTextFill(Color.LIGHTBLUE);
 
         final Label totalIds = new Label("Total IDs: " + input.ids().size());
@@ -302,7 +302,7 @@ public final class RangeVisualization extends Application {
         panel.setStyle(BACKGROUND_COLOR_STYLE);
         panel.setPrefWidth(200);
 
-        final List<Interval> sorted = input.ranges().stream()
+        final List<Interval> sorted = input.intervals().stream()
                 .sorted(Comparator.comparingLong(Interval::start))
                 .toList();
 

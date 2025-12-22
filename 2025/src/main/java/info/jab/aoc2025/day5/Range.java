@@ -28,7 +28,7 @@ public final class Range implements Solver<Long> {
     public Long solvePartOne(final String fileName) {
         final RangeProblemInput input = parse(fileName);
         return input.ids().stream()
-                .filter(id -> input.ranges().stream().anyMatch(range -> range.contains(id)))
+                .filter(id -> input.intervals().stream().anyMatch(range -> range.contains(id)))
                 .count();
     }
 
@@ -41,17 +41,17 @@ public final class Range implements Solver<Long> {
     @Override
     public Long solvePartTwo(final String fileName) {
         final RangeProblemInput input = parse(fileName);
-        final List<Interval> sortedRanges = input.ranges().stream()
+        final List<Interval> sortedIntervals = input.intervals().stream()
                 .sorted(Comparator.comparingLong(Interval::start))
                 .toList();
 
-        if (sortedRanges.isEmpty()) {
+        if (sortedIntervals.isEmpty()) {
             return 0L;
         }
 
-        final List<Interval> mergedRanges = mergeRanges(sortedRanges);
+        final List<Interval> mergedIntervals = mergeIntervals(sortedIntervals);
 
-        return mergedRanges.stream()
+        return mergedIntervals.stream()
                 .mapToLong(r -> r.end() - r.start() + 1)
                 .sum();
     }
@@ -63,12 +63,12 @@ public final class Range implements Solver<Long> {
      * @param sortedRanges Ranges sorted by start value
      * @return List of merged ranges
      */
-    private List<Interval> mergeRanges(final List<Interval> sortedRanges) {
+    private List<Interval> mergeIntervals(final List<Interval> sortedIntervals) {
         final List<Interval> mergedRanges = new ArrayList<>();
-        Interval current = sortedRanges.get(0);
+        Interval current = sortedIntervals.get(0);
 
-        for (int i = 1; i < sortedRanges.size(); i++) {
-            final Interval next = sortedRanges.get(i);
+        for (int i = 1; i < sortedIntervals.size(); i++) {
+            final Interval next = sortedIntervals.get(i);
             // Merge if overlapping or adjacent
             if (next.start() <= current.end() + 1) {
                 current = new Interval(current.start(), Math.max(current.end(), next.end()));

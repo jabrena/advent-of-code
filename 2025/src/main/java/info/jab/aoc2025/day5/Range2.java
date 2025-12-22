@@ -21,46 +21,46 @@ import java.util.stream.IntStream;
 public final class Range2 implements Solver<Long> {
 
     /**
-     * Counts IDs that are contained within any of the given ranges.
+     * Counts IDs that are contained within any of the given intervals.
      * Pure transformation after I/O boundary.
      *
      * @param fileName The input file name
-     * @return The count of IDs contained in any range
+     * @return The count of IDs contained in any interval
      */
     @Override
     public Long solvePartOne(final String fileName) {
         final List<String> lines = ResourceLines.list(fileName);
         final RangeProblemInput input = RangeProblemInput.from(lines);
-        return countIdsInRanges(input);
+        return countIdsInIntervals(input);
     }
 
     /**
-     * Pure function that counts IDs contained in any range.
+     * Pure function that counts IDs contained in any interval.
      * Separated from I/O for testability and functional composition.
      *
-     * @param input The input containing ranges and IDs
-     * @return The count of IDs contained in any range
+     * @param input The input containing intervals and IDs
+     * @return The count of IDs contained in any interval
      */
-    private Long countIdsInRanges(final RangeProblemInput input) {
+    private Long countIdsInIntervals(final RangeProblemInput input) {
         return input.ids().stream()
-                .filter(id -> findById(input.ranges(), id))
+                .filter(id -> existsInInterval(input.intervals(), id))
                 .count();
     }
 
     /**
-     * Pure function that checks if an ID is contained within any of the given ranges.
+     * Pure function that checks if an ID is contained within any of the given intervals.
      * Separated for testability and functional composition.
      *
      * @param id The ID to check
      * @param ranges The list of ranges to check against
      * @return true if the ID is contained in any range, false otherwise
      */
-    private boolean findById(final List<Interval> ranges, final Long id) {
-        return ranges.stream().anyMatch(range -> range.contains(id));
+    private boolean existsInInterval(final List<Interval> intervals, final Long id) {
+        return intervals.stream().anyMatch(interval -> interval.contains(id));
     }
 
     /**
-     * Merges overlapping and adjacent ranges, then calculates the total coverage.
+     * Merges overlapping and adjacent intervals, then calculates the total coverage.
      * Pure transformation after I/O boundary.
      *
      * @param fileName The input file name
@@ -74,17 +74,17 @@ public final class Range2 implements Solver<Long> {
     }
 
     /**
-     * Pure function that calculates total coverage of merged ranges.
+     * Pure function that calculates total coverage of merged intervals.
      * Separated from I/O for testability and functional composition.
      *
-     * @param input The input containing ranges and IDs
-     * @return The total number of values covered by merged ranges
+     * @param input The input containing intervals and IDs
+     * @return The total number of values covered by merged intervals
      */
     private Long calculateTotalCoverage(final RangeProblemInput input) {
-        final List<Interval> sortedRanges = input.ranges().stream()
+        final List<Interval> sortedIntervals = input.intervals().stream()
                 .sorted(Comparator.comparingLong(Interval::start))
                 .toList();
-        return mergeRanges(sortedRanges).stream()
+        return mergeIntervals(sortedIntervals).stream()
                 .mapToLong(Interval::size)
                 .sum();
     }
@@ -97,17 +97,17 @@ public final class Range2 implements Solver<Long> {
      * @param sortedRanges Ranges sorted by start value
      * @return Immutable list of merged ranges
      */
-    private List<Interval> mergeRanges(final List<Interval> sortedRanges) {
-        if (sortedRanges.isEmpty()) {
+    private List<Interval> mergeIntervals(final List<Interval> sortedIntervals) {
+        if (sortedIntervals.isEmpty()) {
             return List.of();
         }
 
-        final RangeMergeState initialState = new RangeMergeState(sortedRanges.get(0), List.of(), 0);
-        final RangeMergeState finalState = IntStream.range(0, sortedRanges.size() - 1)
+        final RangeMergeState initialState = new RangeMergeState(sortedIntervals.get(0), List.of(), 0);
+        final RangeMergeState finalState = IntStream.range(0, sortedIntervals.size() - 1)
                 .boxed()
                 .reduce(
                         initialState,
-                        (state, i) -> state.next(sortedRanges),
+                        (state, i) -> state.next(sortedIntervals),
                         (s1, s2) -> s2.index() > s1.index() ? s2 : s1
                 );
         return finalState.complete();
