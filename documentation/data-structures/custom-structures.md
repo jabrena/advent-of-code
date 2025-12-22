@@ -336,9 +336,34 @@ public record ParsedData(Map<Integer, Shape> shapes, List<Region> regions) {
 
 ### Range Classes
 
-- **Range**: Represents an interval (2025 Day 5, Day 2)
+- **Range**: Represents an interval (2025 Day 2)
   ```java
-  public record Range(int start, int end)
+  public record Range(long start, long end)
+  ```
+
+- **Interval**: Represents a range with start and end values (2025 Day 5)
+  ```java
+  public record Interval(long start, long end) {
+      public boolean contains(long value);
+      public long size();
+      public boolean overlapsOrAdjacent(Interval other);
+      public Interval merge(Interval other);
+      public static Interval from(String line);
+  }
+  ```
+
+- **RangeProblemInput**: Immutable record containing parsed ranges and IDs (2025 Day 5)
+  ```java
+  public record RangeProblemInput(List<Interval> ranges, List<Long> ids)
+  ```
+
+- **RangeMergeState**: Immutable state record for functional range merging (2025 Day 5)
+  ```java
+  record RangeMergeState(Interval current, List<Interval> merged, int index) {
+      boolean hasNext(List<Interval> sortedRanges);
+      RangeMergeState next(List<Interval> sortedRanges);
+      List<Interval> complete();
+  }
   ```
 
 ### State Classes

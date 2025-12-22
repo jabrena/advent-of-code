@@ -4,12 +4,12 @@ package info.jab.aoc2025.day5;
  * Represents a range with start and end values (inclusive).
  * Immutable record following functional programming principles.
  */
-public record RangeData(long start, long end) {
+public record Interval(long start, long end) {
     /**
      * Compact constructor with validation for type safety.
      * Ensures start <= end, making invalid states unrepresentable.
      */
-    public RangeData {
+    public Interval {
         if (start > end) {
             throw new IllegalArgumentException(
                     "Range start (%d) must be less than or equal to end (%d)".formatted(start, end)
@@ -45,7 +45,7 @@ public record RangeData(long start, long end) {
      * @param other The other range to check
      * @return true if ranges overlap or are adjacent, false otherwise
      */
-    public boolean overlapsOrAdjacent(RangeData other) {
+    public boolean overlapsOrAdjacent(Interval other) {
         return other.start() <= this.end() + 1;
     }
 
@@ -56,8 +56,8 @@ public record RangeData(long start, long end) {
      * @param other The other range to merge with
      * @return A new Range representing the merged range
      */
-    public RangeData merge(RangeData other) {
-        return new RangeData(
+    public Interval merge(Interval other) {
+        return new Interval(
                 Math.min(this.start(), other.start()),
                 Math.max(this.end(), other.end())
         );
@@ -72,7 +72,7 @@ public record RangeData(long start, long end) {
      * @return A Range record
      * @throws IllegalArgumentException if the format is invalid or parsing fails
      */
-    public static RangeData from(final String line) {
+    public static Interval from(final String line) {
         final String[] parts = line.split("-");
         if (parts.length != 2) {
             throw new IllegalArgumentException(
@@ -80,7 +80,7 @@ public record RangeData(long start, long end) {
             );
         }
         try {
-            return new RangeData(Long.parseLong(parts[0]), Long.parseLong(parts[1]));
+            return new Interval(Long.parseLong(parts[0]), Long.parseLong(parts[1]));
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(
                     "Invalid range format: '%s'. Start and end must be valid numbers.".formatted(line),

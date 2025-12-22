@@ -4,6 +4,7 @@ import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Solver for range-based problems.
@@ -28,7 +29,8 @@ public final class Range2 implements Solver<Long> {
      */
     @Override
     public Long solvePartOne(final String fileName) {
-        final Input input = Input.from(ResourceLines.list(fileName));
+        final List<String> lines = ResourceLines.list(fileName);
+        final RangeProblemInput input = RangeProblemInput.from(lines);
         return countIdsInRanges(input);
     }
 
@@ -39,7 +41,7 @@ public final class Range2 implements Solver<Long> {
      * @param input The input containing ranges and IDs
      * @return The count of IDs contained in any range
      */
-    private Long countIdsInRanges(final Input input) {
+    private Long countIdsInRanges(final RangeProblemInput input) {
         return input.ids().stream()
                 .filter(id -> input.ranges().stream().anyMatch(range -> range.contains(id)))
                 .count();
@@ -54,7 +56,8 @@ public final class Range2 implements Solver<Long> {
      */
     @Override
     public Long solvePartTwo(final String fileName) {
-        final Input input = Input.from(ResourceLines.list(fileName));
+        final List<String> lines = ResourceLines.list(fileName);
+        final RangeProblemInput input = RangeProblemInput.from(lines);
         return calculateTotalCoverage(input);
     }
 
@@ -65,12 +68,12 @@ public final class Range2 implements Solver<Long> {
      * @param input The input containing ranges and IDs
      * @return The total number of values covered by merged ranges
      */
-    private Long calculateTotalCoverage(final Input input) {
-        final List<RangeData> sortedRanges = input.ranges().stream()
-                .sorted(Comparator.comparingLong(RangeData::start))
+    private Long calculateTotalCoverage(final RangeProblemInput input) {
+        final List<Interval> sortedRanges = input.ranges().stream()
+                .sorted(Comparator.comparingLong(Interval::start))
                 .toList();
         return mergeRanges(sortedRanges).stream()
-                .mapToLong(RangeData::size)
+                .mapToLong(Interval::size)
                 .sum();
     }
 
@@ -82,15 +85,19 @@ public final class Range2 implements Solver<Long> {
      * @param sortedRanges Ranges sorted by start value
      * @return Immutable list of merged ranges
      */
-    private List<RangeData> mergeRanges(final List<RangeData> sortedRanges) {
+    private List<Interval> mergeRanges(final List<Interval> sortedRanges) {
         if (sortedRanges.isEmpty()) {
             return List.of();
         }
 
-        MergeState state = new MergeState(sortedRanges.get(0), List.of(), 0);
-        for (int i = 0; i < sortedRanges.size() - 1; i++) {
-            state = state.next(sortedRanges);
-        }
-        return state.complete();
+        final RangeMergeState initialState = new RangeMergeState(sortedRanges.get(0), List.of(), 0);
+        final RangeMergeState finalState = IntStream.range(0, sortedRanges.size() - 1)
+                .boxed()
+                .reduce(
+                        initialState,
+                        (state, i) -> state.next(sortedRanges),
+                        (s1, s2) -> s2.index() > s1.index() ? s2 : s1
+                );
+        return finalState.complete();
     }
 }

@@ -26,7 +26,7 @@ public final class Range implements Solver<Long> {
      */
     @Override
     public Long solvePartOne(final String fileName) {
-        final Input input = parse(fileName);
+        final RangeProblemInput input = parse(fileName);
         return input.ids().stream()
                 .filter(id -> input.ranges().stream().anyMatch(range -> range.contains(id)))
                 .count();
@@ -40,16 +40,16 @@ public final class Range implements Solver<Long> {
      */
     @Override
     public Long solvePartTwo(final String fileName) {
-        final Input input = parse(fileName);
-        final List<RangeData> sortedRanges = input.ranges().stream()
-                .sorted(Comparator.comparingLong(RangeData::start))
+        final RangeProblemInput input = parse(fileName);
+        final List<Interval> sortedRanges = input.ranges().stream()
+                .sorted(Comparator.comparingLong(Interval::start))
                 .toList();
 
         if (sortedRanges.isEmpty()) {
             return 0L;
         }
 
-        final List<RangeData> mergedRanges = mergeRanges(sortedRanges);
+        final List<Interval> mergedRanges = mergeRanges(sortedRanges);
 
         return mergedRanges.stream()
                 .mapToLong(r -> r.end() - r.start() + 1)
@@ -63,15 +63,15 @@ public final class Range implements Solver<Long> {
      * @param sortedRanges Ranges sorted by start value
      * @return List of merged ranges
      */
-    private List<RangeData> mergeRanges(final List<RangeData> sortedRanges) {
-        final List<RangeData> mergedRanges = new ArrayList<>();
-        RangeData current = sortedRanges.get(0);
+    private List<Interval> mergeRanges(final List<Interval> sortedRanges) {
+        final List<Interval> mergedRanges = new ArrayList<>();
+        Interval current = sortedRanges.get(0);
 
         for (int i = 1; i < sortedRanges.size(); i++) {
-            final RangeData next = sortedRanges.get(i);
+            final Interval next = sortedRanges.get(i);
             // Merge if overlapping or adjacent
             if (next.start() <= current.end() + 1) {
-                current = new RangeData(current.start(), Math.max(current.end(), next.end()));
+                current = new Interval(current.start(), Math.max(current.end(), next.end()));
             } else {
                 mergedRanges.add(current);
                 current = next;
@@ -89,9 +89,9 @@ public final class Range implements Solver<Long> {
      * @param fileName The input file name
      * @return Parsed input containing ranges and IDs
      */
-    private Input parse(final String fileName) {
+    private RangeProblemInput parse(final String fileName) {
         final List<String> lines = ResourceLines.list(fileName);
-        final List<RangeData> ranges = new ArrayList<>();
+        final List<Interval> ranges = new ArrayList<>();
         final List<Long> ids = new ArrayList<>();
 
         boolean parsingRanges = true;
@@ -105,12 +105,12 @@ public final class Range implements Solver<Long> {
 
             if (parsingRanges) {
                 final String[] parts = line.split("-");
-                ranges.add(new RangeData(Long.parseLong(parts[0]), Long.parseLong(parts[1])));
+                ranges.add(new Interval(Long.parseLong(parts[0]), Long.parseLong(parts[1])));
             } else {
                 ids.add(Long.parseLong(line.trim()));
             }
         }
-        return new Input(ranges, ids);
+        return new RangeProblemInput(ranges, ids);
     }
 }
 

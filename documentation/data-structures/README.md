@@ -120,7 +120,7 @@ See [Grids Documentation](grids.md) for detailed information.
 - **PriorityQueue**: Point clustering
 - **ArrayDeque**: Queue operations
 - **DSU**: Custom Union-Find implementation
-- **Records**: Extensive use of records for immutable data (`ParsedData`, `Region`, `Shape`, `GraphNode`, `GraphEdge`, `ColumnRange`, `MathOperator`, etc.)
+- **Records**: Extensive use of records for immutable data (`ParsedData`, `Region`, `Shape`, `GraphNode`, `GraphEdge`, `ColumnRange`, `MathOperator`, `Interval`, `RangeProblemInput`, `RangeMergeState`, etc.)
 - **Arrays**: Grid state representation (bitmask arrays `long[]`), parent/size arrays in DSU, interleaved arrays for rational matrices
 - **DataFrame** (dataframe-ec): Tabular data processing with functional operations (rotation string processing)
 - **LongIntHashMap** (Eclipse Collections): Primitive map for meet-in-the-middle algorithm (Day 10)

@@ -465,7 +465,7 @@ boolean contains = map.containsKey(key);
 **Memory**: More memory-efficient than `ArrayList<Long>` by avoiding boxing overhead.
 
 **Usage Examples**:
-- **2025 Day 5** (`Range3.java`): Storing range start/end values during DataFrame processing
+- **2025 Day 5** (`Range2.java`): Using `List<Interval>` for immutable range collections, `List<Long>` for IDs in `RangeProblemInput`
   ```java
   import org.eclipse.collections.api.list.primitive.MutableLongList;
   import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
