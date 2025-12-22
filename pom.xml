@@ -62,7 +62,7 @@
         <maven-plugin-jar.version>3.5.0</maven-plugin-jar.version>
         <maven-plugin-site.version>3.21.0</maven-plugin-site.version>
         <maven-plugin-allure.version>2.15.2</maven-plugin-allure.version>
-        <allure.version>2.29.0</allure.version>
+        <allure.version>2.32.0</allure.version>
         <maven-plugin-rewrite.version>6.23.0</maven-plugin-rewrite.version>
 
         <!-- Quality thresholds -->
