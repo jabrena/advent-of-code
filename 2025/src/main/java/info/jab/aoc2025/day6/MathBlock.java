@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
  * Part 1: Processes blocks row by row, extracting numbers and operators.
  * Part 2: Processes blocks column by column (right to left), extracting numbers vertically.
  */
-public final class MathBlockSolver {
+public final class MathBlock {
 
     /**
      * Solves the problem by processing blocks using the specified block processor.

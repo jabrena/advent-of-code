@@ -5,7 +5,7 @@ import info.jab.aoc.Solver;
 
 public class Day3 implements Day<Long> {
 
-    private final Solver<Long> solver = new MaxJoltageSolver();
+    private final Solver<Long> solver = new MaxJoltage();
 
     @Override
     public Long getPart1Result(final String fileName) {

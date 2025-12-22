@@ -12,7 +12,7 @@ import java.util.List;
  * Counts '@' symbols that have fewer than 4 neighbors, and iteratively
  * removes such cells until no more can be removed.
  */
-public final class GridNeighborSolver implements Solver<Integer> {
+public final class GridNeighbor implements Solver<Integer> {
 
     private static final char TARGET_CELL = '@';
     private static final char EMPTY_CELL = '.';

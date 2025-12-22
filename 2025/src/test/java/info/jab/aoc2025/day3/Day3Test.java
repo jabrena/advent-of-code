@@ -22,7 +22,7 @@ class Day3Test {
     @Test
     void should_solve_day3_part1() {
         //Given
-        String fileName = "day3/day3-input.txt";
+        String fileName = "/day3/day3-input.txt";
 
         //When
         var day3 = new Day3();
@@ -35,7 +35,7 @@ class Day3Test {
     @Test
     void should_solve_day3_part2_sample() {
         //Given
-        String fileName = "day3/day3-input-sample.txt";
+        String fileName = "/day3/day3-input-sample.txt";
 
         //When
         var day3 = new Day3();
@@ -48,7 +48,7 @@ class Day3Test {
     @Test
     void should_solve_day3_part2() {
         //Given
-        String fileName = "day3/day3-input.txt";
+        String fileName = "/day3/day3-input.txt";
 
         //When
         var day3 = new Day3();
