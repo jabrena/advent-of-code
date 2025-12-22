@@ -43,8 +43,20 @@ public final class Range2 implements Solver<Long> {
      */
     private Long countIdsInRanges(final RangeProblemInput input) {
         return input.ids().stream()
-                .filter(id -> input.ranges().stream().anyMatch(range -> range.contains(id)))
+                .filter(id -> findById(input.ranges(), id))
                 .count();
+    }
+
+    /**
+     * Pure function that checks if an ID is contained within any of the given ranges.
+     * Separated for testability and functional composition.
+     *
+     * @param id The ID to check
+     * @param ranges The list of ranges to check against
+     * @return true if the ID is contained in any range, false otherwise
+     */
+    private boolean findById(final List<Interval> ranges, final Long id) {
+        return ranges.stream().anyMatch(range -> range.contains(id));
     }
 
     /**
