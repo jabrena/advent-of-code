@@ -209,7 +209,7 @@ for (int i = 0; i < height; i++) {
 
 ```java
 // Check visibility from each direction
-boolean visible = 
+boolean visible =
     visibleFromTop(grid, row, col) ||
     visibleFromBottom(grid, row, col) ||
     visibleFromLeft(grid, row, col) ||

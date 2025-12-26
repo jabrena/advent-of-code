@@ -132,7 +132,7 @@ See [Grids Documentation](grids.md) for detailed information.
   - **Day 10**: `Part1Problem`, `Part2Problem`
   - **Day 11**: `GraphNode`, `GraphEdge`, `PathPair`
   - **Day 12**: `Point`, `Shape`, `ShapeVariant`, `Region`, `ParsedData`
-- **Arrays**: 
+- **Arrays**:
   - **Bitmask arrays** (`long[]`): Grid state representation for shape packing (Day 12), O(1) bitwise operations
   - **Interleaved arrays** (`long[]`): Rational matrix storage for better cache locality (Day 10)
   - **Primitive arrays**: Parent/size arrays in DSU (`int[]`), character arrays for ID validation (`char[]`)

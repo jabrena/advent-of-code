@@ -18,49 +18,49 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 
 - **Functional Programming & Design**:
   - **Sealed Interfaces & ADTs**: Type-safe algebraic data types for pattern matching
-    - 2025: [`MathOperator`](2025/src/main/java/info/jab/aoc2025/day6/MathOperator.java) with sealed interface and record implementations
-    - 2016: [`Instruction`](2016/src/main/java/info/jab/aoc2016/day23/instructions/Instruction.java) sealed interface for virtual machine instructions
-    - 2015: [`Instruction`](2015/src/main/java/info/jab/aoc2015/day23/instructions/Instruction.java) sealed interface for Turing machine
+    - [`MathOperator`](2025/src/main/java/info/jab/aoc2025/day6/MathOperator.java) with sealed interface and record implementations
+    - [`Instruction`](2016/src/main/java/info/jab/aoc2016/day23/instructions/Instruction.java) sealed interface for virtual machine instructions
+    - [`Instruction`](2015/src/main/java/info/jab/aoc2015/day23/instructions/Instruction.java) sealed interface for Turing machine
   - **Records**: Immutable data carriers for state representation
-    - 2025: [`Interval`](2025/src/main/java/info/jab/aoc2025/day5/Interval.java), [`RangeMergeState`](2025/src/main/java/info/jab/aoc2025/day5/RangeMergeState.java), [`ParsedData`](2025/src/main/java/info/jab/aoc2025/day12/ParsedData.java), [`Shape`](2025/src/main/java/info/jab/aoc2025/day12/Shape.java), [`Region`](2025/src/main/java/info/jab/aoc2025/day12/Region.java)
-    - 2016: [`ProgramState`](2016/src/main/java/info/jab/aoc2016/day23/ProgramState.java), [`ExecutionResult`](2016/src/main/java/info/jab/aoc2016/day23/ExecutionResult.java), [`GridState`](2016/src/main/java/info/jab/aoc2016/day22/GridState.java), [`VaultState`](2016/src/main/java/info/jab/aoc2016/day17/VaultState.java)
+    - [`Interval`](2025/src/main/java/info/jab/aoc2025/day5/Interval.java), [`RangeMergeState`](2025/src/main/java/info/jab/aoc2025/day5/RangeMergeState.java), [`ParsedData`](2025/src/main/java/info/jab/aoc2025/day12/ParsedData.java), [`Shape`](2025/src/main/java/info/jab/aoc2025/day12/Shape.java), [`Region`](2025/src/main/java/info/jab/aoc2025/day12/Region.java)
+    - [`ProgramState`](2016/src/main/java/info/jab/aoc2016/day23/ProgramState.java), [`ExecutionResult`](2016/src/main/java/info/jab/aoc2016/day23/ExecutionResult.java), [`GridState`](2016/src/main/java/info/jab/aoc2016/day22/GridState.java), [`VaultState`](2016/src/main/java/info/jab/aoc2016/day17/VaultState.java)
   - **Streams API**: Declarative data transformations, `Stream.iterate()` for functional iteration, lazy evaluation
-    - 2025: [`Range2`](2025/src/main/java/info/jab/aoc2025/day5/Range2.java), [`ShapePacking`](2025/src/main/java/info/jab/aoc2025/day12/ShapePacking.java)
-    - 2016: [`Trampoline.run()`](commons/src/main/java/info/jab/aoc/Trampoline.java) uses `Stream.iterate()` for iterative evaluation
+    - [`Range2`](2025/src/main/java/info/jab/aoc2025/day5/Range2.java), [`ShapePacking`](2025/src/main/java/info/jab/aoc2025/day12/ShapePacking.java)
+    - [`Trampoline.run()`](commons/src/main/java/info/jab/aoc/Trampoline.java) uses `Stream.iterate()` for iterative evaluation
   - **Pattern Matching**: Switch expressions with sealed classes for exhaustive type checking
-    - 2016: [`Instruction.from()`](2016/src/main/java/info/jab/aoc2016/day23/instructions/Instruction.java) uses switch expressions for instruction parsing
+    - [`Instruction.from()`](2016/src/main/java/info/jab/aoc2016/day23/instructions/Instruction.java) uses switch expressions for instruction parsing
   - **Trampoline Pattern**: Converting deep recursion to iteration, preventing stack overflow
-    - Commons: [`Trampoline`](commons/src/main/java/info/jab/aoc/Trampoline.java) sealed interface with `Done` and `More` records
-    - 2016: [`AssembunnyInterpreter`](2016/src/main/java/info/jab/aoc2016/day23/AssembunnyInterpreter.java) uses trampoline for safe deep recursion
-    - 2015: [`ContainerCombination`](2015/src/main/java/info/jab/aoc2015/day17/ContainerCombination.java) uses trampoline for backtracking
+    - [`Trampoline`](commons/src/main/java/info/jab/aoc/Trampoline.java) sealed interface with `Done` and `More` records
+    - [`AssembunnyInterpreter`](2016/src/main/java/info/jab/aoc2016/day23/AssembunnyInterpreter.java) uses trampoline for safe deep recursion
+    - [`ContainerCombination`](2015/src/main/java/info/jab/aoc2015/day17/ContainerCombination.java) uses trampoline for backtracking
   - **Pure Functions**: Side-effect-free transformations, immutable data structures
-    - 2025: [`Interval.contains()`](2025/src/main/java/info/jab/aoc2025/day5/Interval.java), [`Range2.mergeIntervals()`](2025/src/main/java/info/jab/aoc2025/day5/Range2.java)
-    - 2016: State transformation methods like [`ProgramState.withRegisters()`](2016/src/main/java/info/jab/aoc2016/day23/ProgramState.java)
+    - [`Interval.contains()`](2025/src/main/java/info/jab/aoc2025/day5/Interval.java), [`Range2.mergeIntervals()`](2025/src/main/java/info/jab/aoc2025/day5/Range2.java)
+    - State transformation methods like [`ProgramState.withRegisters()`](2016/src/main/java/info/jab/aoc2016/day23/ProgramState.java)
   - **Higher-Order Functions**: Function composition, method references, lambda expressions
   - **Parallel Processing**: Parallel streams for independent computations
-    - 2025: [`ShapePacking`](2025/src/main/java/info/jab/aoc2025/day12/ShapePacking.java) with `parallelStream()` for region processing
+    - [`ShapePacking`](2025/src/main/java/info/jab/aoc2025/day12/ShapePacking.java) with `parallelStream()` for region processing
 
 - **Data Oriented Programming (DOP)**:
   - **Code-Data Separation**: Instructions as data structures, execution logic separated from instruction representation
-    - 2016: [`Instruction`](2016/src/main/java/info/jab/aoc2016/day23/instructions/Instruction.java) sealed interface separates instruction data from execution logic
-    - 2015: [`Instruction`](2015/src/main/java/info/jab/aoc2015/day23/instructions/Instruction.java) for Turing machine instructions
+    - [`Instruction`](2016/src/main/java/info/jab/aoc2016/day23/instructions/Instruction.java) sealed interface separates instruction data from execution logic
+    - [`Instruction`](2015/src/main/java/info/jab/aoc2015/day23/instructions/Instruction.java) for Turing machine instructions
   - **Generic Data Structures**: Flexible, reusable data representations
-    - Commons: Generic [`Trampoline<T>`](commons/src/main/java/info/jab/aoc/Trampoline.java) for any computation type
+    - Generic [`Trampoline<T>`](commons/src/main/java/info/jab/aoc/Trampoline.java) for any computation type
   - **Immutable Data**: Records and sealed interfaces ensure data integrity
-    - 2025: [`RangeProblemInput`](2025/src/main/java/info/jab/aoc2025/day5/RangeProblemInput.java), [`GraphNode`](2025/src/main/java/info/jab/aoc2025/day11/GraphNode.java), [`GraphEdge`](2025/src/main/java/info/jab/aoc2025/day11/GraphEdge.java)
-    - 2016: [`ProgramState`](2016/src/main/java/info/jab/aoc2016/day23/ProgramState.java) with `withRegisters()` and `withProgramCounter()` transformation methods
+    - [`RangeProblemInput`](2025/src/main/java/info/jab/aoc2025/day5/RangeProblemInput.java), [`GraphNode`](2025/src/main/java/info/jab/aoc2025/day11/GraphNode.java), [`GraphEdge`](2025/src/main/java/info/jab/aoc2025/day11/GraphEdge.java)
+    - [`ProgramState`](2016/src/main/java/info/jab/aoc2016/day23/ProgramState.java) with `withRegisters()` and `withProgramCounter()` transformation methods
   - **Pure Data Manipulation**: Transformations through pure functions, explicit data flow
   - **Flat Data Models**: Denormalized structures for efficient processing
   - **Interleaved Arrays**: Better cache locality for related data pairs
-    - 2025: [`RationalMatrix`](2025/src/main/java/info/jab/aoc2025/day10/RationalMatrix.java) with interleaved numerator/denominator storage
+    - [`RationalMatrix`](2025/src/main/java/info/jab/aoc2025/day10/RationalMatrix.java) with interleaved numerator/denominator storage
 
 - **Algorithms & Data Structures**:
   - **Graph Algorithms**: BFS (Breadth-First Search), DFS (Depth-First Search), Dijkstra's shortest path, A* pathfinding with heuristics, memoized path counting (e.g., [`GraphPathCounter`](2025/src/main/java/info/jab/aoc2025/day11/GraphPathCounter.java))
   - **Dynamic Programming**: Memoization for overlapping subproblems, optimal substructure exploitation (e.g., [`GraphPathCounter`](2025/src/main/java/info/jab/aoc2025/day11/GraphPathCounter.java), [`BeamPathCounter`](2025/src/main/java/info/jab/aoc2025/day7/BeamPathCounter.java))
   - **Backtracking**: Recursive search with pruning, constraint satisfaction (e.g., [`ShapePacking`](2025/src/main/java/info/jab/aoc2025/day12/ShapePacking.java) with bitmask optimization)
   - **State Space Search**: BFS/DFS for exploring solution spaces
-    - 2024: [`RamRun`](2024/src/main/java/info/jab/aoc2024/day18/RamRun.java) BFS pathfinding, [`LavaHikingTrails2`](2024/src/main/java/info/jab/aoc2024/day10/LavaHikingTrails2.java) BFS trail exploration, [`KeypadConundrum2`](2024/src/main/java/info/jab/aoc2024/day21/KeypadConundrum2.java) BFS shortest paths, [`LavaHikingTrails`](2024/src/main/java/info/jab/aoc2024/day10/LavaHikingTrails.java) DFS trail rating, [`LanParty`](2024/src/main/java/info/jab/aoc2024/day23/LanParty.java) state-based Bron-Kerbosch algorithm
-    - 2016: Elevator puzzles with state space search
+    - [`RamRun`](2024/src/main/java/info/jab/aoc2024/day18/RamRun.java) BFS pathfinding, [`LavaHikingTrails2`](2024/src/main/java/info/jab/aoc2024/day10/LavaHikingTrails2.java) BFS trail exploration, [`KeypadConundrum2`](2024/src/main/java/info/jab/aoc2024/day21/KeypadConundrum2.java) BFS shortest paths, [`LavaHikingTrails`](2024/src/main/java/info/jab/aoc2024/day10/LavaHikingTrails.java) DFS trail rating, [`LanParty`](2024/src/main/java/info/jab/aoc2024/day23/LanParty.java) state-based Bron-Kerbosch algorithm
+    - Elevator puzzles with state space search
   - **Range Algorithms**: Range merging, interval operations, coverage calculations (e.g., [`Range2`](2025/src/main/java/info/jab/aoc2025/day5/Range2.java), [`Interval`](2025/src/main/java/info/jab/aoc2025/day5/Interval.java))
   - **Tree Traversal**: File system navigation, hierarchical data processing
   - **String Algorithms**: Pattern matching, parsing, validation, hash generation
@@ -72,8 +72,8 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
   - **Primitive Collections**: FastUtil and Eclipse Collections for performance-critical code (e.g., [`ObjectArrayList`](2025/src/main/java/info/jab/aoc2025/day8/PointCluster3.java), [`LongIntHashMap`](2025/src/main/java/info/jab/aoc2025/day10/Part1Solver.java))
   - **Optimization Techniques**: Big O analysis, complexity optimization, space-time tradeoffs, parallel execution
   - **Virtual Machine Implementation**: Instruction-based execution with state management
-    - 2016: [`AssembunnyInterpreter`](2016/src/main/java/info/jab/aoc2016/day23/AssembunnyInterpreter.java) with trampoline-based execution
-    - 2015: Turing machine implementation with sealed instruction types
+    - [`AssembunnyInterpreter`](2016/src/main/java/info/jab/aoc2016/day23/AssembunnyInterpreter.java) with trampoline-based execution
+    - Turing machine implementation with sealed instruction types
 
 ## Testing & Benchmarking
 

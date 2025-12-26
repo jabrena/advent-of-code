@@ -67,7 +67,7 @@ public final class DSU {
     public List<Integer> getComponentSizes() {
         boolean[] seen = new boolean[parent.length];
         java.util.ArrayList<Integer> sizes = new java.util.ArrayList<>();
-        
+
         for (int i = 0; i < parent.length; i++) {
             int root = find(i);
             if (!seen[root]) {
@@ -75,7 +75,7 @@ public final class DSU {
                 sizes.add(size[root]);
             }
         }
-        
+
         return List.copyOf(sizes);
     }
 }
@@ -293,12 +293,12 @@ size[rootI] += size[rootJ];
 
 - **MathOperator**: Sealed interface representing mathematical operators (sealed interface with records)
   ```java
-  public sealed interface MathOperator 
+  public sealed interface MathOperator
       permits MathOperator.Addition, MathOperator.Multiplication, MathOperator.None {
-      
+
       long apply(List<Long> numbers);
       String symbol();
-      
+
       record Addition() implements MathOperator {
           @Override
           public long apply(List<Long> numbers) {
@@ -307,7 +307,7 @@ size[rootI] += size[rootJ];
           @Override
           public String symbol() { return "+"; }
       }
-      
+
       record Multiplication() implements MathOperator {
           @Override
           public long apply(List<Long> numbers) {
@@ -316,7 +316,7 @@ size[rootI] += size[rootJ];
           @Override
           public String symbol() { return "*"; }
       }
-      
+
       record None() implements MathOperator {
           @Override
           public long apply(List<Long> numbers) { return 0; }
@@ -539,12 +539,12 @@ Various state representations for game simulations and state space search:
 public final class CustomClass {
     private final int field1;
     private final String field2;
-    
+
     public CustomClass(int field1, String field2) {
         this.field1 = field1;
         this.field2 = field2;
     }
-    
+
     // Getters, equals, hashCode, toString
 }
 ```
