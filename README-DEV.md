@@ -16,9 +16,6 @@
 # Clean the project
 ./mvnw clean
 
-# Remove unused imports
-./mvnw clean rewrite:run
-
 # Clean and package in one command
 ./mvnw clean package
 

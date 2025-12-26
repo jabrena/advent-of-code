@@ -1,11 +1,9 @@
 package info.jab.aoc2025.day8;
 
+import module java.base;
+
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver2;
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.stream.IntStream;
 
 public final class PointCluster implements Solver2<Long, String, Integer> {
 
@@ -101,4 +99,3 @@ public final class PointCluster implements Solver2<Long, String, Integer> {
                 .toList();
     }
 }
-

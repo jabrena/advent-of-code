@@ -1,9 +1,6 @@
 package info.jab.aoc2025.day12;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import module java.base;
 
 /**
  * Represents a shape with all its rotation and reflection variants.

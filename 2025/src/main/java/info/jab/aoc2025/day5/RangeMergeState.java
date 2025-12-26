@@ -1,7 +1,6 @@
 package info.jab.aoc2025.day5;
 
-import java.util.List;
-import java.util.stream.Stream;
+import module java.base;
 
 /**
  * Immutable state record for functional range merging.

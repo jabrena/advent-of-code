@@ -1,7 +1,6 @@
 package info.jab.aoc2025.day12;
 
-import java.util.HashMap;
-import java.util.Map;
+import module java.base;
 
 /**
  * Represents a region with dimensions and shape requirements.

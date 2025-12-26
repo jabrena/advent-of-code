@@ -1,6 +1,6 @@
 package info.jab.aoc2025.day11;
 
-import java.util.List;
+import module java.base;
 
 /**
  * Represents an edge in the graph from a source node to a list of destination nodes.

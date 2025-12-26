@@ -1,9 +1,9 @@
 package info.jab.aoc2025.day9;
 
+import module java.base;
+
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
-import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * Solver for finding maximum rectangle areas.
@@ -115,7 +115,7 @@ public final class MaxRectangleArea implements Solver<Long> {
         final List<Edge> verticalEdges = edges.stream()
                 .filter(Edge::isVertical)
                 .toList();
-        
+
         return IntStream.range(0, points.size())
                 .boxed()
                 .parallel() // Parallel processing for independent pair validations

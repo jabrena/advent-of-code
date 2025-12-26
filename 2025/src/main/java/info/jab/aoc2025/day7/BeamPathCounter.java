@@ -1,15 +1,12 @@
 package info.jab.aoc2025.day7;
 
+import module java.base;
+
 import com.putoet.grid.Grid;
 import com.putoet.grid.GridUtils;
 import com.putoet.grid.Point;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public final class BeamPathCounter implements Solver<Long> {
 

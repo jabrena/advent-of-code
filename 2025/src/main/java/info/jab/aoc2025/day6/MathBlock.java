@@ -1,8 +1,6 @@
 package info.jab.aoc2025.day6;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.function.BiFunction;
+import module java.base;
 
 /**
  * Solver for math block problems.

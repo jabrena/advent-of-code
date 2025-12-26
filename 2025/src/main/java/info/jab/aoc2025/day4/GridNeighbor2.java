@@ -1,12 +1,13 @@
 package info.jab.aoc2025.day4;
 
+import module java.base;
+
 import com.putoet.grid.Grid;
 import com.putoet.grid.GridDirections;
 import com.putoet.grid.GridUtils;
 import com.putoet.grid.Point;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
-import java.util.List;
 
 /**
  * Solver for counting and removing grid cells based on neighbor count.

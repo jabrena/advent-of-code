@@ -1,13 +1,10 @@
 package info.jab.aoc2025.day2;
 
-import com.putoet.resources.ResourceLines;
+import module java.base;
 
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.LongPredicate;
-import java.util.stream.IntStream;
 
 /**
  * Validates IDs and calculates sums of invalid IDs from input ranges.

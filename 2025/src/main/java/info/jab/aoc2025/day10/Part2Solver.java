@@ -1,11 +1,6 @@
 package info.jab.aoc2025.day10;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinTask;
-import java.util.concurrent.RecursiveTask;
-import java.util.concurrent.atomic.AtomicLong;
+import module java.base;
 
 public final class Part2Solver {
 

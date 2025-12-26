@@ -1,10 +1,6 @@
 package info.jab.aoc2025.day1;
 
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import module java.base;
 
 import info.jab.aoc.Solver;
 import com.putoet.resources.ResourceLines;

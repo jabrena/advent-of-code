@@ -1,6 +1,6 @@
 package info.jab.aoc2025.day1;
 
-import java.util.Arrays;
+import module java.base;
 
 /**
  * Enum representing the possible rotation directions.

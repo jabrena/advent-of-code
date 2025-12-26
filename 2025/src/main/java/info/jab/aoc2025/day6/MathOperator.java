@@ -1,6 +1,6 @@
 package info.jab.aoc2025.day6;
 
-import java.util.List;
+import module java.base;
 
 /**
  * Sealed interface representing mathematical operators for block calculations.

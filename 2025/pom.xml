@@ -63,7 +63,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>--enable-preview --add-modules jdk.incubator.vector</argLine>
-                    <runOrder>alphabetical</runOrder>
                 </configuration>
             </plugin>
         </plugins>

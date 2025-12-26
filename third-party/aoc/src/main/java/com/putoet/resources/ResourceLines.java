@@ -62,13 +62,15 @@ public class ResourceLines {
     }
 
     /**
-     * Return a Stream of lines (String) for the given file.
+     * Return a List of lines (String) for the given file.
      * @param resourceName The file to read
      * @throws IllegalArgumentException if the resource does not exist or the URL is invalid
-     * @return A Stream of lines for the given file
+     * @return A List of lines for the given file
      */
     public static List<String> list(String resourceName) {
-        return stream(resourceName).toList();
+        try (Stream<String> lines = stream(resourceName)) {
+            return lines.toList();
+        }
     }
 
     /**
@@ -78,7 +80,9 @@ public class ResourceLines {
      * @return A Set of lines for the given resource name
      */
     public static Set<String> set(String resourceName) {
-        return stream(resourceName).collect(Collectors.toSet());
+        try (Stream<String> lines = stream(resourceName)) {
+            return lines.collect(Collectors.toSet());
+        }
     }
 
     /**
@@ -88,7 +92,9 @@ public class ResourceLines {
      * @return A String with all lines concatenated for the given resource name
      */
     public static String line(String resourceName) {
-        return stream(resourceName).collect(Collectors.joining());
+        try (Stream<String> lines = stream(resourceName)) {
+            return lines.collect(Collectors.joining());
+        }
     }
 
     /**
@@ -100,6 +106,8 @@ public class ResourceLines {
      * @return A List of objects for the given resource name
      */
     public static <T> List<T> list(String resourceName, Function<String,T> of) {
-        return stream(resourceName).map(of).toList();
+        try (Stream<String> lines = stream(resourceName)) {
+            return lines.map(of).toList();
+        }
     }
 }

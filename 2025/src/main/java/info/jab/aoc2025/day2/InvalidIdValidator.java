@@ -1,8 +1,8 @@
 package info.jab.aoc2025.day2;
 
-import com.putoet.resources.ResourceLines;
+import module java.base;
 
-import java.util.List;
+import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
 /**
