@@ -5,7 +5,7 @@ import info.jab.aoc.Solver;
 
 public final class Day6 implements Day<Long> {
 
-    private final Solver<Long> solver = new MathBlock2();
+    private final Solver<Long> solver = new MathBlock();
 
     @Override
     public Long getPart1Result(final String fileName) {

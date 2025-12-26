@@ -2,13 +2,36 @@ package info.jab.aoc2025.day6;
 
 import module java.base;
 
+import com.putoet.resources.ResourceLines;
+import info.jab.aoc.Solver;
+
 /**
  * Solver for math block problems.
  * Processes lines of text containing mathematical expressions separated by empty columns.
  * Part 1: Processes blocks row by row, extracting numbers and operators.
  * Part 2: Processes blocks column by column (right to left), extracting numbers vertically.
  */
-public final class MathBlock {
+public final class MathBlock implements Solver<Long> {
+
+    private static final char SPACE = ' ';
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Long solvePartOne(final String fileName) {
+        final List<String> lines = ResourceLines.list(fileName);
+        return solve(lines, this::processBlockPart1);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Long solvePartTwo(final String fileName) {
+        final List<String> lines = ResourceLines.list(fileName);
+        return solve(lines, this::processBlockPart2);
+    }
 
     /**
      * Solves the problem by processing blocks using the specified block processor.
@@ -55,7 +78,7 @@ public final class MathBlock {
         final int startCol = range[0];
         final int endCol = range[1];
         final List<Long> numbers = new ArrayList<>();
-        char operator = ' ';
+        MathOperator operator = MathOperator.NONE;
 
         for (final String line : lines) {
             final String sub = line.substring(startCol, endCol).trim();
@@ -63,8 +86,9 @@ public final class MathBlock {
                 continue;
             }
 
-            if (sub.equals("+") || sub.equals("*")) {
-                operator = sub.charAt(0);
+            final MathOperator foundOperator = MathOperator.from(sub);
+            if (foundOperator != MathOperator.NONE) {
+                operator = foundOperator;
             } else {
                 try {
                     numbers.add(Long.parseLong(sub));
@@ -88,7 +112,7 @@ public final class MathBlock {
         final int startCol = range[0];
         final int endCol = range[1];
         final List<Long> numbers = new ArrayList<>();
-        final char operator = findOperator(lines, startCol, endCol);
+        final MathOperator operator = findOperator(lines, startCol, endCol);
 
         // Iterate columns right to left
         for (int col = endCol - 1; col >= startCol; col--) {
@@ -112,20 +136,14 @@ public final class MathBlock {
      * Calculates the result based on the operator.
      *
      * @param numbers The list of numbers to operate on
-     * @param operator The operator ('+' or '*')
+     * @param operator The operator to apply
      * @return The calculated result
      */
-    public long calculate(final List<Long> numbers, final char operator) {
+    public long calculate(final List<Long> numbers, final MathOperator operator) {
         if (numbers.isEmpty()) {
             return 0;
         }
-
-        if (operator == '+') {
-            return numbers.stream().mapToLong(Long::longValue).sum();
-        } else if (operator == '*') {
-            return numbers.stream().mapToLong(Long::longValue).reduce(1, (a, b) -> a * b);
-        }
-        return 0;
+        return operator.apply(numbers);
     }
 
     private List<String> padLines(final List<String> lines, final int maxLength) {
@@ -133,7 +151,7 @@ public final class MathBlock {
         for (final String line : lines) {
             final StringBuilder sb = new StringBuilder(line);
             while (sb.length() < maxLength) {
-                sb.append(' ');
+                sb.append(SPACE);
             }
             paddedLines.add(sb.toString());
         }
@@ -142,24 +160,21 @@ public final class MathBlock {
 
     private boolean isSeparatorColumn(final List<String> paddedLines, final int col) {
         for (final String line : paddedLines) {
-            if (line.charAt(col) != ' ') {
+            if (line.charAt(col) != SPACE) {
                 return false;
             }
         }
         return true;
     }
 
-    private char findOperator(final List<String> lines, final int startCol, final int endCol) {
+    private MathOperator findOperator(final List<String> lines, final int startCol, final int endCol) {
         for (final String line : lines) {
             final String sub = line.substring(startCol, endCol).trim();
-            if (sub.contains("+")) {
-                return '+';
-            }
-            if (sub.contains("*")) {
-                return '*';
+            final MathOperator operator = MathOperator.from(sub);
+            if (operator != MathOperator.NONE) {
+                return operator;
             }
         }
-        return ' ';
+        return MathOperator.NONE;
     }
 }
-
