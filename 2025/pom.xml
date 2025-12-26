@@ -66,6 +66,7 @@
                     <excludes>
                         <exclude>**/*Benchmark*.java</exclude>
                     </excludes>
+                    <runOrder>alphabetical</runOrder>
                 </configuration>
             </plugin>
         </plugins>
@@ -114,6 +115,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <argLine>--enable-preview --add-modules jdk.incubator.vector</argLine>
+                            <runOrder>alphabetical</runOrder>
                         </configuration>
                     </plugin>
                 </plugins>
