@@ -70,7 +70,9 @@ public final class Part2Solver {
         int firstFreeVar = freeVars.get(0);
         long maxLimit = DEFAULT_MAX_LIMIT;
         int numThreads = Runtime.getRuntime().availableProcessors();
-        long chunkSize = Math.max(1, maxLimit / (numThreads * 2));
+        // Optimize chunk size: use fewer, larger chunks to reduce task overhead
+        // Aim for approximately numThreads chunks for better load balancing
+        long chunkSize = Math.max(1, (maxLimit + numThreads - 1) / numThreads);
 
         try (ForkJoinPool pool = new ForkJoinPool(numThreads)) {
             // Collect all tasks to ensure they complete before pool shutdown
@@ -104,7 +106,9 @@ public final class Part2Solver {
         for(int i=0; i<freeIdx; i++) {
             currentFreeSum += currentAssignment[freeVars.get(i)];
         }
-        if (currentFreeSum >= bestTotal.get()) return;
+        // Cache bestTotal.get() to avoid repeated atomic reads
+        long currentBest = bestTotal.get();
+        if (currentFreeSum >= currentBest) return;
 
         if (freeIdx == freeVars.size()) {
             // Calculate pivots
@@ -218,7 +222,7 @@ public final class Part2Solver {
 
         // Improved bounds: Use remaining budget to dynamically limit search space
         long maxLimit = DEFAULT_MAX_LIMIT;
-        long currentBest = bestTotal.get();
+        // Reuse cached currentBest instead of calling get() again
         if (currentBest != Long.MAX_VALUE && currentFreeSum < currentBest) {
             // We've found at least one solution, use remaining budget
             long remainingBudget = currentBest - currentFreeSum;
@@ -234,7 +238,11 @@ public final class Part2Solver {
                    freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
 
             // Early termination: if we found optimal solution (0 cost), stop searching
-            if (bestTotal.get() == 0) return;
+            // Update cached value periodically to avoid stale data
+            if (val % 10 == 0) {
+                currentBest = bestTotal.get();
+                if (currentBest == 0) return;
+            }
         }
     }
 
@@ -281,10 +289,17 @@ public final class Part2Solver {
             long[] assignment = new long[numCols];
 
             // Search the assigned range for the first free variable
-            for (long val = startVal; val <= endVal && bestTotal.get() != 0; val++) {
+            // Cache bestTotal.get() to avoid repeated atomic reads in hot loop
+            long currentBest = bestTotal.get();
+            for (long val = startVal; val <= endVal && currentBest != 0; val++) {
                 assignment[firstFreeVar] = val;
                 search(1, freeVars, pivotColForRows, numPivots, assignment,
                       bestTotal, freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
+                // Update cached value periodically to avoid stale data
+                if (val % 10 == 0) {
+                    currentBest = bestTotal.get();
+                    if (currentBest == 0) break;
+                }
             }
             return bestTotal.get();
         }
