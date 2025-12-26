@@ -20,11 +20,7 @@ public final class PointCluster2 implements Solver2<Long, String, Integer> {
             dsu.union(edge.i(), edge.j());
         }
 
-        return dsu.getComponentSizes().stream()
-                .sorted(Comparator.reverseOrder())
-                .limit(3)
-                .mapToLong(Integer::longValue)
-                .reduce(1L, (acc, size) -> acc * size);
+        return calculateTop3Product(dsu.getComponentSizes());
     }
 
     @Override
@@ -57,10 +53,15 @@ public final class PointCluster2 implements Solver2<Long, String, Integer> {
      * @return a list of Point3D objects
      */
     private List<Point3D> parsePoints(String fileName) {
-        return ResourceLines.list(fileName).stream()
-                .filter(line -> !line.trim().isEmpty())
-                .map(Point3D::from)
-                .toList();
+        final List<String> lines = ResourceLines.list(fileName);
+        // Pre-allocate with estimated size
+        final List<Point3D> points = new ArrayList<>(lines.size());
+        for (final String line : lines) {
+            if (!line.trim().isEmpty()) {
+                points.add(Point3D.from(line));
+            }
+        }
+        return points;
     }
 
     /**
@@ -75,13 +76,47 @@ public final class PointCluster2 implements Solver2<Long, String, Integer> {
      * @return a list of all edges with their distance squared
      */
     private List<Edge> computeEdges(List<Point3D> points) {
-        List<Edge> edges = new ArrayList<>();
-        for (int i = 0; i < points.size(); i++) {
-            for (int j = i + 1; j < points.size(); j++) {
-                long distanceSquared = points.get(i).distanceSquared(points.get(j));
-                edges.add(new Edge(i, j, distanceSquared));
+        final int n = points.size();
+        // Pre-allocate with exact size: n*(n-1)/2 for all pairs
+        final int estimatedSize = n * (n - 1) / 2;
+        final List<Edge> edges = new ArrayList<>(estimatedSize);
+        
+        for (int i = 0; i < n; i++) {
+            final Point3D p1 = points.get(i);
+            for (int j = i + 1; j < n; j++) {
+                edges.add(new Edge(i, j, p1.distanceSquared(points.get(j))));
             }
         }
         return edges;
+    }
+
+    /**
+     * Calculates the product of the top 3 component sizes without full sort.
+     * Optimized to find top 3 using partial selection instead of sorting entire list.
+     *
+     * @param sizes List of component sizes
+     * @return Product of the top 3 sizes, or 0 if less than 3 components
+     */
+    private long calculateTop3Product(List<Integer> sizes) {
+        if (sizes.size() < 3) {
+            return 0L;
+        }
+        
+        // Use simple approach: find top 3 by iterating
+        int first = 0, second = 0, third = 0;
+        for (final int size : sizes) {
+            if (size > first) {
+                third = second;
+                second = first;
+                first = size;
+            } else if (size > second) {
+                third = second;
+                second = size;
+            } else if (size > third) {
+                third = size;
+            }
+        }
+        
+        return (long) first * second * third;
     }
 }
