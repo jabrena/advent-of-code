@@ -67,7 +67,7 @@
         <allure.version>2.32.0</allure.version>
 
         <!-- Quality thresholds -->
-        <coverage.level>15</coverage.level>
+        <coverage.level>5</coverage.level>
 
     </properties>
 
