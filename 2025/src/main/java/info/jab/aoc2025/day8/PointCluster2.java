@@ -11,15 +11,18 @@ import java.util.List;
  * <p>
  * This version calculates all edges upfront, sorts them, and processes them sequentially.
  * It follows a cleaner, more straightforward approach compared to the optimized PointCluster.
+ * <p>
+ * Optimized to use distanceSquared (long) instead of distance (double) to avoid
+ * expensive Math.sqrt() operations, improving performance especially in CI/CD environments.
  */
 public final class PointCluster2 implements Solver2<Long, String, Integer> {
 
     /**
-     * Represents an edge between two points with their indices and distance.
+     * Represents an edge between two points with their indices and distance squared.
      */
-    private record Edge(int i, int j, double distance) {
-        static Edge of(int i, int j, double distance) {
-            return new Edge(i, j, distance);
+    private record Edge(int i, int j, long distanceSquared) {
+        static Edge of(int i, int j, long distanceSquared) {
+            return new Edge(i, j, distanceSquared);
         }
     }
 
@@ -27,7 +30,7 @@ public final class PointCluster2 implements Solver2<Long, String, Integer> {
     public Long solvePartOne(String fileName, Integer connectionLimit) {
         List<Point3D> points = parsePoints(fileName);
         List<Edge> edges = computeEdges(points);
-        edges.sort(Comparator.comparingDouble(Edge::distance));
+        edges.sort(Comparator.comparingLong(Edge::distanceSquared));
 
         DSU dsu = new DSU(points.size());
         int limit = Math.min(connectionLimit, edges.size());
@@ -47,7 +50,7 @@ public final class PointCluster2 implements Solver2<Long, String, Integer> {
     public Long solvePartTwo(String fileName, Integer unused) {
         List<Point3D> points = parsePoints(fileName);
         List<Edge> edges = computeEdges(points);
-        edges.sort(Comparator.comparingDouble(Edge::distance));
+        edges.sort(Comparator.comparingLong(Edge::distanceSquared));
 
         DSU dsu = new DSU(points.size());
         int components = points.size();
@@ -80,39 +83,24 @@ public final class PointCluster2 implements Solver2<Long, String, Integer> {
     }
 
     /**
-     * Computes all edges between points with their distances.
+     * Computes all edges between points with their distance squared.
      * <p>
      * This method generates all pairs (i, j) where i < j and calculates
-     * the Euclidean distance between each pair of points.
+     * the squared Euclidean distance between each pair of points.
+     * Using squared distance avoids expensive Math.sqrt() operations while
+     * maintaining the same relative ordering for sorting.
      *
      * @param points the list of points
-     * @return a list of all edges with their distances
+     * @return a list of all edges with their distance squared
      */
     private List<Edge> computeEdges(List<Point3D> points) {
         List<Edge> edges = new ArrayList<>();
         for (int i = 0; i < points.size(); i++) {
             for (int j = i + 1; j < points.size(); j++) {
-                double distance = distance(points.get(i), points.get(j));
-                edges.add(Edge.of(i, j, distance));
+                long distanceSquared = points.get(i).distanceSquared(points.get(j));
+                edges.add(Edge.of(i, j, distanceSquared));
             }
         }
         return edges;
-    }
-
-    /**
-     * Calculates the Euclidean distance between two 3D points.
-     * <p>
-     * This is a helper method that computes the standard Euclidean distance:
-     * sqrt((x1-x2)² + (y1-y2)² + (z1-z2)²)
-     *
-     * @param p1 the first point
-     * @param p2 the second point
-     * @return the Euclidean distance between the two points
-     */
-    private double distance(Point3D p1, Point3D p2) {
-        long dx = p1.x() - p2.x();
-        long dy = p1.y() - p2.y();
-        long dz = p1.z() - p2.z();
-        return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
 }
