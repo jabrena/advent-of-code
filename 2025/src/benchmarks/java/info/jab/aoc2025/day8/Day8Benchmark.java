@@ -10,6 +10,7 @@ public class Day8Benchmark { //NOSONAR java:S5786 - JMH @State annotation requir
     public static class St {
         PointCluster pointCluster = new PointCluster();
         PointCluster2 pointCluster2 = new PointCluster2();
+        PointCluster3 pointCluster3 = new PointCluster3();
         String fileName = "/day8/day8-input.txt";
         Integer connectionLimit = 1000;
     }
@@ -32,6 +33,16 @@ public class Day8Benchmark { //NOSONAR java:S5786 - JMH @State annotation requir
     @Benchmark
     public void pointCluster2_part2(St st) {
         st.pointCluster2.solvePartTwo(st.fileName, st.connectionLimit);
+    }
+
+    @Benchmark
+    public void pointCluster3_part1(St st) {
+        st.pointCluster3.solvePartOne(st.fileName, st.connectionLimit);
+    }
+
+    @Benchmark
+    public void pointCluster3_part2(St st) {
+        st.pointCluster3.solvePartTwo(st.fileName, st.connectionLimit);
     }
 }
 
