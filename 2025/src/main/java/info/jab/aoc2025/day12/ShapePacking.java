@@ -95,6 +95,11 @@ public final class ShapePacking implements Solver<Long> {
         long[] grid = new long[(totalCells + 63) / 64];
         // Incremental grid hash: starts at 0, updated as bits are placed/removed
         long gridHash = 0L;
+        // Use HashMap with optimized CacheKey (no array allocation in common case)
+        // Note: Primitive collections (LongObjectHashMap) would avoid Boolean boxing,
+        // but require complex collision handling. CacheKey optimization (#1) already
+        // eliminates the main performance bottleneck (array allocation), so HashMap is preferred
+        // for correctness and simplicity.
         Map<CacheKey, Boolean> memo = new HashMap<>();
 
         // Precompute minimum area needed for remaining shapes (for constraint propagation)
@@ -103,7 +108,35 @@ public final class ShapePacking implements Solver<Long> {
             minAreaRemaining[i] = minAreaRemaining[i + 1] + shapes.get(shapeIds.get(i)).area();
         }
 
-        return backtrack(grid, gridHash, width, height, shapes, shapeIds, 0, totalCells, minAreaRemaining, memo);
+        // Precompute region-relative bit offsets for all variants (optimization #3)
+        Map<Integer, Map<ShapeVariant, int[]>> variantOffsets = precomputeVariantOffsets(shapes, width);
+
+        return backtrack(grid, gridHash, width, height, shapes, shapeIds, 0, totalCells, minAreaRemaining, memo, variantOffsets);
+    }
+
+    /**
+     * Precomputes region-relative bit offsets for all shape variants.
+     * This eliminates repeated calculations in hot loops (optimization #3).
+     *
+     * @param shapes Map of all shapes
+     * @param regionWidth Width of the region
+     * @return Map from shape ID to map of variant to precomputed bit offsets
+     */
+    private Map<Integer, Map<ShapeVariant, int[]>> precomputeVariantOffsets(Map<Integer, Shape> shapes, int regionWidth) {
+        Map<Integer, Map<ShapeVariant, int[]>> result = new HashMap<>();
+        for (Map.Entry<Integer, Shape> entry : shapes.entrySet()) {
+            Map<ShapeVariant, int[]> variantMap = new HashMap<>();
+            for (ShapeVariant variant : entry.getValue().variants()) {
+                int[] offsets = new int[variant.points().size()];
+                for (int i = 0; i < variant.points().size(); i++) {
+                    Point p = variant.points().get(i);
+                    offsets[i] = p.y() * regionWidth + p.x();
+                }
+                variantMap.put(variant, offsets);
+            }
+            result.put(entry.getKey(), variantMap);
+        }
+        return result;
     }
 
     /**
@@ -114,7 +147,8 @@ public final class ShapePacking implements Solver<Long> {
      */
     private boolean backtrack(long[] grid, long gridHash, int width, int height, Map<Integer, Shape> shapes,
                              List<Integer> shapeIds, int index, long remainingArea,
-                             long[] minAreaRemaining, Map<CacheKey, Boolean> memo) {
+                             long[] minAreaRemaining, Map<CacheKey, Boolean> memo,
+                             Map<Integer, Map<ShapeVariant, int[]>> variantOffsets) {
         if (index == shapeIds.size()) {
             return true;
         }
@@ -124,7 +158,7 @@ public final class ShapePacking implements Solver<Long> {
             return false;
         }
 
-        // Memoization: Check cache using incremental hash
+        // Memoization: Check cache using optimized CacheKey (no array allocation in common case)
         CacheKey key = new CacheKey(gridHash, grid, shapeIds, index);
         Boolean cached = memo.get(key);
         if (cached != null) {
@@ -134,15 +168,13 @@ public final class ShapePacking implements Solver<Long> {
         int shapeId = shapeIds.get(index);
         Shape shape = shapes.get(shapeId);
 
-        for (ShapeVariant variant : shape.variants()) {
-            // Early variant filtering: skip variants that can't fit
-            if (variant.width() > width || variant.height() > height) {
-                continue;
-            }
-            if (variant.points().size() > remainingArea) {
-                continue;
-            }
+        // Optimization #4: Sort variants by area (largest first) for better pruning
+        List<ShapeVariant> sortedVariants = shape.variants().stream()
+                .filter(v -> v.width() <= width && v.height() <= height && v.points().size() <= remainingArea)
+                .sorted((a, b) -> Integer.compare(b.points().size(), a.points().size()))
+                .toList();
 
+        for (ShapeVariant variant : sortedVariants) {
             int maxX = width - variant.width();
             int maxY = height - variant.height();
 
@@ -151,18 +183,22 @@ public final class ShapePacking implements Solver<Long> {
                 continue;
             }
 
-            for (int x = 0; x <= maxX; x++) {
-                for (int y = 0; y <= maxY; y++) {
-                    if (canPlaceBitmask(grid, width, variant, x, y)) {
-                        long newGridHash = placeBitmask(grid, gridHash, width, variant, x, y, true);
-                        long newRemainingArea = remainingArea - variant.points().size();
-                        if (backtrack(grid, newGridHash, width, height, shapes, shapeIds, index + 1,
-                                    newRemainingArea, minAreaRemaining, memo)) {
-                            memo.put(key, true);
-                            return true;
-                        }
-                        gridHash = placeBitmask(grid, newGridHash, width, variant, x, y, false);
+            // Optimization #5: Try positions in smarter order (corners/edges first)
+            List<int[]> positions = generatePositionsByPriority(maxX, maxY);
+
+            for (int[] pos : positions) {
+                int x = pos[0];
+                int y = pos[1];
+                int[] offsets = variantOffsets.get(shapeId).get(variant);
+                if (canPlaceBitmaskOptimized(grid, width, variant, x, y, offsets)) {
+                    long newGridHash = placeBitmaskOptimized(grid, gridHash, width, variant, x, y, offsets, true);
+                    long newRemainingArea = remainingArea - variant.points().size();
+                    if (backtrack(grid, newGridHash, width, height, shapes, shapeIds, index + 1,
+                                newRemainingArea, minAreaRemaining, memo, variantOffsets)) {
+                        memo.put(key, true);
+                        return true;
                     }
+                    gridHash = placeBitmaskOptimized(grid, newGridHash, width, variant, x, y, offsets, false);
                 }
             }
         }
@@ -171,26 +207,111 @@ public final class ShapePacking implements Solver<Long> {
         return false;
     }
 
+
+    /**
+     * Generates positions in priority order: corners first, then edges, then interior.
+     * This helps find solutions faster by trying more constrained positions first (optimization #5).
+     */
+    private List<int[]> generatePositionsByPriority(int maxX, int maxY) {
+        List<int[]> positions = new ArrayList<>();
+        // Corners (highest priority)
+        if (maxX >= 0 && maxY >= 0) {
+            positions.add(new int[]{0, 0});
+            if (maxX > 0) positions.add(new int[]{maxX, 0});
+            if (maxY > 0) positions.add(new int[]{0, maxY});
+            if (maxX > 0 && maxY > 0) positions.add(new int[]{maxX, maxY});
+        }
+        // Edges (medium priority)
+        for (int x = 1; x < maxX; x++) {
+            positions.add(new int[]{x, 0});
+            if (maxY > 0) positions.add(new int[]{x, maxY});
+        }
+        for (int y = 1; y < maxY; y++) {
+            positions.add(new int[]{0, y});
+            if (maxX > 0) positions.add(new int[]{maxX, y});
+        }
+        // Interior (lowest priority)
+        for (int x = 1; x < maxX; x++) {
+            for (int y = 1; y < maxY; y++) {
+                positions.add(new int[]{x, y});
+            }
+        }
+        return positions;
+    }
+
     /**
      * Checks if a variant can be placed at the given position using bitmask operations.
-     * Optimized with precomputed point coordinates and batch bitmask checks for small variants.
+     * Optimized with precomputed region-relative bit offsets and batch operations for small variants.
      * Pure function logic: checks bounds and overlaps using bitwise AND.
      */
-    private boolean canPlaceBitmask(long[] grid, int width, ShapeVariant variant, int x, int y) {
-        // Compute base bit index once: y * width + x
+    private boolean canPlaceBitmaskOptimized(long[] grid, int width, ShapeVariant variant, int x, int y, int[] offsets) {
         int baseBitIndex = y * width + x;
 
-        // For small variants that fit in a single long (<= 64 cells), use batch check if possible
-        // However, since variant bitmask was computed with variant width, we can't directly use it
-        // So we fall back to individual point checks
+        // Optimization #2: Batch bitmask check for small variants that fit in one long
+        if (variant.points().size() <= 64 && canFitInSingleLong(variant, width, x, y)) {
+            return canPlaceBitmaskBatch(grid, baseBitIndex, variant, offsets);
+        }
 
-        // Use precomputed points: compute bit offsets using region width (not variant width)
-        List<Point> points = variant.points();
-        for (int i = 0; i < points.size(); i++) {
-            Point p = points.get(i);
-            // Compute bit index: baseBitIndex + relative offset using region width
-            // bitIndex = (y + py) * width + (x + px) = y * width + x + py * width + px
-            int bitIndex = baseBitIndex + p.y() * width + p.x();
+        // Fall back to individual point checks using precomputed offsets
+        for (int offset : offsets) {
+            int bitIndex = baseBitIndex + offset;
+            int longIndex = bitIndex / 64;
+            int bitOffset = bitIndex % 64;
+            if ((grid[longIndex] & (1L << bitOffset)) != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks if variant placement fits within a single long (64 bits).
+     * This enables batch bitmask operations for better performance.
+     */
+    private boolean canFitInSingleLong(ShapeVariant variant, int width, int x, int y) {
+        // Check if all points map to the same long index
+        int firstBitIndex = (y + variant.points().get(0).y()) * width + (x + variant.points().get(0).x());
+        int firstLongIndex = firstBitIndex / 64;
+        for (int i = 1; i < variant.points().size(); i++) {
+            Point p = variant.points().get(i);
+            int bitIndex = (y + p.y()) * width + (x + p.x());
+            if (bitIndex / 64 != firstLongIndex) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Batch bitmask check for variants that fit in a single long.
+     * Uses a single bitwise AND operation instead of iterating through points (optimization #2).
+     */
+    private boolean canPlaceBitmaskBatch(long[] grid, int baseBitIndex, ShapeVariant variant, int[] offsets) {
+        // Compute bitmask for variant at this position
+        long variantMask = 0L;
+        int longIndex = -1;
+        for (int offset : offsets) {
+            int bitIndex = baseBitIndex + offset;
+            int currentLongIndex = bitIndex / 64;
+            int bitOffset = bitIndex % 64;
+            if (longIndex == -1) {
+                longIndex = currentLongIndex;
+            } else if (currentLongIndex != longIndex) {
+                // Variant spans multiple longs, fall back to individual checks
+                return canPlaceBitmaskIndividual(grid, baseBitIndex, offsets);
+            }
+            variantMask |= (1L << bitOffset);
+        }
+        // Single bitwise AND check
+        return (grid[longIndex] & variantMask) == 0;
+    }
+
+    /**
+     * Individual point check fallback when batch operation is not possible.
+     */
+    private boolean canPlaceBitmaskIndividual(long[] grid, int baseBitIndex, int[] offsets) {
+        for (int offset : offsets) {
+            int bitIndex = baseBitIndex + offset;
             int longIndex = bitIndex / 64;
             int bitOffset = bitIndex % 64;
             if ((grid[longIndex] & (1L << bitOffset)) != 0) {
@@ -202,7 +323,7 @@ public final class ShapePacking implements Solver<Long> {
 
     /**
      * Places or removes a variant from the grid using bitmask operations.
-     * Optimized with precomputed bit offsets for efficient bit index calculation.
+     * Optimized with precomputed region-relative bit offsets for efficient bit index calculation.
      * Updates incremental grid hash as bits are placed/removed.
      * Mutable operation for performance in backtracking algorithm.
      *
@@ -212,19 +333,16 @@ public final class ShapePacking implements Solver<Long> {
      * @param variant The variant to place/remove
      * @param x X position
      * @param y Y position
+     * @param offsets Precomputed region-relative bit offsets (optimization #3)
      * @param val true to place, false to remove
      * @return Updated grid hash after placement/removal
      */
-    private long placeBitmask(long[] grid, long gridHash, int width, ShapeVariant variant, int x, int y, boolean val) {
+    private long placeBitmaskOptimized(long[] grid, long gridHash, int width, ShapeVariant variant, int x, int y, int[] offsets, boolean val) {
         // Compute base bit index once: y * width + x
         int baseBitIndex = y * width + x;
-        // Use precomputed points: compute bit offsets using region width (not variant width)
-        List<Point> points = variant.points();
-        for (int i = 0; i < points.size(); i++) {
-            Point p = points.get(i);
-            // Compute bit index: baseBitIndex + relative offset using region width
-            // bitIndex = (y + py) * width + (x + px) = y * width + x + py * width + px
-            int bitIndex = baseBitIndex + p.y() * width + p.x();
+        // Use precomputed offsets instead of computing on-the-fly
+        for (int offset : offsets) {
+            int bitIndex = baseBitIndex + offset;
             int longIndex = bitIndex / 64;
             int bitOffset = bitIndex % 64;
 
