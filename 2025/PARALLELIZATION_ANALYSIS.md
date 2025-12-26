@@ -10,6 +10,7 @@ The analysis covers 12 days of Advent of Code problems, examining:
 - **Pipeline Parallelism**: Overlapping computation stages
 - **Stream Parallelization**: Using Java parallel streams
 - **Fork/Join**: Recursive task decomposition
+- **Structured Concurrency**: Modern task lifecycle management (Java 21+)
 - **Thread-safe Collections**: Concurrent data structures for shared state
 
 ---
@@ -173,10 +174,30 @@ The analysis covers 12 days of Advent of Code problems, examining:
 - **Benefit**: Medium-High - line processing is independent
 - **Implementation**: Minimal code change, high impact
 
-#### Technique 2: **Parallel Bank Processing**
-- **Approach**: Process multiple banks concurrently using `CompletableFuture` or parallel streams
+#### Technique 2: **Structured Concurrency for Bank Processing**
+- **Approach**: Use `StructuredTaskScope` to process multiple banks concurrently
+- **Complexity**: Low-Medium
+- **Benefit**: Medium-High - better error handling and cancellation than CompletableFuture
+- **Implementation Example**:
+  ```java
+  try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+      List<Subtask<Long>> tasks = banks.stream()
+          .map(bank -> scope.fork(() -> bank.getMaxJoltage(length)))
+          .toList();
+      
+      scope.join();
+      scope.throwIfFailed();
+      
+      return tasks.stream()
+          .mapToLong(Subtask::get)
+          .sum();
+  }
+  ```
+
+#### Technique 2b: **Parallel Stream Alternative**
+- **Approach**: Process multiple banks concurrently using parallel streams
 - **Complexity**: Low
-- **Benefit**: Medium - depends on number of lines and computation per line
+- **Benefit**: Medium - simpler but less control over error handling
 
 ---
 
@@ -367,11 +388,48 @@ The analysis covers 12 days of Advent of Code problems, examining:
   }
   ```
 
-#### Technique 2: **Parallel Path Exploration with CompletableFuture**
+#### Technique 2: **Structured Concurrency for Path Exploration**
+- **Approach**: Use `StructuredTaskScope` when beam splits to explore paths concurrently
+- **Complexity**: Medium-High
+- **Benefit**: High - path exploration is independent after splits, automatic cancellation
+- **Implementation Example**:
+  ```java
+  private long countPathsWithStructuredConcurrency(Grid grid, int x, int y, Map<Point, Long> memo) {
+      if (y >= grid.maxY()) return 1L;
+      
+      Point point = Point.of(x, y);
+      Long cached = memo.get(point);
+      if (cached != null) return cached;
+      
+      CellType cellType = CellType.from(grid.get(point));
+      long result;
+      
+      if (cellType == CellType.SPLITTER) {
+          try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+              Subtask<Long> left = scope.fork(() -> 
+                  countPathsWithStructuredConcurrency(grid, x - 1, y + 1, memo));
+              Subtask<Long> right = scope.fork(() -> 
+                  countPathsWithStructuredConcurrency(grid, x + 1, y + 1, memo));
+              
+              scope.join();
+              scope.throwIfFailed();
+              result = left.get() + right.get();
+          }
+      } else {
+          result = countPathsWithStructuredConcurrency(grid, x, y + 1, memo);
+      }
+      
+      memo.put(point, result);
+      return result;
+  }
+  ```
+
+#### Technique 2b: **CompletableFuture Alternative**
 - **Approach**: When beam splits, explore both paths using `CompletableFuture`
 - **Complexity**: Medium-High
 - **Benefit**: High - path exploration is independent after splits
 - **Implementation**: Use `ConcurrentHashMap` for memo, parallel recursive calls with `CompletableFuture`
+- **Note**: Structured concurrency (Technique 2) is preferred for better error handling
 
 #### Technique 2: **Thread-safe Memoization**
 - **Approach**: Replace `HashMap` with `ConcurrentHashMap` for memo cache
@@ -525,7 +583,31 @@ The analysis covers 12 days of Advent of Code problems, examining:
 
 ### Parallelization Opportunities
 
-#### Technique 1: **Parallel Path Pair Processing (Part 2)**
+#### Technique 1: **Structured Concurrency for Path Pair Processing (Part 2)**
+- **Approach**: Use `StructuredTaskScope` to manage independent path counting tasks
+- **Complexity**: Low-Medium
+- **Benefit**: High - path pairs are independent, better error handling and cancellation
+- **Implementation Example**:
+  ```java
+  try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+      Subtask<Long> f1 = scope.fork(() -> countPaths(pair1.from(), pair1.to(), graph, new HashMap<>()));
+      Subtask<Long> f2 = scope.fork(() -> countPaths(pair2.from(), pair2.to(), graph, new HashMap<>()));
+      Subtask<Long> f3 = scope.fork(() -> countPaths(pair3.from(), pair3.to(), graph, new HashMap<>()));
+      
+      scope.join();  // Wait for all tasks
+      scope.throwIfFailed();  // Propagate any exceptions
+      
+      long product = f1.get() * f2.get() * f3.get();
+      return product;
+  }
+  ```
+- **Benefits over CompletableFuture**:
+  - Automatic cancellation if one task fails
+  - Better error propagation
+  - Clear task lifecycle management
+  - No need for manual exception handling
+
+#### Technique 1b: **CompletableFuture Alternative (Part 2)**
 - **Approach**: Process the three path pairs in parallel using `CompletableFuture.allOf()`
 - **Complexity**: Low-Medium
 - **Benefit**: High - path pairs are independent
@@ -536,6 +618,7 @@ The analysis covers 12 days of Advent of Code problems, examining:
   CompletableFuture<Long> f3 = CompletableFuture.supplyAsync(() -> countPaths(...));
   long product = f1.join() * f2.join() * f3.join();
   ```
+- **Note**: Structured concurrency (Technique 1) is preferred for Java 21+ as it provides better error handling and cancellation
 
 #### Technique 2: **Thread-safe Memoization**
 - **Approach**: Use `ConcurrentHashMap` for memo cache to enable parallel path exploration
@@ -610,19 +693,30 @@ The analysis covers 12 days of Advent of Code problems, examining:
 - **Benefit**: Medium (enables parallel recursive calls)
 - **Implementation**: Replace `HashMap` with `ConcurrentHashMap`
 
-### 6. **Parallel Path Processing** (Medium Impact)
+### 6. **Structured Concurrency** (Medium Impact, Modern Approach)
+- **Days**: 7, 10, 11
+- **Complexity**: Low-Medium
+- **Benefit**: High (better error handling, cancellation, lifecycle management)
+- **Implementation**: `StructuredTaskScope` for managing independent tasks
+- **When to Use**: 
+  - Multiple independent tasks that need coordination
+  - Need automatic cancellation on failure
+  - Want better error propagation
+  - Java 21+ available
+
+### 7. **Parallel Path Processing** (Medium Impact)
 - **Days**: 7, 11
 - **Complexity**: Medium-High
 - **Benefit**: Medium-High (independent path exploration)
-- **Implementation**: `CompletableFuture` or parallel streams with thread-safe memo
+- **Implementation**: `StructuredTaskScope` (preferred) or `CompletableFuture` or parallel streams with thread-safe memo
 
-### 7. **Parallel Sorting** (Low-Medium Impact)
+### 8. **Parallel Sorting** (Low-Medium Impact)
 - **Days**: 5 (Part 2), 8 (Part 2)
 - **Complexity**: Very Low
 - **Benefit**: Medium (only for large datasets)
 - **Implementation**: `Arrays.parallelSort()` or `Collections.parallelSort()`
 
-### 8. **Fork/Join RecursiveTask** (High Complexity, High Control)
+### 9. **Fork/Join RecursiveTask** (High Complexity, High Control)
 - **Days**: 1, 2, 6, 7, 8
 - **Complexity**: Medium-High
 - **Benefit**: Very High (fine-grained control, optimal work-stealing)
@@ -633,7 +727,7 @@ The analysis covers 12 days of Advent of Code problems, examining:
   - Need fine-grained control over splitting
   - Work-stealing optimization needed
 
-### 9. **Parallel Collectors** (Medium Complexity, High Performance)
+### 10. **Parallel Collectors** (Medium Complexity, High Performance)
 - **Days**: 2, 5, 6, 8
 - **Complexity**: Medium
 - **Benefit**: High (eliminates contention, optimal parallel collection)
@@ -658,7 +752,8 @@ The analysis covers 12 days of Advent of Code problems, examining:
 1. **Day 8**: Parallelize edge computation (very high benefit for O(n²))
 2. **Day 4 Part 1**: Parallelize cell neighbor checking
 3. **Day 6**: Parallelize block processing
-4. **Day 11 Part 2**: Parallelize path pair processing
+4. **Day 11 Part 2**: Use structured concurrency for path pair processing
+5. **Day 10 Part 1**: Use structured concurrency for line processing
 
 ### **Low Priority** (Complex or limited benefit)
 1. **Day 1**: Fork/Join chunk-based processing (complex state merging)
@@ -673,6 +768,11 @@ The analysis covers 12 days of Advent of Code problems, examining:
 - Day 3, 9 Part 1, 10 Part 1: Add `.parallel()` or `.parallelStream()`
 - Day 4 Part 1: `parallelStream()` for cell filtering
 - Day 5 Part 1: `parallelStream()` for ID checking
+
+### Medium Effort (Structured Concurrency - Java 21+)
+- Day 10 Part 1: `StructuredTaskScope` for line processing
+- Day 11 Part 2: `StructuredTaskScope` for path pair processing
+- Day 7 Part 2: `StructuredTaskScope` for path exploration
 
 ### Medium Effort (Custom Collectors)
 - Day 2: Parallel stream with `flatMapToLong()` and `sum()`
@@ -877,6 +977,221 @@ When parallelizing, ensure:
 5. **Collectors** should be thread-safe or use `Collectors.toConcurrentMap()`
 6. **Fork/Join tasks** should avoid shared mutable state or use thread-safe structures
 7. **Thread-local collections** eliminate contention but require efficient merging
+
+---
+
+## Structured Concurrency Deep Dive (Java 21+)
+
+### Overview
+
+Structured concurrency is a modern approach to managing concurrent tasks introduced in Java 21 (JEP 453). It provides a way to manage the lifecycle of concurrent tasks, ensuring that child tasks complete before their parent, with automatic cancellation and better error handling.
+
+### Key Benefits
+
+1. **Automatic Cancellation**: If one task fails, others are automatically cancelled
+2. **Error Propagation**: Exceptions are properly propagated and handled
+3. **Lifecycle Management**: Clear parent-child relationship between tasks
+4. **Scoped Values**: Can use `ScopedValue` for thread-local-like values
+5. **Platform Threads**: Works with both virtual threads and platform threads
+
+### When to Use Structured Concurrency
+
+**Use Structured Concurrency when:**
+- Managing multiple independent tasks that need coordination
+- Need automatic cancellation if one task fails
+- Want better error handling than CompletableFuture
+- Need clear task lifecycle management
+- Java 21+ is available
+
+**Don't use Structured Concurrency when:**
+- Simple parallel streams suffice
+- Need recursive task decomposition (use Fork/Join)
+- Need fine-grained work-stealing (use Fork/Join)
+- Java version < 21
+
+### StructuredTaskScope Types
+
+#### 1. ShutdownOnFailure
+- Cancels all tasks if any task fails
+- Use when: All tasks must succeed, or all should be cancelled
+
+```java
+try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    Subtask<String> task1 = scope.fork(() -> compute1());
+    Subtask<String> task2 = scope.fork(() -> compute2());
+    
+    scope.join();           // Wait for all tasks
+    scope.throwIfFailed();  // Throw if any failed
+    
+    return task1.get() + task2.get();
+}
+```
+
+#### 2. ShutdownOnSuccess
+- Cancels remaining tasks when one succeeds
+- Use when: Need first successful result (like `anyOf`)
+
+```java
+try (var scope = new StructuredTaskScope.ShutdownOnSuccess<String>()) {
+    scope.fork(() -> tryMethod1());
+    scope.fork(() -> tryMethod2());
+    scope.fork(() -> tryMethod3());
+    
+    scope.join();
+    return scope.result();  // First successful result
+}
+```
+
+### Common Patterns
+
+#### Pattern 1: Parallel Independent Tasks
+```java
+public Long processMultiplePairs(List<PathPair> pairs, Map<GraphNode, List<GraphNode>> graph) {
+    try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+        List<Subtask<Long>> tasks = pairs.stream()
+            .map(pair -> scope.fork(() -> 
+                countPaths(pair.from(), pair.to(), graph, new HashMap<>())))
+            .toList();
+        
+        scope.join();
+        scope.throwIfFailed();
+        
+        return tasks.stream()
+            .mapToLong(Subtask::get)
+            .reduce(1L, (a, b) -> a * b);
+    }
+}
+```
+
+#### Pattern 2: First Success Pattern
+```java
+public String findFirstValid(List<String> inputs) {
+    try (var scope = new StructuredTaskScope.ShutdownOnSuccess<String>()) {
+        inputs.forEach(input -> 
+            scope.fork(() -> validateAndProcess(input)));
+        
+        scope.join();
+        return scope.result();  // First successful result
+    }
+}
+```
+
+#### Pattern 3: Parallel Processing with Error Handling
+```java
+public List<Result> processAll(List<Input> inputs) {
+    try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+        List<Subtask<Result>> tasks = inputs.stream()
+            .map(input -> scope.fork(() -> process(input)))
+            .toList();
+        
+        scope.join();
+        scope.throwIfFailed();  // Throws if any task failed
+        
+        return tasks.stream()
+            .map(Subtask::get)
+            .toList();
+    } catch (Exception e) {
+        // All tasks automatically cancelled
+        // Handle error appropriately
+        throw new ProcessingException("Failed to process inputs", e);
+    }
+}
+```
+
+#### Pattern 4: With Custom Executor (Platform Threads)
+```java
+ExecutorService executor = Executors.newFixedThreadPool(
+    Runtime.getRuntime().availableProcessors());
+
+try (var scope = new StructuredTaskScope.ShutdownOnFailure(executor)) {
+    Subtask<Long> task1 = scope.fork(() -> compute1());
+    Subtask<Long> task2 = scope.fork(() -> compute2());
+    
+    scope.join();
+    scope.throwIfFailed();
+    
+    return task1.get() + task2.get();
+} finally {
+    executor.shutdown();
+}
+```
+
+### Structured Concurrency vs CompletableFuture
+
+| Feature | Structured Concurrency | CompletableFuture |
+|--------|----------------------|-------------------|
+| **Error Handling** | Automatic cancellation, clear propagation | Manual handling required |
+| **Lifecycle** | Clear parent-child relationship | Flat structure |
+| **Cancellation** | Automatic on failure | Manual cancellation needed |
+| **Exception Handling** | `throwIfFailed()` pattern | Manual `get()` exception handling |
+| **Scoped Values** | Supports `ScopedValue` | No scoped value support |
+| **Java Version** | 21+ | 8+ |
+| **Complexity** | Lower (less boilerplate) | Higher (more manual management) |
+
+### Best Practices
+
+1. **Always use try-with-resources**: Ensures proper cleanup
+2. **Call `throwIfFailed()`**: Propagate exceptions properly
+3. **Use appropriate scope type**: `ShutdownOnFailure` vs `ShutdownOnSuccess`
+4. **Custom executor for CPU-bound**: Use `ExecutorService` with platform threads
+5. **Avoid blocking in tasks**: Use virtual threads or async operations
+6. **Handle exceptions appropriately**: Catch and handle at appropriate level
+
+### Platform Threads vs Virtual Threads
+
+**Platform Threads** (OS threads):
+- Use for CPU-bound tasks
+- Limited by number of cores
+- Use custom `ExecutorService` with `StructuredTaskScope`
+
+**Virtual Threads** (Java 21+):
+- Use for I/O-bound tasks
+- Millions can be created
+- Default for `StructuredTaskScope` (if using virtual thread executor)
+
+**For 2025 module**: Most tasks are CPU-bound, so platform threads with custom executor are appropriate.
+
+### Example: Day 11 Part 2 with Structured Concurrency
+
+```java
+@Override
+public Long solvePartTwo(final String fileName) {
+    final Map<GraphNode, List<GraphNode>> graph = parseInput(fileName);
+    
+    ExecutorService executor = Executors.newFixedThreadPool(
+        Runtime.getRuntime().availableProcessors());
+    
+    try (var scope = new StructuredTaskScope.ShutdownOnFailure(executor)) {
+        // First product: three path pairs
+        Subtask<Long> p1_1 = scope.fork(() -> 
+            countPaths(GraphNode.from("svr"), GraphNode.from("dac"), graph, new HashMap<>()));
+        Subtask<Long> p1_2 = scope.fork(() -> 
+            countPaths(GraphNode.from("dac"), GraphNode.from("fft"), graph, new HashMap<>()));
+        Subtask<Long> p1_3 = scope.fork(() -> 
+            countPaths(GraphNode.from("fft"), GraphNode.from("out"), graph, new HashMap<>()));
+        
+        // Second product: three path pairs
+        Subtask<Long> p2_1 = scope.fork(() -> 
+            countPaths(GraphNode.from("svr"), GraphNode.from("fft"), graph, new HashMap<>()));
+        Subtask<Long> p2_2 = scope.fork(() -> 
+            countPaths(GraphNode.from("fft"), GraphNode.from("dac"), graph, new HashMap<>()));
+        Subtask<Long> p2_3 = scope.fork(() -> 
+            countPaths(GraphNode.from("dac"), GraphNode.from("out"), graph, new HashMap<>()));
+        
+        scope.join();
+        scope.throwIfFailed();
+        
+        long firstProduct = p1_1.get() * p1_2.get() * p1_3.get();
+        long secondProduct = p2_1.get() * p2_2.get() * p2_3.get();
+        
+        return firstProduct + secondProduct;
+    } catch (Exception e) {
+        throw new RuntimeException("Failed to compute paths", e);
+    } finally {
+        executor.shutdown();
+    }
+}
+```
 
 ---
 
