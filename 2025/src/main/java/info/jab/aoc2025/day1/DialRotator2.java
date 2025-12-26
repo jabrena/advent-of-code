@@ -120,4 +120,3 @@ public final class DialRotator2 implements Solver<Integer> {
      */
     private record Sequence(Direction direction, int steps) { }
 }
-

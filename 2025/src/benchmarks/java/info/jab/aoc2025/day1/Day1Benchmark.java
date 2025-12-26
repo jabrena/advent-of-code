@@ -10,6 +10,7 @@ public class Day1Benchmark { //NOSONAR java:S5786 - JMH @State annotation requir
     public static class St {
         DialRotator dialRotator = new DialRotator();
         DialRotator2 dialRotator2 = new DialRotator2();
+        DialRotator3 dialRotator3 = new DialRotator3();
         String fileName = "/day1/day1-input.txt";
     }
 
@@ -31,6 +32,16 @@ public class Day1Benchmark { //NOSONAR java:S5786 - JMH @State annotation requir
     @Benchmark
     public void dialRotator2_part2(St st) {
         st.dialRotator2.solvePartTwo(st.fileName);
+    }
+
+    @Benchmark
+    public void dialRotator3_part1(St st) {
+        st.dialRotator3.solvePartOne(st.fileName);
+    }
+
+    @Benchmark
+    public void dialRotator3_part2(St st) {
+        st.dialRotator3.solvePartTwo(st.fileName);
     }
 }
 
