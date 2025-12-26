@@ -23,11 +23,57 @@ The analysis covers 12 days of Advent of Code problems, examining:
 
 ### Parallelization Opportunities
 
-#### Technique 1: **Chunk-based Parallel Processing with State Merging**
-- **Approach**: Partition input lines into chunks, process each chunk independently starting from initial position, then merge results accounting for zero crossings
-- **Complexity**: Requires careful handling of zero crossings at chunk boundaries
-- **Benefit**: Medium - depends on input size and chunk granularity
-- **Implementation**: Use `ForkJoinPool` or parallel streams with custom collector
+#### Technique 1: **Fork/Join RecursiveTask with State Merging**
+- **Approach**: Custom `RecursiveTask<DialResult>` that processes chunks independently and merges state
+- **Complexity**: High - requires careful handling of zero crossings at chunk boundaries
+- **Benefit**: Medium-High - depends on input size and chunk granularity
+- **Implementation Example**:
+  ```java
+  class DialRotationTask extends RecursiveTask<DialResult> {
+      private final List<String> lines;
+      private final int start, end;
+      private final int initialPosition;
+      private static final int THRESHOLD = 1000;
+      
+      record DialResult(int finalPosition, int zeroCount) {}
+      
+      @Override
+      protected DialResult compute() {
+          if (end - start <= THRESHOLD) {
+              int position = initialPosition;
+              int zeroCount = 0;
+              for (int i = start; i < end; i++) {
+                  String line = lines.get(i);
+                  if (isValidRotation(line)) {
+                      // Process rotation and count zeros
+                      // ...
+                  }
+              }
+              return new DialResult(position, zeroCount);
+          } else {
+              int mid = (start + end) / 2;
+              DialRotationTask left = new DialRotationTask(lines, start, mid, initialPosition);
+              DialRotationTask right = new DialRotationTask(lines, mid, end, initialPosition);
+              left.fork();
+              DialResult rightResult = right.compute();
+              DialResult leftResult = left.join();
+              // Merge: right starts from left's final position
+              DialResult mergedRight = processWithInitialPosition(
+                  lines, mid, end, leftResult.finalPosition());
+              return new DialResult(
+                  mergedRight.finalPosition(),
+                  leftResult.zeroCount() + mergedRight.zeroCount()
+              );
+          }
+      }
+  }
+  ```
+
+#### Technique 2: **Parallel Stream with Custom Collector for State**
+- **Approach**: Use parallel stream with custom collector that maintains dial state
+- **Complexity**: Medium
+- **Benefit**: Medium - simpler than Fork/Join but less control
+- **Implementation**: Custom collector with thread-local state accumulators
 
 #### Technique 2: **Parallel Stream with Sequential State Accumulation**
 - **Approach**: Use `parallelStream()` but maintain sequential state using `reduce()` with identity and accumulator
@@ -57,11 +103,59 @@ The analysis covers 12 days of Advent of Code problems, examining:
 - **Benefit**: Medium-High - especially for large ranges
 - **Note**: Can combine with Technique 1 for nested parallelism
 
-#### Technique 3: **Work-stealing with Fork/Join**
-- **Approach**: Custom `RecursiveTask` that splits ranges and IDs recursively
+#### Technique 3: **Fork/Join RecursiveTask for Range Processing**
+- **Approach**: Custom `RecursiveTask<Long>` that recursively splits ranges and IDs
 - **Complexity**: Medium - requires custom implementation
-- **Benefit**: High - fine-grained control over task splitting
+- **Benefit**: High - fine-grained control over task splitting, optimal work-stealing
 - **Use Case**: When ranges vary significantly in size
+- **Implementation Example**:
+  ```java
+  class RangeValidationTask extends RecursiveTask<Long> {
+      private final List<Range> ranges;
+      private final int start, end;
+      private final LongPredicate validator;
+      private static final int THRESHOLD = 1000; // ranges per task
+      
+      RangeValidationTask(List<Range> ranges, int start, int end, LongPredicate validator) {
+          this.ranges = ranges;
+          this.start = start;
+          this.end = end;
+          this.validator = validator;
+      }
+      
+      @Override
+      protected Long compute() {
+          if (end - start <= THRESHOLD) {
+              // Sequential processing for small chunks
+              long sum = 0;
+              for (int i = start; i < end; i++) {
+                  Range range = ranges.get(i);
+                  for (long id = range.start(); id <= range.end(); id++) {
+                      if (validator.test(id)) {
+                          sum += id;
+                      }
+                  }
+              }
+              return sum;
+          } else {
+              // Split and fork
+              int mid = (start + end) / 2;
+              RangeValidationTask left = new RangeValidationTask(ranges, start, mid, validator);
+              RangeValidationTask right = new RangeValidationTask(ranges, mid, end, validator);
+              left.fork();
+              long rightResult = right.compute();
+              long leftResult = left.join();
+              return leftResult + rightResult;
+          }
+      }
+  }
+  ```
+
+#### Technique 4: **Fork/Join with Nested ID Splitting**
+- **Approach**: Recursively split large ranges into smaller ID chunks
+- **Complexity**: Medium-High
+- **Benefit**: Very High - optimal for very large ranges
+- **Implementation**: `RecursiveTask` that splits both ranges and ID ranges within ranges
 
 ---
 
@@ -121,11 +215,44 @@ The analysis covers 12 days of Advent of Code problems, examining:
 
 ### Parallelization Opportunities
 
-#### Technique 1: **Parallel ID Checking (Part 1)**
+#### Technique 1: **Parallel ID Checking with Parallel Stream**
 - **Approach**: `ids.parallelStream().filter(id -> containsId(intervals, id)).count()`
 - **Complexity**: Low
 - **Benefit**: High - ID checking is independent and CPU-intensive
 - **Implementation**: Convert `LongList` iteration to parallel stream
+
+#### Technique 1b: **Fork/Join RecursiveTask for ID Checking**
+- **Approach**: Custom `RecursiveTask<Long>` that splits ID ranges recursively
+- **Complexity**: Medium
+- **Benefit**: Very High - optimal for large ID lists, fine-grained work-stealing
+- **Implementation Example**:
+  ```java
+  class IdCheckingTask extends RecursiveTask<Long> {
+      private final LongList ids;
+      private final List<Interval> intervals;
+      private final int start, end;
+      private static final int THRESHOLD = 10000;
+      
+      @Override
+      protected Long compute() {
+          if (end - start <= THRESHOLD) {
+              long count = 0;
+              for (int i = start; i < end; i++) {
+                  if (containsId(intervals, ids.getLong(i))) {
+                      count++;
+                  }
+              }
+              return count;
+          } else {
+              int mid = (start + end) / 2;
+              IdCheckingTask left = new IdCheckingTask(ids, intervals, start, mid);
+              IdCheckingTask right = new IdCheckingTask(ids, intervals, mid, end);
+              left.fork();
+              return right.compute() + left.join();
+          }
+      }
+  }
+  ```
 
 #### Technique 2: **Parallel Interval Sorting (Part 2)**
 - **Approach**: Use `parallelSort()` for large interval lists
@@ -159,6 +286,38 @@ The analysis covers 12 days of Advent of Code problems, examining:
 - **Complexity**: Medium
 - **Benefit**: Medium - depends on block structure
 
+#### Technique 3: **Fork/Join RecursiveTask for Block Processing**
+- **Approach**: Custom `RecursiveTask<Long>` that recursively processes blocks
+- **Complexity**: Medium
+- **Benefit**: High - fine-grained work-stealing for variable-sized blocks
+- **Implementation Example**:
+  ```java
+  class BlockProcessingTask extends RecursiveTask<Long> {
+      private final List<Integer[]> blocks;
+      private final int start, end;
+      private final BiFunction<List<String>, Integer[], Long> processor;
+      private final List<String> lines;
+      private static final int THRESHOLD = 10; // blocks per task
+      
+      @Override
+      protected Long compute() {
+          if (end - start <= THRESHOLD) {
+              long sum = 0;
+              for (int i = start; i < end; i++) {
+                  sum += processor.apply(lines, blocks.get(i));
+              }
+              return sum;
+          } else {
+              int mid = (start + end) / 2;
+              BlockProcessingTask left = new BlockProcessingTask(blocks, start, mid, processor, lines);
+              BlockProcessingTask right = new BlockProcessingTask(blocks, mid, end, processor, lines);
+              left.fork();
+              return right.compute() + left.join();
+          }
+      }
+  }
+  ```
+
 ---
 
 ## Day 7: BeamPathCounter
@@ -169,11 +328,50 @@ The analysis covers 12 days of Advent of Code problems, examining:
 
 ### Parallelization Opportunities
 
-#### Technique 1: **Parallel Path Exploration (Part 2)**
-- **Approach**: When beam splits, explore both paths in parallel using `CompletableFuture` or `ForkJoinPool`
+#### Technique 1: **Fork/Join RecursiveTask for Path Exploration (Part 2)**
+- **Approach**: Custom `RecursiveTask<Long>` that recursively explores paths in parallel
 - **Complexity**: High - requires thread-safe memoization
+- **Benefit**: Very High - optimal work-stealing for tree-like path exploration
+- **Implementation Example**:
+  ```java
+  class PathCountingTask extends RecursiveTask<Long> {
+      private final Grid grid;
+      private final int x, y;
+      private final Map<Point, Long> memo; // ConcurrentHashMap
+      private static final int SPLIT_THRESHOLD = 2; // minimum depth to fork
+      
+      @Override
+      protected Long compute() {
+          if (y >= grid.maxY()) return 1L;
+          
+          Point point = Point.of(x, y);
+          Long cached = memo.get(point);
+          if (cached != null) return cached;
+          
+          CellType cellType = CellType.from(grid.get(point));
+          long result;
+          
+          if (cellType == CellType.SPLITTER) {
+              // Fork both paths
+              PathCountingTask left = new PathCountingTask(grid, x - 1, y + 1, memo);
+              PathCountingTask right = new PathCountingTask(grid, x + 1, y + 1, memo);
+              left.fork();
+              result = right.compute() + left.join();
+          } else {
+              result = new PathCountingTask(grid, x, y + 1, memo).compute();
+          }
+          
+          memo.put(point, result);
+          return result;
+      }
+  }
+  ```
+
+#### Technique 2: **Parallel Path Exploration with CompletableFuture**
+- **Approach**: When beam splits, explore both paths using `CompletableFuture`
+- **Complexity**: Medium-High
 - **Benefit**: High - path exploration is independent after splits
-- **Implementation**: Use `ConcurrentHashMap` for memo, parallel recursive calls
+- **Implementation**: Use `ConcurrentHashMap` for memo, parallel recursive calls with `CompletableFuture`
 
 #### Technique 2: **Thread-safe Memoization**
 - **Approach**: Replace `HashMap` with `ConcurrentHashMap` for memo cache
@@ -202,11 +400,67 @@ The analysis covers 12 days of Advent of Code problems, examining:
 - **Benefit**: Very High - O(n²) computation, highly parallelizable
 - **Implementation**: Use thread-safe collection or collect results per thread then merge
 
-#### Technique 2: **Parallel Edge Computation with Thread-local Collections**
-- **Approach**: Use `ThreadLocal<ObjectArrayList>` or collect to thread-safe structure
+#### Technique 2: **Parallel Edge Computation with Custom Parallel Collector**
+- **Approach**: Use custom `Collector` that combines thread-local collections efficiently
 - **Complexity**: Medium
-- **Benefit**: Very High - eliminates contention in edge collection
-- **Implementation**: Custom collector or `Collectors.toConcurrentMap()`
+- **Benefit**: Very High - eliminates contention, optimal for parallel collection
+- **Implementation Example**:
+  ```java
+  Collector<Edge, ?, ObjectList<Edge>> edgeCollector = Collector.of(
+      () -> new ObjectArrayList<>(),  // Supplier: thread-local accumulator
+      ObjectArrayList::add,            // Accumulator: add to local list
+      (left, right) -> {               // Combiner: merge two lists
+          left.addAll(right);
+          return left;
+      },
+      Collector.Characteristics.CONCURRENT,
+      Collector.Characteristics.UNORDERED
+  );
+  
+  ObjectList<Edge> edges = IntStream.range(0, n)
+      .parallel()
+      .boxed()
+      .flatMap(i -> IntStream.range(i + 1, n)
+          .mapToObj(j -> new Edge(i, j, distance(points.get(i), points.get(j)))))
+      .collect(edgeCollector);
+  ```
+
+#### Technique 3: **Fork/Join RecursiveTask for Edge Computation**
+- **Approach**: Custom `RecursiveTask<ObjectList<Edge>>` that recursively computes edge pairs
+- **Complexity**: Medium-High
+- **Benefit**: Very High - optimal work-stealing for O(n²) computation
+- **Implementation Example**:
+  ```java
+  class EdgeComputationTask extends RecursiveTask<ObjectList<Edge>> {
+      private final ObjectList<Point3D> points;
+      private final int startI, endI;
+      private static final int THRESHOLD = 100; // points per task
+      
+      @Override
+      protected ObjectList<Edge> compute() {
+          if (endI - startI <= THRESHOLD) {
+              ObjectList<Edge> edges = new ObjectArrayList<>();
+              for (int i = startI; i < endI; i++) {
+                  Point3D p1 = points.get(i);
+                  for (int j = i + 1; j < points.size(); j++) {
+                      Point3D p2 = points.get(j);
+                      edges.add(new Edge(i, j, p1.distanceSquared(p2)));
+                  }
+              }
+              return edges;
+          } else {
+              int mid = (startI + endI) / 2;
+              EdgeComputationTask left = new EdgeComputationTask(points, startI, mid);
+              EdgeComputationTask right = new EdgeComputationTask(points, mid, endI);
+              left.fork();
+              ObjectList<Edge> rightEdges = right.compute();
+              ObjectList<Edge> leftEdges = left.join();
+              leftEdges.addAll(rightEdges);
+              return leftEdges;
+          }
+      }
+  }
+  ```
 
 #### Technique 3: **Parallel Sorting**
 - **Approach**: Use `Arrays.parallelSort()` for edge array (Part 2)
@@ -368,11 +622,26 @@ The analysis covers 12 days of Advent of Code problems, examining:
 - **Benefit**: Medium (only for large datasets)
 - **Implementation**: `Arrays.parallelSort()` or `Collections.parallelSort()`
 
-### 8. **Fork/Join Custom Tasks** (High Complexity, High Control)
-- **Days**: 1, 2, 6
-- **Complexity**: High
-- **Benefit**: High (fine-grained control)
-- **Implementation**: Custom `RecursiveTask` or `RecursiveAction`
+### 8. **Fork/Join RecursiveTask** (High Complexity, High Control)
+- **Days**: 1, 2, 6, 7, 8
+- **Complexity**: Medium-High
+- **Benefit**: Very High (fine-grained control, optimal work-stealing)
+- **Implementation**: Custom `RecursiveTask<T>` extending `ForkJoinTask`
+- **When to Use**:
+  - Variable-sized work chunks
+  - Recursive divide-and-conquer algorithms
+  - Need fine-grained control over splitting
+  - Work-stealing optimization needed
+
+### 9. **Parallel Collectors** (Medium Complexity, High Performance)
+- **Days**: 2, 5, 6, 8
+- **Complexity**: Medium
+- **Benefit**: High (eliminates contention, optimal parallel collection)
+- **Implementation**: Custom `Collector` with thread-local accumulators
+- **Types**:
+  - **Thread-local collectors**: Each thread accumulates to local collection, merge at end
+  - **Concurrent collectors**: Use `ConcurrentHashMap`, `ConcurrentLinkedQueue`
+  - **Custom combiners**: Efficient merging strategies for specific data structures
 
 ---
 
@@ -392,9 +661,209 @@ The analysis covers 12 days of Advent of Code problems, examining:
 4. **Day 11 Part 2**: Parallelize path pair processing
 
 ### **Low Priority** (Complex or limited benefit)
-1. **Day 1**: Chunk-based processing (complex state merging)
-2. **Day 7**: Parallel path exploration (requires careful synchronization)
+1. **Day 1**: Fork/Join chunk-based processing (complex state merging)
+2. **Day 7**: Fork/Join path exploration (requires careful synchronization)
 3. **Day 12**: Already parallelized, minor optimizations only
+
+---
+
+## Implementation Examples Summary
+
+### Quick Wins (Parallel Streams)
+- Day 3, 9 Part 1, 10 Part 1: Add `.parallel()` or `.parallelStream()`
+- Day 4 Part 1: `parallelStream()` for cell filtering
+- Day 5 Part 1: `parallelStream()` for ID checking
+
+### Medium Effort (Custom Collectors)
+- Day 2: Parallel stream with `flatMapToLong()` and `sum()`
+- Day 8: Custom parallel collector for `ObjectArrayList<Edge>`
+- Day 6: Parallel stream with block collection
+
+### High Effort (Fork/Join)
+- Day 1: `RecursiveTask<DialResult>` with state merging
+- Day 2: `RecursiveTask<Long>` for range/ID processing
+- Day 6: `RecursiveTask<Long>` for block processing
+- Day 7: `RecursiveTask<Long>` for path exploration
+- Day 8: `RecursiveTask<ObjectList<Edge>>` for edge computation
+
+---
+
+## Fork/Join Framework Deep Dive
+
+### When to Use Fork/Join vs Parallel Streams
+
+**Use Fork/Join (`RecursiveTask`/`RecursiveAction`) when:**
+- Need fine-grained control over task splitting
+- Work chunks vary significantly in size
+- Recursive algorithms with variable depth
+- Custom work-stealing strategies needed
+- Need to control thread pool size explicitly
+- Complex state merging required
+
+**Use Parallel Streams when:**
+- Uniform work distribution
+- Simple transformations/filtering
+- Standard collection operations
+- Want simplicity and readability
+
+### Fork/Join Patterns
+
+#### Pattern 1: Range Splitting
+```java
+class RangeTask extends RecursiveTask<Result> {
+    private final int start, end;
+    private static final int THRESHOLD = 1000;
+    
+    @Override
+    protected Result compute() {
+        if (end - start <= THRESHOLD) {
+            return computeSequentially();
+        }
+        int mid = (start + end) / 2;
+        RangeTask left = new RangeTask(start, mid);
+        RangeTask right = new RangeTask(mid, end);
+        left.fork();
+        Result rightResult = right.compute();
+        Result leftResult = left.join();
+        return combine(leftResult, rightResult);
+    }
+}
+```
+
+#### Pattern 2: Tree Traversal
+```java
+class TreeTask extends RecursiveTask<Result> {
+    private final Node node;
+    
+    @Override
+    protected Result compute() {
+        if (node.isLeaf()) {
+            return processLeaf(node);
+        }
+        List<TreeTask> subtasks = node.children().stream()
+            .map(TreeTask::new)
+            .collect(Collectors.toList());
+        invokeAll(subtasks);
+        return combine(subtasks.stream().map(ForkJoinTask::join));
+    }
+}
+```
+
+#### Pattern 3: Divide and Conquer with State
+```java
+class StatefulTask extends RecursiveTask<Result> {
+    private final Data data;
+    private final State initialState;
+    
+    @Override
+    protected Result compute() {
+        if (shouldComputeSequentially(data)) {
+            return computeWithState(data, initialState);
+        }
+        Pair<Data, Data> split = divide(data);
+        StatefulTask left = new StatefulTask(split.left(), initialState);
+        StatefulTask right = new StatefulTask(split.right(), mergeState(initialState, left.getState()));
+        left.fork();
+        Result rightResult = right.compute();
+        Result leftResult = left.join();
+        return combine(leftResult, rightResult);
+    }
+}
+```
+
+### Fork/Join Best Practices
+
+1. **Threshold Selection**: Choose threshold based on:
+   - Work per element (CPU-intensive = smaller threshold)
+   - Overhead vs computation ratio
+   - Typical data sizes
+   - Benchmark to find optimal value
+
+2. **Fork vs Compute**: 
+   - Use `fork()` + `compute()` for asymmetric splits
+   - Use `invokeAll()` for symmetric splits
+   - Prefer `compute()` on one side to reduce thread creation
+
+3. **Avoid Blocking**: Fork/Join threads are worker threads - blocking reduces parallelism
+
+4. **Exception Handling**: Override `getException()` or use `quietlyJoin()` for error handling
+
+---
+
+## Parallel Collectors Deep Dive
+
+### Standard Parallel Collectors
+
+#### 1. **Concurrent Collectors** (Built-in)
+```java
+// Thread-safe concurrent collection
+Map<K, V> map = stream.parallel()
+    .collect(Collectors.toConcurrentMap(keyMapper, valueMapper));
+
+// Concurrent grouping
+Map<K, List<V>> grouped = stream.parallel()
+    .collect(Collectors.groupingByConcurrent(classifier));
+```
+
+#### 2. **Thread-local Collectors** (Custom)
+```java
+Collector<T, ?, List<T>> threadLocalCollector = Collector.of(
+    ArrayList::new,                    // Supplier: creates thread-local accumulator
+    List::add,                         // Accumulator: adds to local list
+    (left, right) -> {                 // Combiner: merges two lists
+        left.addAll(right);
+        return left;
+    },
+    Collector.Characteristics.CONCURRENT,  // Optional: concurrent characteristics
+    Collector.Characteristics.UNORDERED     // Optional: order not preserved
+);
+```
+
+#### 3. **FastUtil Parallel Collectors** (Custom for Day 8)
+```java
+// Custom collector for ObjectArrayList (FastUtil)
+Collector<Edge, ?, ObjectList<Edge>> fastUtilCollector = Collector.of(
+    ObjectArrayList::new,              // Supplier
+    ObjectArrayList::add,              // Accumulator
+    (left, right) -> {                 // Combiner
+        left.addAll(right);
+        return left;
+    },
+    Collector.Characteristics.CONCURRENT,
+    Collector.Characteristics.UNORDERED
+);
+```
+
+### Collector Characteristics
+
+- **CONCURRENT**: Accumulator can be called concurrently from multiple threads
+- **UNORDERED**: Order of elements not preserved
+- **IDENTITY_FINISH**: Finisher is identity function (can be optimized away)
+
+### When to Use Each Type
+
+**Concurrent Collectors** (`toConcurrentMap`, `groupingByConcurrent`):
+- When order doesn't matter
+- High contention expected
+- Map/grouping operations
+
+**Thread-local Collectors**:
+- When building lists/collections
+- Want to minimize contention
+- Need to merge at end
+- Custom data structures (FastUtil, etc.)
+
+**Standard Collectors** (non-concurrent):
+- Sequential streams
+- When order matters
+- Low contention scenarios
+
+### Performance Considerations
+
+1. **Contention**: Concurrent collectors reduce contention but may have overhead
+2. **Memory**: Thread-local collectors use more memory (one collection per thread)
+3. **Merging Cost**: Consider cost of combiner function
+4. **Characteristics**: Set appropriate characteristics for better optimization
 
 ---
 
@@ -406,6 +875,332 @@ When parallelizing, ensure:
 3. **Mutable shared state** requires synchronization (`ConcurrentHashMap`, `synchronized` blocks)
 4. **Local variables** are thread-safe (each thread has its own stack)
 5. **Collectors** should be thread-safe or use `Collectors.toConcurrentMap()`
+6. **Fork/Join tasks** should avoid shared mutable state or use thread-safe structures
+7. **Thread-local collections** eliminate contention but require efficient merging
+
+---
+
+## Complete Fork/Join Implementation Guide
+
+### Basic Fork/Join Setup
+
+```java
+// Create custom ForkJoinPool (optional - can use commonPool())
+ForkJoinPool pool = new ForkJoinPool(
+    Runtime.getRuntime().availableProcessors(),
+    ForkJoinPool.defaultForkJoinWorkerThreadFactory,
+    null,
+    true  // asyncMode for better performance
+);
+
+// Execute task
+RecursiveTask<Result> task = new MyRecursiveTask(data);
+Result result = pool.invoke(task);
+```
+
+### Common Fork/Join Patterns
+
+#### Pattern 1: Array/List Processing
+```java
+class ArrayProcessingTask extends RecursiveTask<Long> {
+    private final long[] array;
+    private final int start, end;
+    private static final int THRESHOLD = 1000;
+    
+    @Override
+    protected Long compute() {
+        if (end - start <= THRESHOLD) {
+            // Sequential processing
+            long sum = 0;
+            for (int i = start; i < end; i++) {
+                sum += process(array[i]);
+            }
+            return sum;
+        }
+        
+        // Split and fork
+        int mid = (start + end) / 2;
+        ArrayProcessingTask left = new ArrayProcessingTask(array, start, mid);
+        ArrayProcessingTask right = new ArrayProcessingTask(array, mid, end);
+        left.fork();
+        return right.compute() + left.join();
+    }
+}
+```
+
+#### Pattern 2: Nested Loop Parallelization (O(n²) operations)
+```java
+class PairProcessingTask extends RecursiveTask<ObjectList<Edge>> {
+    private final ObjectList<Point> points;
+    private final int startI, endI;
+    private static final int THRESHOLD = 100;
+    
+    @Override
+    protected ObjectList<Edge> compute() {
+        if (endI - startI <= THRESHOLD) {
+            ObjectList<Edge> results = new ObjectArrayList<>();
+            for (int i = startI; i < endI; i++) {
+                for (int j = i + 1; j < points.size(); j++) {
+                    results.add(computeEdge(points.get(i), points.get(j)));
+                }
+            }
+            return results;
+        }
+        
+        int mid = (startI + endI) / 2;
+        PairProcessingTask left = new PairProcessingTask(points, startI, mid);
+        PairProcessingTask right = new PairProcessingTask(points, mid, endI);
+        left.fork();
+        ObjectList<Edge> rightResults = right.compute();
+        ObjectList<Edge> leftResults = left.join();
+        leftResults.addAll(rightResults);
+        return leftResults;
+    }
+}
+```
+
+#### Pattern 3: Tree/Graph Traversal
+```java
+class TreeTraversalTask extends RecursiveTask<Long> {
+    private final Node node;
+    private final Map<Node, Long> memo; // ConcurrentHashMap
+    
+    @Override
+    protected Long compute() {
+        if (node.isLeaf()) {
+            return processLeaf(node);
+        }
+        
+        Long cached = memo.get(node);
+        if (cached != null) return cached;
+        
+        List<TreeTraversalTask> subtasks = node.children().stream()
+            .map(child -> new TreeTraversalTask(child, memo))
+            .collect(Collectors.toList());
+        
+        invokeAll(subtasks);
+        
+        long result = subtasks.stream()
+            .mapToLong(ForkJoinTask::join)
+            .sum();
+        
+        memo.put(node, result);
+        return result;
+    }
+}
+```
+
+#### Pattern 4: Stateful Processing with Merging
+```java
+class StatefulTask extends RecursiveTask<StateResult> {
+    private final List<Operation> operations;
+    private final int start, end;
+    private final State initialState;
+    private static final int THRESHOLD = 100;
+    
+    record StateResult(State finalState, long count) {}
+    
+    @Override
+    protected StateResult compute() {
+        if (end - start <= THRESHOLD) {
+            State current = initialState;
+            long count = 0;
+            for (int i = start; i < end; i++) {
+                current = operations.get(i).apply(current);
+                if (current.isTargetState()) count++;
+            }
+            return new StateResult(current, count);
+        }
+        
+        int mid = (start + end) / 2;
+        StatefulTask left = new StatefulTask(operations, start, mid, initialState);
+        StatefulTask right = new StatefulTask(operations, mid, end, initialState);
+        
+        left.fork();
+        StateResult rightResult = right.compute();
+        StateResult leftResult = left.join();
+        
+        // Merge: right needs to start from left's final state
+        StateResult mergedRight = processWithState(
+            operations, mid, end, leftResult.finalState());
+        
+        return new StateResult(
+            mergedRight.finalState(),
+            leftResult.count() + mergedRight.count()
+        );
+    }
+}
+```
+
+### Fork/Join vs Parallel Streams Decision Matrix
+
+| Factor | Fork/Join | Parallel Streams |
+|--------|----------|-------------------|
+| **Control** | Fine-grained | Coarse-grained |
+| **Work Distribution** | Variable sizes | Uniform |
+| **Threshold** | Customizable | Fixed by framework |
+| **State Management** | Explicit | Implicit |
+| **Complexity** | Higher | Lower |
+| **Performance** | Optimal for irregular work | Good for regular work |
+| **Use Case** | Recursive algorithms, divide-conquer | Transformations, filtering |
+
+---
+
+## Complete Parallel Collector Implementation Guide
+
+### Standard Parallel Collectors
+
+#### 1. Concurrent Map Collection
+```java
+// Thread-safe map collection
+Map<String, Long> result = stream.parallel()
+    .collect(Collectors.toConcurrentMap(
+        keyMapper,
+        valueMapper,
+        (v1, v2) -> v1 + v2  // merge function for duplicates
+    ));
+```
+
+#### 2. Concurrent Grouping
+```java
+// Group by classifier, thread-safe
+Map<String, List<Item>> grouped = stream.parallel()
+    .collect(Collectors.groupingByConcurrent(
+        Item::getCategory,
+        Collectors.toList()
+    ));
+```
+
+#### 3. Concurrent Grouping with Downstream Collector
+```java
+// Group and count concurrently
+Map<String, Long> counts = stream.parallel()
+    .collect(Collectors.groupingByConcurrent(
+        Item::getCategory,
+        Collectors.counting()
+    ));
+```
+
+### Custom Thread-Local Collectors
+
+#### Pattern 1: List Collection
+```java
+Collector<T, ?, List<T>> listCollector = Collector.of(
+    ArrayList::new,                    // Supplier
+    List::add,                         // Accumulator
+    (left, right) -> {                 // Combiner
+        left.addAll(right);
+        return left;
+    },
+    Collector.Characteristics.CONCURRENT,
+    Collector.Characteristics.UNORDERED
+);
+
+List<T> result = stream.parallel().collect(listCollector);
+```
+
+#### Pattern 2: FastUtil Collection (Day 8 example)
+```java
+Collector<Edge, ?, ObjectList<Edge>> fastUtilCollector = Collector.of(
+    ObjectArrayList::new,              // Supplier: FastUtil list
+    ObjectArrayList::add,              // Accumulator
+    (left, right) -> {                 // Combiner
+        left.addAll(right);
+        return left;
+    },
+    Collector.Characteristics.CONCURRENT,
+    Collector.Characteristics.UNORDERED
+);
+
+ObjectList<Edge> edges = IntStream.range(0, n)
+    .parallel()
+    .boxed()
+    .flatMap(i -> generateEdges(i))
+    .collect(fastUtilCollector);
+```
+
+#### Pattern 3: Summing Collector
+```java
+Collector<Long, long[], Long> summingCollector = Collector.of(
+    () -> new long[1],                 // Supplier: single-element array
+    (acc, value) -> acc[0] += value,    // Accumulator
+    (left, right) -> {                  // Combiner
+        left[0] += right[0];
+        return left;
+    },
+    acc -> acc[0],                      // Finisher
+    Collector.Characteristics.CONCURRENT,
+    Collector.Characteristics.UNORDERED
+);
+
+long sum = stream.parallel().collect(summingCollector);
+```
+
+#### Pattern 4: Complex Aggregation
+```java
+record Stats(long count, long sum, long max) {
+    Stats combine(Stats other) {
+        return new Stats(
+            count + other.count,
+            sum + other.sum,
+            Math.max(max, other.max)
+        );
+    }
+}
+
+Collector<Long, Stats, Stats> statsCollector = Collector.of(
+    () -> new Stats(0, 0, Long.MIN_VALUE),  // Supplier
+    (stats, value) -> {                      // Accumulator (mutable)
+        stats.count++;
+        stats.sum += value;
+        stats.max = Math.max(stats.max, value);
+    },
+    Stats::combine,                          // Combiner
+    Collector.Characteristics.CONCURRENT,
+    Collector.Characteristics.UNORDERED
+);
+
+Stats stats = stream.parallel().collect(statsCollector);
+```
+
+### Collector Characteristics Explained
+
+- **CONCURRENT**: 
+  - Accumulator can be called concurrently from multiple threads
+  - Use when accumulator is thread-safe
+  - Example: `ConcurrentHashMap.put()`, `AtomicLong.addAndGet()`
+
+- **UNORDERED**:
+  - Order of elements not preserved
+  - Allows optimizations (e.g., parallel reduction)
+  - Use when order doesn't matter
+
+- **IDENTITY_FINISH**:
+  - Finisher is identity function
+  - Can be optimized away
+  - Use when accumulator type equals result type
+
+### When to Use Each Collector Type
+
+**Built-in Concurrent Collectors** (`toConcurrentMap`, `groupingByConcurrent`):
+- ✅ Standard map/grouping operations
+- ✅ High contention scenarios
+- ✅ Order doesn't matter
+- ❌ Need ordered results
+- ❌ Custom data structures
+
+**Custom Thread-Local Collectors**:
+- ✅ Custom data structures (FastUtil, etc.)
+- ✅ Want to minimize contention
+- ✅ Need efficient merging
+- ❌ Simple standard operations (use built-in)
+- ❌ Very small datasets (overhead not worth it)
+
+**Standard Collectors** (non-concurrent):
+- ✅ Sequential streams
+- ✅ Order matters
+- ✅ Low contention
+- ❌ High contention parallel streams
 
 ---
 
@@ -416,6 +1211,8 @@ When parallelizing, ensure:
 3. **Memory**: Parallel processing may increase memory usage (multiple threads processing simultaneously)
 4. **Cache Locality**: Sequential processing may have better cache performance
 5. **Load Balancing**: Ensure work is evenly distributed across threads
+6. **Fork/Join Threshold**: Too small = overhead, too large = underutilization
+7. **Collector Merging**: Consider cost of combiner function - should be O(n) or better
 
 ---
 
