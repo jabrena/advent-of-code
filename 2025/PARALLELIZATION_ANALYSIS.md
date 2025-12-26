@@ -739,6 +739,304 @@ The analysis covers 12 days of Advent of Code problems, examining:
 
 ---
 
+## Theoretical Performance Improvement Estimates
+
+### Methodology
+
+Performance improvements are estimated using **Amdahl's Law** and practical considerations:
+
+**Amdahl's Law**: `Speedup = 1 / ((1 - P) + P/N)`
+- `P` = proportion of code that can be parallelized
+- `N` = number of processors/threads
+
+**Assumptions:**
+- Typical system: 8-16 CPU cores
+- Overhead: 5-15% for parallel streams, 10-20% for Fork/Join
+- Memory bandwidth: May become bottleneck for memory-intensive operations
+- Cache effects: Sequential may have better cache locality
+
+**Estimate Categories:**
+- **Ideal Speedup**: Theoretical maximum (ignoring overhead)
+- **Realistic Speedup**: Accounting for overhead, contention, and real-world factors
+- **Conditions**: When improvement is most/least significant
+
+---
+
+### Day-by-Day Performance Estimates
+
+#### Day 1: DialRotator3
+
+**Technique**: Fork/Join with State Merging
+- **Parallelizable Portion**: ~85% (rotation processing)
+- **Sequential Portion**: ~15% (state merging, zero crossing calculations)
+- **Ideal Speedup**: 4-6x (8 cores)
+- **Realistic Speedup**: **2.5-4x** (accounting for state merging overhead)
+- **Conditions**:
+  - Best: Large input files (>10K lines)
+  - Worst: Small inputs (<1K lines) - overhead dominates
+- **Factors**: State merging complexity, zero crossing boundary calculations
+
+#### Day 2: InvalidIdValidator2
+
+**Technique**: Parallel Stream on Range/ID Processing
+- **Parallelizable Portion**: ~95% (ID validation is independent)
+- **Sequential Portion**: ~5% (range parsing, result aggregation)
+- **Ideal Speedup**: 6-7x (8 cores)
+- **Realistic Speedup**: **4-6x** (CPU-intensive validation benefits well)
+- **Conditions**:
+  - Best: Many ranges with large ID counts (>100K IDs total)
+  - Worst: Few ranges with small ID counts (<10K IDs total)
+- **Factors**: ID validation complexity (Part 2 more complex = better speedup)
+
+**Technique**: Fork/Join RecursiveTask
+- **Realistic Speedup**: **5-7x** (better work-stealing for variable-sized ranges)
+- **Best For**: Highly variable range sizes
+
+#### Day 3: MaxJoltage
+
+**Technique**: Parallel Stream Processing
+- **Parallelizable Portion**: ~98% (line processing is independent)
+- **Sequential Portion**: ~2% (file I/O, result aggregation)
+- **Ideal Speedup**: 7-7.5x (8 cores)
+- **Realistic Speedup**: **5-7x** (minimal overhead, independent work)
+- **Conditions**:
+  - Best: Many lines (>1000 lines)
+  - Worst: Few lines (<100 lines) - overhead not worth it
+- **Factors**: Computation per line (Part 2 with length 12 = better speedup)
+
+#### Day 4: GridNeighbor2
+
+**Part 1 - Parallel Stream for Cell Filtering:**
+- **Parallelizable Portion**: ~90% (neighbor checking per cell)
+- **Sequential Portion**: ~10% (grid creation, result collection)
+- **Ideal Speedup**: 5-6x (8 cores)
+- **Realistic Speedup**: **3.5-5x** (memory access patterns affect cache)
+- **Conditions**:
+  - Best: Large grids (>100x100 cells)
+  - Worst: Small grids (<50x50 cells)
+- **Factors**: Grid size, neighbor access patterns
+
+**Part 2 - Parallel Cell Removal Detection:**
+- **Realistic Speedup**: **2-3x** (only detection parallelized, removal sequential)
+- **Limitation**: Iterative dependencies reduce parallelization benefit
+
+#### Day 5: Range3
+
+**Part 1 - Parallel ID Checking:**
+- **Parallelizable Portion**: ~92% (ID checking against intervals)
+- **Sequential Portion**: ~8% (interval parsing, result aggregation)
+- **Ideal Speedup**: 6-7x (8 cores)
+- **Realistic Speedup**: **4-6x** (CPU-intensive interval checking)
+- **Conditions**:
+  - Best: Many IDs (>100K IDs) with many intervals (>100 intervals)
+  - Worst: Few IDs (<10K IDs)
+- **Factors**: Number of intervals (more intervals = more work per ID)
+
+**Part 2 - Parallel Interval Sorting:**
+- **Realistic Speedup**: **2-3x** (only sorting parallelized, merging sequential)
+- **Best For**: Very large interval lists (>10K intervals)
+
+#### Day 6: MathBlock
+
+**Technique**: Parallel Block Processing
+- **Parallelizable Portion**: ~95% (block processing is independent)
+- **Sequential Portion**: ~5% (block detection, result aggregation)
+- **Ideal Speedup**: 6-7x (8 cores)
+- **Realistic Speedup**: **4-6x** (independent blocks, minimal overhead)
+- **Conditions**:
+  - Best: Many blocks (>50 blocks)
+  - Worst: Few blocks (<10 blocks)
+- **Factors**: Block size variability (more uniform = better load balancing)
+
+**Technique**: Fork/Join RecursiveTask
+- **Realistic Speedup**: **5-7x** (better for variable-sized blocks)
+
+#### Day 7: BeamPathCounter
+
+**Part 2 - Fork/Join Path Exploration:**
+- **Parallelizable Portion**: ~70-85% (varies with splitter density)
+- **Sequential Portion**: ~15-30% (memoization overhead, sequential paths)
+- **Ideal Speedup**: 4-6x (8 cores, depends on graph structure)
+- **Realistic Speedup**: **3-5x** (memoization contention, tree structure)
+- **Conditions**:
+  - Best: High splitter density (many parallel paths)
+  - Worst: Low splitter density (mostly sequential paths)
+- **Factors**: 
+  - Memoization effectiveness (more cache hits = less benefit)
+  - Graph structure (balanced tree = better speedup)
+
+**Technique**: Structured Concurrency
+- **Realistic Speedup**: **2.5-4x** (similar to Fork/Join, better error handling)
+
+#### Day 8: PointCluster3
+
+**Technique**: Parallel Edge Computation
+- **Parallelizable Portion**: ~98% (O(n²) pair computation)
+- **Sequential Portion**: ~2% (point parsing, result collection)
+- **Ideal Speedup**: 7-7.5x (8 cores)
+- **Realistic Speedup**: **6-8x** (highly parallelizable, CPU-intensive)
+- **Conditions**:
+  - Best: Large point sets (>1000 points = >500K edges)
+  - Worst: Small point sets (<100 points)
+- **Factors**: 
+  - Point count (O(n²) means massive benefit for large n)
+  - Distance calculation complexity
+
+**Part 1 - Parallel Top-K Selection:**
+- **Realistic Speedup**: **5-7x** (edge computation dominates)
+
+**Part 2 - Parallel Sorting:**
+- **Realistic Speedup**: **3-5x** (for large edge lists >100K edges)
+
+#### Day 9: MaxRectangleArea
+
+**Part 1 - Parallel Stream:**
+- **Parallelizable Portion**: ~95% (pair generation and area calculation)
+- **Sequential Portion**: ~5% (point parsing, max finding)
+- **Ideal Speedup**: 6-7x (8 cores)
+- **Realistic Speedup**: **4-6x** (independent pair processing)
+- **Conditions**:
+  - Best: Many points (>500 points = >125K pairs)
+  - Worst: Few points (<50 points)
+
+**Part 2 - Already Parallelized:**
+- **Current Speedup**: ~4-6x (already using `.parallel()`)
+- **Potential Improvement**: **+10-20%** (optimization only)
+
+#### Day 10: ButtonPressOptimizer
+
+**Part 1 - Parallel Stream:**
+- **Parallelizable Portion**: ~96% (line processing is independent)
+- **Sequential Portion**: ~4% (file I/O, result aggregation)
+- **Ideal Speedup**: 6-7x (8 cores)
+- **Realistic Speedup**: **4-6x** (independent line processing)
+- **Conditions**:
+  - Best: Many lines (>1000 lines)
+  - Worst: Few lines (<100 lines)
+
+**Part 2 - Already Parallelized:**
+- **Current Speedup**: ~4-6x (already using `.parallelStream()`)
+
+**Technique**: Structured Concurrency
+- **Realistic Speedup**: **4-6x** (similar to parallel stream, better error handling)
+
+#### Day 11: GraphPathCounter
+
+**Part 2 - Structured Concurrency for Path Pairs:**
+- **Parallelizable Portion**: ~100% (6 independent path counts)
+- **Sequential Portion**: ~0% (only result multiplication)
+- **Ideal Speedup**: 6x (6 independent tasks on 8 cores)
+- **Realistic Speedup**: **4-5x** (limited by number of tasks, not cores)
+- **Conditions**:
+  - Best: All path counts take similar time
+  - Worst: One path count dominates (Amdahl's Law)
+- **Factors**: 
+  - Path count computation time (more uniform = better speedup)
+  - Graph structure (affects individual path computation time)
+
+**Technique**: Fork/Join for Path Exploration
+- **Realistic Speedup**: **3-5x** (depends on graph structure and memoization)
+
+#### Day 12: ShapePacking
+
+**Already Parallelized:**
+- **Current Speedup**: ~4-6x (already using `.parallelStream()` for regions)
+- **Potential Improvement**: **+5-15%** (thread pool tuning, work distribution)
+
+**Technique**: Parallel Variant Processing (within backtracking)
+- **Realistic Speedup**: **1.5-2x** (synchronization overhead limits benefit)
+- **Note**: Backtracking is inherently sequential, parallelization difficult
+
+---
+
+### Summary of Expected Improvements
+
+| Day | Technique | Realistic Speedup | Best Case | Worst Case |
+|-----|-----------|------------------|-----------|------------|
+| **Day 1** | Fork/Join State Merging | **2.5-4x** | Large inputs | Small inputs |
+| **Day 2** | Parallel Stream | **4-6x** | Many large ranges | Few small ranges |
+| **Day 2** | Fork/Join | **5-7x** | Variable ranges | Uniform ranges |
+| **Day 3** | Parallel Stream | **5-7x** | Many lines | Few lines |
+| **Day 4 P1** | Parallel Stream | **3.5-5x** | Large grids | Small grids |
+| **Day 4 P2** | Parallel Detection | **2-3x** | Large grids | Small grids |
+| **Day 5 P1** | Parallel ID Check | **4-6x** | Many IDs/intervals | Few IDs |
+| **Day 5 P2** | Parallel Sort | **2-3x** | Many intervals | Few intervals |
+| **Day 6** | Parallel Blocks | **4-6x** | Many blocks | Few blocks |
+| **Day 6** | Fork/Join | **5-7x** | Variable blocks | Uniform blocks |
+| **Day 7** | Fork/Join Paths | **3-5x** | High splitter density | Low splitter density |
+| **Day 8** | Parallel Edges | **6-8x** | Large point sets | Small point sets |
+| **Day 9 P1** | Parallel Stream | **4-6x** | Many points | Few points |
+| **Day 10 P1** | Parallel Stream | **4-6x** | Many lines | Few lines |
+| **Day 11 P2** | Structured Concurrency | **4-5x** | Uniform path times | One dominates |
+| **Day 12** | Already optimized | **+5-15%** | - | - |
+
+### Factors Affecting Speedup
+
+#### Positive Factors (Increase Speedup)
+1. **Large Dataset Size**: More work = better amortization of overhead
+2. **CPU-Intensive Operations**: Computation-bound tasks benefit more
+3. **Independent Work**: No dependencies between parallel tasks
+4. **Uniform Work Distribution**: Even load across threads
+5. **Good Cache Locality**: Each thread works on local data
+6. **Minimal Synchronization**: Low contention on shared resources
+
+#### Negative Factors (Decrease Speedup)
+1. **Small Dataset Size**: Overhead dominates benefits
+2. **I/O-Bound Operations**: Limited by I/O bandwidth, not CPU
+3. **Sequential Dependencies**: Must wait for previous results
+4. **Uneven Work Distribution**: Some threads finish early (load imbalance)
+5. **High Contention**: Many threads competing for shared resources
+6. **Memory Bandwidth Limits**: Memory becomes bottleneck
+7. **Cache Thrashing**: Poor cache locality reduces performance
+
+### Amdahl's Law Application
+
+**Example: Day 8 Edge Computation**
+- Parallelizable: 98%
+- Sequential: 2%
+- Speedup = 1 / (0.02 + 0.98/8) = 1 / 0.1425 = **7.0x** (ideal)
+- With 15% overhead: **6.0x** (realistic)
+
+**Example: Day 1 State Merging**
+- Parallelizable: 85%
+- Sequential: 15%
+- Speedup = 1 / (0.15 + 0.85/8) = 1 / 0.256 = **3.9x** (ideal)
+- With 20% overhead: **2.5-3x** (realistic, accounting for state merging complexity)
+
+### Real-World Considerations
+
+1. **Overhead Costs**:
+   - Parallel stream creation: ~1-5ms
+   - Thread creation/context switching: ~10-50μs per thread
+   - Synchronization: Variable, depends on contention
+
+2. **Memory Effects**:
+   - Parallel processing increases memory usage (multiple threads)
+   - May cause cache misses if data doesn't fit in cache
+   - Memory bandwidth can become bottleneck
+
+3. **Scalability Limits**:
+   - Most improvements plateau around 8-16 cores
+   - Beyond that, memory bandwidth and cache become limiting factors
+   - Some algorithms scale better than others (embarrassingly parallel vs. complex dependencies)
+
+4. **Input Size Thresholds**:
+   - **Minimum**: ~1000-10000 elements for parallel streams to be beneficial
+   - **Optimal**: 100K+ elements for maximum benefit
+   - **Diminishing Returns**: Beyond 1M elements, other bottlenecks emerge
+
+### Benchmarking Recommendations
+
+To validate these estimates:
+1. **Baseline**: Measure sequential performance first
+2. **Parallel**: Measure parallel performance with same input
+3. **Vary Input Size**: Test with small, medium, large inputs
+4. **Multiple Runs**: Average over multiple runs to account for JIT warmup
+5. **JMH**: Use Java Microbenchmark Harness for accurate measurements
+6. **Profile**: Use JFR (Java Flight Recorder) to identify bottlenecks
+
+---
+
 ## Recommendations by Priority
 
 ### **High Priority** (Easy wins, high impact)
