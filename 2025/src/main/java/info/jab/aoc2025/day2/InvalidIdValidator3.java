@@ -78,24 +78,66 @@ public final class InvalidIdValidator3 implements Solver<Long> {
     /**
      * Calculates the number of times a chunk repeats to form the given ID string.
      * Returns 0 if the ID is not composed of repeated chunks.
+     * Optimized to avoid String allocations by using char array and character comparison.
      *
      * @param id The ID to check
      * @return Number of repeats (0 if not repeated)
      */
     private int repeated(final long id) {
-        final String str = String.valueOf(id);
-        final int halfLength = str.length() / 2;
+        final char[] idChars = longToCharArray(id);
+        final int length = idChars.length;
+        final int halfLength = length / 2;
 
         for (int len = halfLength; len >= 1; len--) {
-            if (str.length() % len != 0) {
+            if (length % len != 0) {
                 continue; // can't fill the whole string
             }
-            final String chunk = str.substring(0, len);
-            final int repeats = str.length() / len; // how many to repeat
-            if (chunk.repeat(repeats).equals(str)) {
+            final int repeats = length / len; // how many to repeat
+            
+            // Check if all parts are equal by comparing characters directly
+            // For each position i, check if idChars[i] == idChars[i % len]
+            boolean allPartsEqual = true;
+            for (int i = len; i < length; i++) {
+                if (idChars[i] != idChars[i % len]) {
+                    allPartsEqual = false;
+                    break;
+                }
+            }
+            if (allPartsEqual) {
                 return repeats;
             }
         }
         return 0;
+    }
+
+    /**
+     * Converts a long to a char array without creating intermediate String.
+     *
+     * @param value The long value to convert
+     * @return Char array representation
+     */
+    private static char[] longToCharArray(final long value) {
+        if (value == 0) {
+            return new char[]{'0'};
+        }
+
+        // Calculate number of digits
+        int digits = 0;
+        long temp = value;
+        if (temp < 0) {
+            temp = -temp;
+        }
+        while (temp > 0) {
+            temp /= 10;
+            digits++;
+        }
+
+        final char[] chars = new char[digits];
+        temp = value < 0 ? -value : value;
+        for (int i = digits - 1; i >= 0; i--) {
+            chars[i] = (char) ('0' + (temp % 10));
+            temp /= 10;
+        }
+        return chars;
     }
 }
