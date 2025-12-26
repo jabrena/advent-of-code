@@ -1,8 +1,9 @@
 package info.jab.aoc2025.day10;
 
+import module java.base;
+
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
-import java.util.List;
 
 /**
  * Solver for button press optimization problems.

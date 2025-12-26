@@ -31,6 +31,20 @@ public record DialState(int position, int zeroCount) {
     }
 
     /**
+     * Applies a rotation directly without Rotation object allocation.
+     *
+     * @param direction Rotation direction
+     * @param distance Rotation distance
+     * @param rotator DialRotator instance to perform rotation
+     * @return New state after rotation
+     */
+    public DialState applyRotationDirect(final Direction direction, final int distance, final DialRotator rotator) {
+        final int newPosition = rotator.rotateDial(this.position, direction, distance);
+        final int newZeroCount = this.zeroCount + (newPosition == 0 ? 1 : 0);
+        return new DialState(newPosition, newZeroCount);
+    }
+
+    /**
      * Applies a single-step rotation and updates state.
      *
      * @param direction Rotation direction
@@ -54,6 +68,22 @@ public record DialState(int position, int zeroCount) {
     public DialState applyRotationWithZeroCount(final Rotation rotation, final DialRotator rotator) {
         final int zeroCrossings = rotator.countZeroCrossings(this.position, rotation.direction(), rotation.distance());
         final int newPosition = rotator.rotateDial(this.position, rotation.direction(), rotation.distance());
+        final int newZeroCount = this.zeroCount + zeroCrossings;
+        return new DialState(newPosition, newZeroCount);
+    }
+
+    /**
+     * Applies a rotation and counts zero crossings directly without Rotation object allocation.
+     * Optimized version that calculates zero crossings directly without expanding to steps.
+     *
+     * @param direction Rotation direction
+     * @param distance Rotation distance
+     * @param rotator DialRotator instance to perform rotation and count zero crossings
+     * @return New state after rotation with updated zero count
+     */
+    public DialState applyRotationWithZeroCountDirect(final Direction direction, final int distance, final DialRotator rotator) {
+        final int zeroCrossings = rotator.countZeroCrossings(this.position, direction, distance);
+        final int newPosition = rotator.rotateDial(this.position, direction, distance);
         final int newZeroCount = this.zeroCount + zeroCrossings;
         return new DialState(newPosition, newZeroCount);
     }

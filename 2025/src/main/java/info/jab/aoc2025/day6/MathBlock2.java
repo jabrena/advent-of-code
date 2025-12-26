@@ -1,11 +1,7 @@
 package info.jab.aoc2025.day6;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.function.ToLongFunction;
-import java.util.stream.IntStream;
-import java.util.stream.Collectors;
+import module java.base;
+
 import info.jab.aoc.Solver;
 import com.putoet.resources.ResourceLines;
 

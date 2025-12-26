@@ -1,9 +1,6 @@
 package info.jab.aoc2025.day10;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import module java.base;
 
 public final class InputParser {
 

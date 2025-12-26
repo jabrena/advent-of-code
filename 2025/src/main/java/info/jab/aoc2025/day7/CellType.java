@@ -1,6 +1,6 @@
 package info.jab.aoc2025.day7;
 
-import java.util.Map;
+import module java.base;
 
 public enum CellType {
     EMPTY('.'),

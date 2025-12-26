@@ -1,13 +1,9 @@
 package info.jab.aoc2025.day11;
 
+import module java.base;
+
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Solver for counting paths in a graph.

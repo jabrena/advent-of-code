@@ -1,6 +1,6 @@
 package info.jab.aoc2025.day8;
 
-import java.util.List;
+import module java.base;
 
 /**
  * Disjoint Set Union (DSU) data structure, also known as Union-Find.
@@ -130,7 +130,7 @@ public final class DSU {
         // Avoids distinct() overhead and stream intermediate operations
         boolean[] seen = new boolean[parent.length];
         java.util.ArrayList<Integer> sizes = new java.util.ArrayList<>();
-        
+
         for (int i = 0; i < parent.length; i++) {
             int root = find(i);
             if (!seen[root]) {
@@ -138,7 +138,7 @@ public final class DSU {
                 sizes.add(size[root]);
             }
         }
-        
+
         return List.copyOf(sizes);
     }
 }

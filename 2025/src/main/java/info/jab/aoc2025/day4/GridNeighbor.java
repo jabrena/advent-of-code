@@ -1,11 +1,11 @@
 package info.jab.aoc2025.day4;
 
+import module java.base;
+
 import com.putoet.grid.GridUtils;
 import com.putoet.grid.Point;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Solver for counting and removing grid cells based on neighbor count.
@@ -77,7 +77,7 @@ public final class GridNeighbor implements Solver<Integer> {
      * @return A 2D character array representing the grid
      */
     private char[][] createGrid(final String fileName) {
-        final List<String> lines = ResourceLines.list("/" + fileName).stream()
+        final List<String> lines = ResourceLines.list(fileName).stream()
                 .filter(line -> !line.isEmpty())
                 .toList();
         return GridUtils.of(lines);

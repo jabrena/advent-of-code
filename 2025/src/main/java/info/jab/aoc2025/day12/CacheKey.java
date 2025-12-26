@@ -1,7 +1,6 @@
 package info.jab.aoc2025.day12;
 
-import java.util.Arrays;
-import java.util.List;
+import module java.base;
 
 /**
  * Cache key for memoization in shape packing backtracking.

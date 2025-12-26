@@ -1,8 +1,6 @@
 package info.jab.aoc2025.day10;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import module java.base;
 
 public final class RationalMatrix {
 

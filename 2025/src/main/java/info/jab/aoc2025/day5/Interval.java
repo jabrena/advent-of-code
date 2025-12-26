@@ -20,11 +20,12 @@ public record Interval(long start, long end) {
     /**
      * Checks if a value is contained within this range.
      * Pure function: depends only on input parameters, no side effects.
+     * Final method for better inlining by JIT compiler.
      *
      * @param value The value to check
      * @return true if the value is within the range, false otherwise
      */
-    public boolean contains(long value) {
+    public final boolean contains(final long value) {
         return value >= start && value <= end;
     }
 
@@ -67,26 +68,65 @@ public record Interval(long start, long end) {
      * Static factory method that creates a Range from a string representation.
      * Pure function: depends only on input parameter, no side effects.
      * Follows the "Consider static factory methods instead of constructors" principle.
+     * Optimized to use indexOf() instead of split() to avoid array allocation.
      *
      * @param line The line containing range in format "start-end"
      * @return A Range record
      * @throws IllegalArgumentException if the format is invalid or parsing fails
      */
     public static Interval from(final String line) {
-        final String[] parts = line.split("-");
-        if (parts.length != 2) {
+        final int dashIdx = line.indexOf('-');
+        if (dashIdx == -1 || dashIdx == 0 || dashIdx == line.length() - 1) {
             throw new IllegalArgumentException(
                     "Invalid range format: '%s'. Expected format: 'start-end'".formatted(line)
             );
         }
         try {
-            return new Interval(Long.parseLong(parts[0]), Long.parseLong(parts[1]));
+            final long start = parseLongFromString(line, 0, dashIdx);
+            final long end = parseLongFromString(line, dashIdx + 1, line.length());
+            return new Interval(start, end);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(
                     "Invalid range format: '%s'. Start and end must be valid numbers.".formatted(line),
                     e
             );
         }
+    }
+
+    /**
+     * Parses a long from a substring without creating intermediate String.
+     *
+     * @param str String to parse from
+     * @param start Start index (inclusive)
+     * @param end End index (exclusive)
+     * @return Parsed long value
+     * @throws NumberFormatException if the string is not a valid number
+     */
+    private static long parseLongFromString(final String str, final int start, final int end) {
+        // Skip leading whitespace
+        int actualStart = start;
+        while (actualStart < end && Character.isWhitespace(str.charAt(actualStart))) {
+            actualStart++;
+        }
+        // Skip trailing whitespace
+        int actualEnd = end;
+        while (actualEnd > actualStart && Character.isWhitespace(str.charAt(actualEnd - 1))) {
+            actualEnd--;
+        }
+        
+        if (actualStart >= actualEnd) {
+            throw new NumberFormatException("Empty string");
+        }
+        
+        long result = 0;
+        for (int i = actualStart; i < actualEnd; i++) {
+            final char c = str.charAt(i);
+            if (c < '0' || c > '9') {
+                throw new NumberFormatException("Invalid character: " + c);
+            }
+            result = result * 10 + (c - '0');
+        }
+        return result;
     }
 }
 

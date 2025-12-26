@@ -15,4 +15,12 @@
     <artifactId>commons</artifactId>
     <version>0.1.0</version>
 
+    <dependencies>
+        <!-- JUnit Jupiter API for test utilities (DisabledIf annotation) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

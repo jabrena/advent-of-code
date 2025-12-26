@@ -1,22 +1,8 @@
 package info.jab.aoc2025.day5;
 
-import java.util.List;
-import java.util.stream.IntStream;
+import module java.base;
 
-/**
- * Represents the parsed input containing ranges and IDs.
- * Immutable record following functional programming principles.
- * The lists are expected to be immutable (e.g., from List.of() or List.copyOf()).
- */
 public record RangeProblemInput(List<Interval> intervals, List<Long> ids) {
-    /**
-     * Compact constructor ensuring immutability through defensive copying.
-     */
-    public RangeProblemInput {
-        // Defensive copy to ensure immutability
-        intervals = List.copyOf(intervals);
-        ids = List.copyOf(ids);
-    }
 
     /**
      * Static factory method that creates a RangeProblemInput from a list of lines.

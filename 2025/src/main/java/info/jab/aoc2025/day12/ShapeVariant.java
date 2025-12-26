@@ -1,7 +1,6 @@
 package info.jab.aoc2025.day12;
 
-import java.util.ArrayList;
-import java.util.List;
+import module java.base;
 
 /**
  * Represents a variant of a shape with normalized coordinates.

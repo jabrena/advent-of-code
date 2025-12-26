@@ -60,7 +60,7 @@ public final class PointClusterVisualization extends Application {
 
     // Data
     private List<info.jab.aoc2025.day8.Point3D> points;
-    private List<Connection> connections;
+    private List<Edge> connections;
     private DSU dsu;
 
     // 3D Scene components
@@ -71,7 +71,7 @@ public final class PointClusterVisualization extends Application {
     private PerspectiveCamera camera;
     private final List<Sphere> pointSpheres = new ArrayList<>();
     private final List<Cylinder> connectionCylinders = new ArrayList<>();
-    private final Map<Connection, Cylinder> connectionToCylinder = new HashMap<>(); // Track which cylinder belongs to which connection
+    private final Map<Edge, Cylinder> connectionToCylinder = new HashMap<>(); // Track which cylinder belongs to which connection
     private final Map<Integer, Color> clusterColors = new HashMap<>();
     private final Random colorRandom = new Random(42); // Fixed seed for consistent colors
 
@@ -88,7 +88,7 @@ public final class PointClusterVisualization extends Application {
     private boolean isComplete = false;
     private long lastUpdate = 0;
     private int currentConnectionIndex = 0;
-    private Connection lastMergeConnection = null; // The connection that completed the merge (Part 2)
+    private Edge lastMergeConnection = null; // The connection that completed the merge (Part 2)
     private final List<AnimatedConnection3D> animatedConnections = new ArrayList<>();
 
     // Part selection
@@ -136,8 +136,8 @@ public final class PointClusterVisualization extends Application {
             connections = IntStream.range(0, points.size())
                     .boxed()
                     .flatMap(i -> IntStream.range(i + 1, points.size())
-                            .mapToObj(j -> new Connection(i, j, points.get(i).distanceSquared(points.get(j)))))
-                    .sorted(Comparator.comparingLong(Connection::distanceSquared))
+                            .mapToObj(j -> new Edge(i, j, points.get(i).distanceSquared(points.get(j)))))
+                    .sorted(Comparator.comparingLong(Edge::distanceSquared))
                     .toList();
 
             // Calculate 3D bounds and center
@@ -667,8 +667,8 @@ public final class PointClusterVisualization extends Application {
             return;
         }
 
-        final Connection conn = connections.get(currentConnectionIndex);
-        final boolean merged = dsu.union(conn.p1Index(), conn.p2Index());
+        final Edge conn = connections.get(currentConnectionIndex);
+        final boolean merged = dsu.union(conn.i(), conn.j());
 
         if (merged) {
             // Check if this connection completed the merge (Part 2)
@@ -682,10 +682,10 @@ public final class PointClusterVisualization extends Application {
             updatePointColors();
 
             // Create 3D connection cylinder
-            final info.jab.aoc2025.day8.Point3D p1 = points.get(conn.p1Index());
-            final info.jab.aoc2025.day8.Point3D p2 = points.get(conn.p2Index());
+            final info.jab.aoc2025.day8.Point3D p1 = points.get(conn.i());
+            final info.jab.aoc2025.day8.Point3D p2 = points.get(conn.j());
 
-            final int root = dsu.find(conn.p1Index());
+            final int root = dsu.find(conn.i());
             final Color clusterColor = getClusterColor(root);
 
             createConnectionCylinder(conn, p1, p2, clusterColor);
@@ -710,13 +710,13 @@ public final class PointClusterVisualization extends Application {
     
     private void updateConnectionColors() {
         // For each connection that has been created, update its color based on current cluster
-        for (final Map.Entry<Connection, Cylinder> entry : connectionToCylinder.entrySet()) {
-            final Connection conn = entry.getKey();
+        for (final Map.Entry<Edge, Cylinder> entry : connectionToCylinder.entrySet()) {
+            final Edge conn = entry.getKey();
             final Cylinder cylinder = entry.getValue();
             
             // Get the current cluster root for the connection
             // Since the points are connected, they should be in the same cluster
-            final int clusterRoot = dsu.find(conn.p1Index());
+            final int clusterRoot = dsu.find(conn.i());
             final Color clusterColor = getClusterColor(clusterRoot);
             
             // Update cylinder material
@@ -728,7 +728,7 @@ public final class PointClusterVisualization extends Application {
     }
 
     private void createConnectionCylinder(
-            final Connection connection,
+            final Edge connection,
             final info.jab.aoc2025.day8.Point3D p1,
             final info.jab.aoc2025.day8.Point3D p2,
             final Color color) {
@@ -845,16 +845,16 @@ public final class PointClusterVisualization extends Application {
             } else {
                 // Part 2: Use the connection that completed the merge
                 if (lastMergeConnection != null) {
-                    final info.jab.aoc2025.day8.Point3D p1 = points.get(lastMergeConnection.p1Index());
-                    final info.jab.aoc2025.day8.Point3D p2 = points.get(lastMergeConnection.p2Index());
+                    final info.jab.aoc2025.day8.Point3D p1 = points.get(lastMergeConnection.i());
+                    final info.jab.aoc2025.day8.Point3D p2 = points.get(lastMergeConnection.j());
                     final long result = (long) p1.x() * p2.x();
                     resultLabel.setText("Result: " + result);
                     statusLabel.setText("Complete! Result: " + result);
                 } else if (currentConnectionIndex > 0 && dsu.getCount() == 1) {
                     // Fallback: if lastMergeConnection wasn't set, use the last processed connection
-                    final Connection lastConn = connections.get(currentConnectionIndex - 1);
-                    final info.jab.aoc2025.day8.Point3D p1 = points.get(lastConn.p1Index());
-                    final info.jab.aoc2025.day8.Point3D p2 = points.get(lastConn.p2Index());
+                    final Edge lastConn = connections.get(currentConnectionIndex - 1);
+                    final info.jab.aoc2025.day8.Point3D p1 = points.get(lastConn.i());
+                    final info.jab.aoc2025.day8.Point3D p2 = points.get(lastConn.j());
                     final long result = (long) p1.x() * p2.x();
                     resultLabel.setText("Result: " + result);
                     statusLabel.setText("Complete! Result: " + result);

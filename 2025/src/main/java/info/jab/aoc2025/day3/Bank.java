@@ -1,7 +1,7 @@
 package info.jab.aoc2025.day3;
 
-import java.util.List;
-import java.util.stream.IntStream;
+import module java.base;
+
 import info.jab.aoc.Trampoline;
 import org.eclipse.collections.api.list.primitive.IntList;
 import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
