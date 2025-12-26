@@ -36,4 +36,3 @@ public record RangeProblemInput(List<Interval> intervals, List<Long> ids) {
         return new RangeProblemInput(intervals, ids);
     }
 }
-

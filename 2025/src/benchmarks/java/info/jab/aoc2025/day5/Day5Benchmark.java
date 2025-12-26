@@ -10,6 +10,7 @@ public class Day5Benchmark { //NOSONAR java:S5786 - JMH @State annotation requir
     public static class St {
         Range range = new Range();
         Range2 range2 = new Range2();
+        Range3 range3 = new Range3();
         String fileName = "/day5/day5-input.txt";
     }
 
@@ -31,6 +32,16 @@ public class Day5Benchmark { //NOSONAR java:S5786 - JMH @State annotation requir
     @Benchmark
     public void range2_part2(St st) {
         st.range2.solvePartTwo(st.fileName);
+    }
+
+    @Benchmark
+    public void range3_part1(St st) {
+        st.range3.solvePartOne(st.fileName);
+    }
+
+    @Benchmark
+    public void range3_part2(St st) {
+        st.range3.solvePartTwo(st.fileName);
     }
 }
 
