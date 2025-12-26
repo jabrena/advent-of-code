@@ -49,7 +49,7 @@ Arrays are fixed-size data structures providing O(1) random access. They are the
   ```java
   private final long[] grid;
   ```
-  
+
 - **2025 Day 10** (`RationalMatrix.java`): Interleaved memory layout for rational numbers (numerator/denominator pairs)
   ```java
   // Interleaved: [num0, den0, num1, den1, ...]
@@ -178,17 +178,17 @@ boolean[][] lights = new boolean[height][width];
   ```java
   // Grid represented as bitmask array
   private final long[] grid;
-  
+
   // Each long represents up to 64 cells
   // Index calculation: longIndex = (y * width + x) / 64
   // Bit offset: bitOffset = (y * width + x) % 64
-  
+
   // Check if cell is occupied
   boolean occupied = (grid[longIndex] & (1L << bitOffset)) != 0;
-  
+
   // Place shape (set bits)
   grid[longIndex] |= (1L << bitOffset);
-  
+
   // Remove shape (clear bits)
   grid[longIndex] &= ~(1L << bitOffset);
   ```
@@ -249,16 +249,16 @@ grid[longIndex] &= ~(1L << bitOffset);
   // Interleaved memory layout: [num0, den0, num1, den1, ...]
   // Better cache locality - numerator and denominator are adjacent
   private final long[] data;
-  
+
   // Index calculation: baseIdx = row * (cols+1) + col
   // Then data[baseIdx*2] = numerator, data[baseIdx*2+1] = denominator
-  
+
   // Access numerator
   long num = data[baseIdx * 2];
-  
+
   // Access denominator
   long den = data[baseIdx * 2 + 1];
-  
+
   // Update both
   data[baseIdx * 2] = newNum;
   data[baseIdx * 2 + 1] = newDen;
@@ -356,6 +356,178 @@ for (int i = 0; i < original.length; i++) {
     copy[i] = Arrays.copyOf(original[i], original[i].length);
 }
 ```
+
+---
+
+## Bitmask Arrays (`long[]`)
+
+**Description**: Arrays of `long` values used to represent 2D grids as bitmasks, where each bit represents a cell state. Provides O(1) bitwise operations for placement checks and updates.
+
+**Time Complexity**:
+- Access: O(1) (bitwise operations)
+- Placement check: O(1) (bitwise AND)
+- Placement/removal: O(1) (bitwise OR/AND)
+- Space: O((width × height + 63) / 64) longs
+
+**Memory Layout**: Each `long` represents up to 64 cells, with bit index calculated as `bitIndex = y * width + x`.
+
+**Usage Examples**:
+
+#### 2025 Day 12 - Shape Packing
+
+Bitmask representation for efficient grid state tracking:
+
+```95:106:2025/src/main/java/info/jab/aoc2025/day12/ShapePacking.java
+        // Use bitmask representation for efficient operations
+        long[] grid = new long[(totalCells + 63) / 64];
+        // Incremental grid hash: starts at 0, updated as bits are placed/removed
+        long gridHash = 0L;
+        Map<CacheKey, Boolean> memo = new HashMap<>();
+
+        // Precompute minimum area needed for remaining shapes (for constraint propagation)
+        long[] minAreaRemaining = new long[shapeIds.size() + 1];
+        for (int i = shapeIds.size() - 1; i >= 0; i--) {
+            minAreaRemaining[i] = minAreaRemaining[i + 1] + shapes.get(shapeIds.get(i)).area();
+        }
+```
+
+**Bitwise Operations**:
+```java
+// Calculate bit index and long index
+int bitIndex = y * width + x;
+int longIndex = bitIndex / 64;
+int bitOffset = bitIndex % 64;
+
+// Check if cell is occupied (O(1))
+boolean isOccupied = (grid[longIndex] & (1L << bitOffset)) != 0;
+
+// Place cell (O(1))
+grid[longIndex] |= (1L << bitOffset);
+
+// Remove cell (O(1))
+grid[longIndex] &= ~(1L << bitOffset);
+```
+
+**Precomputed Bit Offsets**:
+```70:88:2025/src/main/java/info/jab/aoc2025/day12/ShapeVariant.java
+        // Precompute bit offsets: offset = py * width + px
+        int[] bitOffsets = new int[normalized.size()];
+        for (int i = 0; i < normalized.size(); i++) {
+            Point p = normalized.get(i);
+            bitOffsets[i] = p.y() * calculatedWidth + p.x();
+        }
+
+        // Precompute bitmask chunks for fast overlap checks
+        int totalCells = calculatedWidth * calculatedHeight;
+        int numLongs = (totalCells + 63) / 64;
+        long[] bitmaskChunks = new long[numLongs];
+        int[] bitmaskLongIndices = new int[normalized.size()];
+
+        for (int i = 0; i < normalized.size(); i++) {
+            int bitIndex = bitOffsets[i];
+            int longIndex = bitIndex / 64;
+            int bitOffset = bitIndex % 64;
+            bitmaskChunks[longIndex] |= (1L << bitOffset);
+            bitmaskLongIndices[i] = longIndex;
+        }
+```
+
+**Advantages**:
+- O(1) placement checks using bitwise AND
+- O(1) placement/removal using bitwise OR/AND
+- Better cache locality than `boolean[][]`
+- Reduced memory overhead (64 cells per long)
+- Fast overlap detection for shape placement
+
+**When to Use**:
+- 2D grid state representation
+- Binary state tracking (occupied/empty, visited/unvisited)
+- Performance-critical placement operations
+- Large grids where memory efficiency matters
+
+---
+
+## Interleaved Arrays (`long[]`)
+
+**Description**: Arrays storing pairs of related values in interleaved format for better cache locality. Adjacent values are stored next to each other in memory.
+
+**Time Complexity**:
+- Access: O(1)
+- Space: O(n × 2) for n pairs
+
+**Memory Layout**: `[value0_pair0, value1_pair0, value0_pair1, value1_pair1, ...]` - pairs are interleaved for cache locality.
+
+**Usage Examples**:
+
+#### 2025 Day 10 - Rational Matrix
+
+Interleaved storage for numerator/denominator pairs in matrix operations:
+
+```7:42:2025/src/main/java/info/jab/aoc2025/day10/RationalMatrix.java
+    // Interleaved memory layout: [num0, den0, num1, den1, ...]
+    // Better cache locality - numerator and denominator are adjacent in memory
+    // Index calculation: baseIdx = row * (cols+1) + col, then data[baseIdx*2] = num, data[baseIdx*2+1] = den
+    private final long[] data;
+    private final int rows;
+    private final int cols;
+    private int[] pivotColForRows;
+    private boolean[] isPivotCol;
+    private int pivotRow;
+
+    public RationalMatrix(int[] targets, int[][] buttons) {
+        this.rows = targets.length;
+        this.cols = buttons.length;
+        int totalSize = rows * (cols + 1);
+        // Interleaved: each element needs 2 slots (num, den)
+        this.data = new long[totalSize * 2];
+
+        // Initialize matrix
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                boolean affects = false;
+                for (int r : buttons[j]) {
+                    if (r == i) {
+                        affects = true;
+                        break;
+                    }
+                }
+                int baseIdx = index(i, j);
+                data[baseIdx * 2] = affects ? 1 : 0;     // numerator
+                data[baseIdx * 2 + 1] = 1;                // denominator
+            }
+            // RHS (augmented column)
+            int rhsBaseIdx = index(i, cols);
+            data[rhsBaseIdx * 2] = targets[i];            // numerator
+            data[rhsBaseIdx * 2 + 1] = 1;                 // denominator
+        }
+    }
+```
+
+**Access Pattern**:
+```java
+// Index calculation
+int baseIdx = row * (cols + 1) + col;
+
+// Access numerator and denominator (adjacent in memory)
+long numerator = data[baseIdx * 2];
+long denominator = data[baseIdx * 2 + 1];
+
+// Update values
+data[baseIdx * 2] = newNumerator;
+data[baseIdx * 2 + 1] = newDenominator;
+```
+
+**Advantages**:
+- Better cache locality (related values are adjacent)
+- Reduced cache misses when accessing pairs together
+- Efficient for matrix operations with rational numbers
+- Single array allocation (better memory management)
+
+**When to Use**:
+- Storing pairs of related values (numerator/denominator, x/y coordinates)
+- Performance-critical code where cache locality matters
+- Matrix operations with structured data
+- When pairs are frequently accessed together
 
 ---
 

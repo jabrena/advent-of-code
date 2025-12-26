@@ -5,7 +5,7 @@ import info.jab.aoc.Solver2;
 
 public class Day8 implements Day2<Long, String, Integer> {
 
-    private final Solver2<Long, String, Integer> solver = new PointCluster2();
+    private final Solver2<Long, String, Integer> solver = new PointCluster3();
 
     @Override
     public Long getPart1Result(String fileName, Integer connectionLimit) {

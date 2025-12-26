@@ -53,6 +53,8 @@
 
 ## 2025
 
-- Day 8: [`PointCluster`](../../2025/src/main/java/info/jab/aoc2025/day8/PointCluster.java)
-- Day 9: [`MaxRectangleArea`](../../2025/src/main/java/info/jab/aoc2025/day9/MaxRectangleArea.java)
-- Day 12: [`ShapePacking`](../../2025/src/main/java/info/jab/aoc2025/day12/ShapePacking.java) - Backtracking constraint satisfaction problem for packing shapes into regions
+- Day 8: [`PointCluster3`](../../2025/src/main/java/info/jab/aoc2025/day8/PointCluster3.java) - DSU (Union-Find) for connected components, point clustering with priority queue optimization
+- Day 9: [`MaxRectangleArea`](../../2025/src/main/java/info/jab/aoc2025/day9/MaxRectangleArea.java) - Geometric optimization, point-in-polygon validation, rectangle area maximization
+- Day 10: [`ButtonPressOptimizer`](../../2025/src/main/java/info/jab/aoc2025/day10/ButtonPressOptimizer.java) - Meet-in-the-middle algorithm (Part 1), RREF (Reduced Row Echelon Form) with parallel backtracking (Part 2)
+- Day 11: [`GraphPathCounter`](../../2025/src/main/java/info/jab/aoc2025/day11/GraphPathCounter.java) - Graph algorithms, memoized recursion for path counting in directed acyclic graphs
+- Day 12: [`ShapePacking`](../../2025/src/main/java/info/jab/aoc2025/day12/ShapePacking.java) - Backtracking constraint satisfaction problem for packing shapes into regions, optimized with bitmask representation, memoization, and constraint propagation

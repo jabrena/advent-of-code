@@ -114,17 +114,35 @@ See [Grids Documentation](grids.md) for detailed information.
 - **Records**: `GapInfo` and other immutable data structures
 
 ### 2025
-- **HashMap**: Graph adjacency lists, memoization, shape/region mappings
-- **HashSet**: Unique variant tracking, visited sets
-- **ArrayList**: Shape point collection, path lists
-- **PriorityQueue**: Point clustering
+- **HashMap**: Graph adjacency lists, memoization, shape/region mappings, cache keys
+- **HashSet**: Unique variant tracking, visited sets, beam position tracking
+- **ArrayList**: Shape point collection, path lists, instruction lists, range processing
+- **PriorityQueue**: Point clustering (max-heap for top-k connections)
 - **ArrayDeque**: Queue operations
-- **DSU**: Custom Union-Find implementation
-- **Records**: Extensive use of records for immutable data (`ParsedData`, `Region`, `Shape`, `GraphNode`, `GraphEdge`, `ColumnRange`, `MathOperator`, `Interval`, `RangeProblemInput`, `RangeMergeState`, etc.)
-- **Arrays**: Grid state representation (bitmask arrays `long[]`), parent/size arrays in DSU, interleaved arrays for rational matrices
-- **DataFrame** (dataframe-ec): Tabular data processing with functional operations (rotation string processing)
-- **LongIntHashMap** (Eclipse Collections): Primitive map for meet-in-the-middle algorithm (Day 10)
-- **MutableLongList** (Eclipse Collections): Primitive lists for range processing (Day 5)
+- **DSU**: Custom Union-Find implementation with path compression and union by size
+- **Records**: Extensive use of records for immutable data:
+  - **Day 1**: `Rotation`, `DialState`, `Sequence`
+  - **Day 2**: `Range`
+  - **Day 3**: `Bank`, `MaxDigitResult`
+  - **Day 5**: `Interval`, `RangeProblemInput`, `RangeMergeState`
+  - **Day 6**: `ColumnRange`, `MathOperator` (sealed interface with records)
+  - **Day 7**: `BeamAction`, `SplitResult`
+  - **Day 8**: `Point3D`, `Edge`
+  - **Day 9**: `PointPair`
+  - **Day 10**: `Part1Problem`, `Part2Problem`
+  - **Day 11**: `GraphNode`, `GraphEdge`, `PathPair`
+  - **Day 12**: `Point`, `Shape`, `ShapeVariant`, `Region`, `ParsedData`
+- **Arrays**:
+  - **Bitmask arrays** (`long[]`): Grid state representation for shape packing (Day 12), O(1) bitwise operations
+  - **Interleaved arrays** (`long[]`): Rational matrix storage for better cache locality (Day 10)
+  - **Primitive arrays**: Parent/size arrays in DSU (`int[]`), character arrays for ID validation (`char[]`)
+- **FastUtil Library**:
+  - **ObjectArrayList/ObjectList**: Object collections with better cache locality (Day 1, Day 8)
+  - **LongArrayList/LongList**: Primitive long lists avoiding boxing overhead (Day 3, Day 5)
+  - **IntArrayList/IntList**: Primitive int lists avoiding boxing overhead (Day 3, Day 8)
+- **Eclipse Collections**:
+  - **LongIntHashMap**: Primitive map for meet-in-the-middle algorithm (Day 10)
+  - **MutableLongList/LongArrayList**: Primitive lists for range processing (Day 5)
 
 ---
 
@@ -143,10 +161,12 @@ See [Grids Documentation](grids.md) for detailed information.
 9. **DSU**: For connected component problems, cycle detection, equivalence relations
 10. **Records**: For immutable data carriers with clear structure
 11. **DataFrame**: For tabular data processing with functional operations, when working with structured columnar data
-12. **Bitmask Arrays** (`long[]`): For efficient 2D grid representation with O(1) bitwise operations
-13. **Interleaved Arrays** (`long[]`): For storing pairs of related values with better cache locality
+12. **Bitmask Arrays** (`long[]`): For efficient 2D grid representation with O(1) bitwise operations, binary state tracking
+13. **Interleaved Arrays** (`long[]`): For storing pairs of related values with better cache locality (numerator/denominator, x/y coordinates)
 14. **Eclipse Collections Primitive Maps**: For performance-critical primitive key-value mappings (LongIntHashMap)
 15. **Eclipse Collections Primitive Lists**: For performance-critical primitive lists (MutableLongList, LongArrayList)
+16. **FastUtil ObjectArrayList**: For object collections with better memory layout and cache locality than ArrayList
+17. **FastUtil Primitive Lists**: For performance-critical primitive lists avoiding boxing overhead (LongArrayList, IntArrayList)
 
 ### Performance Characteristics
 

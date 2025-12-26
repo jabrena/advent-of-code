@@ -5,12 +5,6 @@ import module java.base;
 import com.putoet.resources.ResourceLines;
 import info.jab.aoc.Solver;
 
-/**
- * Alternative implementation based on TypeScript reference.
- * Validates IDs and calculates sums of invalid IDs from input ranges.
- * This implementation follows the algorithm from:
- * https://github.com/juan-medina/adventofcode2025/blob/master/src/days/day02.ts
- */
 public final class InvalidIdValidator3 implements Solver<Long> {
 
     /**
@@ -93,7 +87,7 @@ public final class InvalidIdValidator3 implements Solver<Long> {
                 continue; // can't fill the whole string
             }
             final int repeats = length / len; // how many to repeat
-            
+
             // Check if all parts are equal by comparing characters directly
             // For each position i, check if idChars[i] == idChars[i % len]
             boolean allPartsEqual = true;

@@ -2,6 +2,10 @@ package info.jab.aoc2025.day8;
 
 import module java.base;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import java.util.function.IntConsumer;
+
 /**
  * Disjoint Set Union (DSU) data structure, also known as Union-Find.
  * <p>
@@ -123,23 +127,53 @@ public final class DSU {
      * <p>
      * Optimized to avoid distinct() operation by using direct array access and early collection.
      *
-     * @return an immutable list of component sizes, one per disjoint set
+     * @return a list of component sizes, one per disjoint set
      */
     public List<Integer> getComponentSizes() {
+        List<Integer> sizes = new ArrayList<>();
+        collectComponentSizes(size -> sizes.add(size));
+        return sizes;
+    }
+
+    /**
+     * Returns component sizes as FastUtil IntList to avoid boxing overhead.
+     * <p>
+     * This method provides the same functionality as {@link #getComponentSizes()}
+     * but returns a FastUtil IntList instead of a List<Integer>, eliminating
+     * boxing overhead and reducing memory allocations.
+     * <p>
+     * Each element in the returned list represents the size of one connected component.
+     * The list contains one entry per distinct root in the DSU structure.
+     *
+     * @return an IntList of component sizes, one per disjoint set
+     */
+    public IntList getComponentSizesIntList() {
+        IntList sizes = new IntArrayList();
+        collectComponentSizes(sizes::add);
+        return sizes;
+    }
+
+    /**
+     * Internal method that collects component sizes using a generic consumer.
+     * <p>
+     * This method extracts the common logic for finding unique component sizes.
+     * It uses a functional interface to add sizes to different collection types,
+     * allowing reuse between {@link #getComponentSizes()} and {@link #getComponentSizesIntList()}.
+     *
+     * @param sizeConsumer consumer function that adds a size value to the collection
+     */
+    private void collectComponentSizes(IntConsumer sizeConsumer) {
         // Optimized: Use boolean array to track seen roots, collect sizes directly
         // Avoids distinct() overhead and stream intermediate operations
         boolean[] seen = new boolean[parent.length];
-        java.util.ArrayList<Integer> sizes = new java.util.ArrayList<>();
 
         for (int i = 0; i < parent.length; i++) {
             int root = find(i);
             if (!seen[root]) {
                 seen[root] = true;
-                sizes.add(size[root]);
+                sizeConsumer.accept(size[root]);
             }
         }
-
-        return List.copyOf(sizes);
     }
 }
 

@@ -25,7 +25,7 @@ Benchmarks are located in `src/benchmarks` and are excluded from normal test run
 ./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day4.Day4BenchmarkTest -D2025-day4-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
 
 # Day 5 Benchmark (JMH)
-# Run benchmark to compare Range vs Range2 implementations:
+# Run benchmark to compare Range vs Range2 vs Range3 implementations:
 ./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day5.Day5BenchmarkTest -D2025-day5-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
 
 # Day 6 Benchmark (JMH)

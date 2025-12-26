@@ -254,7 +254,7 @@ Based on the classification documents:
 - **2016**: Balanced mix, many virtual machine problems
 - **2022**: Heavy focus on Data Processing
 - **2024**: Good mix with many grid pathfinding problems
-- **2025**: Early days, mostly Data Processing so far
+- **2025**: Balanced distribution with strong Games & Algorithms focus (DSU, graph algorithms, backtracking, RREF optimization)
 
 ---
 

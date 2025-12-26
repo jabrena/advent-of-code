@@ -1,30 +1,29 @@
 package info.jab.aoc2025.day3;
 
-import module java.base;
-
 import info.jab.aoc.Trampoline;
-import org.eclipse.collections.api.list.primitive.IntList;
-import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 /**
  * Bank abstraction representing a line of digits.
+ * Optimized using FastUtil IntArrayList for primitive collections
+ * and direct loop iteration to avoid allocations.
  * Immutable data structure following functional programming principles.
  * Each line from the input is converted to a Bank object.
  *
- * @param digits The list of digits (immutable)
+ * @param digits The list of digits (immutable, using FastUtil IntArrayList)
  */
-public record Bank(List<Integer> digits) {
+public record Bank(IntArrayList digits) {
     /**
      * Creates a Bank from a line string.
      * Pure factory method that transforms input to output without side effects.
+     * Uses FastUtil IntArrayList to avoid boxing overhead.
      *
      * @param line The input line containing digits
      * @return A Bank object containing the digits
      */
     public static Bank from(final String line) {
-        final List<Integer> digits = line.chars()
-                .mapToObj(ch -> ch - '0')
-                .toList();
+        final IntArrayList digits = new IntArrayList(line.length());
+        line.chars().forEach(ch -> digits.add(ch - '0'));
         return new Bank(digits);
     }
 
@@ -92,26 +91,25 @@ public record Bank(List<Integer> digits) {
 
     /**
      * Finds the maximum digit value and its first occurrence index in the specified range.
-     * Pure function with no side effects. Uses Eclipse Collections for functional processing.
+     * Optimized to use direct loop iteration instead of creating intermediate collections.
+     * Pure function with no side effects. Avoids allocations by iterating directly over digits.
      *
      * @param startPos The starting position (inclusive)
      * @param endPos   The ending position (inclusive)
      * @return A record containing the maximum digit value and its index
      */
     private MaxDigitResult findMaxDigitInRange(final int startPos, final int endPos) {
-        // Convert the range to an IntList using Eclipse Collections functional approach
-        final IntList range = new IntArrayList(
-                IntStream.rangeClosed(startPos, endPos)
-                        .map(i -> digits.get(i))
-                        .toArray()
-        );
+        int maxValue = -1;
+        int maxIndex = startPos;
 
-        // Find the maximum value using Eclipse Collections
-        final int maxValue = range.max();
-        // Find the first occurrence index (relative to startPos)
-        final int relativeIndex = range.indexOf(maxValue);
-        // Convert to absolute index
-        final int maxIndex = startPos + relativeIndex;
+        // Direct iteration avoids creating intermediate collections
+        for (int i = startPos; i <= endPos; i++) {
+            final int value = digits.getInt(i);
+            if (value > maxValue) {
+                maxValue = value;
+                maxIndex = i;
+            }
+        }
 
         return new MaxDigitResult(maxValue, maxIndex);
     }

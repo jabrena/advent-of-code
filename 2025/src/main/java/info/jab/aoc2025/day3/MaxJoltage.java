@@ -45,8 +45,7 @@ public final class MaxJoltage implements Solver<Long> {
      * @return The sum of maximum joltages for all valid lines
      */
     private Long solve(final String fileName, final int length) {
-        final String resourceName = fileName.startsWith("/") ? fileName : "/" + fileName;
-        return ResourceLines.list(resourceName).stream()
+        return ResourceLines.list(fileName).stream()
                 .map(Bank::from)
                 .filter(bank -> bank.hasEnoughDigits(length))
                 .mapToLong(bank -> bank.getMaxJoltage(length))

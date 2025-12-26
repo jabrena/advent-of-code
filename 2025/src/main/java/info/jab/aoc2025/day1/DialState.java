@@ -88,4 +88,3 @@ public record DialState(int position, int zeroCount) {
         return new DialState(newPosition, newZeroCount);
     }
 }
-

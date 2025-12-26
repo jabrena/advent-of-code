@@ -26,4 +26,3 @@ public record Rotation(Direction direction, int distance) {
         return new Rotation(direction, distance);
     }
 }
-
