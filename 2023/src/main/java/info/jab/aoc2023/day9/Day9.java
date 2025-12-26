@@ -1,7 +1,5 @@
 package info.jab.aoc2023.day9;
 
-import info.jab.aoc.Day;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

@@ -1,7 +1,5 @@
 package info.jab.aoc2024.day15;
 
-import info.jab.aoc.Day2;
-
 /**
  * https://adventofcode.com/2024/day/15
  *
