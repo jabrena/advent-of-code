@@ -61,5 +61,6 @@
 
 ## 2025
 
-- Day 4: [`Day4`](../../2025/src/main/java/info/jab/aoc2025/day4/Day4.java)
-- Day 7: [`BeamPathCounter`](../../2025/src/main/java/info/jab/aoc2025/day7/BeamPathCounter.java)
+- Day 4: [`GridNeighbor2`](../../2025/src/main/java/info/jab/aoc2025/day4/GridNeighbor2.java) - 2D grid neighbor counting, iterative cell removal based on neighbor count
+- Day 6: [`MathBlock2`](../../2025/src/main/java/info/jab/aoc2025/day6/MathBlock2.java) - 2D grid processing for math blocks, row-by-row and column-by-column extraction
+- Day 7: [`BeamPathCounter`](../../2025/src/main/java/info/jab/aoc2025/day7/BeamPathCounter.java) - 2D grid beam simulation, beam splitting and path counting with memoization

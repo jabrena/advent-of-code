@@ -218,6 +218,110 @@ boolean visible =
 
 ---
 
+## Bitmask Grid Representation
+
+**Description**: Grid state represented as `long[]` arrays where each bit represents a cell state. Provides O(1) bitwise operations for placement checks and updates, better cache locality than `boolean[][]`.
+
+**Time Complexity**:
+- Placement check: O(1) (bitwise AND)
+- Placement/removal: O(1) (bitwise OR/AND)
+- Space: O((width × height + 63) / 64) longs
+
+**Memory Layout**: Each `long` represents up to 64 cells, with bit index calculated as `bitIndex = y * width + x`.
+
+**Usage Examples**:
+
+#### 2025 Day 12 - Shape Packing
+
+Bitmask representation for efficient grid state tracking in backtracking:
+
+```95:106:2025/src/main/java/info/jab/aoc2025/day12/ShapePacking.java
+        // Use bitmask representation for efficient operations
+        long[] grid = new long[(totalCells + 63) / 64];
+        // Incremental grid hash: starts at 0, updated as bits are placed/removed
+        long gridHash = 0L;
+        Map<CacheKey, Boolean> memo = new HashMap<>();
+
+        // Precompute minimum area needed for remaining shapes (for constraint propagation)
+        long[] minAreaRemaining = new long[shapeIds.size() + 1];
+        for (int i = shapeIds.size() - 1; i >= 0; i--) {
+            minAreaRemaining[i] = minAreaRemaining[i + 1] + shapes.get(shapeIds.get(i)).area();
+        }
+```
+
+**Bitwise Operations**:
+```java
+// Calculate bit index and long index
+int bitIndex = y * width + x;
+int longIndex = bitIndex / 64;
+int bitOffset = bitIndex % 64;
+
+// Check if cell is occupied (O(1))
+boolean isOccupied = (grid[longIndex] & (1L << bitOffset)) != 0;
+
+// Place cell (O(1))
+grid[longIndex] |= (1L << bitOffset);
+
+// Remove cell (O(1))
+grid[longIndex] &= ~(1L << bitOffset);
+
+// Check shape overlap (O(1) per long chunk)
+boolean canPlace = (grid[longIndex] & shapeBitmask[chunkIndex]) == 0;
+```
+
+**Precomputed Bit Offsets**:
+Shapes precompute bit offsets and bitmask chunks for efficient placement:
+
+```70:88:2025/src/main/java/info/jab/aoc2025/day12/ShapeVariant.java
+        // Precompute bit offsets: offset = py * width + px
+        int[] bitOffsets = new int[normalized.size()];
+        for (int i = 0; i < normalized.size(); i++) {
+            Point p = normalized.get(i);
+            bitOffsets[i] = p.y() * calculatedWidth + p.x();
+        }
+
+        // Precompute bitmask chunks for fast overlap checks
+        int totalCells = calculatedWidth * calculatedHeight;
+        int numLongs = (totalCells + 63) / 64;
+        long[] bitmaskChunks = new long[numLongs];
+        int[] bitmaskLongIndices = new int[normalized.size()];
+
+        for (int i = 0; i < normalized.size(); i++) {
+            int bitIndex = bitOffsets[i];
+            int longIndex = bitIndex / 64;
+            int bitOffset = bitIndex % 64;
+            bitmaskChunks[longIndex] |= (1L << bitOffset);
+            bitmaskLongIndices[i] = longIndex;
+        }
+```
+
+**Advantages**:
+- O(1) placement checks using bitwise AND
+- O(1) placement/removal using bitwise OR/AND
+- Better cache locality than `boolean[][]`
+- Reduced memory overhead (64 cells per long)
+- Fast overlap detection for shape placement
+- Efficient for backtracking algorithms
+
+**When to Use**:
+- Binary state tracking (occupied/empty, visited/unvisited)
+- Performance-critical placement operations
+- Large grids where memory efficiency matters
+- Backtracking algorithms with frequent state checks
+- Shape packing and placement problems
+
+**Comparison with boolean[][]**:
+
+| Aspect | `boolean[][]` | `long[]` bitmask |
+|--------|---------------|------------------|
+| Space | O(n×m) booleans | O((n×m)/64) longs |
+| Placement check | O(points) iteration | O(1) bitwise AND |
+| Cache locality | Good | Better (contiguous longs) |
+| Memory overhead | Higher | Lower |
+| Best for | Small grids, simple operations | Large grids, frequent checks |
+
+---
+
 ## Performance Considerations
 
 ### Cache Locality
@@ -255,6 +359,7 @@ for (int j = 0; j < width; j++) {
 | 2D Array | O(n×m) | O(1) | Dense grids, fixed size |
 | Map<Point, Value> | O(k) where k = non-empty cells | O(1)* | Sparse grids |
 | Grid Class | O(n×m) | O(1) | Rich utilities needed |
+| Bitmask (`long[]`) | O((n×m)/64) | O(1) bitwise | Binary state grids, frequent checks |
 
 ---
 
@@ -275,6 +380,7 @@ Grids are represented using:
 - **2D Arrays**: `int[][]`, `char[][]`, `boolean[][]` for dense grids
 - **Grid Classes**: Custom utilities for complex operations
 - **Maps**: For sparse grid representations
+- **Bitmask Arrays** (`long[]`): For binary state grids with O(1) bitwise operations
 
 **Key Operations**:
 - Neighbor checking (4-directional, 8-directional)

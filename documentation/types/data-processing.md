@@ -97,15 +97,7 @@
 
 ## 2025
 
-- Day 1: [`DialRotator2`](../../2025/src/main/java/info/jab/aoc2025/day1/DialRotator2.java)
-- Day 2: [`InvalidIdValidator3`](../../2025/src/main/java/info/jab/aoc2025/day2/InvalidIdValidator3.java)
-- Day 3: [`MaxJoltage2`](../../2025/src/main/java/info/jab/aoc2025/day3/MaxJoltage2.java)
-- Day 4: [`GridNeighbor2`](../../2025/src/main/java/info/jab/aoc2025/day4/GridNeighbor2.java)
-- Day 5: [`Range2`](../../2025/src/main/java/info/jab/aoc2025/day5/Range2.java)
-- Day 6: [`MathBlock2`](../../2025/src/main/java/info/jab/aoc2025/day6/MathBlock2.java)
-- Day 7: [`BeamPathCounter`](../../2025/src/main/java/info/jab/aoc2025/day7/BeamPathCounter.java)
-- Day 8: [`PointCluster`](../../2025/src/main/java/info/jab/aoc2025/day8/PointCluster.java)
-- Day 9: [`MaxRectangleArea`](../../2025/src/main/java/info/jab/aoc2025/day9/MaxRectangleArea.java)
-- Day 10: [`ButtonPressOptimizer`](../../2025/src/main/java/info/jab/aoc2025/day10/ButtonPressOptimizer.java)
-- Day 11: [`GraphPathCounter`](../../2025/src/main/java/info/jab/aoc2025/day11/GraphPathCounter.java)
-- Day 12: [`ShapePacking`](../../2025/src/main/java/info/jab/aoc2025/day12/ShapePacking.java)
+- Day 1: [`DialRotator2`](../../2025/src/main/java/info/jab/aoc2025/day1/DialRotator2.java) - String parsing, rotation counting, modular arithmetic
+- Day 2: [`InvalidIdValidator3`](../../2025/src/main/java/info/jab/aoc2025/day2/InvalidIdValidator3.java) - String validation, pattern matching, character comparison
+- Day 3: [`MaxJoltage`](../../2025/src/main/java/info/jab/aoc2025/day3/MaxJoltage.java) - Digit sequence processing, greedy algorithm for max digit sequences
+- Day 5: [`Range2`](../../2025/src/main/java/info/jab/aoc2025/day5/Range2.java) - Range merging, interval checking, ID validation

@@ -503,6 +503,184 @@ int size = list.size();
 
 ---
 
+## FastUtil Library
+
+FastUtil provides high-performance primitive collections and object collections with better memory layout and cache locality than standard Java collections.
+
+**Library**: `it.unimi.dsi:fastutil`
+
+### ObjectArrayList / ObjectList
+
+**Description**: FastUtil's object list implementation providing better memory layout and cache locality than `ArrayList` for object collections.
+
+**Time Complexity**:
+- Access: O(1)
+- Search: O(n)
+- Insertion: O(1)* (amortized at end)
+- Deletion: O(n)
+
+**Memory**: Better memory layout with contiguous storage, improved cache locality compared to `ArrayList`.
+
+**Usage Examples**:
+- **2025 Day 1** (`DialRotator3.java`): Efficient iteration over rotation strings
+  ```java
+  import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+  import it.unimi.dsi.fastutil.objects.ObjectList;
+  
+  final ObjectList<String> lines = new ObjectArrayList<>(allLines);
+  ```
+- **2025 Day 8** (`PointCluster3.java`): Point and edge collections for optimized sorting and iteration
+  ```java
+  import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+  import it.unimi.dsi.fastutil.objects.ObjectList;
+  
+  final ObjectList<Point3D> points = new ObjectArrayList<>(lines.size());
+  final ObjectList<Edge> edges = new ObjectArrayList<>(estimatedSize);
+  ```
+
+**Code Reference**:
+```java
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
+
+ObjectList<String> list = new ObjectArrayList<>(initialCapacity);
+list.add(element);
+String element = list.get(index);
+int size = list.size();
+```
+
+**When to Use**:
+- Performance-critical object collections
+- Need better cache locality than standard ArrayList
+- Working with FastUtil ecosystem
+- Large collections where memory layout matters
+
+**Advantages**:
+- Better memory layout and cache locality
+- Optimized for iteration and sorting
+- Rich functional API
+- Same O(1) average complexity as ArrayList
+
+**Disadvantages**:
+- External dependency (FastUtil)
+- Less familiar API than standard collections
+
+---
+
+### LongArrayList / LongList
+
+**Description**: FastUtil's primitive long list implementation avoiding boxing overhead.
+
+**Time Complexity**:
+- Access: O(1)
+- Search: O(n)
+- Insertion: O(1)* (amortized at end)
+- Deletion: O(n)
+
+**Memory**: More memory-efficient than `ArrayList<Long>` by avoiding boxing overhead.
+
+**Usage Examples**:
+- **2025 Day 3** (`Bank.java`): Storing digit sequences
+  ```java
+  import it.unimi.dsi.fastutil.longs.LongArrayList;
+  import it.unimi.dsi.fastutil.longs.LongList;
+  
+  final LongList digits = new LongArrayList(line.length());
+  ```
+- **2025 Day 5** (`Range3.java`): Processing ID ranges
+  ```java
+  import it.unimi.dsi.fastutil.longs.LongArrayList;
+  import it.unimi.dsi.fastutil.longs.LongList;
+  
+  final LongList result = new LongArrayList(ids.size());
+  ```
+
+**Code Reference**:
+```java
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
+
+LongList list = new LongArrayList(initialCapacity);
+list.add(value);
+long value = list.getLong(index);
+int size = list.size();
+```
+
+**When to Use**:
+- Need primitive long lists
+- Performance-critical code where boxing overhead matters
+- Processing large sequences of long values
+- When working with FastUtil ecosystem
+
+**Advantages**:
+- No boxing overhead (faster than `ArrayList<Long>`)
+- Memory efficient (primitive storage)
+- Rich functional API
+- Same O(1) average complexity as ArrayList
+
+**Disadvantages**:
+- External dependency (FastUtil)
+- Less flexible than generic ArrayList (fixed element type)
+
+---
+
+### IntArrayList / IntList
+
+**Description**: FastUtil's primitive int list implementation avoiding boxing overhead.
+
+**Time Complexity**:
+- Access: O(1)
+- Search: O(n)
+- Insertion: O(1)* (amortized at end)
+- Deletion: O(n)
+
+**Memory**: More memory-efficient than `ArrayList<Integer>` by avoiding boxing overhead.
+
+**Usage Examples**:
+- **2025 Day 3** (`Bank.java`): Storing digit sequences
+  ```java
+  import it.unimi.dsi.fastutil.ints.IntArrayList;
+  import it.unimi.dsi.fastutil.ints.IntList;
+  
+  final IntList digits = new IntArrayList(line.length());
+  ```
+- **2025 Day 8** (`DSU.java`): Component size tracking
+  ```java
+  import it.unimi.dsi.fastutil.ints.IntArrayList;
+  import it.unimi.dsi.fastutil.ints.IntList;
+  
+  IntList sizes = new IntArrayList();
+  ```
+
+**Code Reference**:
+```java
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+
+IntList list = new IntArrayList(initialCapacity);
+list.add(value);
+int value = list.getInt(index);
+int size = list.size();
+```
+
+**When to Use**:
+- Need primitive int lists
+- Performance-critical code where boxing overhead matters
+- Processing large sequences of int values
+- When working with FastUtil ecosystem
+
+**Advantages**:
+- No boxing overhead (faster than `ArrayList<Integer>`)
+- Memory efficient (primitive storage)
+- Rich functional API
+- Same O(1) average complexity as ArrayList
+
+**Disadvantages**:
+- External dependency (FastUtil)
+- Less flexible than generic ArrayList (fixed element type)
+
+---
+
 ## Summary
 
 | Collection | Best For | Time Complexity | Order |
@@ -521,6 +699,9 @@ int size = list.size();
 | DataFrame | Tabular data manipulation | O(n) iteration, O(1) column access | Column order |
 | LongIntHashMap | Primitive long→int mappings | O(1)* average | No order |
 | MutableLongList | Primitive long lists | O(1) access, O(1)* insert at end | Insertion order |
+| ObjectArrayList | Object collections with better cache locality | O(1) access, O(1)* insert at end | Insertion order |
+| LongArrayList | Primitive long lists (FastUtil) | O(1) access, O(1)* insert at end | Insertion order |
+| IntArrayList | Primitive int lists (FastUtil) | O(1) access, O(1)* insert at end | Insertion order |
 
 *Average case; worst case may be O(n) for hash-based structures.
 

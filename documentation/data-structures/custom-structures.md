@@ -217,6 +217,64 @@ size[rootI] += size[rootJ];
   public record Connection(Point3D from, Point3D to)
   ```
 
+### 2025 Day 1 - Dial Rotation
+
+- **Rotation**: Represents a dial rotation with direction and distance
+  ```java
+  public record Rotation(Direction direction, int distance)
+  ```
+
+- **DialState**: Immutable state record representing dial position and zero count
+  ```java
+  public record DialState(int position, int zeroCount)
+  ```
+
+- **Sequence**: Internal record for rotation sequences
+  ```java
+  private record Sequence(Direction direction, int steps)
+  ```
+
+### 2025 Day 2 - Invalid ID Validation
+
+- **Range**: Immutable record representing a range of IDs
+  ```java
+  public record Range(long start, long end)
+  ```
+
+### 2025 Day 3 - Max Joltage
+
+- **Bank**: Record containing digit sequences using FastUtil IntArrayList
+  ```java
+  public record Bank(IntArrayList digits)
+  ```
+
+- **MaxDigitResult**: Internal result record
+  ```java
+  private record MaxDigitResult(int value, int index)
+  ```
+
+### 2025 Day 5 - Range Processing
+
+- **Interval**: Immutable record representing a range with start and end values
+  ```java
+  public record Interval(long start, long end) {
+      public boolean contains(long value);
+      public long size();
+      public boolean overlapsOrAdjacent(Interval other);
+      public Interval merge(Interval other);
+  }
+  ```
+
+- **RangeProblemInput**: Immutable record containing parsed ranges and IDs
+  ```java
+  public record RangeProblemInput(List<Interval> intervals, List<Long> ids)
+  ```
+
+- **RangeMergeState**: Immutable state record for functional range merging
+  ```java
+  record RangeMergeState(Interval current, List<Interval> merged, int index)
+  ```
+
 ### 2025 Day 6 - Math Block Processing
 
 - **ColumnRange**: Immutable record representing a column range for block processing
@@ -265,6 +323,108 @@ size[rootI] += size[rootJ];
           @Override
           public String symbol() { return " "; }
       }
+  }
+  ```
+
+### 2025 Day 7 - Beam Path Counting
+
+- **BeamAction**: Internal record for beam actions
+  ```java
+  private record BeamAction(int x, CellType cellType)
+  ```
+
+- **SplitResult**: Internal record for split results
+  ```java
+  private record SplitResult(Set<Integer> nextBeams, long splits)
+  ```
+
+### 2025 Day 8 - Point Clustering
+
+- **Point3D**: 3D coordinate
+  ```java
+  public record Point3D(int x, int y, int z)
+  ```
+
+- **Edge**: Connection between points with distance
+  ```java
+  public record Edge(int i, int j, long distanceSquared)
+  ```
+
+### 2025 Day 9 - Max Rectangle Area
+
+- **PointPair**: Internal record for point pairs
+  ```java
+  private record PointPair(Point p1, Point p2)
+  ```
+
+### 2025 Day 10 - Button Press Optimization
+
+- **Part1Problem**: Problem input record
+  ```java
+  public record Part1Problem(long target, long[] buttons)
+  ```
+
+- **Part2Problem**: Problem input record
+  ```java
+  public record Part2Problem(int[] targets, int[][] buttons)
+  ```
+
+### 2025 Day 11 - Graph Path Counting
+
+- **GraphNode**: Represents a node in the graph
+  ```java
+  public record GraphNode(String value)
+  ```
+
+- **GraphEdge**: Represents an edge with source and destination
+  ```java
+  public record GraphEdge(GraphNode from, List<GraphNode> to)
+  ```
+
+- **PathPair**: Represents a path pair for counting
+  ```java
+  public record PathPair(GraphNode from, GraphNode to)
+  ```
+
+### 2025 Day 12 - Shape Packing
+
+- **Point**: 2D coordinate
+  ```java
+  public record Point(int x, int y)
+  ```
+
+- **Shape**: Immutable record representing a shape with variants
+  ```java
+  public record Shape(int id, int area, List<ShapeVariant> variants)
+  ```
+
+- **ShapeVariant**: Represents a variant of a shape with normalized coordinates and precomputed bitmasks
+  ```java
+  public record ShapeVariant(
+      List<Point> points,
+      int width,
+      int height,
+      int[] bitOffsets,
+      long[] bitmaskChunks,
+      int[] bitmaskLongIndices)
+  ```
+
+- **Region**: Immutable record representing a region to pack shapes into
+  ```java
+  public record Region(int width, int height, Map<Integer, Integer> requirements, long regionArea)
+  ```
+
+- **ParsedData**: Immutable record containing parsed shapes and regions
+  ```java
+  public record ParsedData(Map<Integer, Shape> shapes, List<Region> regions)
+  ```
+
+- **CacheKey**: Cache key for memoization in shape packing backtracking
+  ```java
+  public final class CacheKey {
+      private final long[] grid;
+      private final long gridHash;
+      private final int[] remainingShapeIds;
   }
   ```
 
