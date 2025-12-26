@@ -1,4 +1,4 @@
-package info.jab.aoc2025.day1;
+package info.jab.aoc2025.day8;
 
 import info.jab.aoc.DisabledIf;
 
@@ -16,22 +16,22 @@ import org.openjdk.jmh.profile.JavaFlightRecorderProfiler;
 
 /**
  * JMH Benchmark test - disabled by default.
- * Enable with: mvn test -D2025-day1-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+ * Enable with: mvn test -D2025-day8-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
  */
 @DisabledIf(
-    name = "2025-day1-benchmark",
+    name = "2025-day8-benchmark",
     value = "false",
-    reason = "Benchmark tests are disabled by default. Enable with: mvn test -D2025-day1-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am"
+    reason = "Benchmark tests are disabled by default. Enable with: mvn test -D2025-day8-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am"
 )
-class Day1BenchmarkTest {
+class Day8BenchmarkTest {
 
     @Test
     void should_show_best_alternatives() throws RunnerException {
 
         Options options = new OptionsBuilder()
-                .include(Day1Benchmark.class.getSimpleName())
+                .include(Day8Benchmark.class.getSimpleName())
                 .resultFormat(ResultFormatType.JSON)
-                .result("src/test/resources/benchmarks/day1/%s.json".formatted(Day1Benchmark.class.getSimpleName()))
+                .result("src/benchmarks/resources/benchmarks/day8/%s.json".formatted(Day8Benchmark.class.getSimpleName()))
                 //.verbosity(VerboseMode.EXTRA)
                 .mode(Mode.AverageTime)
                 .timeUnit(TimeUnit.MILLISECONDS)
@@ -44,7 +44,7 @@ class Day1BenchmarkTest {
                 .shouldDoGC(true)
                 .forks(3)
                 .jvmArgs("-Xmx6144m", "-Xms6144m")
-                .addProfiler(JavaFlightRecorderProfiler.class, "dir=src/test/resources/benchmarks/day1;config=profile")
+                .addProfiler(JavaFlightRecorderProfiler.class, "dir=src/benchmarks/resources/benchmarks/day8;config=profile")
                 .build();
 
         new Runner(options).run();

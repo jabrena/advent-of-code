@@ -9,30 +9,32 @@
 
 ## Benchmarks & profiling
 
+Benchmarks are located in `src/benchmarks` and are excluded from normal test runs. Use the `benchmarks` profile to run them.
+
 ```bash
-# Day 1 Benchmark (JMH) - disabled by default
+# Day 1 Benchmark (JMH)
 # Run benchmark to compare DialRotator vs DialRotator2 implementations:
-./mvnw clean test -Dtest=Day1BenchmarkTest -D2025-day1-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day1.Day1BenchmarkTest -D2025-day1-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
 
-# Day 2 Benchmark (JMH) - disabled by default
+# Day 2 Benchmark (JMH)
 # Run benchmark to compare InvalidIdValidator vs InvalidIdValidator2 vs InvalidIdValidator3 implementations:
-./mvnw clean test -Dtest=Day2BenchmarkTest -D2025-day2-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day2.Day2BenchmarkTest -D2025-day2-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
 
-# Day 4 Benchmark (JMH) - disabled by default
+# Day 4 Benchmark (JMH)
 # Run benchmark to compare GridNeighbor vs GridNeighbor2 implementations:
-./mvnw clean test -Dtest=Day4BenchmarkTest -D2025-day4-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day4.Day4BenchmarkTest -D2025-day4-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
 
-# Day 5 Benchmark (JMH) - disabled by default
+# Day 5 Benchmark (JMH)
 # Run benchmark to compare Range vs Range2 implementations:
-./mvnw clean test -Dtest=Day5BenchmarkTest -D2025-day5-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day5.Day5BenchmarkTest -D2025-day5-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
 
-# Day 6 Benchmark (JMH) - disabled by default
+# Day 6 Benchmark (JMH)
 # Run benchmark to compare MathBlock vs MathBlock2 implementations:
-./mvnw clean test -Dtest=Day6BenchmarkTest -D2025-day6-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day6.Day6BenchmarkTest -D2025-day6-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
 
-# Day 8 Benchmark (JMH) - disabled by default
+# Day 8 Benchmark (JMH)
 # Run benchmark to compare PointCluster vs PointCluster2 implementations:
-./mvnw clean test -Dtest=Day8BenchmarkTest -D2025-day8-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day8.Day8BenchmarkTest -D2025-day8-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
 ```
 
 ## Visualizations

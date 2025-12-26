@@ -31,7 +31,7 @@ class Day4BenchmarkTest {
         Options options = new OptionsBuilder()
                 .include(Day4Benchmark.class.getSimpleName())
                 .resultFormat(ResultFormatType.JSON)
-                .result("src/test/resources/benchmarks/day4/%s.json".formatted(Day4Benchmark.class.getSimpleName()))
+                .result("src/benchmarks/resources/benchmarks/day4/%s.json".formatted(Day4Benchmark.class.getSimpleName()))
                 //.verbosity(VerboseMode.EXTRA)
                 .mode(Mode.AverageTime)
                 .timeUnit(TimeUnit.MILLISECONDS)
@@ -44,7 +44,7 @@ class Day4BenchmarkTest {
                 .shouldDoGC(true)
                 .forks(3)
                 .jvmArgs("-Xmx6144m", "-Xms6144m")
-                .addProfiler(JavaFlightRecorderProfiler.class, "dir=src/test/resources/benchmarks/day4;config=profile")
+                .addProfiler(JavaFlightRecorderProfiler.class, "dir=src/benchmarks/resources/benchmarks/day4;config=profile")
                 .build();
 
         new Runner(options).run();
