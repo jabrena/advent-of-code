@@ -1,6 +1,7 @@
 package info.jab.aoc2025.day8;
 
 import info.jab.aoc.Day2;
+
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
