@@ -6,25 +6,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * PointCluster2 - A simplified implementation based on TypeScript approach.
- * <p>
- * This version calculates all edges upfront, sorts them, and processes them sequentially.
- * It follows a cleaner, more straightforward approach compared to the optimized PointCluster.
- * <p>
- * Optimized to use distanceSquared (long) instead of distance (double) to avoid
- * expensive Math.sqrt() operations, improving performance especially in CI/CD environments.
- */
 public final class PointCluster2 implements Solver2<Long, String, Integer> {
-
-    /**
-     * Represents an edge between two points with their indices and distance squared.
-     */
-    private record Edge(int i, int j, long distanceSquared) {
-        static Edge of(int i, int j, long distanceSquared) {
-            return new Edge(i, j, distanceSquared);
-        }
-    }
 
     @Override
     public Long solvePartOne(String fileName, Integer connectionLimit) {
@@ -98,7 +80,7 @@ public final class PointCluster2 implements Solver2<Long, String, Integer> {
         for (int i = 0; i < points.size(); i++) {
             for (int j = i + 1; j < points.size(); j++) {
                 long distanceSquared = points.get(i).distanceSquared(points.get(j));
-                edges.add(Edge.of(i, j, distanceSquared));
+                edges.add(new Edge(i, j, distanceSquared));
             }
         }
         return edges;
