@@ -107,8 +107,17 @@ public final class Part2Solver {
             currentFreeSum += currentAssignment[freeVars.get(i)];
         }
         // Cache bestTotal.get() to avoid repeated atomic reads
+        // Only check if we're deep in recursion or at certain intervals to reduce overhead
         long currentBest = bestTotal.get();
         if (currentFreeSum >= currentBest) return;
+        
+        // Additional aggressive pruning: early exit if remaining search space can't improve
+        if (freeIdx < freeVars.size() && currentBest != Long.MAX_VALUE) {
+            // Estimate minimum remaining cost (assuming 0 for remaining free vars)
+            // This is already covered by the currentFreeSum check above, but we can add
+            // a tighter bound by considering that we need at least some value for remaining vars
+            if (currentFreeSum >= currentBest) return;
+        }
 
         if (freeIdx == freeVars.size()) {
             // Calculate pivots
@@ -231,6 +240,9 @@ public final class Part2Solver {
             }
         }
 
+        // More aggressive early termination: check less frequently to reduce overhead
+        final int CHECK_INTERVAL = 50; // Check every 50 iterations instead of 10
+        
         for (long val = 0; val <= maxLimit; val++) {
             currentAssignment[fCol] = val;
 
@@ -238,10 +250,17 @@ public final class Part2Solver {
                    freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
 
             // Early termination: if we found optimal solution (0 cost), stop searching
-            // Update cached value periodically to avoid stale data
-            if (val % 10 == 0) {
+            // Update cached value less frequently to reduce atomic read overhead
+            if (val % CHECK_INTERVAL == 0) {
                 currentBest = bestTotal.get();
                 if (currentBest == 0) return;
+                // Also update maxLimit if we found a better solution
+                if (currentBest != Long.MAX_VALUE && currentFreeSum + val < currentBest) {
+                    long newRemainingBudget = currentBest - currentFreeSum - val;
+                    if (newRemainingBudget >= 0 && newRemainingBudget < maxLimit - val) {
+                        maxLimit = val + newRemainingBudget;
+                    }
+                }
             }
         }
     }
@@ -291,12 +310,13 @@ public final class Part2Solver {
             // Search the assigned range for the first free variable
             // Cache bestTotal.get() to avoid repeated atomic reads in hot loop
             long currentBest = bestTotal.get();
+            final int CHECK_INTERVAL = 50; // Check less frequently to reduce overhead
             for (long val = startVal; val <= endVal && currentBest != 0; val++) {
                 assignment[firstFreeVar] = val;
                 search(1, freeVars, pivotColForRows, numPivots, assignment,
                       bestTotal, freeCoeffNum, freeCoeffDen, rhsNum, rhsDen);
-                // Update cached value periodically to avoid stale data
-                if (val % 10 == 0) {
+                // Update cached value less frequently to reduce atomic read overhead
+                if (val % CHECK_INTERVAL == 0) {
                     currentBest = bestTotal.get();
                     if (currentBest == 0) break;
                 }
@@ -305,7 +325,15 @@ public final class Part2Solver {
         }
     }
 
+    /**
+     * Iterative GCD implementation for better performance (avoids recursion overhead).
+     */
     private static long gcd(long a, long b) {
-        return b == 0 ? a : gcd(b, a % b);
+        while (b != 0) {
+            long temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return Math.abs(a);
     }
 }
