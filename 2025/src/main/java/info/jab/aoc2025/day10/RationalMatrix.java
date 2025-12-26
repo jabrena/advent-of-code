@@ -165,16 +165,8 @@ public final class RationalMatrix {
         data[baseIdx * 2 + 1] = den;     // denominator
     }
 
-    /**
-     * Iterative GCD implementation for better performance (avoids recursion overhead).
-     */
     private static long gcd(long a, long b) {
-        while (b != 0) {
-            long temp = b;
-            b = a % b;
-            a = temp;
-        }
-        return Math.abs(a);
+        return b == 0 ? a : gcd(b, a % b);
     }
 
     public boolean isConsistent() {

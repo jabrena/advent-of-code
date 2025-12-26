@@ -24,9 +24,7 @@ public final class ButtonPressOptimizer implements Solver<Long> {
     public Long solvePartTwo(final String fileName) {
         List<String> lines = ResourceLines.list(fileName);
         Part2Solver solver = new Part2Solver();
-        // Use sequential stream since Part2Solver already uses ForkJoinPool for parallelization
-        // This avoids double parallelization overhead and thread contention
-        return lines.stream()
+        return lines.parallelStream()
             .filter(line -> line.contains("["))
             .map(InputParser::parsePart2)
             .mapToLong(solver::solve)
