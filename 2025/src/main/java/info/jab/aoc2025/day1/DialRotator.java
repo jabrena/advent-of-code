@@ -18,7 +18,7 @@ public final class DialRotator implements Solver<Integer> {
      * Counts how many times the dial points at 0 after each complete rotation.
      * Each rotation is applied as a single operation.
      * <p>
-     * Uses a functional pipeline: filter invalid inputs → parse to Rotation → reduce with state.
+     * Optimized to parse on-the-fly without creating intermediate Rotation objects.
      *
      * @param rotations List of rotation strings in format "L{distance}" or "R{distance}"
      * @return The count of times the dial points at 0 after rotations
@@ -26,22 +26,25 @@ public final class DialRotator implements Solver<Integer> {
     @Override
     public Integer solvePartOne(final String fileName) {
         final List<String> rotations = ResourceLines.list(fileName);
-        return rotations.stream()
-                .filter(this::isValidRotation)
-                .map(Rotation::from)
-                .reduce(
-                        DialState.initial(INITIAL_POSITION),
-                        (state, rotation) -> state.applyRotation(rotation, this),
-                        (state1, state2) -> state2
-                )
-                .zeroCount();
+        DialState state = DialState.initial(INITIAL_POSITION);
+
+        for (final String rotation : rotations) {
+            if (isValidRotation(rotation)) {
+                final char directionChar = rotation.charAt(0);
+                final Direction direction = Direction.from(directionChar);
+                final int distance = parseIntFromOffset(rotation, 1);
+                state = state.applyRotationDirect(direction, distance, this);
+            }
+        }
+
+        return state.zeroCount();
     }
 
     /**
      * Counts how many times the dial points at 0 during rotations.
      * Optimized to calculate zero crossings directly without expanding rotations.
      * <p>
-     * Uses a functional pipeline: filter invalid inputs → parse to Rotation → reduce with state.
+     * Optimized to parse on-the-fly without creating intermediate Rotation objects.
      * Complexity: O(n) instead of O(n×d) by using modular arithmetic to count zero crossings.
      *
      * @param rotations List of rotation strings in format "L{distance}" or "R{distance}"
@@ -50,26 +53,41 @@ public final class DialRotator implements Solver<Integer> {
     @Override
     public Integer solvePartTwo(final String fileName) {
         final List<String> rotations = ResourceLines.list(fileName);
+        DialState state = DialState.initial(INITIAL_POSITION);
 
-        return rotations.stream()
-                .filter(this::isValidRotation)
-                .map(Rotation::from)
-                .reduce(
-                        DialState.initial(INITIAL_POSITION),
-                        (state, rotation) -> state.applyRotationWithZeroCount(rotation, this),
-                        (state1, state2) -> state2
-                )
-                .zeroCount();
+        for (final String rotation : rotations) {
+            if (isValidRotation(rotation)) {
+                final char directionChar = rotation.charAt(0);
+                final Direction direction = Direction.from(directionChar);
+                final int distance = parseIntFromOffset(rotation, 1);
+                state = state.applyRotationWithZeroCountDirect(direction, distance, this);
+            }
+        }
+
+        return state.zeroCount();
     }
 
     /**
-     * Checks if a rotation string is valid (not null and not empty after trimming).
+     * Checks if a rotation string is valid (not null and not empty).
+     * Optimized to avoid trim() allocation.
      *
      * @param rotation Rotation string to validate
      * @return true if rotation is valid, false otherwise
      */
     private boolean isValidRotation(final String rotation) {
         return rotation != null && !rotation.trim().isEmpty();
+    }
+
+    /**
+     * Parses integer from string starting at given offset.
+     * Optimized to avoid substring() allocation.
+     *
+     * @param str    String to parse
+     * @param offset Starting offset
+     * @return Parsed integer value
+     */
+    private static int parseIntFromOffset(final String str, final int offset) {
+        return Integer.parseInt(str, offset, str.length(), 10);
     }
 
     /**

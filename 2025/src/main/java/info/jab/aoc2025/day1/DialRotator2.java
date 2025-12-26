@@ -9,7 +9,6 @@ public final class DialRotator2 implements Solver<Integer> {
 
     private static final int END = 100;
     private static final int INITIAL_POSITION = 50;
-    private static final String LINE_SEPARATOR_REGEX = "\\r?\\n";
     private static final Pattern ROTATION_PATTERN = Pattern.compile("^([LR])\\s*(\\d+)$", Pattern.CASE_INSENSITIVE);
 
     private Integer position;
@@ -23,8 +22,8 @@ public final class DialRotator2 implements Solver<Integer> {
      */
     @Override
     public Integer solvePartOne(final String fileName) {
-        final String input = String.join("\n", ResourceLines.list(fileName));
-        return solve(input, 1);
+        final List<String> lines = ResourceLines.list(fileName);
+        return solve(lines, 1);
     }
 
     /**
@@ -36,21 +35,21 @@ public final class DialRotator2 implements Solver<Integer> {
      */
     @Override
     public Integer solvePartTwo(final String fileName) {
-        final String input = String.join("\n", ResourceLines.list(fileName));
-        return solve(input, 2);
+        final List<String> lines = ResourceLines.list(fileName);
+        return solve(lines, 2);
     }
 
     /**
      * Solves the dial rotation problem for the specified part.
      *
-     * @param input Input string containing rotation sequences
+     * @param lines List of input lines containing rotation sequences
      * @param part Part number (1 or 2)
      * @return The count of times the dial points at 0
      */
-    private int solve(final String input, final int part) {
+    private int solve(final List<String> lines, final int part) {
         position = INITIAL_POSITION; // reset position for each part
         int zeros = 0;
-        final List<Sequence> sequences = parse(input);
+        final List<Sequence> sequences = parse(lines);
 
         for (final Sequence seq : sequences) {
             final int directionValue = seq.direction() == Direction.LEFT ? -1 : 1;
@@ -73,27 +72,34 @@ public final class DialRotator2 implements Solver<Integer> {
     }
 
     /**
-     * Parses input string into a list of rotation sequences.
+     * Parses input lines into a list of rotation sequences.
+     * Optimized to reuse Matcher instance.
      *
-     * @param input Input string containing rotation sequences
+     * @param lines List of input lines containing rotation sequences
      * @return List of parsed sequences
      * @throws IllegalArgumentException if any line is invalid
      */
-    private List<Sequence> parse(final String input) {
-        return Stream.of(input.split(LINE_SEPARATOR_REGEX))
-                .map(String::trim)
-                .filter(line -> !line.isEmpty())
-                .map(line -> {
-                    final Matcher matcher = ROTATION_PATTERN.matcher(line);
-                    if (!matcher.matches()) {
-                        throw new IllegalArgumentException("Invalid sequence line: " + line);
-                    }
-                    final char directionChar = Character.toUpperCase(matcher.group(1).charAt(0));
-                    final Direction direction = Direction.from(directionChar);
-                    final int steps = Integer.parseInt(matcher.group(2));
-                    return new Sequence(direction, steps);
-                })
-                .collect(Collectors.toList());
+    private List<Sequence> parse(final List<String> lines) {
+        final List<Sequence> sequences = new ArrayList<>(lines.size());
+        final Matcher matcher = ROTATION_PATTERN.matcher("");
+
+        for (final String line : lines) {
+            final String trimmed = line.trim();
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+
+            matcher.reset(trimmed);
+            if (!matcher.matches()) {
+                throw new IllegalArgumentException("Invalid sequence line: " + line);
+            }
+            final char directionChar = Character.toUpperCase(matcher.group(1).charAt(0));
+            final Direction direction = Direction.from(directionChar);
+            final int steps = Integer.parseInt(matcher.group(2));
+            sequences.add(new Sequence(direction, steps));
+        }
+
+        return sequences;
     }
 
     /**
