@@ -36,26 +36,37 @@ public final class Range2 implements Solver<Long> {
     /**
      * Pure function that counts IDs contained in any interval.
      * Separated from I/O for testability and functional composition.
+     * Optimized to inline interval check and use imperative loop for better performance.
      *
      * @param input The input containing intervals and IDs
      * @return The count of IDs contained in any interval
      */
     private Long countIdsInIntervals(final RangeProblemInput input) {
-        return input.ids().stream()
-                .filter(id -> existsInInterval(input.intervals(), id))
-                .count();
+        final List<Interval> intervals = input.intervals();
+        long count = 0;
+        for (final long id : input.ids()) {
+            if (containsId(intervals, id)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
-     * Pure function that checks if an ID is contained within any of the given intervals.
-     * Separated for testability and functional composition.
+     * Checks if an ID is contained within any of the given intervals.
+     * Optimized with early exit and inlined contains check.
      *
+     * @param intervals The list of intervals to check against
      * @param id The ID to check
-     * @param ranges The list of ranges to check against
-     * @return true if the ID is contained in any range, false otherwise
+     * @return true if the ID is contained in any interval, false otherwise
      */
-    private boolean existsInInterval(final List<Interval> intervals, final Long id) {
-        return intervals.stream().anyMatch(interval -> interval.contains(id));
+    private static boolean containsId(final List<Interval> intervals, final long id) {
+        for (final Interval interval : intervals) {
+            if (interval.contains(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -93,8 +104,8 @@ public final class Range2 implements Solver<Long> {
      * Functional approach replacing imperative loop with declarative stream operations.
      * Ranges are merged if they overlap or are adjacent.
      *
-     * @param sortedRanges Ranges sorted by start value
-     * @return Immutable list of merged ranges
+     * @param sortedIntervals Ranges sorted by start value
+     * @return List of merged ranges
      */
     private List<Interval> mergeIntervals(final List<Interval> sortedIntervals) {
         if (sortedIntervals.isEmpty()) {
