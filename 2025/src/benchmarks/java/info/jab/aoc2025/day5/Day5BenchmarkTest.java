@@ -43,7 +43,14 @@ class Day5BenchmarkTest {
                 .shouldFailOnError(true)
                 .shouldDoGC(true)
                 .forks(3)
-                .jvmArgs("-Xmx6144m", "-Xms6144m")
+                .jvmArgs(
+                        "-Xmx6144m",
+                        "-Xms6144m",
+                        "-Xlog:gc*:file=src/benchmarks/resources/benchmarks/day5/gc.log:time,tags,level:filecount=0",
+                        "-XX:+HeapDumpOnOutOfMemoryError",
+                        "-XX:HeapDumpPath=src/benchmarks/resources/benchmarks/day5/heap-dump.hprof",
+                        "-XX:+UnlockDiagnosticVMOptions"
+                )
                 .addProfiler(JavaFlightRecorderProfiler.class, "dir=src/benchmarks/resources/benchmarks/day5;config=profile")
                 .build();
 

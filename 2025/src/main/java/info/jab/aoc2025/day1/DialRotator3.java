@@ -5,6 +5,8 @@ import module java.base;
 import info.jab.aoc.Solver;
 import com.putoet.resources.ResourceLines;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
+import java.util.stream.Collector;
 
 /**
  * Handles dial rotation logic for a 0-99 dial.
@@ -12,7 +14,8 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
  * Optimized with:
  * - Mutable state (eliminates DialState allocations)
  * - Single-pass processing (combines filtering and processing)
- * - FastUtil ObjectArrayList for efficient iteration
+ * - Zero-allocation validation (avoids trim() and substring())
+ * - FastUtil ObjectArrayList for efficient iteration (collected directly from stream)
  */
 public final class DialRotator3 implements Solver<Integer> {
 
@@ -26,16 +29,20 @@ public final class DialRotator3 implements Solver<Integer> {
      * Optimized with:
      * - Mutable state to eliminate DialState record allocations
      * - Single-pass processing (filter and process in one loop)
-     * - FastUtil ObjectArrayList for efficient iteration
+     * - Zero-allocation validation (avoids trim() and substring())
+     * - FastUtil ObjectArrayList collected directly from stream (no intermediate List)
      *
      * @param fileName Input file name containing rotation sequences
      * @return The count of times the dial points at 0 after rotations
      */
     @Override
     public Integer solvePartOne(final String fileName) {
-        final List<String> allLines = ResourceLines.list(fileName);
-        // Convert to FastUtil ObjectArrayList for efficient iteration
-        final ObjectArrayList<String> lines = new ObjectArrayList<>(allLines);
+        // Collect directly to ObjectArrayList to avoid intermediate List allocation
+        // Use try-with-resources to properly close the stream
+        final ObjectList<String> lines;
+        try (var stream = ResourceLines.stream(fileName)) {
+            lines = stream.collect(toObjectArrayList());
+        }
 
         // Single-pass: filter and process in one loop with mutable state
         int position = INITIAL_POSITION;
@@ -63,7 +70,8 @@ public final class DialRotator3 implements Solver<Integer> {
      * Optimized with:
      * - Mutable state to eliminate DialState record allocations
      * - Single-pass processing (filter and process in one loop)
-     * - FastUtil ObjectArrayList for efficient iteration
+     * - Zero-allocation validation (avoids trim() and substring())
+     * - FastUtil ObjectArrayList collected directly from stream (no intermediate List)
      * Complexity: O(n) instead of O(n×d) by using modular arithmetic to count zero crossings.
      *
      * @param fileName Input file name containing rotation sequences
@@ -71,9 +79,12 @@ public final class DialRotator3 implements Solver<Integer> {
      */
     @Override
     public Integer solvePartTwo(final String fileName) {
-        final List<String> allLines = ResourceLines.list(fileName);
-        // Convert to FastUtil ObjectArrayList for efficient iteration
-        final ObjectArrayList<String> lines = new ObjectArrayList<>(allLines);
+        // Collect directly to ObjectArrayList to avoid intermediate List allocation
+        // Use try-with-resources to properly close the stream
+        final ObjectList<String> lines;
+        try (var stream = ResourceLines.stream(fileName)) {
+            lines = stream.collect(toObjectArrayList());
+        }
 
         // Single-pass: filter and process in one loop with mutable state
         int position = INITIAL_POSITION;
@@ -94,14 +105,18 @@ public final class DialRotator3 implements Solver<Integer> {
     }
 
     /**
-     * Checks if a rotation string is valid (not null and not empty).
-     * Optimized to avoid trim() allocation.
+     * Checks if a rotation string is valid (not null, not empty, and starts with L or R).
+     * Optimized to avoid trim() allocation by checking first character directly.
      *
      * @param rotation Rotation string to validate
      * @return true if rotation is valid, false otherwise
      */
     private boolean isValidRotation(final String rotation) {
-        return rotation != null && !rotation.trim().isEmpty();
+        if (rotation == null || rotation.isEmpty()) {
+            return false;
+        }
+        final char firstChar = rotation.charAt(0);
+        return firstChar == 'L' || firstChar == 'R' || firstChar == 'l' || firstChar == 'r';
     }
 
     /**
@@ -172,5 +187,23 @@ public final class DialRotator3 implements Solver<Integer> {
      */
     int rotateDialByOne(final int currentPosition, final Direction direction) {
         return rotateDial(currentPosition, direction, 1);
+    }
+
+    /**
+     * Custom collector for ObjectArrayList that avoids intermediate List allocation.
+     * Collects directly from Stream to FastUtil ObjectArrayList for better performance.
+     *
+     * @return Collector that collects to ObjectArrayList
+     */
+    private static Collector<String, ?, ObjectList<String>> toObjectArrayList() {
+        return Collector.of(
+                ObjectArrayList::new,
+                (list, element) -> list.add(element),
+                (left, right) -> {
+                    left.addAll(right);
+                    return left;
+                },
+                Collector.Characteristics.IDENTITY_FINISH
+        );
     }
 }
