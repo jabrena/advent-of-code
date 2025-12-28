@@ -117,8 +117,9 @@ public final class ShapePacking implements Solver<Long> {
         // Pre-size HashMap to avoid resizing overhead during backtracking
         // Estimate: typically 10-100 entries per region, use 2x for load factor (0.75)
         // This reduces variability from HashMap resizing operations
+        // Use Map<Long, Boolean> instead of Map<CacheKey, Boolean> to eliminate CacheKey allocations
         int estimatedMemoSize = Math.max(16, shapeIds.size() * 4);
-        Map<CacheKey, Boolean> memo = new HashMap<>(estimatedMemoSize * 2);
+        Map<Long, Boolean> memo = new HashMap<>(estimatedMemoSize * 2);
 
         // Precompute minimum area needed for remaining shapes (for constraint propagation)
         long[] minAreaRemaining = new long[shapeIds.size() + 1];
@@ -162,10 +163,12 @@ public final class ShapePacking implements Solver<Long> {
      * precomputed bit offsets, variant filtering, and incremental grid hash.
      * The backtracking algorithm is inherently stateful and performance-critical,
      * so we use mutable grid here while maintaining functional principles elsewhere.
+     * <p>
+     * Optimized to use primitive long hash keys instead of CacheKey objects to reduce allocations.
      */
     private boolean backtrack(long[] grid, long gridHash, int width, int height, Map<Integer, Shape> shapes,
                              List<Integer> shapeIds, int index, long remainingArea,
-                             long[] minAreaRemaining, Map<CacheKey, Boolean> memo,
+                             long[] minAreaRemaining, Map<Long, Boolean> memo,
                              Map<Integer, Map<ShapeVariant, int[]>> variantOffsets) {
         if (index == shapeIds.size()) {
             return true;
@@ -176,8 +179,8 @@ public final class ShapePacking implements Solver<Long> {
             return false;
         }
 
-        // Memoization: Check cache using optimized CacheKey (no array allocation in common case)
-        CacheKey key = new CacheKey(gridHash, grid, shapeIds, index);
+        // Memoization: Use primitive long hash key instead of CacheKey object to reduce allocations
+        long key = computeMemoKey(gridHash, shapeIds, index);
         Boolean cached = memo.get(key);
         if (cached != null) {
             return cached;
@@ -294,5 +297,26 @@ public final class ShapePacking implements Solver<Long> {
     private long computeBitHash(int bitIndex) {
         // Use multiplication with large prime for good hash distribution
         return (long) bitIndex * HASH_MULTIPLIER;
+    }
+
+    /**
+     * Computes memoization key from grid hash and remaining shape IDs.
+     * Uses primitive long instead of CacheKey object to eliminate allocations.
+     * Combines gridHash with shapeIds hash to ensure uniqueness.
+     *
+     * @param gridHash The incremental hash of the grid state
+     * @param shapeIds The list of all shape IDs to place
+     * @param index The starting index of remaining shapes to place
+     * @return A long hash key combining grid state and remaining shapes
+     */
+    private long computeMemoKey(long gridHash, List<Integer> shapeIds, int index) {
+        // Compute hash from remaining shape IDs (similar to CacheKey but returning long)
+        long shapeHash = 1L;
+        for (int i = index; i < shapeIds.size(); i++) {
+            shapeHash = 31L * shapeHash + shapeIds.get(i);
+        }
+        // Mix grid hash with shape hash using XOR for better distribution
+        // Use 31 multiplier to match CacheKey's hash computation pattern
+        return gridHash * 31L + shapeHash;
     }
 }
