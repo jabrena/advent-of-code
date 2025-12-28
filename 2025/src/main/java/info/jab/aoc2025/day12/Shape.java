@@ -63,6 +63,13 @@ public record Shape(int id, int area, List<ShapeVariant> variants) {
                 current = rotate90(current);
             }
         }
+        // Sort variants deterministically to reduce backtracking search space variability
+        // Order by: area (points size, largest first), then width, then height
+        // This makes search order consistent across runs, reducing timing variation
+        result.sort(Comparator
+                .comparingInt((ShapeVariant v) -> v.points().size()).reversed()
+                .thenComparingInt(ShapeVariant::width).reversed()
+                .thenComparingInt(ShapeVariant::height).reversed());
         return result;
     }
 

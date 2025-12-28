@@ -15,10 +15,10 @@ import info.jab.aoc.Solver;
  * removes such cells until no more can be removed.
  *
  * This implementation follows functional programming principles:
- * - Uses Stream API for declarative transformations
+ * - Uses parallel Stream API for declarative transformations with improved performance
  * - Employs immutable collections where possible
  * - Separates pure functions from side effects
- * - Uses Stream.iterate for iterative processes
+ * - Parallelizes independent neighbor counting operations
  */
 public final class GridNeighbor2 implements Solver<Integer> {
 
@@ -28,7 +28,8 @@ public final class GridNeighbor2 implements Solver<Integer> {
 
     /**
      * Counts '@' symbols that have fewer than 4 neighbors.
-     * Uses Stream API for declarative processing.
+     * Uses parallel Stream API for declarative processing with improved performance.
+     * The grid is read-only, making it safe for parallel access.
      *
      * @param fileName The input file name
      * @return The count of '@' symbols with fewer than 4 neighbors
@@ -37,7 +38,7 @@ public final class GridNeighbor2 implements Solver<Integer> {
     public Integer solvePartOne(final String fileName) {
         final Grid grid = createGrid(fileName);
 
-        return grid.findAll(c -> c == TARGET_CELL).stream()
+        return grid.findAll(c -> c == TARGET_CELL).parallelStream()
                 .filter(p -> hasFewerThanMinimumNeighbors(grid, p))
                 .mapToInt(p -> 1)
                 .sum();
@@ -102,7 +103,9 @@ public final class GridNeighbor2 implements Solver<Integer> {
     /**
      * Pure function that finds all cells that should be removed.
      * Returns an immutable list of points to remove.
-     * Uses Stream API for declarative processing.
+     * Uses sequential Stream API for declarative processing.
+     * Note: Sequential stream is used here as parallel overhead in iterative
+     * scenarios (Part 2) outweighs benefits for smaller per-iteration datasets.
      *
      * @param grid The grid
      * @return An immutable list of points to remove

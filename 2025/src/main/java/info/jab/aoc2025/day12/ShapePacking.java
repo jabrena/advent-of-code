@@ -29,11 +29,30 @@ public final class ShapePacking implements Solver<Long> {
         Map<Integer, Shape> shapes = parsedData.shapes();
         List<Region> regions = parsedData.regions();
 
-        // Parallel processing: regions are independent, each creates its own local state
-        // Shapes map is immutable (Map.copyOf), safe for concurrent reads
-        return regions.parallelStream()
+        // Separate fast and slow regions for better load distribution
+        // Fast regions: area > 200 or impossible (total area > region area) - process sequentially
+        // Slow regions: area <= 200 and possible - process in parallel
+        // This reduces variability from uneven work distribution
+        long fastCount = regions.stream()
+                .filter(region -> {
+                    long totalArea = calculateTotalArea(region, shapes);
+                    return region.regionArea() > 200 || totalArea > region.regionArea();
+                })
                 .filter(region -> solve(region, shapes))
                 .count();
+
+        // Sort slow regions by complexity (area) for better load distribution
+        long slowCount = regions.stream()
+                .filter(region -> {
+                    long totalArea = calculateTotalArea(region, shapes);
+                    return region.regionArea() <= 200 && totalArea <= region.regionArea();
+                })
+                .sorted(Comparator.comparingLong(Region::regionArea))
+                .parallel()
+                .filter(region -> solve(region, shapes))
+                .count();
+
+        return fastCount + slowCount;
     }
 
     @Override
@@ -95,12 +114,11 @@ public final class ShapePacking implements Solver<Long> {
         long[] grid = new long[(totalCells + 63) / 64];
         // Incremental grid hash: starts at 0, updated as bits are placed/removed
         long gridHash = 0L;
-        // Use HashMap with optimized CacheKey (no array allocation in common case)
-        // Note: Primitive collections (LongObjectHashMap) would avoid Boolean boxing,
-        // but require complex collision handling. CacheKey optimization (#1) already
-        // eliminates the main performance bottleneck (array allocation), so HashMap is preferred
-        // for correctness and simplicity.
-        Map<CacheKey, Boolean> memo = new HashMap<>();
+        // Pre-size HashMap to avoid resizing overhead during backtracking
+        // Estimate: typically 10-100 entries per region, use 2x for load factor (0.75)
+        // This reduces variability from HashMap resizing operations
+        int estimatedMemoSize = Math.max(16, shapeIds.size() * 4);
+        Map<CacheKey, Boolean> memo = new HashMap<>(estimatedMemoSize * 2);
 
         // Precompute minimum area needed for remaining shapes (for constraint propagation)
         long[] minAreaRemaining = new long[shapeIds.size() + 1];
