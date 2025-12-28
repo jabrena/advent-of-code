@@ -1,0 +1,617 @@
+[2025-12-28T15:19:20.757+0100][info][gc,init] CardTable entry size: 512
+[2025-12-28T15:19:20.758+0100][info][gc     ] Using G1
+[2025-12-28T15:19:20.760+0100][info][gc,init] Version: 25.0.1+8-jvmci-b01 (release)
+[2025-12-28T15:19:20.760+0100][info][gc,init] CPUs: 8 total, 8 available
+[2025-12-28T15:19:20.760+0100][info][gc,init] Memory: 16384M
+[2025-12-28T15:19:20.760+0100][info][gc,init] Large Page Support: Disabled
+[2025-12-28T15:19:20.760+0100][info][gc,init] NUMA Support: Disabled
+[2025-12-28T15:19:20.760+0100][info][gc,init] Compressed Oops: Enabled (Zero based)
+[2025-12-28T15:19:20.760+0100][info][gc,init] Heap Region Size: 4M
+[2025-12-28T15:19:20.760+0100][info][gc,init] Heap Min Capacity: 6G
+[2025-12-28T15:19:20.760+0100][info][gc,init] Heap Initial Capacity: 6G
+[2025-12-28T15:19:20.760+0100][info][gc,init] Heap Max Capacity: 6G
+[2025-12-28T15:19:20.761+0100][info][gc,init] Pre-touch: Disabled
+[2025-12-28T15:19:20.761+0100][info][gc,init] Parallel Workers: 8
+[2025-12-28T15:19:20.761+0100][info][gc,init] Concurrent Workers: 2
+[2025-12-28T15:19:20.761+0100][info][gc,init] Concurrent Refinement Workers: 8
+[2025-12-28T15:19:20.761+0100][info][gc,init] Periodic GC: Disabled
+[2025-12-28T15:19:20.763+0100][info][gc,metaspace] CDS archive(s) mapped at: [0x00000fe000000000-0x00000fe000da0000-0x00000fe000da0000), size 14286848, SharedBaseAddress: 0x00000fe000000000, ArchiveRelocationMode: 1.
+[2025-12-28T15:19:20.763+0100][info][gc,metaspace] Compressed class space mapped at: 0x00000fe001000000-0x00000fe041000000, reserved size: 1073741824
+[2025-12-28T15:19:20.763+0100][info][gc,metaspace] UseCompressedClassPointers 1, UseCompactObjectHeaders 0
+[2025-12-28T15:19:20.763+0100][info][gc,metaspace] Narrow klass pointer bits 32, Max shift 3
+[2025-12-28T15:19:20.763+0100][info][gc,metaspace] Narrow klass base: 0x00000fe000000000, Narrow klass shift: 0
+[2025-12-28T15:19:20.763+0100][info][gc,metaspace] Encoding Range: [0x00000fe000000000 - 0x00000fe100000000), (4294967296 bytes)
+[2025-12-28T15:19:20.763+0100][info][gc,metaspace] Klass Range:    [0x00000fe000004000 - 0x00000fe041000000), (1090502656 bytes)
+[2025-12-28T15:19:20.763+0100][info][gc,metaspace] Klass ID Range:  [16384 - 1090519033) (1090502649)
+[2025-12-28T15:19:20.763+0100][info][gc,metaspace] Protection zone: [0x00000fe000000000 - 0x00000fe000004000), (16384 bytes)
+[2025-12-28T15:19:20.949+0100][info][gc,start    ] GC(0) Pause Full (System.gc())
+[2025-12-28T15:19:20.950+0100][info][gc,task     ] GC(0) Using 7 workers of 8 for full compaction
+[2025-12-28T15:19:20.950+0100][info][gc,phases,start] GC(0) Phase 1: Mark live objects
+[2025-12-28T15:19:20.952+0100][info][gc,phases      ] GC(0) Phase 1: Mark live objects 1.683ms
+[2025-12-28T15:19:20.952+0100][info][gc,phases,start] GC(0) Phase 2: Prepare compaction
+[2025-12-28T15:19:20.952+0100][info][gc,phases      ] GC(0) Phase 2: Prepare compaction 0.389ms
+[2025-12-28T15:19:20.952+0100][info][gc,phases,start] GC(0) Phase 3: Adjust pointers
+[2025-12-28T15:19:20.953+0100][info][gc,phases      ] GC(0) Phase 3: Adjust pointers 0.638ms
+[2025-12-28T15:19:20.953+0100][info][gc,phases,start] GC(0) Phase 4: Compact heap
+[2025-12-28T15:19:20.954+0100][info][gc,phases      ] GC(0) Phase 4: Compact heap 1.143ms
+[2025-12-28T15:19:20.954+0100][info][gc,phases,start] GC(0) Phase 5: Reset Metadata
+[2025-12-28T15:19:20.954+0100][info][gc,phases      ] GC(0) Phase 5: Reset Metadata 0.424ms
+[2025-12-28T15:19:20.965+0100][info][gc,heap        ] GC(0) Eden regions: 6->0(76)
+[2025-12-28T15:19:20.966+0100][info][gc,heap        ] GC(0) Survivor regions: 0->0(0)
+[2025-12-28T15:19:20.966+0100][info][gc,heap        ] GC(0) Old regions: 1->7
+[2025-12-28T15:19:20.966+0100][info][gc,heap        ] GC(0) Humongous regions: 0->0
+[2025-12-28T15:19:20.966+0100][info][gc,metaspace   ] GC(0) Metaspace: 3415K(3520K)->3415K(3520K) NonClass: 3146K(3200K)->3146K(3200K) Class: 269K(320K)->269K(320K)
+[2025-12-28T15:19:20.966+0100][info][gc             ] GC(0) Pause Full (System.gc()) 23M->7M(6144M) 16.127ms
+[2025-12-28T15:19:20.966+0100][info][gc,cpu         ] GC(0) User=0.02s Sys=0.05s Real=0.02s
+[2025-12-28T15:19:20.966+0100][info][gc,start       ] GC(1) Pause Full (System.gc())
+[2025-12-28T15:19:20.966+0100][info][gc,task        ] GC(1) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:20.966+0100][info][gc,phases,start] GC(1) Phase 1: Mark live objects
+[2025-12-28T15:19:20.967+0100][info][gc,phases      ] GC(1) Phase 1: Mark live objects 1.138ms
+[2025-12-28T15:19:20.967+0100][info][gc,phases,start] GC(1) Phase 2: Prepare compaction
+[2025-12-28T15:19:20.967+0100][info][gc,phases      ] GC(1) Phase 2: Prepare compaction 0.277ms
+[2025-12-28T15:19:20.967+0100][info][gc,phases,start] GC(1) Phase 3: Adjust pointers
+[2025-12-28T15:19:20.968+0100][info][gc,phases      ] GC(1) Phase 3: Adjust pointers 0.599ms
+[2025-12-28T15:19:20.968+0100][info][gc,phases,start] GC(1) Phase 4: Compact heap
+[2025-12-28T15:19:20.968+0100][info][gc,phases      ] GC(1) Phase 4: Compact heap 0.200ms
+[2025-12-28T15:19:20.968+0100][info][gc,phases,start] GC(1) Phase 5: Reset Metadata
+[2025-12-28T15:19:20.968+0100][info][gc,phases      ] GC(1) Phase 5: Reset Metadata 0.351ms
+[2025-12-28T15:19:20.971+0100][info][gc,heap        ] GC(1) Eden regions: 1->0(76)
+[2025-12-28T15:19:20.972+0100][info][gc,heap        ] GC(1) Survivor regions: 0->0(0)
+[2025-12-28T15:19:20.972+0100][info][gc,heap        ] GC(1) Old regions: 7->7
+[2025-12-28T15:19:20.972+0100][info][gc,heap        ] GC(1) Humongous regions: 0->0
+[2025-12-28T15:19:20.972+0100][info][gc,metaspace   ] GC(1) Metaspace: 3415K(3520K)->3415K(3520K) NonClass: 3146K(3200K)->3146K(3200K) Class: 269K(320K)->269K(320K)
+[2025-12-28T15:19:20.972+0100][info][gc             ] GC(1) Pause Full (System.gc()) 9M->7M(6144M) 5.758ms
+[2025-12-28T15:19:20.972+0100][info][gc,cpu         ] GC(1) User=0.03s Sys=0.00s Real=0.01s
+[2025-12-28T15:19:21.722+0100][info][gc,start       ] GC(2) Pause Young (Normal) (G1 Evacuation Pause)
+[2025-12-28T15:19:21.722+0100][info][gc,task        ] GC(2) Using 8 workers of 8 for evacuation
+[2025-12-28T15:19:21.723+0100][info][gc,phases      ] GC(2)   Pre Evacuate Collection Set: 0.12ms
+[2025-12-28T15:19:21.723+0100][info][gc,phases      ] GC(2)   Merge Heap Roots: 0.05ms
+[2025-12-28T15:19:21.723+0100][info][gc,phases      ] GC(2)   Evacuate Collection Set: 0.77ms
+[2025-12-28T15:19:21.723+0100][info][gc,phases      ] GC(2)   Post Evacuate Collection Set: 0.18ms
+[2025-12-28T15:19:21.723+0100][info][gc,phases      ] GC(2)   Other: 0.08ms
+[2025-12-28T15:19:21.723+0100][info][gc,heap        ] GC(2) Eden regions: 76->0(184)
+[2025-12-28T15:19:21.723+0100][info][gc,heap        ] GC(2) Survivor regions: 0->1(10)
+[2025-12-28T15:19:21.723+0100][info][gc,heap        ] GC(2) Old regions: 7->7
+[2025-12-28T15:19:21.723+0100][info][gc,heap        ] GC(2) Humongous regions: 0->0
+[2025-12-28T15:19:21.723+0100][info][gc,metaspace   ] GC(2) Metaspace: 4662K(4800K)->4662K(4800K) NonClass: 4270K(4352K)->4270K(4352K) Class: 392K(448K)->392K(448K)
+[2025-12-28T15:19:21.723+0100][info][gc             ] GC(2) Pause Young (Normal) (G1 Evacuation Pause) 311M->8M(6144M) 1.333ms
+[2025-12-28T15:19:21.723+0100][info][gc,cpu         ] GC(2) User=0.00s Sys=0.00s Real=0.00s
+[2025-12-28T15:19:22.807+0100][info][gc,start       ] GC(3) Pause Young (Normal) (G1 Evacuation Pause)
+[2025-12-28T15:19:22.807+0100][info][gc,task        ] GC(3) Using 8 workers of 8 for evacuation
+[2025-12-28T15:19:22.808+0100][info][gc,phases      ] GC(3)   Pre Evacuate Collection Set: 0.24ms
+[2025-12-28T15:19:22.808+0100][info][gc,phases      ] GC(3)   Merge Heap Roots: 0.07ms
+[2025-12-28T15:19:22.808+0100][info][gc,phases      ] GC(3)   Evacuate Collection Set: 0.85ms
+[2025-12-28T15:19:22.808+0100][info][gc,phases      ] GC(3)   Post Evacuate Collection Set: 0.30ms
+[2025-12-28T15:19:22.808+0100][info][gc,phases      ] GC(3)   Other: 0.10ms
+[2025-12-28T15:19:22.808+0100][info][gc,heap        ] GC(3) Eden regions: 184->0(767)
+[2025-12-28T15:19:22.808+0100][info][gc,heap        ] GC(3) Survivor regions: 1->1(24)
+[2025-12-28T15:19:22.808+0100][info][gc,heap        ] GC(3) Old regions: 7->7
+[2025-12-28T15:19:22.808+0100][info][gc,heap        ] GC(3) Humongous regions: 0->0
+[2025-12-28T15:19:22.808+0100][info][gc,metaspace   ] GC(3) Metaspace: 4803K(4928K)->4803K(4928K) NonClass: 4411K(4480K)->4411K(4480K) Class: 392K(448K)->392K(448K)
+[2025-12-28T15:19:22.808+0100][info][gc             ] GC(3) Pause Young (Normal) (G1 Evacuation Pause) 744M->8M(6144M) 1.775ms
+[2025-12-28T15:19:22.808+0100][info][gc,cpu         ] GC(3) User=0.00s Sys=0.00s Real=0.00s
+[2025-12-28T15:19:29.262+0100][info][gc,start       ] GC(4) Pause Full (System.gc())
+[2025-12-28T15:19:29.262+0100][info][gc,task        ] GC(4) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:29.262+0100][info][gc,phases,start] GC(4) Phase 1: Mark live objects
+[2025-12-28T15:19:29.265+0100][info][gc,phases      ] GC(4) Phase 1: Mark live objects 2.656ms
+[2025-12-28T15:19:29.265+0100][info][gc,phases,start] GC(4) Phase 2: Prepare compaction
+[2025-12-28T15:19:29.267+0100][info][gc,phases      ] GC(4) Phase 2: Prepare compaction 2.091ms
+[2025-12-28T15:19:29.267+0100][info][gc,phases,start] GC(4) Phase 3: Adjust pointers
+[2025-12-28T15:19:29.269+0100][info][gc,phases      ] GC(4) Phase 3: Adjust pointers 2.035ms
+[2025-12-28T15:19:29.269+0100][info][gc,phases,start] GC(4) Phase 4: Compact heap
+[2025-12-28T15:19:29.271+0100][info][gc,phases      ] GC(4) Phase 4: Compact heap 1.499ms
+[2025-12-28T15:19:29.271+0100][info][gc,phases,start] GC(4) Phase 5: Reset Metadata
+[2025-12-28T15:19:29.271+0100][info][gc,phases      ] GC(4) Phase 5: Reset Metadata 0.330ms
+[2025-12-28T15:19:29.275+0100][info][gc,heap        ] GC(4) Eden regions: 765->0(769)
+[2025-12-28T15:19:29.275+0100][info][gc,heap        ] GC(4) Survivor regions: 1->0(24)
+[2025-12-28T15:19:29.275+0100][info][gc,heap        ] GC(4) Old regions: 7->8
+[2025-12-28T15:19:29.275+0100][info][gc,heap        ] GC(4) Humongous regions: 0->0
+[2025-12-28T15:19:29.275+0100][info][gc,metaspace   ] GC(4) Metaspace: 4875K(5056K)->4820K(5056K) NonClass: 4477K(4608K)->4438K(4608K) Class: 398K(448K)->382K(448K)
+[2025-12-28T15:19:29.275+0100][info][gc             ] GC(4) Pause Full (System.gc()) 3068M->8M(6144M) 12.712ms
+[2025-12-28T15:19:29.275+0100][info][gc,cpu         ] GC(4) User=0.06s Sys=0.01s Real=0.01s
+[2025-12-28T15:19:29.275+0100][info][gc,start       ] GC(5) Pause Full (System.gc())
+[2025-12-28T15:19:29.275+0100][info][gc,task        ] GC(5) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:29.275+0100][info][gc,phases,start] GC(5) Phase 1: Mark live objects
+[2025-12-28T15:19:29.277+0100][info][gc,phases      ] GC(5) Phase 1: Mark live objects 1.892ms
+[2025-12-28T15:19:29.277+0100][info][gc,phases,start] GC(5) Phase 2: Prepare compaction
+[2025-12-28T15:19:29.278+0100][info][gc,phases      ] GC(5) Phase 2: Prepare compaction 0.388ms
+[2025-12-28T15:19:29.278+0100][info][gc,phases,start] GC(5) Phase 3: Adjust pointers
+[2025-12-28T15:19:29.279+0100][info][gc,phases      ] GC(5) Phase 3: Adjust pointers 1.161ms
+[2025-12-28T15:19:29.279+0100][info][gc,phases,start] GC(5) Phase 4: Compact heap
+[2025-12-28T15:19:29.279+0100][info][gc,phases      ] GC(5) Phase 4: Compact heap 0.323ms
+[2025-12-28T15:19:29.279+0100][info][gc,phases,start] GC(5) Phase 5: Reset Metadata
+[2025-12-28T15:19:29.279+0100][info][gc,phases      ] GC(5) Phase 5: Reset Metadata 0.321ms
+[2025-12-28T15:19:29.283+0100][info][gc,heap        ] GC(5) Eden regions: 1->0(769)
+[2025-12-28T15:19:29.283+0100][info][gc,heap        ] GC(5) Survivor regions: 0->0(24)
+[2025-12-28T15:19:29.283+0100][info][gc,heap        ] GC(5) Old regions: 8->8
+[2025-12-28T15:19:29.283+0100][info][gc,heap        ] GC(5) Humongous regions: 0->0
+[2025-12-28T15:19:29.283+0100][info][gc,metaspace   ] GC(5) Metaspace: 4820K(5056K)->4820K(5056K) NonClass: 4438K(4608K)->4438K(4608K) Class: 382K(448K)->382K(448K)
+[2025-12-28T15:19:29.283+0100][info][gc             ] GC(5) Pause Full (System.gc()) 10M->8M(6144M) 7.742ms
+[2025-12-28T15:19:29.283+0100][info][gc,cpu         ] GC(5) User=0.03s Sys=0.00s Real=0.01s
+[2025-12-28T15:19:34.179+0100][info][gc,start       ] GC(6) Pause Young (Normal) (G1 Evacuation Pause)
+[2025-12-28T15:19:34.179+0100][info][gc,task        ] GC(6) Using 8 workers of 8 for evacuation
+[2025-12-28T15:19:34.182+0100][info][gc,phases      ] GC(6)   Pre Evacuate Collection Set: 0.29ms
+[2025-12-28T15:19:34.183+0100][info][gc,phases      ] GC(6)   Merge Heap Roots: 0.19ms
+[2025-12-28T15:19:34.183+0100][info][gc,phases      ] GC(6)   Evacuate Collection Set: 1.92ms
+[2025-12-28T15:19:34.183+0100][info][gc,phases      ] GC(6)   Post Evacuate Collection Set: 0.86ms
+[2025-12-28T15:19:34.183+0100][info][gc,phases      ] GC(6)   Other: 0.20ms
+[2025-12-28T15:19:34.183+0100][info][gc,heap        ] GC(6) Eden regions: 769->0(920)
+[2025-12-28T15:19:34.183+0100][info][gc,heap        ] GC(6) Survivor regions: 0->1(97)
+[2025-12-28T15:19:34.183+0100][info][gc,heap        ] GC(6) Old regions: 8->8
+[2025-12-28T15:19:34.183+0100][info][gc,heap        ] GC(6) Humongous regions: 0->0
+[2025-12-28T15:19:34.183+0100][info][gc,metaspace   ] GC(6) Metaspace: 8109K(8320K)->8109K(8320K) NonClass: 7437K(7552K)->7437K(7552K) Class: 671K(768K)->671K(768K)
+[2025-12-28T15:19:34.183+0100][info][gc             ] GC(6) Pause Young (Normal) (G1 Evacuation Pause) 3084M->11M(6144M) 3.700ms
+[2025-12-28T15:19:34.183+0100][info][gc,cpu         ] GC(6) User=0.01s Sys=0.00s Real=0.01s
+[2025-12-28T15:19:35.324+0100][info][gc,start       ] GC(7) Pause Full (System.gc())
+[2025-12-28T15:19:35.324+0100][info][gc,task        ] GC(7) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:35.325+0100][info][gc,phases,start] GC(7) Phase 1: Mark live objects
+[2025-12-28T15:19:35.328+0100][info][gc,phases      ] GC(7) Phase 1: Mark live objects 3.587ms
+[2025-12-28T15:19:35.328+0100][info][gc,phases,start] GC(7) Phase 2: Prepare compaction
+[2025-12-28T15:19:35.330+0100][info][gc,phases      ] GC(7) Phase 2: Prepare compaction 1.215ms
+[2025-12-28T15:19:35.330+0100][info][gc,phases,start] GC(7) Phase 3: Adjust pointers
+[2025-12-28T15:19:35.332+0100][info][gc,phases      ] GC(7) Phase 3: Adjust pointers 2.346ms
+[2025-12-28T15:19:35.332+0100][info][gc,phases,start] GC(7) Phase 4: Compact heap
+[2025-12-28T15:19:35.334+0100][info][gc,phases      ] GC(7) Phase 4: Compact heap 1.648ms
+[2025-12-28T15:19:35.334+0100][info][gc,phases,start] GC(7) Phase 5: Reset Metadata
+[2025-12-28T15:19:35.334+0100][info][gc,phases      ] GC(7) Phase 5: Reset Metadata 0.464ms
+[2025-12-28T15:19:35.337+0100][info][gc,heap        ] GC(7) Eden regions: 107->0(921)
+[2025-12-28T15:19:35.338+0100][info][gc,heap        ] GC(7) Survivor regions: 1->0(97)
+[2025-12-28T15:19:35.338+0100][info][gc,heap        ] GC(7) Old regions: 8->9
+[2025-12-28T15:19:35.338+0100][info][gc,heap        ] GC(7) Humongous regions: 0->0
+[2025-12-28T15:19:35.338+0100][info][gc,metaspace   ] GC(7) Metaspace: 8117K(8320K)->8117K(8320K) NonClass: 7445K(7552K)->7445K(7552K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:35.338+0100][info][gc             ] GC(7) Pause Full (System.gc()) 439M->10M(6144M) 13.262ms
+[2025-12-28T15:19:35.338+0100][info][gc,cpu         ] GC(7) User=0.05s Sys=0.01s Real=0.01s
+[2025-12-28T15:19:35.338+0100][info][gc,start       ] GC(8) Pause Full (System.gc())
+[2025-12-28T15:19:35.338+0100][info][gc,task        ] GC(8) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:35.338+0100][info][gc,phases,start] GC(8) Phase 1: Mark live objects
+[2025-12-28T15:19:35.342+0100][info][gc,phases      ] GC(8) Phase 1: Mark live objects 3.676ms
+[2025-12-28T15:19:35.342+0100][info][gc,phases,start] GC(8) Phase 2: Prepare compaction
+[2025-12-28T15:19:35.343+0100][info][gc,phases      ] GC(8) Phase 2: Prepare compaction 0.802ms
+[2025-12-28T15:19:35.343+0100][info][gc,phases,start] GC(8) Phase 3: Adjust pointers
+[2025-12-28T15:19:35.345+0100][info][gc,phases      ] GC(8) Phase 3: Adjust pointers 2.076ms
+[2025-12-28T15:19:35.345+0100][info][gc,phases,start] GC(8) Phase 4: Compact heap
+[2025-12-28T15:19:35.346+0100][info][gc,phases      ] GC(8) Phase 4: Compact heap 0.996ms
+[2025-12-28T15:19:35.346+0100][info][gc,phases,start] GC(8) Phase 5: Reset Metadata
+[2025-12-28T15:19:35.346+0100][info][gc,phases      ] GC(8) Phase 5: Reset Metadata 0.483ms
+[2025-12-28T15:19:35.350+0100][info][gc,heap        ] GC(8) Eden regions: 1->0(921)
+[2025-12-28T15:19:35.350+0100][info][gc,heap        ] GC(8) Survivor regions: 0->0(97)
+[2025-12-28T15:19:35.350+0100][info][gc,heap        ] GC(8) Old regions: 9->8
+[2025-12-28T15:19:35.350+0100][info][gc,heap        ] GC(8) Humongous regions: 0->0
+[2025-12-28T15:19:35.350+0100][info][gc,metaspace   ] GC(8) Metaspace: 8117K(8320K)->8117K(8320K) NonClass: 7445K(7552K)->7445K(7552K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:35.350+0100][info][gc             ] GC(8) Pause Full (System.gc()) 12M->10M(6144M) 11.679ms
+[2025-12-28T15:19:35.350+0100][info][gc,cpu         ] GC(8) User=0.05s Sys=0.01s Real=0.02s
+[2025-12-28T15:19:40.769+0100][info][gc,start       ] GC(9) Pause Young (Normal) (G1 Evacuation Pause)
+[2025-12-28T15:19:40.770+0100][info][gc,task        ] GC(9) Using 8 workers of 8 for evacuation
+[2025-12-28T15:19:40.771+0100][info][gc,phases      ] GC(9)   Pre Evacuate Collection Set: 0.27ms
+[2025-12-28T15:19:40.772+0100][info][gc,phases      ] GC(9)   Merge Heap Roots: 0.18ms
+[2025-12-28T15:19:40.772+0100][info][gc,phases      ] GC(9)   Evacuate Collection Set: 0.48ms
+[2025-12-28T15:19:40.772+0100][info][gc,phases      ] GC(9)   Post Evacuate Collection Set: 0.78ms
+[2025-12-28T15:19:40.772+0100][info][gc,phases      ] GC(9)   Other: 0.17ms
+[2025-12-28T15:19:40.772+0100][info][gc,heap        ] GC(9) Eden regions: 921->0(920)
+[2025-12-28T15:19:40.772+0100][info][gc,heap        ] GC(9) Survivor regions: 0->1(116)
+[2025-12-28T15:19:40.772+0100][info][gc,heap        ] GC(9) Old regions: 8->8
+[2025-12-28T15:19:40.772+0100][info][gc,heap        ] GC(9) Humongous regions: 0->0
+[2025-12-28T15:19:40.772+0100][info][gc,metaspace   ] GC(9) Metaspace: 8163K(8384K)->8163K(8384K) NonClass: 7491K(7616K)->7491K(7616K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:40.772+0100][info][gc             ] GC(9) Pause Young (Normal) (G1 Evacuation Pause) 3694M->10M(6144M) 2.513ms
+[2025-12-28T15:19:40.772+0100][info][gc,cpu         ] GC(9) User=0.01s Sys=0.00s Real=0.01s
+[2025-12-28T15:19:40.896+0100][info][gc,start       ] GC(10) Pause Full (System.gc())
+[2025-12-28T15:19:40.896+0100][info][gc,task        ] GC(10) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:40.897+0100][info][gc,phases,start] GC(10) Phase 1: Mark live objects
+[2025-12-28T15:19:40.901+0100][info][gc,phases      ] GC(10) Phase 1: Mark live objects 4.013ms
+[2025-12-28T15:19:40.901+0100][info][gc,phases,start] GC(10) Phase 2: Prepare compaction
+[2025-12-28T15:19:40.902+0100][info][gc,phases      ] GC(10) Phase 2: Prepare compaction 0.861ms
+[2025-12-28T15:19:40.902+0100][info][gc,phases,start] GC(10) Phase 3: Adjust pointers
+[2025-12-28T15:19:40.904+0100][info][gc,phases      ] GC(10) Phase 3: Adjust pointers 2.331ms
+[2025-12-28T15:19:40.904+0100][info][gc,phases,start] GC(10) Phase 4: Compact heap
+[2025-12-28T15:19:40.905+0100][info][gc,phases      ] GC(10) Phase 4: Compact heap 0.932ms
+[2025-12-28T15:19:40.905+0100][info][gc,phases,start] GC(10) Phase 5: Reset Metadata
+[2025-12-28T15:19:40.905+0100][info][gc,phases      ] GC(10) Phase 5: Reset Metadata 0.521ms
+[2025-12-28T15:19:40.909+0100][info][gc,heap        ] GC(10) Eden regions: 19->0(921)
+[2025-12-28T15:19:40.909+0100][info][gc,heap        ] GC(10) Survivor regions: 1->0(116)
+[2025-12-28T15:19:40.909+0100][info][gc,heap        ] GC(10) Old regions: 8->8
+[2025-12-28T15:19:40.909+0100][info][gc,heap        ] GC(10) Humongous regions: 0->0
+[2025-12-28T15:19:40.909+0100][info][gc,metaspace   ] GC(10) Metaspace: 8172K(8384K)->8172K(8384K) NonClass: 7499K(7616K)->7499K(7616K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:40.909+0100][info][gc             ] GC(10) Pause Full (System.gc()) 86M->10M(6144M) 12.733ms
+[2025-12-28T15:19:40.909+0100][info][gc,cpu         ] GC(10) User=0.04s Sys=0.01s Real=0.01s
+[2025-12-28T15:19:40.909+0100][info][gc,start       ] GC(11) Pause Full (System.gc())
+[2025-12-28T15:19:40.909+0100][info][gc,task        ] GC(11) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:40.910+0100][info][gc,phases,start] GC(11) Phase 1: Mark live objects
+[2025-12-28T15:19:40.913+0100][info][gc,phases      ] GC(11) Phase 1: Mark live objects 3.724ms
+[2025-12-28T15:19:40.913+0100][info][gc,phases,start] GC(11) Phase 2: Prepare compaction
+[2025-12-28T15:19:40.914+0100][info][gc,phases      ] GC(11) Phase 2: Prepare compaction 0.758ms
+[2025-12-28T15:19:40.914+0100][info][gc,phases,start] GC(11) Phase 3: Adjust pointers
+[2025-12-28T15:19:40.916+0100][info][gc,phases      ] GC(11) Phase 3: Adjust pointers 2.091ms
+[2025-12-28T15:19:40.916+0100][info][gc,phases,start] GC(11) Phase 4: Compact heap
+[2025-12-28T15:19:40.917+0100][info][gc,phases      ] GC(11) Phase 4: Compact heap 0.616ms
+[2025-12-28T15:19:40.917+0100][info][gc,phases,start] GC(11) Phase 5: Reset Metadata
+[2025-12-28T15:19:40.917+0100][info][gc,phases      ] GC(11) Phase 5: Reset Metadata 0.453ms
+[2025-12-28T15:19:40.921+0100][info][gc,heap        ] GC(11) Eden regions: 1->0(921)
+[2025-12-28T15:19:40.921+0100][info][gc,heap        ] GC(11) Survivor regions: 0->0(116)
+[2025-12-28T15:19:40.921+0100][info][gc,heap        ] GC(11) Old regions: 8->8
+[2025-12-28T15:19:40.921+0100][info][gc,heap        ] GC(11) Humongous regions: 0->0
+[2025-12-28T15:19:40.921+0100][info][gc,metaspace   ] GC(11) Metaspace: 8173K(8384K)->8173K(8384K) NonClass: 7501K(7616K)->7501K(7616K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:40.921+0100][info][gc             ] GC(11) Pause Full (System.gc()) 12M->10M(6144M) 11.234ms
+[2025-12-28T15:19:40.921+0100][info][gc,cpu         ] GC(11) User=0.04s Sys=0.00s Real=0.02s
+[2025-12-28T15:19:44.643+0100][info][gc,start       ] GC(12) Pause Young (Normal) (G1 Evacuation Pause)
+[2025-12-28T15:19:44.644+0100][info][gc,task        ] GC(12) Using 8 workers of 8 for evacuation
+[2025-12-28T15:19:44.645+0100][info][gc,phases      ] GC(12)   Pre Evacuate Collection Set: 0.23ms
+[2025-12-28T15:19:44.645+0100][info][gc,phases      ] GC(12)   Merge Heap Roots: 0.16ms
+[2025-12-28T15:19:44.645+0100][info][gc,phases      ] GC(12)   Evacuate Collection Set: 0.52ms
+[2025-12-28T15:19:44.645+0100][info][gc,phases      ] GC(12)   Post Evacuate Collection Set: 0.74ms
+[2025-12-28T15:19:44.645+0100][info][gc,phases      ] GC(12)   Other: 0.09ms
+[2025-12-28T15:19:44.645+0100][info][gc,heap        ] GC(12) Eden regions: 921->0(920)
+[2025-12-28T15:19:44.645+0100][info][gc,heap        ] GC(12) Survivor regions: 0->1(116)
+[2025-12-28T15:19:44.645+0100][info][gc,heap        ] GC(12) Old regions: 8->8
+[2025-12-28T15:19:44.645+0100][info][gc,heap        ] GC(12) Humongous regions: 0->0
+[2025-12-28T15:19:44.645+0100][info][gc,metaspace   ] GC(12) Metaspace: 8236K(8448K)->8236K(8448K) NonClass: 7564K(7680K)->7564K(7680K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:44.645+0100][info][gc             ] GC(12) Pause Young (Normal) (G1 Evacuation Pause) 3694M->10M(6144M) 1.975ms
+[2025-12-28T15:19:44.645+0100][info][gc,cpu         ] GC(12) User=0.00s Sys=0.00s Real=0.00s
+[2025-12-28T15:19:46.429+0100][info][gc,start       ] GC(13) Pause Full (System.gc())
+[2025-12-28T15:19:46.429+0100][info][gc,task        ] GC(13) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:46.429+0100][info][gc,phases,start] GC(13) Phase 1: Mark live objects
+[2025-12-28T15:19:46.433+0100][info][gc,phases      ] GC(13) Phase 1: Mark live objects 3.637ms
+[2025-12-28T15:19:46.433+0100][info][gc,phases,start] GC(13) Phase 2: Prepare compaction
+[2025-12-28T15:19:46.434+0100][info][gc,phases      ] GC(13) Phase 2: Prepare compaction 1.009ms
+[2025-12-28T15:19:46.434+0100][info][gc,phases,start] GC(13) Phase 3: Adjust pointers
+[2025-12-28T15:19:46.437+0100][info][gc,phases      ] GC(13) Phase 3: Adjust pointers 2.735ms
+[2025-12-28T15:19:46.437+0100][info][gc,phases,start] GC(13) Phase 4: Compact heap
+[2025-12-28T15:19:46.438+0100][info][gc,phases      ] GC(13) Phase 4: Compact heap 1.006ms
+[2025-12-28T15:19:46.438+0100][info][gc,phases,start] GC(13) Phase 5: Reset Metadata
+[2025-12-28T15:19:46.438+0100][info][gc,phases      ] GC(13) Phase 5: Reset Metadata 0.491ms
+[2025-12-28T15:19:46.442+0100][info][gc,heap        ] GC(13) Eden regions: 220->0(921)
+[2025-12-28T15:19:46.442+0100][info][gc,heap        ] GC(13) Survivor regions: 1->0(116)
+[2025-12-28T15:19:46.442+0100][info][gc,heap        ] GC(13) Old regions: 8->9
+[2025-12-28T15:19:46.442+0100][info][gc,heap        ] GC(13) Humongous regions: 0->0
+[2025-12-28T15:19:46.442+0100][info][gc,metaspace   ] GC(13) Metaspace: 8246K(8448K)->8246K(8448K) NonClass: 7574K(7680K)->7574K(7680K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:46.442+0100][info][gc             ] GC(13) Pause Full (System.gc()) 890M->10M(6144M) 12.955ms
+[2025-12-28T15:19:46.442+0100][info][gc,cpu         ] GC(13) User=0.04s Sys=0.01s Real=0.02s
+[2025-12-28T15:19:46.442+0100][info][gc,start       ] GC(14) Pause Full (System.gc())
+[2025-12-28T15:19:46.442+0100][info][gc,task        ] GC(14) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:46.443+0100][info][gc,phases,start] GC(14) Phase 1: Mark live objects
+[2025-12-28T15:19:46.446+0100][info][gc,phases      ] GC(14) Phase 1: Mark live objects 3.852ms
+[2025-12-28T15:19:46.446+0100][info][gc,phases,start] GC(14) Phase 2: Prepare compaction
+[2025-12-28T15:19:46.447+0100][info][gc,phases      ] GC(14) Phase 2: Prepare compaction 0.872ms
+[2025-12-28T15:19:46.447+0100][info][gc,phases,start] GC(14) Phase 3: Adjust pointers
+[2025-12-28T15:19:46.449+0100][info][gc,phases      ] GC(14) Phase 3: Adjust pointers 2.133ms
+[2025-12-28T15:19:46.449+0100][info][gc,phases,start] GC(14) Phase 4: Compact heap
+[2025-12-28T15:19:46.450+0100][info][gc,phases      ] GC(14) Phase 4: Compact heap 0.655ms
+[2025-12-28T15:19:46.450+0100][info][gc,phases,start] GC(14) Phase 5: Reset Metadata
+[2025-12-28T15:19:46.451+0100][info][gc,phases      ] GC(14) Phase 5: Reset Metadata 0.468ms
+[2025-12-28T15:19:46.454+0100][info][gc,heap        ] GC(14) Eden regions: 1->0(921)
+[2025-12-28T15:19:46.454+0100][info][gc,heap        ] GC(14) Survivor regions: 0->0(116)
+[2025-12-28T15:19:46.454+0100][info][gc,heap        ] GC(14) Old regions: 9->9
+[2025-12-28T15:19:46.454+0100][info][gc,heap        ] GC(14) Humongous regions: 0->0
+[2025-12-28T15:19:46.454+0100][info][gc,metaspace   ] GC(14) Metaspace: 8246K(8448K)->8246K(8448K) NonClass: 7574K(7680K)->7574K(7680K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:46.454+0100][info][gc             ] GC(14) Pause Full (System.gc()) 12M->10M(6144M) 11.987ms
+[2025-12-28T15:19:46.454+0100][info][gc,cpu         ] GC(14) User=0.05s Sys=0.01s Real=0.01s
+[2025-12-28T15:19:50.352+0100][info][gc,start       ] GC(15) Pause Young (Normal) (G1 Evacuation Pause)
+[2025-12-28T15:19:50.353+0100][info][gc,task        ] GC(15) Using 8 workers of 8 for evacuation
+[2025-12-28T15:19:50.355+0100][info][gc,phases      ] GC(15)   Pre Evacuate Collection Set: 0.32ms
+[2025-12-28T15:19:50.355+0100][info][gc,phases      ] GC(15)   Merge Heap Roots: 0.17ms
+[2025-12-28T15:19:50.355+0100][info][gc,phases      ] GC(15)   Evacuate Collection Set: 0.58ms
+[2025-12-28T15:19:50.355+0100][info][gc,phases      ] GC(15)   Post Evacuate Collection Set: 0.77ms
+[2025-12-28T15:19:50.355+0100][info][gc,phases      ] GC(15)   Other: 0.11ms
+[2025-12-28T15:19:50.355+0100][info][gc,heap        ] GC(15) Eden regions: 921->0(920)
+[2025-12-28T15:19:50.355+0100][info][gc,heap        ] GC(15) Survivor regions: 0->1(116)
+[2025-12-28T15:19:50.355+0100][info][gc,heap        ] GC(15) Old regions: 9->9
+[2025-12-28T15:19:50.355+0100][info][gc,heap        ] GC(15) Humongous regions: 0->0
+[2025-12-28T15:19:50.355+0100][info][gc,metaspace   ] GC(15) Metaspace: 8262K(8512K)->8262K(8512K) NonClass: 7590K(7744K)->7590K(7744K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:50.355+0100][info][gc             ] GC(15) Pause Young (Normal) (G1 Evacuation Pause) 3694M->11M(6144M) 3.055ms
+[2025-12-28T15:19:50.355+0100][info][gc,cpu         ] GC(15) User=0.00s Sys=0.01s Real=0.00s
+[2025-12-28T15:19:51.474+0100][info][gc,start       ] GC(16) Pause Full (System.gc())
+[2025-12-28T15:19:51.474+0100][info][gc,task        ] GC(16) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:51.475+0100][info][gc,phases,start] GC(16) Phase 1: Mark live objects
+[2025-12-28T15:19:51.479+0100][info][gc,phases      ] GC(16) Phase 1: Mark live objects 4.118ms
+[2025-12-28T15:19:51.479+0100][info][gc,phases,start] GC(16) Phase 2: Prepare compaction
+[2025-12-28T15:19:51.480+0100][info][gc,phases      ] GC(16) Phase 2: Prepare compaction 0.887ms
+[2025-12-28T15:19:51.480+0100][info][gc,phases,start] GC(16) Phase 3: Adjust pointers
+[2025-12-28T15:19:51.483+0100][info][gc,phases      ] GC(16) Phase 3: Adjust pointers 2.827ms
+[2025-12-28T15:19:51.483+0100][info][gc,phases,start] GC(16) Phase 4: Compact heap
+[2025-12-28T15:19:51.484+0100][info][gc,phases      ] GC(16) Phase 4: Compact heap 0.846ms
+[2025-12-28T15:19:51.484+0100][info][gc,phases,start] GC(16) Phase 5: Reset Metadata
+[2025-12-28T15:19:51.484+0100][info][gc,phases      ] GC(16) Phase 5: Reset Metadata 0.580ms
+[2025-12-28T15:19:51.488+0100][info][gc,heap        ] GC(16) Eden regions: 125->0(921)
+[2025-12-28T15:19:51.488+0100][info][gc,heap        ] GC(16) Survivor regions: 1->0(116)
+[2025-12-28T15:19:51.488+0100][info][gc,heap        ] GC(16) Old regions: 9->9
+[2025-12-28T15:19:51.488+0100][info][gc,heap        ] GC(16) Humongous regions: 0->0
+[2025-12-28T15:19:51.488+0100][info][gc,metaspace   ] GC(16) Metaspace: 8263K(8512K)->8263K(8512K) NonClass: 7591K(7744K)->7591K(7744K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:51.488+0100][info][gc             ] GC(16) Pause Full (System.gc()) 509M->10M(6144M) 13.598ms
+[2025-12-28T15:19:51.488+0100][info][gc,cpu         ] GC(16) User=0.04s Sys=0.01s Real=0.01s
+[2025-12-28T15:19:51.488+0100][info][gc,start       ] GC(17) Pause Full (System.gc())
+[2025-12-28T15:19:51.488+0100][info][gc,task        ] GC(17) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:51.489+0100][info][gc,phases,start] GC(17) Phase 1: Mark live objects
+[2025-12-28T15:19:51.492+0100][info][gc,phases      ] GC(17) Phase 1: Mark live objects 3.375ms
+[2025-12-28T15:19:51.492+0100][info][gc,phases,start] GC(17) Phase 2: Prepare compaction
+[2025-12-28T15:19:51.493+0100][info][gc,phases      ] GC(17) Phase 2: Prepare compaction 0.775ms
+[2025-12-28T15:19:51.493+0100][info][gc,phases,start] GC(17) Phase 3: Adjust pointers
+[2025-12-28T15:19:51.495+0100][info][gc,phases      ] GC(17) Phase 3: Adjust pointers 2.183ms
+[2025-12-28T15:19:51.495+0100][info][gc,phases,start] GC(17) Phase 4: Compact heap
+[2025-12-28T15:19:51.496+0100][info][gc,phases      ] GC(17) Phase 4: Compact heap 0.752ms
+[2025-12-28T15:19:51.496+0100][info][gc,phases,start] GC(17) Phase 5: Reset Metadata
+[2025-12-28T15:19:51.496+0100][info][gc,phases      ] GC(17) Phase 5: Reset Metadata 0.596ms
+[2025-12-28T15:19:51.500+0100][info][gc,heap        ] GC(17) Eden regions: 1->0(921)
+[2025-12-28T15:19:51.500+0100][info][gc,heap        ] GC(17) Survivor regions: 0->0(116)
+[2025-12-28T15:19:51.500+0100][info][gc,heap        ] GC(17) Old regions: 9->9
+[2025-12-28T15:19:51.500+0100][info][gc,heap        ] GC(17) Humongous regions: 0->0
+[2025-12-28T15:19:51.500+0100][info][gc,metaspace   ] GC(17) Metaspace: 8263K(8512K)->8263K(8512K) NonClass: 7591K(7744K)->7591K(7744K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:51.500+0100][info][gc             ] GC(17) Pause Full (System.gc()) 11M->10M(6144M) 11.671ms
+[2025-12-28T15:19:51.500+0100][info][gc,cpu         ] GC(17) User=0.04s Sys=0.00s Real=0.02s
+[2025-12-28T15:19:55.426+0100][info][gc,start       ] GC(18) Pause Young (Normal) (G1 Evacuation Pause)
+[2025-12-28T15:19:55.426+0100][info][gc,task        ] GC(18) Using 8 workers of 8 for evacuation
+[2025-12-28T15:19:55.427+0100][info][gc,phases      ] GC(18)   Pre Evacuate Collection Set: 0.21ms
+[2025-12-28T15:19:55.427+0100][info][gc,phases      ] GC(18)   Merge Heap Roots: 0.15ms
+[2025-12-28T15:19:55.427+0100][info][gc,phases      ] GC(18)   Evacuate Collection Set: 0.44ms
+[2025-12-28T15:19:55.427+0100][info][gc,phases      ] GC(18)   Post Evacuate Collection Set: 0.75ms
+[2025-12-28T15:19:55.427+0100][info][gc,phases      ] GC(18)   Other: 0.09ms
+[2025-12-28T15:19:55.427+0100][info][gc,heap        ] GC(18) Eden regions: 921->0(920)
+[2025-12-28T15:19:55.427+0100][info][gc,heap        ] GC(18) Survivor regions: 0->1(116)
+[2025-12-28T15:19:55.427+0100][info][gc,heap        ] GC(18) Old regions: 9->9
+[2025-12-28T15:19:55.427+0100][info][gc,heap        ] GC(18) Humongous regions: 0->0
+[2025-12-28T15:19:55.427+0100][info][gc,metaspace   ] GC(18) Metaspace: 8272K(8512K)->8272K(8512K) NonClass: 7599K(7744K)->7599K(7744K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:55.427+0100][info][gc             ] GC(18) Pause Young (Normal) (G1 Evacuation Pause) 3694M->11M(6144M) 1.836ms
+[2025-12-28T15:19:55.427+0100][info][gc,cpu         ] GC(18) User=0.01s Sys=0.00s Real=0.00s
+[2025-12-28T15:19:56.490+0100][info][gc,start       ] GC(19) Pause Full (System.gc())
+[2025-12-28T15:19:56.491+0100][info][gc,task        ] GC(19) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:56.492+0100][info][gc,phases,start] GC(19) Phase 1: Mark live objects
+[2025-12-28T15:19:56.496+0100][info][gc,phases      ] GC(19) Phase 1: Mark live objects 4.067ms
+[2025-12-28T15:19:56.496+0100][info][gc,phases,start] GC(19) Phase 2: Prepare compaction
+[2025-12-28T15:19:56.497+0100][info][gc,phases      ] GC(19) Phase 2: Prepare compaction 1.016ms
+[2025-12-28T15:19:56.497+0100][info][gc,phases,start] GC(19) Phase 3: Adjust pointers
+[2025-12-28T15:19:56.500+0100][info][gc,phases      ] GC(19) Phase 3: Adjust pointers 2.837ms
+[2025-12-28T15:19:56.500+0100][info][gc,phases,start] GC(19) Phase 4: Compact heap
+[2025-12-28T15:19:56.501+0100][info][gc,phases      ] GC(19) Phase 4: Compact heap 0.874ms
+[2025-12-28T15:19:56.501+0100][info][gc,phases,start] GC(19) Phase 5: Reset Metadata
+[2025-12-28T15:19:56.501+0100][info][gc,phases      ] GC(19) Phase 5: Reset Metadata 0.587ms
+[2025-12-28T15:19:56.506+0100][info][gc,heap        ] GC(19) Eden regions: 148->0(921)
+[2025-12-28T15:19:56.506+0100][info][gc,heap        ] GC(19) Survivor regions: 1->0(116)
+[2025-12-28T15:19:56.506+0100][info][gc,heap        ] GC(19) Old regions: 9->9
+[2025-12-28T15:19:56.506+0100][info][gc,heap        ] GC(19) Humongous regions: 0->0
+[2025-12-28T15:19:56.506+0100][info][gc,metaspace   ] GC(19) Metaspace: 8286K(8512K)->8286K(8512K) NonClass: 7613K(7744K)->7613K(7744K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:56.506+0100][info][gc             ] GC(19) Pause Full (System.gc()) 599M->10M(6144M) 15.775ms
+[2025-12-28T15:19:56.506+0100][info][gc,cpu         ] GC(19) User=0.05s Sys=0.00s Real=0.01s
+[2025-12-28T15:19:56.507+0100][info][gc,start       ] GC(20) Pause Full (System.gc())
+[2025-12-28T15:19:56.507+0100][info][gc,task        ] GC(20) Using 8 workers of 8 for full compaction
+[2025-12-28T15:19:56.507+0100][info][gc,phases,start] GC(20) Phase 1: Mark live objects
+[2025-12-28T15:19:56.511+0100][info][gc,phases      ] GC(20) Phase 1: Mark live objects 4.227ms
+[2025-12-28T15:19:56.511+0100][info][gc,phases,start] GC(20) Phase 2: Prepare compaction
+[2025-12-28T15:19:56.512+0100][info][gc,phases      ] GC(20) Phase 2: Prepare compaction 1.053ms
+[2025-12-28T15:19:56.512+0100][info][gc,phases,start] GC(20) Phase 3: Adjust pointers
+[2025-12-28T15:19:56.515+0100][info][gc,phases      ] GC(20) Phase 3: Adjust pointers 2.730ms
+[2025-12-28T15:19:56.515+0100][info][gc,phases,start] GC(20) Phase 4: Compact heap
+[2025-12-28T15:19:56.516+0100][info][gc,phases      ] GC(20) Phase 4: Compact heap 0.631ms
+[2025-12-28T15:19:56.516+0100][info][gc,phases,start] GC(20) Phase 5: Reset Metadata
+[2025-12-28T15:19:56.516+0100][info][gc,phases      ] GC(20) Phase 5: Reset Metadata 0.497ms
+[2025-12-28T15:19:56.521+0100][info][gc,heap        ] GC(20) Eden regions: 1->0(921)
+[2025-12-28T15:19:56.521+0100][info][gc,heap        ] GC(20) Survivor regions: 0->0(116)
+[2025-12-28T15:19:56.521+0100][info][gc,heap        ] GC(20) Old regions: 9->9
+[2025-12-28T15:19:56.521+0100][info][gc,heap        ] GC(20) Humongous regions: 0->0
+[2025-12-28T15:19:56.521+0100][info][gc,metaspace   ] GC(20) Metaspace: 8286K(8512K)->8286K(8512K) NonClass: 7614K(7744K)->7614K(7744K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:19:56.521+0100][info][gc             ] GC(20) Pause Full (System.gc()) 11M->10M(6144M) 14.333ms
+[2025-12-28T15:19:56.521+0100][info][gc,cpu         ] GC(20) User=0.04s Sys=0.01s Real=0.02s
+[2025-12-28T15:20:01.271+0100][info][gc,start       ] GC(21) Pause Young (Normal) (G1 Evacuation Pause)
+[2025-12-28T15:20:01.271+0100][info][gc,task        ] GC(21) Using 8 workers of 8 for evacuation
+[2025-12-28T15:20:01.273+0100][info][gc,phases      ] GC(21)   Pre Evacuate Collection Set: 0.40ms
+[2025-12-28T15:20:01.273+0100][info][gc,phases      ] GC(21)   Merge Heap Roots: 0.18ms
+[2025-12-28T15:20:01.273+0100][info][gc,phases      ] GC(21)   Evacuate Collection Set: 0.81ms
+[2025-12-28T15:20:01.273+0100][info][gc,phases      ] GC(21)   Post Evacuate Collection Set: 0.89ms
+[2025-12-28T15:20:01.273+0100][info][gc,phases      ] GC(21)   Other: 0.10ms
+[2025-12-28T15:20:01.273+0100][info][gc,heap        ] GC(21) Eden regions: 921->0(920)
+[2025-12-28T15:20:01.273+0100][info][gc,heap        ] GC(21) Survivor regions: 0->1(116)
+[2025-12-28T15:20:01.273+0100][info][gc,heap        ] GC(21) Old regions: 9->9
+[2025-12-28T15:20:01.273+0100][info][gc,heap        ] GC(21) Humongous regions: 0->0
+[2025-12-28T15:20:01.273+0100][info][gc,metaspace   ] GC(21) Metaspace: 8291K(8512K)->8291K(8512K) NonClass: 7619K(7744K)->7619K(7744K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:01.273+0100][info][gc             ] GC(21) Pause Young (Normal) (G1 Evacuation Pause) 3694M->11M(6144M) 2.598ms
+[2025-12-28T15:20:01.273+0100][info][gc,cpu         ] GC(21) User=0.00s Sys=0.00s Real=0.00s
+[2025-12-28T15:20:03.033+0100][info][gc,start       ] GC(22) Pause Full (System.gc())
+[2025-12-28T15:20:03.033+0100][info][gc,task        ] GC(22) Using 8 workers of 8 for full compaction
+[2025-12-28T15:20:03.034+0100][info][gc,phases,start] GC(22) Phase 1: Mark live objects
+[2025-12-28T15:20:03.039+0100][info][gc,phases      ] GC(22) Phase 1: Mark live objects 4.838ms
+[2025-12-28T15:20:03.039+0100][info][gc,phases,start] GC(22) Phase 2: Prepare compaction
+[2025-12-28T15:20:03.041+0100][info][gc,phases      ] GC(22) Phase 2: Prepare compaction 1.848ms
+[2025-12-28T15:20:03.041+0100][info][gc,phases,start] GC(22) Phase 3: Adjust pointers
+[2025-12-28T15:20:03.044+0100][info][gc,phases      ] GC(22) Phase 3: Adjust pointers 3.298ms
+[2025-12-28T15:20:03.044+0100][info][gc,phases,start] GC(22) Phase 4: Compact heap
+[2025-12-28T15:20:03.045+0100][info][gc,phases      ] GC(22) Phase 4: Compact heap 0.842ms
+[2025-12-28T15:20:03.045+0100][info][gc,phases,start] GC(22) Phase 5: Reset Metadata
+[2025-12-28T15:20:03.045+0100][info][gc,phases      ] GC(22) Phase 5: Reset Metadata 0.588ms
+[2025-12-28T15:20:03.050+0100][info][gc,heap        ] GC(22) Eden regions: 117->0(921)
+[2025-12-28T15:20:03.051+0100][info][gc,heap        ] GC(22) Survivor regions: 1->0(116)
+[2025-12-28T15:20:03.051+0100][info][gc,heap        ] GC(22) Old regions: 9->9
+[2025-12-28T15:20:03.051+0100][info][gc,heap        ] GC(22) Humongous regions: 0->0
+[2025-12-28T15:20:03.051+0100][info][gc,metaspace   ] GC(22) Metaspace: 8292K(8512K)->8292K(8512K) NonClass: 7619K(7744K)->7619K(7744K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:03.051+0100][info][gc             ] GC(22) Pause Full (System.gc()) 479M->10M(6144M) 17.610ms
+[2025-12-28T15:20:03.051+0100][info][gc,cpu         ] GC(22) User=0.04s Sys=0.01s Real=0.02s
+[2025-12-28T15:20:03.051+0100][info][gc,start       ] GC(23) Pause Full (System.gc())
+[2025-12-28T15:20:03.051+0100][info][gc,task        ] GC(23) Using 8 workers of 8 for full compaction
+[2025-12-28T15:20:03.052+0100][info][gc,phases,start] GC(23) Phase 1: Mark live objects
+[2025-12-28T15:20:03.056+0100][info][gc,phases      ] GC(23) Phase 1: Mark live objects 3.873ms
+[2025-12-28T15:20:03.056+0100][info][gc,phases,start] GC(23) Phase 2: Prepare compaction
+[2025-12-28T15:20:03.057+0100][info][gc,phases      ] GC(23) Phase 2: Prepare compaction 0.938ms
+[2025-12-28T15:20:03.057+0100][info][gc,phases,start] GC(23) Phase 3: Adjust pointers
+[2025-12-28T15:20:03.059+0100][info][gc,phases      ] GC(23) Phase 3: Adjust pointers 2.750ms
+[2025-12-28T15:20:03.059+0100][info][gc,phases,start] GC(23) Phase 4: Compact heap
+[2025-12-28T15:20:03.060+0100][info][gc,phases      ] GC(23) Phase 4: Compact heap 0.786ms
+[2025-12-28T15:20:03.060+0100][info][gc,phases,start] GC(23) Phase 5: Reset Metadata
+[2025-12-28T15:20:03.061+0100][info][gc,phases      ] GC(23) Phase 5: Reset Metadata 0.494ms
+[2025-12-28T15:20:03.065+0100][info][gc,heap        ] GC(23) Eden regions: 1->0(921)
+[2025-12-28T15:20:03.065+0100][info][gc,heap        ] GC(23) Survivor regions: 0->0(116)
+[2025-12-28T15:20:03.065+0100][info][gc,heap        ] GC(23) Old regions: 9->9
+[2025-12-28T15:20:03.065+0100][info][gc,heap        ] GC(23) Humongous regions: 0->0
+[2025-12-28T15:20:03.065+0100][info][gc,metaspace   ] GC(23) Metaspace: 8292K(8512K)->8292K(8512K) NonClass: 7619K(7744K)->7619K(7744K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:03.065+0100][info][gc             ] GC(23) Pause Full (System.gc()) 10M->10M(6144M) 13.971ms
+[2025-12-28T15:20:03.065+0100][info][gc,cpu         ] GC(23) User=0.05s Sys=0.00s Real=0.01s
+[2025-12-28T15:20:07.265+0100][info][gc,start       ] GC(24) Pause Young (Normal) (G1 Evacuation Pause)
+[2025-12-28T15:20:07.265+0100][info][gc,task        ] GC(24) Using 8 workers of 8 for evacuation
+[2025-12-28T15:20:07.267+0100][info][gc,phases      ] GC(24)   Pre Evacuate Collection Set: 0.23ms
+[2025-12-28T15:20:07.267+0100][info][gc,phases      ] GC(24)   Merge Heap Roots: 0.18ms
+[2025-12-28T15:20:07.267+0100][info][gc,phases      ] GC(24)   Evacuate Collection Set: 0.62ms
+[2025-12-28T15:20:07.267+0100][info][gc,phases      ] GC(24)   Post Evacuate Collection Set: 0.82ms
+[2025-12-28T15:20:07.267+0100][info][gc,phases      ] GC(24)   Other: 0.11ms
+[2025-12-28T15:20:07.267+0100][info][gc,heap        ] GC(24) Eden regions: 921->0(920)
+[2025-12-28T15:20:07.267+0100][info][gc,heap        ] GC(24) Survivor regions: 0->1(116)
+[2025-12-28T15:20:07.267+0100][info][gc,heap        ] GC(24) Old regions: 9->9
+[2025-12-28T15:20:07.267+0100][info][gc,heap        ] GC(24) Humongous regions: 0->0
+[2025-12-28T15:20:07.267+0100][info][gc,metaspace   ] GC(24) Metaspace: 8308K(8512K)->8308K(8512K) NonClass: 7636K(7744K)->7636K(7744K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:07.267+0100][info][gc             ] GC(24) Pause Young (Normal) (G1 Evacuation Pause) 3694M->11M(6144M) 2.183ms
+[2025-12-28T15:20:07.267+0100][info][gc,cpu         ] GC(24) User=0.01s Sys=0.00s Real=0.00s
+[2025-12-28T15:20:08.558+0100][info][gc,start       ] GC(25) Pause Full (System.gc())
+[2025-12-28T15:20:08.558+0100][info][gc,task        ] GC(25) Using 8 workers of 8 for full compaction
+[2025-12-28T15:20:08.558+0100][info][gc,phases,start] GC(25) Phase 1: Mark live objects
+[2025-12-28T15:20:08.566+0100][info][gc,phases      ] GC(25) Phase 1: Mark live objects 7.419ms
+[2025-12-28T15:20:08.566+0100][info][gc,phases,start] GC(25) Phase 2: Prepare compaction
+[2025-12-28T15:20:08.567+0100][info][gc,phases      ] GC(25) Phase 2: Prepare compaction 1.070ms
+[2025-12-28T15:20:08.567+0100][info][gc,phases,start] GC(25) Phase 3: Adjust pointers
+[2025-12-28T15:20:08.570+0100][info][gc,phases      ] GC(25) Phase 3: Adjust pointers 2.664ms
+[2025-12-28T15:20:08.570+0100][info][gc,phases,start] GC(25) Phase 4: Compact heap
+[2025-12-28T15:20:08.570+0100][info][gc,phases      ] GC(25) Phase 4: Compact heap 0.781ms
+[2025-12-28T15:20:08.570+0100][info][gc,phases,start] GC(25) Phase 5: Reset Metadata
+[2025-12-28T15:20:08.571+0100][info][gc,phases      ] GC(25) Phase 5: Reset Metadata 0.518ms
+[2025-12-28T15:20:08.577+0100][info][gc,heap        ] GC(25) Eden regions: 125->0(921)
+[2025-12-28T15:20:08.577+0100][info][gc,heap        ] GC(25) Survivor regions: 1->0(116)
+[2025-12-28T15:20:08.577+0100][info][gc,heap        ] GC(25) Old regions: 9->9
+[2025-12-28T15:20:08.577+0100][info][gc,heap        ] GC(25) Humongous regions: 0->0
+[2025-12-28T15:20:08.577+0100][info][gc,metaspace   ] GC(25) Metaspace: 8316K(8512K)->8316K(8512K) NonClass: 7644K(7744K)->7644K(7744K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:08.577+0100][info][gc             ] GC(25) Pause Full (System.gc()) 511M->10M(6144M) 18.702ms
+[2025-12-28T15:20:08.577+0100][info][gc,cpu         ] GC(25) User=0.04s Sys=0.02s Real=0.02s
+[2025-12-28T15:20:08.577+0100][info][gc,start       ] GC(26) Pause Full (System.gc())
+[2025-12-28T15:20:08.577+0100][info][gc,task        ] GC(26) Using 8 workers of 8 for full compaction
+[2025-12-28T15:20:08.577+0100][info][gc,phases,start] GC(26) Phase 1: Mark live objects
+[2025-12-28T15:20:08.581+0100][info][gc,phases      ] GC(26) Phase 1: Mark live objects 3.955ms
+[2025-12-28T15:20:08.581+0100][info][gc,phases,start] GC(26) Phase 2: Prepare compaction
+[2025-12-28T15:20:08.583+0100][info][gc,phases      ] GC(26) Phase 2: Prepare compaction 1.435ms
+[2025-12-28T15:20:08.583+0100][info][gc,phases,start] GC(26) Phase 3: Adjust pointers
+[2025-12-28T15:20:08.587+0100][info][gc,phases      ] GC(26) Phase 3: Adjust pointers 3.760ms
+[2025-12-28T15:20:08.587+0100][info][gc,phases,start] GC(26) Phase 4: Compact heap
+[2025-12-28T15:20:08.587+0100][info][gc,phases      ] GC(26) Phase 4: Compact heap 0.653ms
+[2025-12-28T15:20:08.587+0100][info][gc,phases,start] GC(26) Phase 5: Reset Metadata
+[2025-12-28T15:20:08.588+0100][info][gc,phases      ] GC(26) Phase 5: Reset Metadata 0.528ms
+[2025-12-28T15:20:08.593+0100][info][gc,heap        ] GC(26) Eden regions: 1->0(921)
+[2025-12-28T15:20:08.593+0100][info][gc,heap        ] GC(26) Survivor regions: 0->0(116)
+[2025-12-28T15:20:08.593+0100][info][gc,heap        ] GC(26) Old regions: 9->9
+[2025-12-28T15:20:08.593+0100][info][gc,heap        ] GC(26) Humongous regions: 0->0
+[2025-12-28T15:20:08.593+0100][info][gc,metaspace   ] GC(26) Metaspace: 8321K(8512K)->8321K(8512K) NonClass: 7649K(7744K)->7649K(7744K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:08.593+0100][info][gc             ] GC(26) Pause Full (System.gc()) 10M->10M(6144M) 15.733ms
+[2025-12-28T15:20:08.593+0100][info][gc,cpu         ] GC(26) User=0.05s Sys=0.01s Real=0.02s
+[2025-12-28T15:20:12.947+0100][info][gc,start       ] GC(27) Pause Young (Normal) (G1 Evacuation Pause)
+[2025-12-28T15:20:12.948+0100][info][gc,task        ] GC(27) Using 8 workers of 8 for evacuation
+[2025-12-28T15:20:12.950+0100][info][gc,phases      ] GC(27)   Pre Evacuate Collection Set: 0.23ms
+[2025-12-28T15:20:12.950+0100][info][gc,phases      ] GC(27)   Merge Heap Roots: 0.20ms
+[2025-12-28T15:20:12.950+0100][info][gc,phases      ] GC(27)   Evacuate Collection Set: 0.54ms
+[2025-12-28T15:20:12.950+0100][info][gc,phases      ] GC(27)   Post Evacuate Collection Set: 0.86ms
+[2025-12-28T15:20:12.950+0100][info][gc,phases      ] GC(27)   Other: 0.11ms
+[2025-12-28T15:20:12.950+0100][info][gc,heap        ] GC(27) Eden regions: 921->0(920)
+[2025-12-28T15:20:12.950+0100][info][gc,heap        ] GC(27) Survivor regions: 0->1(116)
+[2025-12-28T15:20:12.950+0100][info][gc,heap        ] GC(27) Old regions: 9->9
+[2025-12-28T15:20:12.950+0100][info][gc,heap        ] GC(27) Humongous regions: 0->0
+[2025-12-28T15:20:12.950+0100][info][gc,metaspace   ] GC(27) Metaspace: 8326K(8576K)->8326K(8576K) NonClass: 7653K(7808K)->7653K(7808K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:12.950+0100][info][gc             ] GC(27) Pause Young (Normal) (G1 Evacuation Pause) 3694M->10M(6144M) 3.058ms
+[2025-12-28T15:20:12.950+0100][info][gc,cpu         ] GC(27) User=0.01s Sys=0.01s Real=0.01s
+[2025-12-28T15:20:14.256+0100][info][gc,start       ] GC(28) Pause Full (System.gc())
+[2025-12-28T15:20:14.256+0100][info][gc,task        ] GC(28) Using 8 workers of 8 for full compaction
+[2025-12-28T15:20:14.256+0100][info][gc,phases,start] GC(28) Phase 1: Mark live objects
+[2025-12-28T15:20:14.260+0100][info][gc,phases      ] GC(28) Phase 1: Mark live objects 3.966ms
+[2025-12-28T15:20:14.260+0100][info][gc,phases,start] GC(28) Phase 2: Prepare compaction
+[2025-12-28T15:20:14.261+0100][info][gc,phases      ] GC(28) Phase 2: Prepare compaction 1.030ms
+[2025-12-28T15:20:14.261+0100][info][gc,phases,start] GC(28) Phase 3: Adjust pointers
+[2025-12-28T15:20:14.264+0100][info][gc,phases      ] GC(28) Phase 3: Adjust pointers 3.020ms
+[2025-12-28T15:20:14.264+0100][info][gc,phases,start] GC(28) Phase 4: Compact heap
+[2025-12-28T15:20:14.265+0100][info][gc,phases      ] GC(28) Phase 4: Compact heap 0.862ms
+[2025-12-28T15:20:14.265+0100][info][gc,phases,start] GC(28) Phase 5: Reset Metadata
+[2025-12-28T15:20:14.266+0100][info][gc,phases      ] GC(28) Phase 5: Reset Metadata 0.526ms
+[2025-12-28T15:20:14.270+0100][info][gc,heap        ] GC(28) Eden regions: 132->0(921)
+[2025-12-28T15:20:14.270+0100][info][gc,heap        ] GC(28) Survivor regions: 1->0(116)
+[2025-12-28T15:20:14.270+0100][info][gc,heap        ] GC(28) Old regions: 9->9
+[2025-12-28T15:20:14.270+0100][info][gc,heap        ] GC(28) Humongous regions: 0->0
+[2025-12-28T15:20:14.270+0100][info][gc,metaspace   ] GC(28) Metaspace: 8333K(8576K)->8333K(8576K) NonClass: 7661K(7808K)->7661K(7808K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:14.270+0100][info][gc             ] GC(28) Pause Full (System.gc()) 538M->10M(6144M) 14.289ms
+[2025-12-28T15:20:14.270+0100][info][gc,cpu         ] GC(28) User=0.04s Sys=0.00s Real=0.02s
+[2025-12-28T15:20:14.271+0100][info][gc,start       ] GC(29) Pause Full (System.gc())
+[2025-12-28T15:20:14.271+0100][info][gc,task        ] GC(29) Using 8 workers of 8 for full compaction
+[2025-12-28T15:20:14.271+0100][info][gc,phases,start] GC(29) Phase 1: Mark live objects
+[2025-12-28T15:20:14.274+0100][info][gc,phases      ] GC(29) Phase 1: Mark live objects 3.588ms
+[2025-12-28T15:20:14.274+0100][info][gc,phases,start] GC(29) Phase 2: Prepare compaction
+[2025-12-28T15:20:14.275+0100][info][gc,phases      ] GC(29) Phase 2: Prepare compaction 0.756ms
+[2025-12-28T15:20:14.275+0100][info][gc,phases,start] GC(29) Phase 3: Adjust pointers
+[2025-12-28T15:20:14.277+0100][info][gc,phases      ] GC(29) Phase 3: Adjust pointers 2.251ms
+[2025-12-28T15:20:14.277+0100][info][gc,phases,start] GC(29) Phase 4: Compact heap
+[2025-12-28T15:20:14.278+0100][info][gc,phases      ] GC(29) Phase 4: Compact heap 0.613ms
+[2025-12-28T15:20:14.278+0100][info][gc,phases,start] GC(29) Phase 5: Reset Metadata
+[2025-12-28T15:20:14.279+0100][info][gc,phases      ] GC(29) Phase 5: Reset Metadata 0.460ms
+[2025-12-28T15:20:14.283+0100][info][gc,heap        ] GC(29) Eden regions: 1->0(921)
+[2025-12-28T15:20:14.283+0100][info][gc,heap        ] GC(29) Survivor regions: 0->0(116)
+[2025-12-28T15:20:14.283+0100][info][gc,heap        ] GC(29) Old regions: 9->9
+[2025-12-28T15:20:14.283+0100][info][gc,heap        ] GC(29) Humongous regions: 0->0
+[2025-12-28T15:20:14.283+0100][info][gc,metaspace   ] GC(29) Metaspace: 8333K(8576K)->8333K(8576K) NonClass: 7661K(7808K)->7661K(7808K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:14.283+0100][info][gc             ] GC(29) Pause Full (System.gc()) 10M->10M(6144M) 12.427ms
+[2025-12-28T15:20:14.283+0100][info][gc,cpu         ] GC(29) User=0.04s Sys=0.01s Real=0.01s
+[2025-12-28T15:20:18.394+0100][info][gc,start       ] GC(30) Pause Young (Normal) (G1 Evacuation Pause)
+[2025-12-28T15:20:18.394+0100][info][gc,task        ] GC(30) Using 8 workers of 8 for evacuation
+[2025-12-28T15:20:18.396+0100][info][gc,phases      ] GC(30)   Pre Evacuate Collection Set: 0.28ms
+[2025-12-28T15:20:18.396+0100][info][gc,phases      ] GC(30)   Merge Heap Roots: 0.17ms
+[2025-12-28T15:20:18.396+0100][info][gc,phases      ] GC(30)   Evacuate Collection Set: 0.51ms
+[2025-12-28T15:20:18.396+0100][info][gc,phases      ] GC(30)   Post Evacuate Collection Set: 0.82ms
+[2025-12-28T15:20:18.396+0100][info][gc,phases      ] GC(30)   Other: 0.13ms
+[2025-12-28T15:20:18.396+0100][info][gc,heap        ] GC(30) Eden regions: 921->0(920)
+[2025-12-28T15:20:18.396+0100][info][gc,heap        ] GC(30) Survivor regions: 0->1(116)
+[2025-12-28T15:20:18.396+0100][info][gc,heap        ] GC(30) Old regions: 9->9
+[2025-12-28T15:20:18.396+0100][info][gc,heap        ] GC(30) Humongous regions: 0->0
+[2025-12-28T15:20:18.396+0100][info][gc,metaspace   ] GC(30) Metaspace: 8334K(8576K)->8334K(8576K) NonClass: 7662K(7808K)->7662K(7808K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:18.396+0100][info][gc             ] GC(30) Pause Young (Normal) (G1 Evacuation Pause) 3694M->10M(6144M) 2.175ms
+[2025-12-28T15:20:18.396+0100][info][gc,cpu         ] GC(30) User=0.01s Sys=0.00s Real=0.00s
+[2025-12-28T15:20:20.498+0100][info][gc,start       ] GC(31) Pause Full (System.gc())
+[2025-12-28T15:20:20.498+0100][info][gc,task        ] GC(31) Using 8 workers of 8 for full compaction
+[2025-12-28T15:20:20.498+0100][info][gc,phases,start] GC(31) Phase 1: Mark live objects
+[2025-12-28T15:20:20.503+0100][info][gc,phases      ] GC(31) Phase 1: Mark live objects 5.031ms
+[2025-12-28T15:20:20.503+0100][info][gc,phases,start] GC(31) Phase 2: Prepare compaction
+[2025-12-28T15:20:20.505+0100][info][gc,phases      ] GC(31) Phase 2: Prepare compaction 1.186ms
+[2025-12-28T15:20:20.505+0100][info][gc,phases,start] GC(31) Phase 3: Adjust pointers
+[2025-12-28T15:20:20.508+0100][info][gc,phases      ] GC(31) Phase 3: Adjust pointers 3.526ms
+[2025-12-28T15:20:20.508+0100][info][gc,phases,start] GC(31) Phase 4: Compact heap
+[2025-12-28T15:20:20.510+0100][info][gc,phases      ] GC(31) Phase 4: Compact heap 1.587ms
+[2025-12-28T15:20:20.510+0100][info][gc,phases,start] GC(31) Phase 5: Reset Metadata
+[2025-12-28T15:20:20.511+0100][info][gc,phases      ] GC(31) Phase 5: Reset Metadata 0.701ms
+[2025-12-28T15:20:20.516+0100][info][gc,heap        ] GC(31) Eden regions: 265->0(921)
+[2025-12-28T15:20:20.516+0100][info][gc,heap        ] GC(31) Survivor regions: 1->0(116)
+[2025-12-28T15:20:20.516+0100][info][gc,heap        ] GC(31) Old regions: 9->9
+[2025-12-28T15:20:20.516+0100][info][gc,heap        ] GC(31) Humongous regions: 0->0
+[2025-12-28T15:20:20.516+0100][info][gc,metaspace   ] GC(31) Metaspace: 8387K(8576K)->8387K(8576K) NonClass: 7715K(7808K)->7715K(7808K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:20.516+0100][info][gc             ] GC(31) Pause Full (System.gc()) 1068M->10M(6144M) 18.322ms
+[2025-12-28T15:20:20.516+0100][info][gc,cpu         ] GC(31) User=0.05s Sys=0.01s Real=0.02s
+[2025-12-28T15:20:20.517+0100][info][gc,start       ] GC(32) Pause Full (System.gc())
+[2025-12-28T15:20:20.517+0100][info][gc,task        ] GC(32) Using 8 workers of 8 for full compaction
+[2025-12-28T15:20:20.517+0100][info][gc,phases,start] GC(32) Phase 1: Mark live objects
+[2025-12-28T15:20:20.522+0100][info][gc,phases      ] GC(32) Phase 1: Mark live objects 4.673ms
+[2025-12-28T15:20:20.522+0100][info][gc,phases,start] GC(32) Phase 2: Prepare compaction
+[2025-12-28T15:20:20.523+0100][info][gc,phases      ] GC(32) Phase 2: Prepare compaction 0.980ms
+[2025-12-28T15:20:20.523+0100][info][gc,phases,start] GC(32) Phase 3: Adjust pointers
+[2025-12-28T15:20:20.526+0100][info][gc,phases      ] GC(32) Phase 3: Adjust pointers 2.660ms
+[2025-12-28T15:20:20.526+0100][info][gc,phases,start] GC(32) Phase 4: Compact heap
+[2025-12-28T15:20:20.526+0100][info][gc,phases      ] GC(32) Phase 4: Compact heap 0.717ms
+[2025-12-28T15:20:20.526+0100][info][gc,phases,start] GC(32) Phase 5: Reset Metadata
+[2025-12-28T15:20:20.527+0100][info][gc,phases      ] GC(32) Phase 5: Reset Metadata 0.914ms
+[2025-12-28T15:20:20.534+0100][info][gc,heap        ] GC(32) Eden regions: 1->0(921)
+[2025-12-28T15:20:20.534+0100][info][gc,heap        ] GC(32) Survivor regions: 0->0(116)
+[2025-12-28T15:20:20.534+0100][info][gc,heap        ] GC(32) Old regions: 9->9
+[2025-12-28T15:20:20.534+0100][info][gc,heap        ] GC(32) Humongous regions: 0->0
+[2025-12-28T15:20:20.534+0100][info][gc,metaspace   ] GC(32) Metaspace: 8387K(8576K)->8387K(8576K) NonClass: 7715K(7808K)->7715K(7808K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:20.534+0100][info][gc             ] GC(32) Pause Full (System.gc()) 10M->10M(6144M) 17.624ms
+[2025-12-28T15:20:20.534+0100][info][gc,cpu         ] GC(32) User=0.05s Sys=0.01s Real=0.02s
+[2025-12-28T15:20:24.861+0100][info][gc,start       ] GC(33) Pause Young (Normal) (G1 Evacuation Pause)
+[2025-12-28T15:20:24.861+0100][info][gc,task        ] GC(33) Using 8 workers of 8 for evacuation
+[2025-12-28T15:20:24.863+0100][info][gc,phases      ] GC(33)   Pre Evacuate Collection Set: 0.29ms
+[2025-12-28T15:20:24.863+0100][info][gc,phases      ] GC(33)   Merge Heap Roots: 0.17ms
+[2025-12-28T15:20:24.863+0100][info][gc,phases      ] GC(33)   Evacuate Collection Set: 0.57ms
+[2025-12-28T15:20:24.863+0100][info][gc,phases      ] GC(33)   Post Evacuate Collection Set: 0.74ms
+[2025-12-28T15:20:24.863+0100][info][gc,phases      ] GC(33)   Other: 0.11ms
+[2025-12-28T15:20:24.863+0100][info][gc,heap        ] GC(33) Eden regions: 921->0(920)
+[2025-12-28T15:20:24.863+0100][info][gc,heap        ] GC(33) Survivor regions: 0->1(116)
+[2025-12-28T15:20:24.863+0100][info][gc,heap        ] GC(33) Old regions: 9->9
+[2025-12-28T15:20:24.863+0100][info][gc,heap        ] GC(33) Humongous regions: 0->0
+[2025-12-28T15:20:24.863+0100][info][gc,metaspace   ] GC(33) Metaspace: 8440K(8640K)->8440K(8640K) NonClass: 7768K(7872K)->7768K(7872K) Class: 672K(768K)->672K(768K)
+[2025-12-28T15:20:24.863+0100][info][gc             ] GC(33) Pause Young (Normal) (G1 Evacuation Pause) 3694M->11M(6144M) 2.115ms
+[2025-12-28T15:20:24.863+0100][info][gc,cpu         ] GC(33) User=0.01s Sys=0.00s Real=0.00s
+[2025-12-28T15:20:26.148+0100][info][gc,exit        ] Heap
+[2025-12-28T15:20:26.148+0100][info][gc,exit        ]  garbage-first heap   total reserved 6291456K, committed 6291456K, used 497151K [0x0000000680000000, 0x0000000800000000)
+[2025-12-28T15:20:26.148+0100][info][gc,exit        ]   region size 4096K, 120 young (491520K), 1 survivors (4096K)
+[2025-12-28T15:20:26.148+0100][info][gc,exit        ]  Metaspace       used 8825K, committed 9024K, reserved 1114112K
+[2025-12-28T15:20:26.148+0100][info][gc,exit        ]   class space    used 708K, committed 832K, reserved 1048576K

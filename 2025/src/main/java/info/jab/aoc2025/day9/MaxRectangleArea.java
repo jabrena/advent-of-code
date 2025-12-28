@@ -33,6 +33,7 @@ public final class MaxRectangleArea implements Solver<Long> {
     /**
      * Pure function that finds the maximum area rectangle formed by any two points.
      * Uses Stream API for declarative pair generation and area calculation.
+     * Optimized with parallel processing for independent pair calculations.
      *
      * @param points The list of points
      * @return The maximum area rectangle
@@ -40,6 +41,7 @@ public final class MaxRectangleArea implements Solver<Long> {
     private Long findMaxRectangleArea(final List<Point> points) {
         return IntStream.range(0, points.size())
                 .boxed()
+                .parallel() // Parallel processing for independent pair calculations
                 .flatMap(i -> IntStream.range(i + 1, points.size())
                         .mapToObj(j -> calculateArea(points.get(i), points.get(j))))
                 .max(Long::compareTo)

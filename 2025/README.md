@@ -20,6 +20,10 @@ Benchmarks are located in `src/benchmarks` and are excluded from normal test run
 # Run benchmark to compare InvalidIdValidator vs InvalidIdValidator2 vs InvalidIdValidator3 implementations:
 ./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day2.Day2BenchmarkTest -D2025-day2-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
 
+# Day 3 Benchmark (JMH)
+# Run benchmark to measure MaxJoltage performance:
+./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day3.Day3BenchmarkTest -D2025-day3-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+
 # Day 4 Benchmark (JMH)
 # Run benchmark to compare GridNeighbor vs GridNeighbor2 implementations:
 ./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day4.Day4BenchmarkTest -D2025-day4-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
@@ -32,9 +36,29 @@ Benchmarks are located in `src/benchmarks` and are excluded from normal test run
 # Run benchmark to compare MathBlock vs MathBlock2 implementations:
 ./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day6.Day6BenchmarkTest -D2025-day6-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
 
+# Day 7 Benchmark (JMH)
+# Run benchmark to measure BeamPathCounter performance:
+./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day7.Day7BenchmarkTest -D2025-day7-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+
 # Day 8 Benchmark (JMH)
 # Run benchmark to compare PointCluster vs PointCluster2 implementations:
 ./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day8.Day8BenchmarkTest -D2025-day8-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+
+# Day 9 Benchmark (JMH)
+# Run benchmark to measure MaxRectangleArea performance:
+./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day9.Day9BenchmarkTest -D2025-day9-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+
+# Day 10 Benchmark (JMH)
+# Run benchmark to measure ButtonPressOptimizer performance with parallel streams:
+./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day10.Day10BenchmarkTest -D2025-day10-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+
+# Day 11 Benchmark (JMH)
+# Run benchmark to measure GraphPathCounter performance:
+./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day11.Day11BenchmarkTest -D2025-day11-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
+
+# Day 12 Benchmark (JMH)
+# Run benchmark to measure ShapePacking performance:
+./mvnw clean test -Pbenchmarks -Dtest=info.jab.aoc2025.day12.Day12BenchmarkTest -D2025-day12-benchmark=true -Dsurefire.failIfNoSpecifiedTests=false -pl 2025 -am
 ```
 
 ## Visualizations

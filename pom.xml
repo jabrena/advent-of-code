@@ -42,12 +42,14 @@
         <parallel-collectors.version>3.4.0</parallel-collectors.version>
         <agrona.version>2.3.1</agrona.version>
         <fastutil.version>8.5.12</fastutil.version>
+        <tablesaw.version>0.44.1</tablesaw.version>
 
         <!-- Testing dependency versions -->
         <junit.version>5.14.1</junit.version>
         <junit.platform.version>1.14.1</junit.platform.version>
         <assertj-core.version>3.27.6</assertj-core.version>
         <mockito-core.version>5.21.0</mockito-core.version>
+        <fray.version>0.6.9</fray.version>
 
         <!-- Maven plugin versions -->
         <maven-plugin-enforcer.version>3.6.2</maven-plugin-enforcer.version>
@@ -159,6 +161,11 @@
                 <artifactId>fastutil</artifactId>
                 <version>${fastutil.version}</version>
             </dependency>
+            <dependency>
+                <groupId>tech.tablesaw</groupId>
+                <artifactId>tablesaw-core</artifactId>
+                <version>${tablesaw.version}</version>
+            </dependency>
 
             <!-- JavaFX -->
             <dependency>
@@ -208,6 +215,12 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.pastalab.fray</groupId>
+                <artifactId>fray-junit</artifactId>
+                <version>${fray.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- JOL -->
@@ -290,6 +303,11 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.pastalab.fray</groupId>
+            <artifactId>fray-junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

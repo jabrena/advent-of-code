@@ -1,0 +1,240 @@
+[
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "info.jab.aoc2025.day12.Day12Benchmark.shapePacking_part1",
+        "mode" : "avgt",
+        "threads" : 8,
+        "forks" : 3,
+        "jvm" : "/Users/jabrena/.sdkman/candidates/java/25.0.1-graalce/bin/java",
+        "jvmArgs" : [
+            "-Xmx6144m",
+            "-Xms6144m",
+            "-Xlog:gc*:file=src/benchmarks/resources/benchmarks/day12/gc.log:time,tags,level:filecount=0",
+            "-XX:+HeapDumpOnOutOfMemoryError",
+            "-XX:HeapDumpPath=src/benchmarks/resources/benchmarks/day12/heap-dump.hprof",
+            "-XX:+UnlockDiagnosticVMOptions"
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-jvmci-b01",
+        "warmupIterations" : 1,
+        "warmupTime" : "5 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 10,
+        "measurementTime" : "1 ms",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 6.509345885416667,
+            "scoreError" : 2.065272852458336,
+            "scoreConfidence" : [
+                4.444073032958331,
+                8.574618737875003
+            ],
+            "scorePercentiles" : {
+                "0.0" : 3.6957613541666667,
+                "50.0" : 5.309216291666667,
+                "90.0" : 11.65159715,
+                "95.0" : 15.3831828125,
+                "99.0" : 16.695843749999998,
+                "99.9" : 16.695843749999998,
+                "99.99" : 16.695843749999998,
+                "99.999" : 16.695843749999998,
+                "99.9999" : 16.695843749999998,
+                "100.0" : 16.695843749999998
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    11.677546625,
+                    11.418051875,
+                    6.0505025625,
+                    5.0822551875,
+                    4.744411625,
+                    4.368518375,
+                    5.4253175,
+                    5.550057500000001,
+                    5.2596382083333335,
+                    4.62327075
+                ],
+                [
+                    14.309187500000002,
+                    7.9183541250000005,
+                    6.9631091875,
+                    6.4106224375,
+                    4.732302250000001,
+                    4.952078125000001,
+                    5.208236937500001,
+                    4.792672,
+                    5.220734375,
+                    5.1466407499999995
+                ],
+                [
+                    16.695843749999998,
+                    8.798434874999998,
+                    4.8151301250000005,
+                    3.6957613541666667,
+                    5.085755375,
+                    5.3587943749999996,
+                    5.7018723125,
+                    5.785546875,
+                    3.7903700000000007,
+                    5.699359625
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+            "jfr" : {
+                "score" : "NaN",
+                "scoreError" : "NaN",
+                "scoreConfidence" : [
+                    "NaN",
+                    "NaN"
+                ],
+                "scorePercentiles" : {
+                    "0.0" : "NaN",
+                    "50.0" : "NaN",
+                    "90.0" : "NaN",
+                    "95.0" : "NaN",
+                    "99.0" : "NaN",
+                    "99.9" : "NaN",
+                    "99.99" : "NaN",
+                    "99.999" : "NaN",
+                    "99.9999" : "NaN",
+                    "100.0" : "NaN"
+                },
+                "scoreUnit" : "---",
+                "rawData" : [
+                    [
+                        "NaN"
+                    ],
+                    [
+                        "NaN"
+                    ],
+                    [
+                        "NaN"
+                    ]
+                ]
+            }
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "info.jab.aoc2025.day12.Day12Benchmark.shapePacking_part2",
+        "mode" : "avgt",
+        "threads" : 8,
+        "forks" : 3,
+        "jvm" : "/Users/jabrena/.sdkman/candidates/java/25.0.1-graalce/bin/java",
+        "jvmArgs" : [
+            "-Xmx6144m",
+            "-Xms6144m",
+            "-Xlog:gc*:file=src/benchmarks/resources/benchmarks/day12/gc.log:time,tags,level:filecount=0",
+            "-XX:+HeapDumpOnOutOfMemoryError",
+            "-XX:HeapDumpPath=src/benchmarks/resources/benchmarks/day12/heap-dump.hprof",
+            "-XX:+UnlockDiagnosticVMOptions"
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-jvmci-b01",
+        "warmupIterations" : 1,
+        "warmupTime" : "5 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 10,
+        "measurementTime" : "1 ms",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 3.930956082920939E-4,
+            "scoreError" : 5.569397516770711E-4,
+            "scoreConfidence" : [
+                -1.638441433849772E-4,
+                9.500353599691649E-4
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1.0828005162330937E-6,
+                "50.0" : 1.947200163022247E-6,
+                "90.0" : 0.0013629701488632672,
+                "95.0" : 0.002727976921357125,
+                "99.0" : 0.003872374927226698,
+                "99.9" : 0.003872374927226698,
+                "99.99" : 0.003872374927226698,
+                "99.999" : 0.003872374927226698,
+                "99.9999" : 0.003872374927226698,
+                "100.0" : 0.003872374927226698
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    6.656328850051968E-4,
+                    9.107484176103116E-4,
+                    0.0013231113917372855,
+                    0.003872374927226698,
+                    2.3957992126823415E-6,
+                    1.858423102599769E-6,
+                    1.2009437030472691E-6,
+                    1.8506792609710867E-6,
+                    1.0828005162330937E-6,
+                    1.8835845177676307E-6
+                ],
+                [
+                    0.0013673988996550429,
+                    0.0010976386633805668,
+                    0.0017916512801911134,
+                    2.9199461050167143E-5,
+                    2.3154659049704834E-6,
+                    1.7570255342152041E-6,
+                    1.928880687695096E-6,
+                    1.965519638349398E-6,
+                    1.8448908171145235E-6,
+                    1.862634504302526E-6
+                ],
+                [
+                    6.95405268740828E-4,
+                    1.8749203580826674E-6,
+                    1.8118111825814276E-6,
+                    2.4081281165677884E-6,
+                    1.795722892488946E-6,
+                    1.7758148236493112E-6,
+                    1.8064447754247287E-6,
+                    3.0549189752011713E-6,
+                    1.2477827215672339E-6,
+                    1.984862920092645E-6
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+            "jfr" : {
+                "score" : "NaN",
+                "scoreError" : "NaN",
+                "scoreConfidence" : [
+                    "NaN",
+                    "NaN"
+                ],
+                "scorePercentiles" : {
+                    "0.0" : "NaN",
+                    "50.0" : "NaN",
+                    "90.0" : "NaN",
+                    "95.0" : "NaN",
+                    "99.0" : "NaN",
+                    "99.9" : "NaN",
+                    "99.99" : "NaN",
+                    "99.999" : "NaN",
+                    "99.9999" : "NaN",
+                    "100.0" : "NaN"
+                },
+                "scoreUnit" : "---",
+                "rawData" : [
+                    [
+                        "NaN"
+                    ],
+                    [
+                        "NaN"
+                    ],
+                    [
+                        "NaN"
+                    ]
+                ]
+            }
+        }
+    }
+]
+
+

@@ -15,10 +15,10 @@ import info.jab.aoc.Solver;
  * removes such cells until no more can be removed.
  *
  * This implementation follows functional programming principles:
- * - Uses Stream API for declarative transformations
+ * - Uses parallel Stream API for declarative transformations with improved performance
  * - Employs immutable collections where possible
  * - Separates pure functions from side effects
- * - Uses Stream.iterate for iterative processes
+ * - Parallelizes independent neighbor counting operations
  */
 public final class GridNeighbor2 implements Solver<Integer> {
 
@@ -26,9 +26,13 @@ public final class GridNeighbor2 implements Solver<Integer> {
     private static final char EMPTY_CELL = '.';
     private static final int MIN_NEIGHBORS = 4;
 
+    // Reusable buffer for cells to remove to avoid allocations in hot loop
+    private final List<Point> cellsToRemoveBuffer = new ArrayList<>(1000);
+
     /**
      * Counts '@' symbols that have fewer than 4 neighbors.
-     * Uses Stream API for declarative processing.
+     * Uses parallel Stream API for declarative processing with improved performance.
+     * The grid is read-only, making it safe for parallel access.
      *
      * @param fileName The input file name
      * @return The count of '@' symbols with fewer than 4 neighbors
@@ -37,7 +41,7 @@ public final class GridNeighbor2 implements Solver<Integer> {
     public Integer solvePartOne(final String fileName) {
         final Grid grid = createGrid(fileName);
 
-        return grid.findAll(c -> c == TARGET_CELL).stream()
+        return grid.findAll(c -> c == TARGET_CELL).parallelStream()
                 .filter(p -> hasFewerThanMinimumNeighbors(grid, p))
                 .mapToInt(p -> 1)
                 .sum();
@@ -100,27 +104,37 @@ public final class GridNeighbor2 implements Solver<Integer> {
     }
 
     /**
-     * Pure function that finds all cells that should be removed.
-     * Returns an immutable list of points to remove.
-     * Uses Stream API for declarative processing.
+     * Finds all cells that should be removed.
+     * Optimized: Reuses buffer to avoid allocations in iterative scenarios.
+     * Uses imperative loop instead of stream to reduce overhead.
      *
      * @param grid The grid
-     * @return An immutable list of points to remove
+     * @return A list of points to remove (copy of buffer)
      */
     private List<Point> findCellsToRemove(final Grid grid) {
-        return grid.findAll(c -> c == TARGET_CELL).stream()
-                .filter(p -> hasFewerThanMinimumNeighbors(grid, p))
-                .toList();
+        cellsToRemoveBuffer.clear(); // Reuse buffer instead of creating new list
+
+        for (final Point point : grid.findAll(c -> c == TARGET_CELL)) {
+            if (hasFewerThanMinimumNeighbors(grid, point)) {
+                cellsToRemoveBuffer.add(point);
+            }
+        }
+
+        return new ArrayList<>(cellsToRemoveBuffer); // Copy only when needed
     }
 
     /**
      * Mutates the grid by removing cells at the specified points.
+     * Optimized: Uses imperative loop instead of forEach to reduce lambda overhead.
      * This is the only mutation point in the algorithm, isolated for clarity.
      *
      * @param grid     The grid to mutate
      * @param toRemove The list of points to remove
      */
     private void removeCells(final Grid grid, final List<Point> toRemove) {
-        toRemove.forEach(p -> grid.set(p, EMPTY_CELL));
+        // Use imperative loop instead of forEach to avoid lambda allocation overhead
+        for (final Point point : toRemove) {
+            grid.set(point, EMPTY_CELL);
+        }
     }
 }
