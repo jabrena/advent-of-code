@@ -20,24 +20,12 @@ public final class DialRotator implements Solver<Integer> {
      * <p>
      * Optimized to parse on-the-fly without creating intermediate Rotation objects.
      *
-     * @param rotations List of rotation strings in format "L{distance}" or "R{distance}"
+     * @param fileName File name containing rotation strings
      * @return The count of times the dial points at 0 after rotations
      */
     @Override
     public Integer solvePartOne(final String fileName) {
-        final List<String> rotations = ResourceLines.list(fileName);
-        DialState state = DialState.initial(INITIAL_POSITION);
-
-        for (final String rotation : rotations) {
-            if (isValidRotation(rotation)) {
-                final char directionChar = rotation.charAt(0);
-                final Direction direction = Direction.from(directionChar);
-                final int distance = parseIntFromOffset(rotation, 1);
-                state = state.applyRotationDirect(direction, distance, this);
-            }
-        }
-
-        return state.zeroCount();
+        return solve(fileName, false);
     }
 
     /**
@@ -47,11 +35,27 @@ public final class DialRotator implements Solver<Integer> {
      * Optimized to parse on-the-fly without creating intermediate Rotation objects.
      * Complexity: O(n) instead of O(n×d) by using modular arithmetic to count zero crossings.
      *
-     * @param rotations List of rotation strings in format "L{distance}" or "R{distance}"
+     * @param fileName File name containing rotation strings
      * @return The count of times the dial points at 0 during rotations
      */
     @Override
     public Integer solvePartTwo(final String fileName) {
+        return solve(fileName, true);
+    }
+
+    /**
+     * Unified solve method that processes rotations and counts zero occurrences.
+     * The only difference between part 1 and part 2 is which state method is called:
+     * - Part 1: applyRotationDirect (counts zeros only after complete rotations)
+     * - Part 2: applyRotationWithZeroCountDirect (counts zeros during rotations)
+     * <p>
+     * Optimized to parse on-the-fly without creating intermediate Rotation objects.
+     *
+     * @param fileName File name containing rotation strings
+     * @param countDuringRotation If true, counts zeros during rotation (part 2); if false, counts after rotation (part 1)
+     * @return The count of times the dial points at 0
+     */
+    private Integer solve(final String fileName, final boolean countDuringRotation) {
         final List<String> rotations = ResourceLines.list(fileName);
         DialState state = DialState.initial(INITIAL_POSITION);
 
@@ -60,10 +64,11 @@ public final class DialRotator implements Solver<Integer> {
                 final char directionChar = rotation.charAt(0);
                 final Direction direction = Direction.from(directionChar);
                 final int distance = parseIntFromOffset(rotation, 1);
-                state = state.applyRotationWithZeroCountDirect(direction, distance, this);
+                state = countDuringRotation
+                        ? state.applyRotationWithZeroCountDirect(direction, distance, this)
+                        : state.applyRotationDirect(direction, distance, this);
             }
         }
-
         return state.zeroCount();
     }
 

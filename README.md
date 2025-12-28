@@ -94,10 +94,11 @@ Advent of Code is an annual set of Christmas-themed computer programming challen
 - https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Funny%22
 - https://www.reddit.com/r/adventofcode/?f=flair_name%3A%22Visualization%22
 - https://www.reddit.com/r/adventofcode/search/?q=flair_name%3A%22SOLUTION%20MEGATHREAD%22&restrict_sr=1
+- https://github.com/forax/advent-of-code-2025
 
 ## Acknowledgements
 
-A heartfelt thanks to ChatGPT and Gemini for the insightful early morning (6:00 AM)
+A heartfelt thanks to Frontier models for the insightful early morning (6:00 AM)
 discussions on design thinking and code refactoring, with a focus on functional approaches.
 I'm also deeply grateful to my friend [Juan Antonio Medina](https://www.github.com/juan-medina)
 for the continuous and inspiring conversations throughout the day,
