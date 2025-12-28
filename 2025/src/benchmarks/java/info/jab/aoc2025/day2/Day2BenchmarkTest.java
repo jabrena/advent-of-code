@@ -29,7 +29,7 @@ class Day2BenchmarkTest {
     void should_show_best_alternatives() throws RunnerException {
 
         Options options = new OptionsBuilder()
-                .include(Day2Benchmark.class.getSimpleName())
+                .include(Day2Benchmark.class.getName())
                 .resultFormat(ResultFormatType.JSON)
                 .result("src/benchmarks/resources/benchmarks/day2/%s.json".formatted(Day2Benchmark.class.getSimpleName()))
                 //.verbosity(VerboseMode.EXTRA)

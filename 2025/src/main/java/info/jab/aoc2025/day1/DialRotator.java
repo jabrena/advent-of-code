@@ -63,7 +63,7 @@ public final class DialRotator implements Solver<Integer> {
             if (isValidRotation(rotation)) {
                 final char directionChar = rotation.charAt(0);
                 final Direction direction = Direction.from(directionChar);
-                final int distance = parseIntFromOffset(rotation, 1);
+                final int distance = Integer.parseInt(rotation.substring(1));
                 state = countDuringRotation
                         ? state.applyRotationWithZeroCountDirect(direction, distance, this)
                         : state.applyRotationDirect(direction, distance, this);
@@ -81,18 +81,6 @@ public final class DialRotator implements Solver<Integer> {
      */
     private boolean isValidRotation(final String rotation) {
         return rotation != null && !rotation.trim().isEmpty();
-    }
-
-    /**
-     * Parses integer from string starting at given offset.
-     * Optimized to avoid substring() allocation.
-     *
-     * @param str    String to parse
-     * @param offset Starting offset
-     * @return Parsed integer value
-     */
-    private static int parseIntFromOffset(final String str, final int offset) {
-        return Integer.parseInt(str, offset, str.length(), 10);
     }
 
     /**

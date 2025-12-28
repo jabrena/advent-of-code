@@ -8,6 +8,16 @@ import info.jab.aoc.Solver;
 public final class InvalidIdValidator3 implements Solver<Long> {
 
     /**
+     * Pattern to match all digit sequences in the input (for parsing ranges).
+     */
+    private static final Pattern RANGE_PATTERN = Pattern.compile("(\\d+)");
+
+    /**
+     * Pattern to match a digit sequence followed by itself (exactly 2 repeats).
+     */
+    private static final Pattern TWICE_PATTERN = Pattern.compile("(\\d+)(\\1)");
+
+    /**
      * Calculates the sum of all invalid IDs in the given ranges for part one.
      * An invalid ID must have 2 or fewer repeated parts.
      *
@@ -35,103 +45,86 @@ public final class InvalidIdValidator3 implements Solver<Long> {
 
     /**
      * Solves the invalid ID validation problem for the specified part.
+     * Uses a stream-based approach:
+     * - Direct regex parsing to extract all numbers
+     * - Gatherers.windowFixed(2) to pair numbers into ranges
+     * - flatMapToLong to generate all IDs from all ranges
+     * - Direct filtering and summing in the stream pipeline
      *
      * @param input Input string containing comma-separated ranges
      * @param part Part number (1 or 2)
      * @return The sum of all invalid IDs
      */
     private Long solve(final String input, final int part) {
-        long totalInvalid = 0;
-        final List<Range> ranges = parse(input);
+        final int maxRepeats = part == 1 ? 2 : 99;
+        final LongToIntFunction repeatedFunction = part == 1
+            ? this::repeatedOptimized
+            : this::repeated;
 
-        for (final Range range : ranges) {
-            final int maxRepeats = part == 1 ? 2 : 99;
-            for (final long id : range.invalidIds(maxRepeats, this::repeated)) {
-                totalInvalid += id;
-            }
-        }
-
-        return totalInvalid;
+        // Solution approach: extract all numbers with regex, pair them with windowFixed(2)
+        return RANGE_PATTERN.matcher(input).results()
+            .map(result -> Long.parseLong(result.group()))
+            .gather(Gatherers.windowFixed(2))
+            .flatMapToLong(list -> LongStream.rangeClosed(list.getFirst(), list.getLast()))
+            .filter(id -> {
+                final int repeats = repeatedFunction.applyAsInt(id);
+                return repeats > 0 && repeats <= maxRepeats;
+            })
+            .sum();
     }
 
     /**
-     * Parses input string into a list of ranges.
+     * Optimized check for exactly 2 repeats.
+     * Uses the pattern (\\d+)(\\1) which matches a chunk followed by itself.
+     * This is more efficient than the general repeated() method for part 1.
      *
-     * @param input Input string containing comma-separated ranges
-     * @return List of parsed ranges
+     * @param id The ID to check
+     * @return 2 if the ID has exactly 2 repeats, 0 otherwise
      */
-    private List<Range> parse(final String input) {
-        final String[] parts = input.split(",");
-        final List<Range> ranges = new ArrayList<>();
-        for (final String part : parts) {
-            ranges.add(Range.from(part.trim()));
-        }
-        return ranges;
+    private int repeatedOptimized(final long id) {
+        final String idStr = String.valueOf(id);
+        return TWICE_PATTERN.matcher(idStr).matches() ? 2 : 0;
     }
 
     /**
      * Calculates the number of times a chunk repeats to form the given ID string.
      * Returns 0 if the ID is not composed of repeated chunks.
-     * Optimized to avoid String allocations by using char array and character comparison.
+     * Uses regex pattern matching.
+     * The solution uses (\\d+)(\\1) to match exactly 2 repeats with .matches().
+     * This method generalizes to count any number of repeats by checking if
+     * the entire string matches a pattern where a chunk is repeated multiple times.
+     * Uses Stream API to find the first matching chunk pattern.
      *
      * @param id The ID to check
      * @return Number of repeats (0 if not repeated)
      */
     private int repeated(final long id) {
-        final char[] idChars = longToCharArray(id);
-        final int length = idChars.length;
+        final String idStr = String.valueOf(id);
+        final int length = idStr.length();
         final int halfLength = length / 2;
 
-        for (int len = halfLength; len >= 1; len--) {
-            if (length % len != 0) {
-                continue; // can't fill the whole string
-            }
-            final int repeats = length / len; // how many to repeat
-
-            // Check if all parts are equal by comparing characters directly
-            // For each position i, check if idChars[i] == idChars[i % len]
-            boolean allPartsEqual = true;
-            for (int i = len; i < length; i++) {
-                if (idChars[i] != idChars[i % len]) {
-                    allPartsEqual = false;
-                    break;
-                }
-            }
-            if (allPartsEqual) {
-                return repeats;
-            }
-        }
-        return 0;
+        // Try all possible chunk lengths from largest to smallest using Stream API
+        return IntStream.iterate(halfLength, chunkLen -> chunkLen >= 1, chunkLen -> chunkLen - 1)
+            .filter(chunkLen -> length % chunkLen == 0) // can't fill the whole string if not divisible
+            .mapToObj(chunkLen -> checkRepeatedPattern(chunkLen, idStr, length))
+            .flatMap(Optional::stream)
+            .findFirst()
+            .orElse(0);
     }
 
     /**
-     * Converts a long to a char array without creating intermediate String.
+     * Checks if the ID string matches a repeated pattern for the given chunk length.
+     * Creates a regex pattern where the chunk is repeated to form the entire string.
      *
-     * @param value The long value to convert
-     * @return Char array representation
+     * @param chunkLen The length of the chunk to test
+     * @param idStr The ID string to check
+     * @param length The total length of the ID string
+     * @return Optional containing the number of repeats if pattern matches, empty otherwise
      */
-    private static char[] longToCharArray(final long value) {
-        if (value == 0) {
-            return new char[]{'0'};
-        }
-
-        // Calculate number of digits
-        int digits = 0;
-        long temp = value;
-        if (temp < 0) {
-            temp = -temp;
-        }
-        while (temp > 0) {
-            temp /= 10;
-            digits++;
-        }
-
-        final char[] chars = new char[digits];
-        temp = value < 0 ? -value : value;
-        for (int i = digits - 1; i >= 0; i--) {
-            chars[i] = (char) ('0' + (temp % 10));
-            temp /= 10;
-        }
-        return chars;
+    private Optional<Integer> checkRepeatedPattern(final int chunkLen, final String idStr, final int length) {
+        final int repeats = length / chunkLen;
+        final String chunk = idStr.substring(0, chunkLen);
+        final String pattern = "^(" + chunk + "){" + repeats + "}$";
+        return Pattern.matches(pattern, idStr) ? Optional.of(repeats) : Optional.empty();
     }
 }

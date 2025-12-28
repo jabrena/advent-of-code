@@ -14,6 +14,7 @@ public class Day1Benchmark { //NOSONAR java:S5786 - JMH @State annotation requir
         String fileName = "/day1/day1-input.txt";
     }
 
+    // Part 1 benchmarks - grouped for easier comparison
     @Benchmark
     public void dialRotator_part1(St st) {
         st.dialRotator.solvePartOne(st.fileName);
@@ -25,6 +26,12 @@ public class Day1Benchmark { //NOSONAR java:S5786 - JMH @State annotation requir
     }
 
     @Benchmark
+    public void dialRotator3_part1(St st) {
+        st.dialRotator3.solvePartOne(st.fileName);
+    }
+
+    // Part 2 benchmarks - grouped for easier comparison
+    @Benchmark
     public void dialRotator_part2(St st) {
         st.dialRotator.solvePartTwo(st.fileName);
     }
@@ -32,11 +39,6 @@ public class Day1Benchmark { //NOSONAR java:S5786 - JMH @State annotation requir
     @Benchmark
     public void dialRotator2_part2(St st) {
         st.dialRotator2.solvePartTwo(st.fileName);
-    }
-
-    @Benchmark
-    public void dialRotator3_part1(St st) {
-        st.dialRotator3.solvePartOne(st.fileName);
     }
 
     @Benchmark
