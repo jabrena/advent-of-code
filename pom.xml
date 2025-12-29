@@ -42,7 +42,7 @@
         <parallel-collectors.version>3.4.0</parallel-collectors.version>
         <agrona.version>2.3.1</agrona.version>
         <fastutil.version>8.5.12</fastutil.version>
-        <tablesaw.version>0.44.1</tablesaw.version>
+        <tablesaw.version>0.44.4</tablesaw.version>
 
         <!-- Testing dependency versions -->
         <junit.version>5.14.1</junit.version>
