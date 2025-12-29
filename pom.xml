@@ -49,7 +49,7 @@
         <junit.platform.version>1.14.1</junit.platform.version>
         <assertj-core.version>3.27.6</assertj-core.version>
         <mockito-core.version>5.21.0</mockito-core.version>
-        <fray.version>0.6.9</fray.version>
+        <fray.version>0.7.1</fray.version>
 
         <!-- Maven plugin versions -->
         <maven-plugin-enforcer.version>3.6.2</maven-plugin-enforcer.version>
