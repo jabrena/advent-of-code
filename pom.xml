@@ -37,7 +37,7 @@
         <jackson.version>2.20.1</jackson.version>
         <jol.version>0.17</jol.version>
         <jmh.version>1.37</jmh.version>
-        <javafx.version>25.0.1</javafx.version>
+        <javafx.version>26-ea+21</javafx.version>
         <dataframe-ec.version>1.4.0</dataframe-ec.version>
         <parallel-collectors.version>3.4.0</parallel-collectors.version>
         <agrona.version>2.3.1</agrona.version>
