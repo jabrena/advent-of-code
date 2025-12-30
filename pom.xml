@@ -41,7 +41,7 @@
         <dataframe-ec.version>1.4.0</dataframe-ec.version>
         <parallel-collectors.version>3.4.0</parallel-collectors.version>
         <agrona.version>2.4.0</agrona.version>
-        <fastutil.version>8.5.12</fastutil.version>
+        <fastutil.version>8.5.18</fastutil.version>
         <tablesaw.version>0.44.4</tablesaw.version>
 
         <!-- Testing dependency versions -->
