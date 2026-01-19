@@ -34,7 +34,7 @@
         <guava.version>33.5.0-jre</guava.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
-        <jackson.version>2.20.1</jackson.version>
+        <jackson.version>2.21.0</jackson.version>
         <jol.version>0.17</jol.version>
         <jmh.version>1.37</jmh.version>
         <javafx.version>25.0.1</javafx.version>
